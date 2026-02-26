@@ -1,0 +1,180 @@
+{
+  "buildings": [
+    {
+      "id": "sutherland",
+      "name": "Sutherland Hall",
+      "latitude": 40.11536,
+      "longitude": -75.11334,
+      "floors": ["ground", "2", "3", "4"],
+      "entrances": [
+        "wp_suth_main_entrance",
+        "wp_suth_side_entrance"
+      ]
+    },
+    {
+      "id": "woodland",
+      "name": "Woodland Building",
+      "latitude": 40.11501,
+      "longitude": -75.11290,
+      "floors": ["1", "2", "3"],
+      "entrances": [
+        "wp_wood_main_entrance"
+      ]
+    },
+    {
+      "id": "lares",
+      "name": "Lares Building",
+      "latitude": 40.11480,
+      "longitude": -75.11370,
+      "floors": ["ground", "2"],
+      "entrances": [
+        "wp_lares_main_entrance"
+      ]
+    },
+    {
+      "id": "rydal",
+      "name": "Rydal Building",
+      "latitude": 40.11550,
+      "longitude": -75.11450,
+      "floors": ["1", "2"],
+      "entrances": [
+        "wp_rydal_main_entrance"
+      ]
+    },
+    {
+      "id": "springhouse",
+      "name": "Springhouse",
+      "latitude": 40.11420,
+      "longitude": -75.11310,
+      "floors": ["1"],
+      "entrances": [
+        "wp_spring_main_entrance"
+      ]
+    }
+  ],
+
+  "waypoints": [
+    { "id": "wp_suth_main_entrance",  "building": "sutherland", "floor": "ground", "label": "Sutherland Main Entrance",    "type": "entrance",   "x": 100, "y": 200, "qr_code": "QR_SUTH_GND_MAIN_ENTRANCE"  },
+    { "id": "wp_suth_side_entrance",  "building": "sutherland", "floor": "ground", "label": "Sutherland Side Entrance",    "type": "entrance",   "x": 280, "y": 200, "qr_code": "QR_SUTH_GND_SIDE_ENTRANCE"  },
+    { "id": "wp_suth_gnd_stairs",     "building": "sutherland", "floor": "ground", "label": "Sutherland Ground Stairwell", "type": "stairwell",  "x": 190, "y": 150, "qr_code": "QR_SUTH_GND_STAIRS"         },
+    { "id": "wp_suth_gnd_hallway_a",  "building": "sutherland", "floor": "ground", "label": "Ground Hallway A",            "type": "hallway",    "x": 150, "y": 170, "qr_code": "QR_SUTH_GND_HALL_A"         },
+    { "id": "wp_suth_008",            "building": "sutherland", "floor": "ground", "label": "Room 008",                    "type": "classroom",  "x": 120, "y": 130, "qr_code": "QR_SUTH_GND_008"            },
+    { "id": "wp_suth_009",            "building": "sutherland", "floor": "ground", "label": "Room 009 - Auditorium",       "type": "auditorium", "x": 250, "y": 130, "qr_code": "QR_SUTH_GND_009"            },
+
+    { "id": "wp_suth_floor2_stairs",  "building": "sutherland", "floor": "2",      "label": "Floor 2 Stairwell",          "type": "stairwell",  "x": 190, "y": 150, "qr_code": "QR_SUTH_F2_STAIRS"          },
+    { "id": "wp_suth_f2_hallway_a",   "building": "sutherland", "floor": "2",      "label": "Floor 2 Hallway A",          "type": "hallway",    "x": 150, "y": 170, "qr_code": "QR_SUTH_F2_HALL_A"          },
+    { "id": "wp_suth_f2_hallway_b",   "building": "sutherland", "floor": "2",      "label": "Floor 2 Hallway B",          "type": "hallway",    "x": 230, "y": 170, "qr_code": "QR_SUTH_F2_HALL_B"          },
+    { "id": "wp_suth_121",            "building": "sutherland", "floor": "2",      "label": "Room 121 - Print Lab",       "type": "lab",        "x": 100, "y": 120, "qr_code": "QR_SUTH_F2_121"             },
+    { "id": "wp_suth_209",            "building": "sutherland", "floor": "2",      "label": "Room 209",                   "type": "classroom",  "x": 145, "y": 92,  "qr_code": "QR_SUTH_F2_209"             },
+    { "id": "wp_suth_211",            "building": "sutherland", "floor": "2",      "label": "Room 211 - Active Learning", "type": "lab",        "x": 180, "y": 92,  "qr_code": "QR_SUTH_F2_211"             },
+    { "id": "wp_suth_218",            "building": "sutherland", "floor": "2",      "label": "Room 218 - IT Help Desk",    "type": "office",     "x": 240, "y": 92,  "qr_code": "QR_SUTH_F2_218"             },
+    { "id": "wp_suth_224",            "building": "sutherland", "floor": "2",      "label": "Room 224 - Digital Learning","type": "lab",        "x": 270, "y": 110, "qr_code": "QR_SUTH_F2_224"             },
+
+    { "id": "wp_suth_floor3_stairs",  "building": "sutherland", "floor": "3",      "label": "Floor 3 Stairwell",          "type": "stairwell",  "x": 190, "y": 150, "qr_code": "QR_SUTH_F3_STAIRS"          },
+    { "id": "wp_suth_f3_hallway_a",   "building": "sutherland", "floor": "3",      "label": "Floor 3 Hallway A",          "type": "hallway",    "x": 150, "y": 170, "qr_code": "QR_SUTH_F3_HALL_A"          },
+    { "id": "wp_suth_f3_hallway_b",   "building": "sutherland", "floor": "3",      "label": "Floor 3 Hallway B",          "type": "hallway",    "x": 230, "y": 170, "qr_code": "QR_SUTH_F3_HALL_B"          },
+    { "id": "wp_suth_305",            "building": "sutherland", "floor": "3",      "label": "Room 305",                   "type": "classroom",  "x": 120, "y": 100, "qr_code": "QR_SUTH_F3_305"             },
+    { "id": "wp_suth_307",            "building": "sutherland", "floor": "3",      "label": "Room 307 - Computer Lab",    "type": "lab",        "x": 160, "y": 100, "qr_code": "QR_SUTH_F3_307"             },
+    { "id": "wp_suth_331",            "building": "sutherland", "floor": "3",      "label": "Room 331 - Math Lecture",    "type": "classroom",  "x": 260, "y": 100, "qr_code": "QR_SUTH_F3_331"             },
+
+    { "id": "wp_wood_main_entrance",  "building": "woodland",   "floor": "1",      "label": "Woodland Main Entrance",     "type": "entrance",   "x": 100, "y": 200, "qr_code": "QR_WOOD_F1_MAIN_ENTRANCE"   },
+    { "id": "wp_wood_f1_stairs",      "building": "woodland",   "floor": "1",      "label": "Woodland Floor 1 Stairwell", "type": "stairwell",  "x": 190, "y": 150, "qr_code": "QR_WOOD_F1_STAIRS"          },
+    { "id": "wp_wood_f1_hallway_a",   "building": "woodland",   "floor": "1",      "label": "Woodland Floor 1 Hallway A", "type": "hallway",    "x": 150, "y": 170, "qr_code": "QR_WOOD_F1_HALL_A"          },
+    { "id": "wp_wood_132b",           "building": "woodland",   "floor": "1",      "label": "Room 132B",                  "type": "classroom",  "x": 130, "y": 110, "qr_code": "QR_WOOD_F1_132B"            },
+    { "id": "wp_wood_237",            "building": "woodland",   "floor": "2",      "label": "Room 237",                   "type": "classroom",  "x": 140, "y": 100, "qr_code": "QR_WOOD_F2_237"             },
+    { "id": "wp_wood_242",            "building": "woodland",   "floor": "2",      "label": "Room 242",                   "type": "classroom",  "x": 200, "y": 100, "qr_code": "QR_WOOD_F2_242"             },
+    { "id": "wp_wood_313",            "building": "woodland",   "floor": "3",      "label": "Room 313",                   "type": "classroom",  "x": 150, "y": 100, "qr_code": "QR_WOOD_F3_313"             },
+
+    { "id": "wp_lares_main_entrance", "building": "lares",      "floor": "ground", "label": "Lares Main Entrance",        "type": "entrance",   "x": 100, "y": 200, "qr_code": "QR_LARES_GND_MAIN_ENTRANCE" },
+    { "id": "wp_lares_g04",           "building": "lares",      "floor": "ground", "label": "Room G04 - Computer Lab",    "type": "lab",        "x": 140, "y": 120, "qr_code": "QR_LARES_GND_G04"           },
+
+    { "id": "wp_rydal_main_entrance", "building": "rydal",      "floor": "1",      "label": "Rydal Main Entrance",        "type": "entrance",   "x": 100, "y": 200, "qr_code": "QR_RYDAL_F1_MAIN_ENTRANCE"  },
+    { "id": "wp_rydal_106",           "building": "rydal",      "floor": "1",      "label": "Room 106 - Campus Security", "type": "office",     "x": 140, "y": 120, "qr_code": "QR_RYDAL_F1_106"            },
+
+    { "id": "wp_spring_main_entrance","building": "springhouse","floor": "1",      "label": "Springhouse Main Entrance",  "type": "entrance",   "x": 100, "y": 200, "qr_code": "QR_SPRING_F1_MAIN_ENTRANCE" }
+  ],
+
+  "edges": [
+    { "from": "wp_suth_main_entrance", "to": "wp_suth_gnd_hallway_a",  "distance": 10.0, "accessible": true  },
+    { "from": "wp_suth_side_entrance", "to": "wp_suth_gnd_hallway_a",  "distance": 12.0, "accessible": true  },
+    { "from": "wp_suth_gnd_hallway_a", "to": "wp_suth_008",            "distance": 8.0,  "accessible": true  },
+    { "from": "wp_suth_gnd_hallway_a", "to": "wp_suth_009",            "distance": 15.0, "accessible": true  },
+    { "from": "wp_suth_gnd_hallway_a", "to": "wp_suth_gnd_stairs",     "distance": 6.0,  "accessible": true  },
+    { "from": "wp_suth_gnd_stairs",    "to": "wp_suth_floor2_stairs",  "distance": 5.0,  "accessible": false },
+    { "from": "wp_suth_floor2_stairs", "to": "wp_suth_f2_hallway_a",   "distance": 5.0,  "accessible": true  },
+    { "from": "wp_suth_f2_hallway_a",  "to": "wp_suth_f2_hallway_b",   "distance": 10.0, "accessible": true  },
+    { "from": "wp_suth_f2_hallway_a",  "to": "wp_suth_121",            "distance": 7.0,  "accessible": true  },
+    { "from": "wp_suth_f2_hallway_a",  "to": "wp_suth_209",            "distance": 9.0,  "accessible": true  },
+    { "from": "wp_suth_f2_hallway_b",  "to": "wp_suth_211",            "distance": 6.0,  "accessible": true  },
+    { "from": "wp_suth_f2_hallway_b",  "to": "wp_suth_218",            "distance": 8.0,  "accessible": true  },
+    { "from": "wp_suth_f2_hallway_b",  "to": "wp_suth_224",            "distance": 11.0, "accessible": true  },
+    { "from": "wp_suth_floor2_stairs", "to": "wp_suth_floor3_stairs",  "distance": 5.0,  "accessible": false },
+    { "from": "wp_suth_floor3_stairs", "to": "wp_suth_f3_hallway_a",   "distance": 5.0,  "accessible": true  },
+    { "from": "wp_suth_f3_hallway_a",  "to": "wp_suth_f3_hallway_b",   "distance": 10.0, "accessible": true  },
+    { "from": "wp_suth_f3_hallway_a",  "to": "wp_suth_305",            "distance": 7.0,  "accessible": true  },
+    { "from": "wp_suth_f3_hallway_a",  "to": "wp_suth_307",            "distance": 9.0,  "accessible": true  },
+    { "from": "wp_suth_f3_hallway_b",  "to": "wp_suth_331",            "distance": 12.0, "accessible": true  },
+    { "from": "wp_wood_main_entrance", "to": "wp_wood_f1_hallway_a",   "distance": 8.0,  "accessible": true  },
+    { "from": "wp_wood_f1_hallway_a",  "to": "wp_wood_132b",           "distance": 10.0, "accessible": true  },
+    { "from": "wp_wood_f1_hallway_a",  "to": "wp_wood_f1_stairs",      "distance": 6.0,  "accessible": true  },
+    { "from": "wp_wood_f1_stairs",     "to": "wp_wood_237",            "distance": 8.0,  "accessible": false },
+    { "from": "wp_wood_f1_stairs",     "to": "wp_wood_242",            "distance": 12.0, "accessible": false },
+    { "from": "wp_wood_f1_stairs",     "to": "wp_wood_313",            "distance": 14.0, "accessible": false },
+    { "from": "wp_lares_main_entrance","to": "wp_lares_g04",           "distance": 20.0, "accessible": true  },
+    { "from": "wp_rydal_main_entrance","to": "wp_rydal_106",           "distance": 15.0, "accessible": true  }
+  ],
+
+  "rooms": [
+    { "building": "sutherland", "room_number": "008", "floor": "ground", "waypoint_id": "wp_suth_008", "room_name": "Video Conference Room",   "capacity": 66,  "type": "classroom" },
+    { "building": "sutherland", "room_number": "009", "floor": "ground", "waypoint_id": "wp_suth_009", "room_name": "Auditorium",              "capacity": 258, "type": "auditorium"},
+    { "building": "sutherland", "room_number": "121", "floor": "2",      "waypoint_id": "wp_suth_121", "room_name": "Print Lab",               "capacity": null,"type": "lab"       },
+    { "building": "sutherland", "room_number": "209", "floor": "2",      "waypoint_id": "wp_suth_209", "room_name": "Traditional Classroom",   "capacity": null,"type": "classroom" },
+    { "building": "sutherland", "room_number": "211", "floor": "2",      "waypoint_id": "wp_suth_211", "room_name": "Active Learning Lab",     "capacity": null,"type": "lab"       },
+    { "building": "sutherland", "room_number": "218", "floor": "2",      "waypoint_id": "wp_suth_218", "room_name": "IT Help Desk",            "capacity": null,"type": "office"    },
+    { "building": "sutherland", "room_number": "224", "floor": "2",      "waypoint_id": "wp_suth_224", "room_name": "Digital Learning Space",  "capacity": 20,  "type": "lab"       },
+    { "building": "sutherland", "room_number": "305", "floor": "3",      "waypoint_id": "wp_suth_305", "room_name": "Standard Classroom",      "capacity": null,"type": "classroom" },
+    { "building": "sutherland", "room_number": "307", "floor": "3",      "waypoint_id": "wp_suth_307", "room_name": "Computer Lab",            "capacity": null,"type": "lab"       },
+    { "building": "sutherland", "room_number": "331", "floor": "3",      "waypoint_id": "wp_suth_331", "room_name": "Math Lecture Room",       "capacity": null,"type": "classroom" },
+    { "building": "woodland",   "room_number": "132B","floor": "1",      "waypoint_id": "wp_wood_132b","room_name": "Classroom 132B",          "capacity": null,"type": "classroom" },
+    { "building": "woodland",   "room_number": "237", "floor": "2",      "waypoint_id": "wp_wood_237", "room_name": "Classroom 237",           "capacity": null,"type": "classroom" },
+    { "building": "woodland",   "room_number": "242", "floor": "2",      "waypoint_id": "wp_wood_242", "room_name": "Classroom 242",           "capacity": null,"type": "classroom" },
+    { "building": "woodland",   "room_number": "313", "floor": "3",      "waypoint_id": "wp_wood_313", "room_name": "Classroom 313",           "capacity": null,"type": "classroom" },
+    { "building": "lares",      "room_number": "G04", "floor": "ground", "waypoint_id": "wp_lares_g04","room_name": "Student Computer Lab",    "capacity": null,"type": "lab"       },
+    { "building": "rydal",      "room_number": "106", "floor": "1",      "waypoint_id": "wp_rydal_106","room_name": "Campus Security / Police","capacity": null,"type": "office"    }
+  ],
+
+  "qrAnchors": [
+    { "qr_id": "QR_SUTH_GND_MAIN_ENTRANCE",  "waypoint_id": "wp_suth_main_entrance",  "building": "sutherland", "floor": "ground" },
+    { "qr_id": "QR_SUTH_GND_SIDE_ENTRANCE",  "waypoint_id": "wp_suth_side_entrance",  "building": "sutherland", "floor": "ground" },
+    { "qr_id": "QR_SUTH_GND_STAIRS",         "waypoint_id": "wp_suth_gnd_stairs",     "building": "sutherland", "floor": "ground" },
+    { "qr_id": "QR_SUTH_GND_HALL_A",         "waypoint_id": "wp_suth_gnd_hallway_a",  "building": "sutherland", "floor": "ground" },
+    { "qr_id": "QR_SUTH_GND_008",            "waypoint_id": "wp_suth_008",            "building": "sutherland", "floor": "ground" },
+    { "qr_id": "QR_SUTH_GND_009",            "waypoint_id": "wp_suth_009",            "building": "sutherland", "floor": "ground" },
+    { "qr_id": "QR_SUTH_F2_STAIRS",          "waypoint_id": "wp_suth_floor2_stairs",  "building": "sutherland", "floor": "2"      },
+    { "qr_id": "QR_SUTH_F2_HALL_A",          "waypoint_id": "wp_suth_f2_hallway_a",   "building": "sutherland", "floor": "2"      },
+    { "qr_id": "QR_SUTH_F2_HALL_B",          "waypoint_id": "wp_suth_f2_hallway_b",   "building": "sutherland", "floor": "2"      },
+    { "qr_id": "QR_SUTH_F2_121",             "waypoint_id": "wp_suth_121",            "building": "sutherland", "floor": "2"      },
+    { "qr_id": "QR_SUTH_F2_209",             "waypoint_id": "wp_suth_209",            "building": "sutherland", "floor": "2"      },
+    { "qr_id": "QR_SUTH_F2_211",             "waypoint_id": "wp_suth_211",            "building": "sutherland", "floor": "2"      },
+    { "qr_id": "QR_SUTH_F2_218",             "waypoint_id": "wp_suth_218",            "building": "sutherland", "floor": "2"      },
+    { "qr_id": "QR_SUTH_F2_224",             "waypoint_id": "wp_suth_224",            "building": "sutherland", "floor": "2"      },
+    { "qr_id": "QR_SUTH_F3_STAIRS",          "waypoint_id": "wp_suth_floor3_stairs",  "building": "sutherland", "floor": "3"      },
+    { "qr_id": "QR_SUTH_F3_HALL_A",          "waypoint_id": "wp_suth_f3_hallway_a",   "building": "sutherland", "floor": "3"      },
+    { "qr_id": "QR_SUTH_F3_HALL_B",          "waypoint_id": "wp_suth_f3_hallway_b",   "building": "sutherland", "floor": "3"      },
+    { "qr_id": "QR_SUTH_F3_305",             "waypoint_id": "wp_suth_305",            "building": "sutherland", "floor": "3"      },
+    { "qr_id": "QR_SUTH_F3_307",             "waypoint_id": "wp_suth_307",            "building": "sutherland", "floor": "3"      },
+    { "qr_id": "QR_SUTH_F3_331",             "waypoint_id": "wp_suth_331",            "building": "sutherland", "floor": "3"      },
+    { "qr_id": "QR_WOOD_F1_MAIN_ENTRANCE",   "waypoint_id": "wp_wood_main_entrance",  "building": "woodland",   "floor": "1"      },
+    { "qr_id": "QR_WOOD_F1_STAIRS",          "waypoint_id": "wp_wood_f1_stairs",      "building": "woodland",   "floor": "1"      },
+    { "qr_id": "QR_WOOD_F1_HALL_A",          "waypoint_id": "wp_wood_f1_hallway_a",   "building": "woodland",   "floor": "1"      },
+    { "qr_id": "QR_WOOD_F1_132B",            "waypoint_id": "wp_wood_132b",           "building": "woodland",   "floor": "1"      },
+    { "qr_id": "QR_WOOD_F2_237",             "waypoint_id": "wp_wood_237",            "building": "woodland",   "floor": "2"      },
+    { "qr_id": "QR_WOOD_F2_242",             "waypoint_id": "wp_wood_242",            "building": "woodland",   "floor": "2"      },
+    { "qr_id": "QR_WOOD_F3_313",             "waypoint_id": "wp_wood_313",            "building": "woodland",   "floor": "3"      },
+    { "qr_id": "QR_LARES_GND_MAIN_ENTRANCE", "waypoint_id": "wp_lares_main_entrance", "building": "lares",      "floor": "ground" },
+    { "qr_id": "QR_LARES_GND_G04",           "waypoint_id": "wp_lares_g04",           "building": "lares",      "floor": "ground" },
+    { "qr_id": "QR_RYDAL_F1_MAIN_ENTRANCE",  "waypoint_id": "wp_rydal_main_entrance", "building": "rydal",      "floor": "1"      },
+    { "qr_id": "QR_RYDAL_F1_106",            "waypoint_id": "wp_rydal_106",           "building": "rydal",      "floor": "1"      },
+    { "qr_id": "QR_SPRING_F1_MAIN_ENTRANCE", "waypoint_id": "wp_spring_main_entrance","building": "springhouse","floor": "1"      }
+  ]
+}
