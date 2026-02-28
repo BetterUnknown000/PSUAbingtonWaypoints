@@ -66,3 +66,17 @@ The system is designed to be data-driven, allowing new buildings, floors, classr
 User Need Addressed:
 This feature ensures long-term usability and adaptability of the system as campus infrastructure changes or expands.
 
+
+## Get started
+
+1. Install dependencies
+
+   ```bash
+   npm install
+   ```
+
+2. Start the app
+
+   ```bash
+   npx expo start
+   ```
