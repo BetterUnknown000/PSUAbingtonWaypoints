@@ -123,6 +123,9 @@
     { "id": "wp_wood_343",            "building": "woodland",   "floor": "3",      "label": "Room 343",                                "type": "classroom", "latitude": 40.116583, "longitude": -75.111101, "x": 0, "y": 0, "qr_code": "QR_WOOD_F3_343"            },
     { "id": "wp_wood_345",            "building": "woodland",   "floor": "3",      "label": "Room 345",                                "type": "classroom", "latitude": 40.116499, "longitude": -75.111186, "x": 0, "y": 0, "qr_code": "QR_WOOD_F3_345"            },
     { "id": "wp_wood_346",            "building": "woodland",   "floor": "3",      "label": "Room 346",                                "type": "classroom", "latitude": 40.116519, "longitude": -75.111144, "x": 0, "y": 0, "qr_code": "QR_WOOD_F3_346"            },
+    { "id": "wp_wood_elevator_f1",    "building": "woodland",   "floor": "1",      "label": "Woodland Elevator (Floor 1)",             "type": "elevator",  "latitude": 40.1170594444, "longitude": -75.1107976944, "x": 0, "y": 0, "qr_code": "QR_WOOD_F1_ELEVATOR" },
+    { "id": "wp_wood_elevator_f2",    "building": "woodland",   "floor": "2",      "label": "Woodland Elevator (Floor 2)",             "type": "elevator",  "latitude": 40.1170630556, "longitude": -75.1107448889, "x": 0, "y": 0, "qr_code": "QR_WOOD_F2_ELEVATOR" },
+    { "id": "wp_wood_elevator_f3",    "building": "woodland",   "floor": "3",      "label": "Woodland Elevator (Floor 3)",             "type": "elevator",  "latitude": 40.1170361389, "longitude": -75.1107876389, "x": 0, "y": 0, "qr_code": "QR_WOOD_F3_ELEVATOR" },
 
     { "id": "wp_lares_main_entrance", "building": "lares",      "floor": "ground", "label": "Lares Main Entrance",                     "type": "entrance",  "latitude": 40.116770, "longitude": -75.109210, "x": 0, "y": 0, "qr_code": "QR_LARES_GND_MAIN_ENTRANCE"},
     { "id": "wp_lares_g04",           "building": "lares",      "floor": "ground", "label": "Room G04 - Student Computer Lab",         "type": "lab",       "latitude": 40.116939, "longitude": -75.109334, "x": 0, "y": 0, "qr_code": "QR_LARES_GND_G04"          },
@@ -226,6 +229,16 @@
     { "from": "wp_wood_342",           "to": "wp_wood_343",          "distance": 7.0,  "accessible": true  },
     { "from": "wp_wood_343",           "to": "wp_wood_345",          "distance": 10.0, "accessible": true  },
     { "from": "wp_wood_345",           "to": "wp_wood_346",          "distance": 5.0,  "accessible": true  },
+    { "from": "wp_wood_elevator_f1",   "to": "wp_wood_elevator_f2",  "distance": 5.0, "accessible": true   },
+    { "from": "wp_wood_elevator_f2",   "to": "wp_wood_elevator_f1",  "distance": 5.0, "accessible": true   },
+    { "from": "wp_wood_elevator_f2",   "to": "wp_wood_elevator_f3",  "distance": 5.0,  "accessible": true  },
+    { "from": "wp_wood_elevator_f3",   "to": "wp_wood_elevator_f2",  "distance": 5.0,  "accessible": true  },
+    { "from": "wp_wood_main_entrance", "to": "wp_wood_elevator_f1",  "distance": 12.0, "accessible": true  },
+    { "from": "wp_wood_elevator_f1",   "to": "wp_wood_main_entrance","distance": 12.0, "accessible": true  },
+    { "from": "wp_wood_elevator_f2",   "to": "wp_wood_220",          "distance": 8.0, "accessible": true   },
+    { "from": "wp_wood_220",           "to": "wp_wood_elevator_f2",  "distance": 8.0, "accessible": true   },
+    { "from": "wp_wood_elevator_f3",   "to": "wp_wood_313",          "distance": 8.0, "accessible": true   },
+    { "from": "wp_wood_313",           "to": "wp_wood_elevator_f3", "distance": 8.0,   "accessible": true  },
 
     { "from": "wp_lares_main_entrance","to": "wp_lares_g04",         "distance": 32.0, "accessible": true  },
     { "from": "wp_lares_main_entrance","to": "wp_lares_108",         "distance": 5.0,  "accessible": false },
@@ -323,7 +336,13 @@
     { "building": "rydal",       "room_number": "101",    "floor": "1",      "waypoint_id": "wp_rydal_101",         "room_name": "Room 101",                    "type": "classroom" },
     { "building": "springhouse", "room_number": "100",    "floor": "1",      "waypoint_id": "wp_spring_100_inside", "room_name": "Room 100",                    "type": "classroom" },
     { "building": "springhouse", "room_number": "101",    "floor": "1",      "waypoint_id": "wp_spring_101",        "room_name": "Room 101",                    "type": "classroom" },
-    { "building": "athletic",    "room_number": "court",  "floor": "1",      "waypoint_id": "wp_ath_basketball_court","room_name": "Basketball Court",          "type": "recreation" }
+    { "building": "athletic",    "room_number": "court",  "floor": "1",      "waypoint_id": "wp_ath_basketball_court","room_name": "Basketball Court",          "type": "recreation" },
+    { "building": "sutherland", "room_number": "ELEV",    "floor": "1",      "waypoint_id": "wp_suth_elevator_f1",  "room_name": "Elevator",                    "type": "elevator"  },
+    { "building": "sutherland", "room_number": "ELEV",    "floor": "2",      "waypoint_id": "wp_suth_elevator_f2",  "room_name": "Elevator",                    "type": "elevator"  },
+    { "building": "sutherland", "room_number": "ELEV",    "floor": "3",      "waypoint_id": "wp_suth_elevator_f3",  "room_name": "Elevator",                    "type": "elevator"  },
+    { "building": "woodland",   "room_number": "ELEV",    "floor": "1",      "waypoint_id": "wp_wood_elevator_f1",  "room_name": "Elevator",                    "type": "elevator"  },
+    { "building": "woodland",   "room_number": "ELEV",    "floor": "2",      "waypoint_id": "wp_wood_elevator_f2",  "room_name": "Elevator",                    "type": "elevator"  },
+    { "building": "woodland",   "room_number": "ELEV",    "floor": "3",      "waypoint_id": "wp_wood_elevator_f3",  "room_name": "Elevator",                    "type": "elevator"  }
   ],
 
   "qrAnchors": [
@@ -398,6 +417,9 @@
     { "qr_id": "QR_WOOD_F3_343",             "waypoint_id": "wp_wood_343",            "building": "woodland",    "floor": "3"      },
     { "qr_id": "QR_WOOD_F3_345",             "waypoint_id": "wp_wood_345",            "building": "woodland",    "floor": "3"      },
     { "qr_id": "QR_WOOD_F3_346",             "waypoint_id": "wp_wood_346",            "building": "woodland",    "floor": "3"      },
+    { "qr_id": "QR_WOOD_F1_ELEVATOR",        "waypoint_id": "wp_wood_elevator_f1",    "building": "woodland",    "floor": "1"      },
+    { "qr_id": "QR_WOOD_F2_ELEVATOR",        "waypoint_id": "wp_wood_elevator_f2",    "building": "woodland",    "floor": "2"      },
+    { "qr_id": "QR_WOOD_F3_ELEVATOR",        "waypoint_id": "wp_wood_elevator_f3",    "building": "woodland",    "floor": "3"      },
     { "qr_id": "QR_LARES_GND_MAIN_ENTRANCE", "waypoint_id": "wp_lares_main_entrance", "building": "lares",       "floor": "ground" },
     { "qr_id": "QR_LARES_GND_G04",           "waypoint_id": "wp_lares_g04",           "building": "lares",       "floor": "ground" },
     { "qr_id": "QR_LARES_F1_108",            "waypoint_id": "wp_lares_108",           "building": "lares",       "floor": "1"      },
