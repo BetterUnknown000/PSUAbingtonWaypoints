@@ -7,6 +7,7 @@ export default function BottomMenu() {
 
   const isSearch = pathname === "/";
   const isBuildings = pathname.startsWith("/buildings");
+  const isMap = pathname.startsWith("/map");
 
   return (
     <div className="bottomMenu">
@@ -16,18 +17,27 @@ export default function BottomMenu() {
           onClick={() => nav("/")}
           aria-label="Search"
         >
-          <span className="psuBadge" style={{ width: 22, height: 22, borderRadius: 8, fontSize: 10 }}>
-            PSU
-          </span>
           Search
         </button>
+
+        <button
+          className={"navBtn " + (isMap ? "navBtnActive" : "")}
+          onClick={() => nav("/map")}
+          aria-label="Map View"
+        >
+          Map
+        </button>
+
+        <div className="menuCenterLogo" aria-hidden="true">
+          <img src="/psu-logo.svg" alt="" />
+        </div>
 
         <button
           className={"navBtn " + (isBuildings ? "navBtnActive" : "")}
           onClick={() => nav("/buildings")}
           aria-label="Buildings"
         >
-          🏛️ Buildings
+          Buildings
         </button>
       </div>
     </div>
