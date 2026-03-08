@@ -1,5 +1,6 @@
 import React, { useMemo, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import { TransformWrapper, TransformComponent } from "react-zoom-pan-pinch";
 import BottomMenu from "../components/BottomMenu.jsx";
 import campusData from "../data/campusData.json";
 
@@ -26,7 +27,6 @@ export default function BuildingMapView() {
 
   const floors = useMemo(() => sortFloors(building?.floors || []), [building]);
   const [selectedFloor, setSelectedFloor] = useState(floors[0] || "");
-  const [zoom, setZoom] = useState(1);
 
   if (!building) {
     return (
@@ -42,10 +42,6 @@ export default function BuildingMapView() {
     );
   }
 
-  const zoomIn = () => setZoom((z) => Math.min(z + 0.2, 3));
-  const zoomOut = () => setZoom((z) => Math.max(z - 0.2, 0.6));
-  const resetZoom = () => setZoom(1);
-
   return (
     <div className="page">
       <div className="brandRow">
@@ -60,7 +56,9 @@ export default function BuildingMapView() {
       <div className="panel">
         <div className="floorViewerTopBar">
           <div className="floorSelectorWrap">
-            <label className="label" style={{ marginTop: 0 }}>Floor</label>
+            <label className="label" style={{ marginTop: 0 }}>
+              Floor
+            </label>
             <select
               className="input"
               value={selectedFloor}
@@ -82,52 +80,50 @@ export default function BuildingMapView() {
         </div>
 
         <div className="resultMeta" style={{ marginTop: "10px" }}>
-          Viewing floor: <b>{String(selectedFloor)}</b>
-        </div>
-
-        <div className="zoomToolbar">
-          <button className="smallBtn" onClick={zoomOut}>−</button>
-          <button className="smallBtn" onClick={resetZoom}>Reset</button>
-          <button className="smallBtn" onClick={zoomIn}>+</button>
+          Pinch to zoom and drag to move
         </div>
 
         <div className="svgViewport">
-          <div
-            className="svgCanvas"
-            style={{
-              transform: `scale(${zoom})`,
-              transformOrigin: "center center",
-            }}
+          <TransformWrapper
+            initialScale={1}
+            minScale={0.6}
+            maxScale={4}
+            centerOnInit
+            wheel={{ step: 0.15 }}
+            doubleClick={{ disabled: true }}
+            pinch={{ step: 5 }}
+            panning={{ velocityDisabled: false }}
           >
-            <div className="svgPlaceholder">
-              <div className="svgPlaceholderTitle">
-                {building.name} — Floor {String(selectedFloor)}
-              </div>
-              <div className="svgPlaceholderText">
-                SVG floor map placeholder
-              </div>
-              <div className="svgPlaceholderSub">
-                Real SVG file will be added later.
-              </div>
+            <TransformComponent
+              wrapperStyle={{
+                width: "100%",
+                height: "100%",
+              }}
+              contentStyle={{
+                width: "100%",
+                height: "100%",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
+              <div className="svgPlaceholder">
+                <div className="svgPlaceholderTitle">
+                  {building.name} — Floor {String(selectedFloor)}
+                </div>
+                <div className="svgPlaceholderText">SVG floor map placeholder</div>
+                <div className="svgPlaceholderSub">
+                  Real SVG file will be added later.
+                </div>
 
-              {/* fake rooms just for UI preview */}
-              <div className="roomBox roomA">Room A</div>
-              <div className="roomBox roomB">Room B</div>
-              <div className="roomBox roomC">Room C</div>
-              <div className="roomBox roomD">Room D</div>
-              <div className="hallwayBox">Hallway</div>
-            </div>
-          </div>
-        </div>
-
-        <div className="mapInfoBox" style={{ marginTop: "14px" }}>
-          <div className="panelTitleSmall">Later Integration</div>
-          <ul className="mapFeatureList">
-            <li>Replace placeholder with real SVG floor files</li>
-            <li>Highlight rooms and waypoints</li>
-            <li>Overlay navigation route on the floor plan</li>
-            <li>Update progress using scanned QR codes</li>
-          </ul>
+                <div className="roomBox roomA">Room A</div>
+                <div className="roomBox roomB">Room B</div>
+                <div className="roomBox roomC">Room C</div>
+                <div className="roomBox roomD">Room D</div>
+                <div className="hallwayBox">Hallway</div>
+              </div>
+            </TransformComponent>
+          </TransformWrapper>
         </div>
       </div>
 
