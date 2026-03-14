@@ -27,7 +27,7 @@ export default function MapView() {
         <div className="mapPlaceholder">
 
           <img
-            src="/images/psu-abington-map.jpg"
+            src="/images/psu-abington-map.jpeg"
             className="campusMapImage"
             alt="Penn State Abington Campus Map"
           />
