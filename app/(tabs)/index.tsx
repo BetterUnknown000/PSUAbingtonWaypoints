@@ -1,3 +1,4 @@
+<<<<<<< Updated upstream
 import { Image } from 'expo-image';
 import { Platform, StyleSheet } from 'react-native';
 
@@ -96,3 +97,8 @@ const styles = StyleSheet.create({
     position: 'absolute',
   },
 });
+=======
+// app/(tabs)/index.tsx
+import SearchPage from "@/pages/SearchPage";
+export default SearchPage;
+>>>>>>> Stashed changes
