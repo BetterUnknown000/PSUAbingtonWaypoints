@@ -1,0 +1,7 @@
+{
+  "courses": [
+    { "course": "CMPSC 472", "building": "sutherland", "room_number": "209" },
+    { "course": "CMPSC 445", "building": "woodland",   "room_number": "237" },
+    { "course": "STAT 401",  "building": "sutherland", "room_number": "121" }
+  ]
+}
