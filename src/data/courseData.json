@@ -1,0 +1,6484 @@
+{
+  "courses": [
+    {
+      "course": "A-I 100",
+      "building": "woodland",
+      "room_number": "313",
+      "day": "T Th",
+      "time": "12:05 PM-1:20 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "AA 193N",
+      "building": "rydal",
+      "room_number": "001",
+      "day": "M",
+      "time": "1:35 PM-4:20 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "AA 193N",
+      "building": "rydal",
+      "room_number": "001",
+      "day": "M",
+      "time": "9:05 AM-11:50 AM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "AAS 100N",
+      "building": "sutherland",
+      "room_number": "208",
+      "day": "M W",
+      "time": "11:15 AM-12:05 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "AAS 100N",
+      "building": "sutherland",
+      "room_number": "008",
+      "day": "M W",
+      "time": "1:25 PM-2:15 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "ACCTG 201",
+      "building": "sutherland",
+      "room_number": "309",
+      "day": "M W",
+      "time": "1:00 PM-2:15 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "ACCTG 201",
+      "building": "sutherland",
+      "room_number": "309",
+      "day": "M W",
+      "time": "4:00 PM-5:15 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "ACCTG 201",
+      "building": "sutherland",
+      "room_number": "209",
+      "day": "T Th",
+      "time": "3:05 PM-4:20 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "ACCTG 201",
+      "building": "sutherland",
+      "room_number": "209",
+      "day": "T Th",
+      "time": "4:35 PM-5:50 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "ACCTG 201",
+      "building": "",
+      "room_number": "",
+      "day": "",
+      "time": "",
+      "status": "WEB"
+    },
+    {
+      "course": "ACCTG 202",
+      "building": "sutherland",
+      "room_number": "204",
+      "day": "T Th",
+      "time": "3:05 PM-4:20 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "ACCTG 202",
+      "building": "sutherland",
+      "room_number": "204",
+      "day": "T Th",
+      "time": "4:35 PM-5:50 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "ACCTG 211",
+      "building": "sutherland",
+      "room_number": "222",
+      "day": "M W",
+      "time": "2:30 PM-3:45 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "ACCTG 310",
+      "building": "sutherland",
+      "room_number": "222",
+      "day": "T",
+      "time": "6:00 PM-9:00 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "ACCTG 340",
+      "building": "sutherland",
+      "room_number": "204",
+      "day": "Th",
+      "time": "6:00 PM-9:00 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "ACCTG 403",
+      "building": "",
+      "room_number": "",
+      "day": "T Th",
+      "time": "1:35 PM-2:50 PM",
+      "status": "ZOOM"
+    },
+    {
+      "course": "ACCTG 403W",
+      "building": "sutherland",
+      "room_number": "217",
+      "day": "M",
+      "time": "6:00 PM-9:00 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "ACCTG 410",
+      "building": "sutherland",
+      "room_number": "217",
+      "day": "W",
+      "time": "6:00 PM-9:00 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "ACCTG 426",
+      "building": "",
+      "room_number": "",
+      "day": "",
+      "time": "",
+      "status": "WEB"
+    },
+    {
+      "course": "ACCTG 431",
+      "building": "sutherland",
+      "room_number": "213",
+      "day": "M W",
+      "time": "4:00 PM-5:15 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "ACCTG 471",
+      "building": "sutherland",
+      "room_number": "222",
+      "day": "M W",
+      "time": "4:00 PM-5:15 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "ACCTG 472",
+      "building": "sutherland",
+      "room_number": "209",
+      "day": "T",
+      "time": "6:00 PM-9:00 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "ACCTG 473",
+      "building": "sutherland",
+      "room_number": "309",
+      "day": "M W",
+      "time": "2:30 PM-3:45 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "ACCTG 483",
+      "building": "",
+      "room_number": "",
+      "day": "",
+      "time": "",
+      "status": "WEB"
+    },
+    {
+      "course": "ACCTG 495",
+      "building": "",
+      "room_number": "",
+      "day": "",
+      "time": "",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "AMST 100",
+      "building": "woodland",
+      "room_number": "220",
+      "day": "M W",
+      "time": "2:30 PM-3:45 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "AMST 106N",
+      "building": "",
+      "room_number": "",
+      "day": "T Th",
+      "time": "10:35 AM-11:50 AM",
+      "status": "ZOOM"
+    },
+    {
+      "course": "AMST 106N",
+      "building": "",
+      "room_number": "",
+      "day": "T Th",
+      "time": "12:05 PM-1:20 PM",
+      "status": "ZOOM"
+    },
+    {
+      "course": "AMST 106N",
+      "building": "",
+      "room_number": "",
+      "day": "T Th",
+      "time": "9:05 AM-10:20 AM",
+      "status": "ZOOM"
+    },
+    {
+      "course": "AMST 140Y",
+      "building": "sutherland",
+      "room_number": "331",
+      "day": "T Th",
+      "time": "10:35 AM-11:50 AM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "AMST 140Y",
+      "building": "sutherland",
+      "room_number": "331",
+      "day": "T Th",
+      "time": "12:05 PM-1:20 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "AMST 160N",
+      "building": "sutherland",
+      "room_number": "208",
+      "day": "M W",
+      "time": "11:15 AM-12:05 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "AMST 160N",
+      "building": "sutherland",
+      "room_number": "008",
+      "day": "M W",
+      "time": "1:25 PM-2:15 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "AMST 494",
+      "building": "",
+      "room_number": "",
+      "day": "",
+      "time": "",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "ANSC 100",
+      "building": "",
+      "room_number": "",
+      "day": "",
+      "time": "",
+      "status": "WEB"
+    },
+    {
+      "course": "ANTH 21",
+      "building": "",
+      "room_number": "",
+      "day": "",
+      "time": "",
+      "status": "WEB"
+    },
+    {
+      "course": "ANTH 45N",
+      "building": "woodland",
+      "room_number": "313",
+      "day": "T",
+      "time": "10:35 AM-11:50 AM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "ANTH 45N",
+      "building": "woodland",
+      "room_number": "313",
+      "day": "T",
+      "time": "9:05 AM-10:20 AM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "APLNG 200",
+      "building": "sutherland",
+      "room_number": "227",
+      "day": "Th",
+      "time": "3:35 PM-5:30 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "APLNG 220N",
+      "building": "sutherland",
+      "room_number": "201",
+      "day": "T Th",
+      "time": "12:05 PM-1:20 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "ARMY 101",
+      "building": "",
+      "room_number": "",
+      "day": "",
+      "time": "",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "ARMY 102",
+      "building": "",
+      "room_number": "",
+      "day": "",
+      "time": "",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "ARMY 202",
+      "building": "",
+      "room_number": "",
+      "day": "",
+      "time": "",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "ARMY 301",
+      "building": "",
+      "room_number": "",
+      "day": "",
+      "time": "",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "ARMY 302",
+      "building": "",
+      "room_number": "",
+      "day": "",
+      "time": "",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "ARMY 401",
+      "building": "",
+      "room_number": "",
+      "day": "",
+      "time": "",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "ARMY 402",
+      "building": "",
+      "room_number": "",
+      "day": "",
+      "time": "",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "ART 1",
+      "building": "",
+      "room_number": "",
+      "day": "",
+      "time": "",
+      "status": "WEB"
+    },
+    {
+      "course": "ART 102",
+      "building": "woodland",
+      "room_number": "341",
+      "day": "T Th",
+      "time": "9:05 AM-11:50 AM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "ART 110",
+      "building": "woodland",
+      "room_number": "136B",
+      "day": "T Th",
+      "time": "12:05 PM-2:50 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "ART 122Y",
+      "building": "woodland",
+      "room_number": "319",
+      "day": "M W",
+      "time": "12:20 PM-1:10 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "ART 20",
+      "building": "woodland",
+      "room_number": "133A",
+      "day": "T Th",
+      "time": "12:05 PM-2:50 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "ART 20",
+      "building": "woodland",
+      "room_number": "133A",
+      "day": "T Th",
+      "time": "3:05 PM-5:50 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "ART 223",
+      "building": "woodland",
+      "room_number": "133A",
+      "day": "T Th",
+      "time": "9:05 AM-11:50 AM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "ART 240",
+      "building": "rydal",
+      "room_number": "001",
+      "day": "T Th",
+      "time": "12:05 PM-2:50 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "ART 250",
+      "building": "woodland",
+      "room_number": "133A",
+      "day": "M W",
+      "time": "9:05 AM-11:50 AM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "ART 269",
+      "building": "woodland",
+      "room_number": "136B",
+      "day": "M W",
+      "time": "9:05 AM-11:50 AM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "ART 280",
+      "building": "woodland",
+      "room_number": "136B",
+      "day": "F",
+      "time": "9:30 AM-2:20 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "ART 296",
+      "building": "",
+      "room_number": "",
+      "day": "",
+      "time": "",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "ART 30",
+      "building": "woodland",
+      "room_number": "136B",
+      "day": "M W",
+      "time": "9:05 AM-11:50 AM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "ART 320",
+      "building": "woodland",
+      "room_number": "133A",
+      "day": "T Th",
+      "time": "9:05 AM-11:50 AM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "ART 340",
+      "building": "rydal",
+      "room_number": "001",
+      "day": "T Th",
+      "time": "12:05 PM-2:50 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "ART 381",
+      "building": "woodland",
+      "room_number": "136B",
+      "day": "F",
+      "time": "9:30 AM-2:20 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "ART 381",
+      "building": "",
+      "room_number": "",
+      "day": "",
+      "time": "",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "ART 40",
+      "building": "rydal",
+      "room_number": "001",
+      "day": "T Th",
+      "time": "12:05 PM-2:50 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "ART 40",
+      "building": "rydal",
+      "room_number": "001",
+      "day": "T Th",
+      "time": "9:05 AM-11:50 AM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "ART 421",
+      "building": "woodland",
+      "room_number": "133A",
+      "day": "T Th",
+      "time": "9:05 AM-11:50 AM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "ART 440",
+      "building": "rydal",
+      "room_number": "001",
+      "day": "T Th",
+      "time": "12:05 PM-2:50 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "ART 480",
+      "building": "woodland",
+      "room_number": "136B",
+      "day": "F",
+      "time": "9:30 AM-2:20 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "ART 480",
+      "building": "",
+      "room_number": "",
+      "day": "",
+      "time": "",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "ART 494",
+      "building": "",
+      "room_number": "",
+      "day": "",
+      "time": "",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "ART 496",
+      "building": "",
+      "room_number": "",
+      "day": "",
+      "time": "",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "ART 496H",
+      "building": "",
+      "room_number": "",
+      "day": "",
+      "time": "",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "ART 50",
+      "building": "woodland",
+      "room_number": "133A",
+      "day": "M W",
+      "time": "1:35 PM-4:20 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "ART 50",
+      "building": "woodland",
+      "room_number": "133A",
+      "day": "M W",
+      "time": "9:05 AM-11:50 AM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "ART 80",
+      "building": "woodland",
+      "room_number": "136B",
+      "day": "F",
+      "time": "9:30 AM-2:20 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "ART 80",
+      "building": "woodland",
+      "room_number": "136A",
+      "day": "M W",
+      "time": "1:35 PM-4:20 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "ART 80",
+      "building": "woodland",
+      "room_number": "136A",
+      "day": "M W",
+      "time": "9:05 AM-11:50 AM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "ARTH 112",
+      "building": "spring house",
+      "room_number": "101",
+      "day": "T Th",
+      "time": "12:05 PM-1:20 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "ARTH 112U",
+      "building": "spring house",
+      "room_number": "101",
+      "day": "T Th",
+      "time": "10:35 AM-11:50 AM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "ARTH 225N",
+      "building": "spring house",
+      "room_number": "101",
+      "day": "T Th",
+      "time": "3:05 PM-4:20 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "ARTH 226",
+      "building": "",
+      "room_number": "",
+      "day": "",
+      "time": "",
+      "status": "WEB"
+    },
+    {
+      "course": "ARTH 296",
+      "building": "",
+      "room_number": "",
+      "day": "",
+      "time": "",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "ASIA 428",
+      "building": "sutherland",
+      "room_number": "208",
+      "day": "M W",
+      "time": "2:30 PM-3:45 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "ASTRO 141N",
+      "building": "woodland",
+      "room_number": "313",
+      "day": "T Th",
+      "time": "1:35 PM-2:50 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "ASTRO 296",
+      "building": "",
+      "room_number": "",
+      "day": "",
+      "time": "",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "ASTRO 496",
+      "building": "",
+      "room_number": "",
+      "day": "",
+      "time": "",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "BA 243",
+      "building": "sutherland",
+      "room_number": "210",
+      "day": "M",
+      "time": "4:00 PM-5:15 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "BA 243",
+      "building": "sutherland",
+      "room_number": "210",
+      "day": "M",
+      "time": "6:00 PM-7:15 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "BA 243",
+      "building": "",
+      "room_number": "",
+      "day": "Th",
+      "time": "6:00 PM-10:00 PM",
+      "status": "ZOOM"
+    },
+    {
+      "course": "BA 321",
+      "building": "sutherland",
+      "room_number": "331",
+      "day": "M",
+      "time": "4:00 PM-5:15 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "BA 321",
+      "building": "sutherland",
+      "room_number": "210",
+      "day": "W",
+      "time": "6:00 PM-8:30 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "BA 322",
+      "building": "sutherland",
+      "room_number": "008",
+      "day": "T Th",
+      "time": "9:05 AM-10:20 AM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "BA 322",
+      "building": "sutherland",
+      "room_number": "222",
+      "day": "W",
+      "time": "6:00 PM-9:00 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "BA 364Y",
+      "building": "sutherland",
+      "room_number": "209",
+      "day": "T Th",
+      "time": "9:05 AM-10:20 AM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "BA 364Y",
+      "building": "",
+      "room_number": "",
+      "day": "",
+      "time": "",
+      "status": "WEB"
+    },
+    {
+      "course": "BA 420",
+      "building": "sutherland",
+      "room_number": "204",
+      "day": "M",
+      "time": "3:35 PM-5:30 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "BA 420",
+      "building": "woodland",
+      "room_number": "319",
+      "day": "Th",
+      "time": "8:00 AM-9:55 AM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "BA 421",
+      "building": "woodland",
+      "room_number": "220",
+      "day": "M",
+      "time": "6:00 PM-9:00 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "BA 421",
+      "building": "woodland",
+      "room_number": "220",
+      "day": "W",
+      "time": "6:00 PM-9:00 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "BA 422W",
+      "building": "woodland",
+      "room_number": "319",
+      "day": "M",
+      "time": "6:00 PM-9:00 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "BA 422W",
+      "building": "sutherland",
+      "room_number": "009",
+      "day": "M W",
+      "time": "2:30 PM-3:45 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "BA 462",
+      "building": "",
+      "room_number": "",
+      "day": "W",
+      "time": "6:00 PM-9:00 PM",
+      "status": "ZOOM"
+    },
+    {
+      "course": "BA 495A",
+      "building": "",
+      "room_number": "",
+      "day": "",
+      "time": "",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "BBH 119",
+      "building": "sutherland",
+      "room_number": "222",
+      "day": "M W F",
+      "time": "1:25 PM-2:15 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "BBH 119",
+      "building": "sutherland",
+      "room_number": "222",
+      "day": "M W F",
+      "time": "9:05 AM-9:55 AM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "BBH 143",
+      "building": "sutherland",
+      "room_number": "331",
+      "day": "Th",
+      "time": "6:00 PM-9:00 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "BBH 143",
+      "building": "",
+      "room_number": "",
+      "day": "",
+      "time": "",
+      "status": "WEB"
+    },
+    {
+      "course": "BBH 146",
+      "building": "sutherland",
+      "room_number": "222",
+      "day": "M W F",
+      "time": "10:10 AM-11:00 AM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "BBH 146",
+      "building": "sutherland",
+      "room_number": "222",
+      "day": "M W F",
+      "time": "12:20 PM-1:10 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "BIOET 100",
+      "building": "sutherland",
+      "room_number": "206",
+      "day": "M W F",
+      "time": "3:35 PM-4:25 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "BIOET 110N",
+      "building": "sutherland",
+      "room_number": "206",
+      "day": "M W F",
+      "time": "2:30 PM-3:20 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "BIOL 11",
+      "building": "",
+      "room_number": "",
+      "day": "",
+      "time": "",
+      "status": "WEB"
+    },
+    {
+      "course": "BIOL 110",
+      "building": "woodland",
+      "room_number": "112",
+      "day": "T Th",
+      "time": "9:05 AM-10:20 AM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "BIOL 144",
+      "building": "spring house",
+      "room_number": "101",
+      "day": "T Th",
+      "time": "1:35 PM-2:50 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "BIOL 161",
+      "building": "",
+      "room_number": "",
+      "day": "",
+      "time": "",
+      "status": "WEB"
+    },
+    {
+      "course": "BIOL 162",
+      "building": "woodland",
+      "room_number": "240",
+      "day": "W",
+      "time": "2:30 PM-5:30 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "BIOL 163",
+      "building": "",
+      "room_number": "",
+      "day": "",
+      "time": "",
+      "status": "WEB"
+    },
+    {
+      "course": "BIOL 164",
+      "building": "woodland",
+      "room_number": "240",
+      "day": "M",
+      "time": "2:30 PM-5:20 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "BIOL 199",
+      "building": "sutherland",
+      "room_number": "306",
+      "day": "T",
+      "time": "12:05 PM-1:20 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "BIOL 199",
+      "building": "",
+      "room_number": "",
+      "day": "",
+      "time": "",
+      "status": "WEB"
+    },
+    {
+      "course": "BIOL 230W",
+      "building": "woodland",
+      "room_number": "313",
+      "day": "M W F",
+      "time": "11:15 AM-12:05 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "BIOL 240W",
+      "building": "woodland",
+      "room_number": "112",
+      "day": "M W F",
+      "time": "1:25 PM-2:15 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "BIOL 294",
+      "building": "",
+      "room_number": "",
+      "day": "",
+      "time": "",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "BIOL 406",
+      "building": "",
+      "room_number": "",
+      "day": "",
+      "time": "",
+      "status": "WEB"
+    },
+    {
+      "course": "BIOL 413",
+      "building": "woodland",
+      "room_number": "345",
+      "day": "M W F",
+      "time": "11:15 AM-12:05 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "BIOL 416",
+      "building": "woodland",
+      "room_number": "319",
+      "day": "M W F",
+      "time": "1:25 PM-2:15 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "BIOL 422",
+      "building": "woodland",
+      "room_number": "319",
+      "day": "M W F",
+      "time": "10:10 AM-11:00 AM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "BIOL 429",
+      "building": "woodland",
+      "room_number": "220",
+      "day": "T Th",
+      "time": "12:05 PM-1:20 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "BIOL 443",
+      "building": "woodland",
+      "room_number": "319",
+      "day": "M W F",
+      "time": "9:05 AM-9:55 AM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "BIOL 482",
+      "building": "",
+      "room_number": "",
+      "day": "",
+      "time": "",
+      "status": "WEB"
+    },
+    {
+      "course": "BIOL 494",
+      "building": "",
+      "room_number": "",
+      "day": "",
+      "time": "",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "BISC 3",
+      "building": "woodland",
+      "room_number": "220",
+      "day": "T",
+      "time": "3:05 PM-4:20 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "BISC 3",
+      "building": "",
+      "room_number": "",
+      "day": "",
+      "time": "",
+      "status": "WEB"
+    },
+    {
+      "course": "BISC 4",
+      "building": "woodland",
+      "room_number": "220",
+      "day": "Th",
+      "time": "3:05 PM-4:20 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "BISC 4",
+      "building": "",
+      "room_number": "",
+      "day": "",
+      "time": "",
+      "status": "WEB"
+    },
+    {
+      "course": "BMB 402",
+      "building": "woodland",
+      "room_number": "319",
+      "day": "M W F",
+      "time": "8:00 AM-8:50 AM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "BMB 494",
+      "building": "",
+      "room_number": "",
+      "day": "",
+      "time": "",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "BMH 490",
+      "building": "spring house",
+      "room_number": "100",
+      "day": "Th",
+      "time": "3:05 PM-4:20 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "CAMS 5",
+      "building": "sutherland",
+      "room_number": "206",
+      "day": "M W",
+      "time": "9:05 AM-9:55 AM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "CAS 100A",
+      "building": "sutherland",
+      "room_number": "311",
+      "day": "M F",
+      "time": "8:00 AM-8:50 AM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "CAS 100A",
+      "building": "sutherland",
+      "room_number": "311",
+      "day": "M W F",
+      "time": "10:10 AM-11:00 AM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "CAS 100A",
+      "building": "sutherland",
+      "room_number": "320",
+      "day": "M W F",
+      "time": "10:10 AM-11:00 AM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "CAS 100A",
+      "building": "sutherland",
+      "room_number": "217",
+      "day": "M W F",
+      "time": "11:15 AM-12:05 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "CAS 100A",
+      "building": "sutherland",
+      "room_number": "311",
+      "day": "M W F",
+      "time": "1:25 PM-2:15 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "CAS 100A",
+      "building": "sutherland",
+      "room_number": "308",
+      "day": "M W F",
+      "time": "2:30 PM-3:20 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "CAS 100A",
+      "building": "sutherland",
+      "room_number": "308",
+      "day": "M W F",
+      "time": "3:35 PM-4:25 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "CAS 100A",
+      "building": "sutherland",
+      "room_number": "204",
+      "day": "M W F",
+      "time": "8:00 AM-8:50 AM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "CAS 100A",
+      "building": "spring house",
+      "room_number": "100",
+      "day": "M W F",
+      "time": "9:05 AM-9:55 AM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "CAS 100A",
+      "building": "sutherland",
+      "room_number": "204",
+      "day": "M W F",
+      "time": "9:05 AM-9:55 AM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "CAS 100A",
+      "building": "sutherland",
+      "room_number": "311",
+      "day": "M W F",
+      "time": "9:05 AM-9:55 AM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "CAS 100A",
+      "building": "sutherland",
+      "room_number": "308",
+      "day": "T",
+      "time": "6:00 PM-9:00 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "CAS 100A",
+      "building": "sutherland",
+      "room_number": "305",
+      "day": "T Th",
+      "time": "3:05 PM-4:20 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "CAS 100A",
+      "building": "sutherland",
+      "room_number": "308",
+      "day": "T Th",
+      "time": "3:05 PM-4:20 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "CAS 100B",
+      "building": "sutherland",
+      "room_number": "331",
+      "day": "M W F",
+      "time": "1:25 PM-2:15 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "CAS 162N",
+      "building": "sutherland",
+      "room_number": "215",
+      "day": "T",
+      "time": "12:05 PM-1:20 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "CAS 182N",
+      "building": "sutherland",
+      "room_number": "311",
+      "day": "M W F",
+      "time": "11:15 AM-12:05 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "CAS 200",
+      "building": "sutherland",
+      "room_number": "227",
+      "day": "Th",
+      "time": "3:35 PM-5:30 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "CAS 204",
+      "building": "sutherland",
+      "room_number": "306",
+      "day": "T",
+      "time": "10:35 AM-11:50 AM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "CAS 280W",
+      "building": "sutherland",
+      "room_number": "213",
+      "day": "T Th",
+      "time": "12:05 PM-1:20 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "CAS 296",
+      "building": "",
+      "room_number": "",
+      "day": "",
+      "time": "",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "CAS 352",
+      "building": "sutherland",
+      "room_number": "306",
+      "day": "T",
+      "time": "9:05 AM-10:20 AM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "CAS 352",
+      "building": "",
+      "room_number": "",
+      "day": "",
+      "time": "",
+      "status": "WEB"
+    },
+    {
+      "course": "CAS 471",
+      "building": "sutherland",
+      "room_number": "320",
+      "day": "Th",
+      "time": "3:35 PM-5:30 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "CC 200",
+      "building": "sutherland",
+      "room_number": "206",
+      "day": "T",
+      "time": "10:35 AM-11:50 AM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "CC 200",
+      "building": "sutherland",
+      "room_number": "208",
+      "day": "Th",
+      "time": "1:35 PM-2:50 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "CC 401",
+      "building": "sutherland",
+      "room_number": "216",
+      "day": "Th",
+      "time": "12:05 PM-1:20 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "CC 402",
+      "building": "woodland",
+      "room_number": "220",
+      "day": "Th",
+      "time": "1:35 PM-2:50 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "CC 404",
+      "building": "sutherland",
+      "room_number": "226",
+      "day": "Th",
+      "time": "4:35 PM-5:50 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "CC 406",
+      "building": "sutherland",
+      "room_number": "227",
+      "day": "T",
+      "time": "3:05 PM-4:20 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "CC 490W",
+      "building": "sutherland",
+      "room_number": "311",
+      "day": "Th",
+      "time": "3:05 PM-4:20 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "CC 495A",
+      "building": "",
+      "room_number": "",
+      "day": "",
+      "time": "",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "CHEM 1",
+      "building": "",
+      "room_number": "",
+      "day": "",
+      "time": "",
+      "status": "WEB"
+    },
+    {
+      "course": "CHEM 101",
+      "building": "woodland",
+      "room_number": "220",
+      "day": "T Th",
+      "time": "5:00 PM-6:20 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "CHEM 110",
+      "building": "woodland",
+      "room_number": "112",
+      "day": "M W F",
+      "time": "10:10 AM-11:00 AM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "CHEM 110",
+      "building": "woodland",
+      "room_number": "112",
+      "day": "M W F",
+      "time": "11:15 AM-12:05 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "CHEM 110",
+      "building": "woodland",
+      "room_number": "313",
+      "day": "M W F",
+      "time": "9:05 AM-9:55 AM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "CHEM 111",
+      "building": "woodland",
+      "room_number": "222",
+      "day": "T",
+      "time": "1:35 PM-4:35 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "CHEM 111",
+      "building": "woodland",
+      "room_number": "222",
+      "day": "Th",
+      "time": "12:30 PM-3:30 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "CHEM 111",
+      "building": "woodland",
+      "room_number": "222",
+      "day": "Th",
+      "time": "4:00 PM-7:00 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "CHEM 111",
+      "building": "woodland",
+      "room_number": "222",
+      "day": "W",
+      "time": "12:15 PM-3:15 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "CHEM 111",
+      "building": "woodland",
+      "room_number": "222",
+      "day": "W",
+      "time": "4:00 PM-7:00 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "CHEM 112",
+      "building": "woodland",
+      "room_number": "313",
+      "day": "M W F",
+      "time": "10:10 AM-11:00 AM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "CHEM 113",
+      "building": "woodland",
+      "room_number": "224",
+      "day": "F",
+      "time": "2:30 PM-5:30 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "CHEM 113",
+      "building": "woodland",
+      "room_number": "224",
+      "day": "T",
+      "time": "1:00 PM-4:00 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "CHEM 113",
+      "building": "woodland",
+      "room_number": "224",
+      "day": "W",
+      "time": "2:30 PM-5:30 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "CHEM 130",
+      "building": "",
+      "room_number": "",
+      "day": "",
+      "time": "",
+      "status": "WEB"
+    },
+    {
+      "course": "CHEM 210",
+      "building": "woodland",
+      "room_number": "220",
+      "day": "T Th",
+      "time": "9:05 AM-10:20 AM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "CHEM 212",
+      "building": "woodland",
+      "room_number": "313",
+      "day": "T Th",
+      "time": "7:45 AM-9:00 AM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "CHEM 213",
+      "building": "woodland",
+      "room_number": "321",
+      "day": "T Th",
+      "time": "1:30 PM-4:30 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "CHEM 213",
+      "building": "woodland",
+      "room_number": "321",
+      "day": "T Th",
+      "time": "9:30 AM-12:30 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "CHEM 294",
+      "building": "",
+      "room_number": "",
+      "day": "",
+      "time": "",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "CHEM 395",
+      "building": "",
+      "room_number": "",
+      "day": "",
+      "time": "",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "CHEM 494",
+      "building": "",
+      "room_number": "",
+      "day": "",
+      "time": "",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "CHEM 5",
+      "building": "sutherland",
+      "room_number": "213",
+      "day": "M W F",
+      "time": "10:10 AM-11:00 AM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "CHNS 2",
+      "building": "",
+      "room_number": "",
+      "day": "T Th",
+      "time": "1:35 PM-3:30 PM",
+      "status": "ZOOM"
+    },
+    {
+      "course": "CI 295A",
+      "building": "",
+      "room_number": "",
+      "day": "Th",
+      "time": "6:00 PM-8:30 PM",
+      "status": "ZOOM"
+    },
+    {
+      "course": "CI 405",
+      "building": "sutherland",
+      "room_number": "210",
+      "day": "T Th",
+      "time": "10:35 AM-11:50 AM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "CI 460",
+      "building": "spring house",
+      "room_number": "101",
+      "day": "M W",
+      "time": "2:30 PM-3:45 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "CI 495D",
+      "building": "off campus",
+      "room_number": "",
+      "day": "M T W Th F",
+      "time": "7:00 AM-3:00 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "CI 495F",
+      "building": "woodland",
+      "room_number": "313",
+      "day": "Th",
+      "time": "3:00 PM-6:00 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "CMPEN 270",
+      "building": "",
+      "room_number": "",
+      "day": "",
+      "time": "",
+      "status": "WEB"
+    },
+    {
+      "course": "CMPEN 271",
+      "building": "",
+      "room_number": "",
+      "day": "",
+      "time": "",
+      "status": "WEB"
+    },
+    {
+      "course": "CMPEN 296",
+      "building": "",
+      "room_number": "",
+      "day": "",
+      "time": "",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "CMPSC 131",
+      "building": "woodland",
+      "room_number": "132A",
+      "day": "T Th",
+      "time": "12:05 PM-1:20 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "CMPSC 131",
+      "building": "woodland",
+      "room_number": "132B",
+      "day": "T Th",
+      "time": "9:05 AM-10:20 AM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "CMPSC 132",
+      "building": "woodland",
+      "room_number": "132A",
+      "day": "M W",
+      "time": "2:30 PM-3:20 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "CMPSC 132",
+      "building": "woodland",
+      "room_number": "132B",
+      "day": "M W F",
+      "time": "11:15 AM-12:05 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "CMPSC 132",
+      "building": "woodland",
+      "room_number": "132B",
+      "day": "T Th",
+      "time": "1:35 PM-2:50 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "CMPSC 201",
+      "building": "woodland",
+      "room_number": "132A",
+      "day": "M W F",
+      "time": "1:25 PM-2:15 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "CMPSC 221",
+      "building": "woodland",
+      "room_number": "132B",
+      "day": "T Th",
+      "time": "12:05 PM-1:20 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "CMPSC 296",
+      "building": "",
+      "room_number": "",
+      "day": "",
+      "time": "",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "CMPSC 312",
+      "building": "",
+      "room_number": "",
+      "day": "",
+      "time": "",
+      "status": "WEB"
+    },
+    {
+      "course": "CMPSC 330",
+      "building": "woodland",
+      "room_number": "343",
+      "day": "M W F",
+      "time": "9:05 AM-9:55 AM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "CMPSC 330",
+      "building": "woodland",
+      "room_number": "345",
+      "day": "T Th",
+      "time": "1:35 PM-2:50 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "CMPSC 360",
+      "building": "sutherland",
+      "room_number": "209",
+      "day": "M W",
+      "time": "11:15 AM-12:45 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "CMPSC 360",
+      "building": "sutherland",
+      "room_number": "209",
+      "day": "M W",
+      "time": "9:30 AM-10:45 AM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "CMPSC 430",
+      "building": "",
+      "room_number": "",
+      "day": "T Th",
+      "time": "3:05 PM-4:20 PM",
+      "status": "ZOOM"
+    },
+    {
+      "course": "CMPSC 438",
+      "building": "woodland",
+      "room_number": "345",
+      "day": "T Th",
+      "time": "12:05 PM-1:20 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "CMPSC 441",
+      "building": "woodland",
+      "room_number": "346",
+      "day": "T Th",
+      "time": "1:35 PM-2:50 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "CMPSC 445",
+      "building": "woodland",
+      "room_number": "342",
+      "day": "M W F",
+      "time": "1:25 PM-2:15 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "CMPSC 446",
+      "building": "woodland",
+      "room_number": "345",
+      "day": "T Th",
+      "time": "10:35 AM-11:50 AM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "CMPSC 460",
+      "building": "woodland",
+      "room_number": "342",
+      "day": "T Th",
+      "time": "10:35 AM-11:50 AM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "CMPSC 462",
+      "building": "woodland",
+      "room_number": "342",
+      "day": "T Th",
+      "time": "12:05 PM-1:20 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "CMPSC 463",
+      "building": "woodland",
+      "room_number": "342",
+      "day": "M W F",
+      "time": "10:10 AM-11:00 AM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "CMPSC 469",
+      "building": "woodland",
+      "room_number": "342",
+      "day": "M W F",
+      "time": "2:30 PM-3:20 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "CMPSC 470",
+      "building": "",
+      "room_number": "",
+      "day": "M W F",
+      "time": "3:35 PM-4:25 PM",
+      "status": "ZOOM"
+    },
+    {
+      "course": "CMPSC 472",
+      "building": "woodland",
+      "room_number": "342",
+      "day": "M W",
+      "time": "11:15 AM-12:05 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "CMPSC 487W",
+      "building": "",
+      "room_number": "",
+      "day": "T Th",
+      "time": "1:35 PM-2:50 PM",
+      "status": "ZOOM"
+    },
+    {
+      "course": "CMPSC 488",
+      "building": "woodland",
+      "room_number": "346",
+      "day": "F",
+      "time": "1:00 PM-4:00 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "CMPSC 488",
+      "building": "woodland",
+      "room_number": "346",
+      "day": "T Th",
+      "time": "9:05 AM-10:20 AM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "CMPSC 494",
+      "building": "",
+      "room_number": "",
+      "day": "",
+      "time": "",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "CMPSC 495",
+      "building": "",
+      "room_number": "",
+      "day": "",
+      "time": "",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "CMPSC 496",
+      "building": "",
+      "room_number": "",
+      "day": "",
+      "time": "",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "CMPSC 497",
+      "building": "woodland",
+      "room_number": "346",
+      "day": "T Th",
+      "time": "4:35 PM-5:50 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "CNED 393",
+      "building": "sutherland",
+      "room_number": "227",
+      "day": "M",
+      "time": "12:20 PM-1:10 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "CNED 401",
+      "building": "",
+      "room_number": "",
+      "day": "",
+      "time": "",
+      "status": "WEB"
+    },
+    {
+      "course": "COMM 100N",
+      "building": "",
+      "room_number": "",
+      "day": "T Th",
+      "time": "10:35 AM-11:50 AM",
+      "status": "ZOOM"
+    },
+    {
+      "course": "COMM 100N",
+      "building": "",
+      "room_number": "",
+      "day": "T Th",
+      "time": "12:05 PM-1:20 PM",
+      "status": "ZOOM"
+    },
+    {
+      "course": "COMM 100N",
+      "building": "",
+      "room_number": "",
+      "day": "T Th",
+      "time": "9:05 AM-10:20 AM",
+      "status": "ZOOM"
+    },
+    {
+      "course": "COMM 110",
+      "building": "sutherland",
+      "room_number": "216",
+      "day": "T Th",
+      "time": "10:35 AM-11:50 AM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "COMM 150N",
+      "building": "",
+      "room_number": "",
+      "day": "T",
+      "time": "2:30 PM-5:30 PM",
+      "status": "ZOOM"
+    },
+    {
+      "course": "COMM 151N",
+      "building": "woodland",
+      "room_number": "313",
+      "day": "T Th",
+      "time": "1:35 PM-2:50 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "COMM 160",
+      "building": "",
+      "room_number": "",
+      "day": "",
+      "time": "",
+      "status": "WEB"
+    },
+    {
+      "course": "COMM 241",
+      "building": "",
+      "room_number": "",
+      "day": "",
+      "time": "",
+      "status": "WEB"
+    },
+    {
+      "course": "COMM 242",
+      "building": "sutherland",
+      "room_number": "210",
+      "day": "T Th",
+      "time": "3:05 PM-4:20 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "CRIMJ 100",
+      "building": "sutherland",
+      "room_number": "226",
+      "day": "T Th",
+      "time": "10:35 AM-11:50 AM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "CRIMJ 100",
+      "building": "sutherland",
+      "room_number": "208",
+      "day": "T Th",
+      "time": "3:05 PM-4:20 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "CRIMJ 100",
+      "building": "sutherland",
+      "room_number": "226",
+      "day": "T Th",
+      "time": "9:05 AM-10:20 AM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "CRIMJ 12",
+      "building": "sutherland",
+      "room_number": "226",
+      "day": "M W",
+      "time": "10:10 AM-11:00 AM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "CRIMJ 12",
+      "building": "sutherland",
+      "room_number": "226",
+      "day": "M W",
+      "time": "2:30 PM-3:20 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "CRIMJ 12",
+      "building": "sutherland",
+      "room_number": "226",
+      "day": "T",
+      "time": "4:35 PM-5:50 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "CRIMJ 12",
+      "building": "sutherland",
+      "room_number": "226",
+      "day": "T Th",
+      "time": "12:05 PM-1:20 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "CRIMJ 13",
+      "building": "",
+      "room_number": "",
+      "day": "",
+      "time": "",
+      "status": "WEB"
+    },
+    {
+      "course": "CRIMJ 205N",
+      "building": "sutherland",
+      "room_number": "311",
+      "day": "T Th",
+      "time": "12:05 PM-1:20 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "CRIMJ 210",
+      "building": "sutherland",
+      "room_number": "226",
+      "day": "M W",
+      "time": "1:00 PM-2:15 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "CRIMJ 220",
+      "building": "sutherland",
+      "room_number": "204",
+      "day": "M W",
+      "time": "10:10 AM-11:00 AM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "CRIMJ 230",
+      "building": "sutherland",
+      "room_number": "226",
+      "day": "M W",
+      "time": "11:15 AM-12:30 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "CRIMJ 234",
+      "building": "sutherland",
+      "room_number": "226",
+      "day": "T Th",
+      "time": "1:35 PM-2:50 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "CRIMJ 250W",
+      "building": "sutherland",
+      "room_number": "320",
+      "day": "T Th",
+      "time": "9:05 AM-10:20 AM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "CRIMJ 250W",
+      "building": "",
+      "room_number": "",
+      "day": "W",
+      "time": "2:30 PM-4:00 PM",
+      "status": "ZOOM"
+    },
+    {
+      "course": "CRIMJ 290",
+      "building": "sutherland",
+      "room_number": "226",
+      "day": "T Th",
+      "time": "3:05 PM-4:20 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "CRIMJ 294",
+      "building": "",
+      "room_number": "",
+      "day": "",
+      "time": "",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "CRIMJ 296",
+      "building": "",
+      "room_number": "",
+      "day": "",
+      "time": "",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "CRIMJ 413",
+      "building": "sutherland",
+      "room_number": "216",
+      "day": "M W",
+      "time": "2:30 PM-3:45 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "CRIMJ 420",
+      "building": "sutherland",
+      "room_number": "206",
+      "day": "M W",
+      "time": "11:15 AM-12:30 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "CRIMJ 423",
+      "building": "sutherland",
+      "room_number": "217",
+      "day": "T Th",
+      "time": "10:35 AM-11:50 AM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "CRIMJ 441",
+      "building": "sutherland",
+      "room_number": "206",
+      "day": "M W",
+      "time": "1:00 PM-2:15 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "CRIMJ 450W",
+      "building": "sutherland",
+      "room_number": "226",
+      "day": "M W",
+      "time": "4:00 PM-5:15 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "CRIMJ 451",
+      "building": "sutherland",
+      "room_number": "308",
+      "day": "T Th",
+      "time": "1:35 PM-2:50 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "CRIMJ 495",
+      "building": "",
+      "room_number": "",
+      "day": "",
+      "time": "",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "CSD 146",
+      "building": "",
+      "room_number": "",
+      "day": "",
+      "time": "",
+      "status": "WEB"
+    },
+    {
+      "course": "CYBER 100",
+      "building": "sutherland",
+      "room_number": "208",
+      "day": "T",
+      "time": "9:05 AM-10:20 AM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "CYBER 100",
+      "building": "",
+      "room_number": "",
+      "day": "",
+      "time": "",
+      "status": "WEB"
+    },
+    {
+      "course": "CYBER 221",
+      "building": "woodland",
+      "room_number": "343",
+      "day": "T Th",
+      "time": "7:45 AM-9:00 AM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "CYBER 221",
+      "building": "woodland",
+      "room_number": "343",
+      "day": "T Th",
+      "time": "9:05 AM-10:20 AM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "CYBER 262",
+      "building": "woodland",
+      "room_number": "343",
+      "day": "T",
+      "time": "6:00 PM-9:00 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "CYBER 262",
+      "building": "",
+      "room_number": "",
+      "day": "T Th",
+      "time": "9:05 AM-10:20 AM",
+      "status": "ZOOM"
+    },
+    {
+      "course": "CYBER 342W",
+      "building": "woodland",
+      "room_number": "345",
+      "day": "W",
+      "time": "6:00 PM-9:00 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "CYBER 366",
+      "building": "woodland",
+      "room_number": "343",
+      "day": "T Th",
+      "time": "4:35 PM-5:50 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "CYBER 440",
+      "building": "woodland",
+      "room_number": "345",
+      "day": "T",
+      "time": "9:05 AM-10:20 AM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "CYBER 451",
+      "building": "",
+      "room_number": "",
+      "day": "",
+      "time": "",
+      "status": "WEB"
+    },
+    {
+      "course": "CYBER 454",
+      "building": "",
+      "room_number": "",
+      "day": "",
+      "time": "",
+      "status": "WEB"
+    },
+    {
+      "course": "CYBER 456",
+      "building": "",
+      "room_number": "",
+      "day": "M",
+      "time": "6:00 PM-9:00 PM",
+      "status": "ZOOM"
+    },
+    {
+      "course": "CYBER 499",
+      "building": "woodland",
+      "room_number": "346",
+      "day": "T Th",
+      "time": "3:05 PM-4:20 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "DANCE 240",
+      "building": "athletic",
+      "room_number": "",
+      "day": "M W F",
+      "time": "10:10 AM-11:00 AM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "DANCE 261",
+      "building": "athletic",
+      "room_number": "",
+      "day": "M W F",
+      "time": "11:15 AM-12:05 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "DANCE 485",
+      "building": "athletic",
+      "room_number": "",
+      "day": "T",
+      "time": "3:05 PM-4:20 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "DANCE 485",
+      "building": "athletic",
+      "room_number": "",
+      "day": "T",
+      "time": "9:05 AM-10:20 AM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "DART 202",
+      "building": "woodland",
+      "room_number": "341",
+      "day": "M W",
+      "time": "1:35 PM-4:20 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "DART 304",
+      "building": "woodland",
+      "room_number": "341",
+      "day": "M W",
+      "time": "9:05 AM-11:50 AM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "DART 410",
+      "building": "woodland",
+      "room_number": "341",
+      "day": "M W",
+      "time": "9:05 AM-11:50 AM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "DS 200",
+      "building": "",
+      "room_number": "",
+      "day": "",
+      "time": "",
+      "status": "WEB"
+    },
+    {
+      "course": "DS 220",
+      "building": "woodland",
+      "room_number": "342",
+      "day": "T Th",
+      "time": "3:05 PM-4:20 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "EARTH 103N",
+      "building": "",
+      "room_number": "",
+      "day": "",
+      "time": "",
+      "status": "WEB"
+    },
+    {
+      "course": "EARTH 2",
+      "building": "",
+      "room_number": "",
+      "day": "",
+      "time": "",
+      "status": "WEB"
+    },
+    {
+      "course": "ECON 102",
+      "building": "rydal",
+      "room_number": "101",
+      "day": "M W",
+      "time": "4:00 PM-5:15 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "ECON 102",
+      "building": "sutherland",
+      "room_number": "331",
+      "day": "M W F",
+      "time": "10:10 AM-11:00 AM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "ECON 102",
+      "building": "sutherland",
+      "room_number": "331",
+      "day": "M W F",
+      "time": "9:05 AM-9:55 AM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "ECON 102",
+      "building": "sutherland",
+      "room_number": "209",
+      "day": "T Th",
+      "time": "10:35 AM-11:50 AM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "ECON 102",
+      "building": "sutherland",
+      "room_number": "204",
+      "day": "T Th",
+      "time": "12:05 PM-1:20 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "ECON 102",
+      "building": "sutherland",
+      "room_number": "204",
+      "day": "T Th",
+      "time": "1:35 PM-2:50 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "ECON 102",
+      "building": "sutherland",
+      "room_number": "204",
+      "day": "W",
+      "time": "6:00 PM-7:15 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "ECON 102H",
+      "building": "sutherland",
+      "room_number": "206",
+      "day": "T Th",
+      "time": "12:05 PM-1:20 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "ECON 104",
+      "building": "sutherland",
+      "room_number": "204",
+      "day": "T",
+      "time": "6:00 PM-9:00 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "ECON 104",
+      "building": "sutherland",
+      "room_number": "209",
+      "day": "T Th",
+      "time": "1:35 PM-2:50 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "ECON 104",
+      "building": "sutherland",
+      "room_number": "204",
+      "day": "W",
+      "time": "2:30 PM-5:30 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "ECON 104",
+      "building": "",
+      "room_number": "",
+      "day": "W",
+      "time": "6:00 PM-9:00 PM",
+      "status": "ZOOM"
+    },
+    {
+      "course": "ECON 104H",
+      "building": "sutherland",
+      "room_number": "201",
+      "day": "M W",
+      "time": "2:30 PM-3:45 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "ECON 315",
+      "building": "sutherland",
+      "room_number": "213",
+      "day": "T",
+      "time": "6:00 PM-8:30 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "ECON 351",
+      "building": "sutherland",
+      "room_number": "222",
+      "day": "T Th",
+      "time": "10:35 AM-11:50 AM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "ECON 410",
+      "building": "sutherland",
+      "room_number": "213",
+      "day": "T",
+      "time": "6:00 PM-8:30 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "EDPSY 10",
+      "building": "",
+      "room_number": "",
+      "day": "",
+      "time": "",
+      "status": "WEB"
+    },
+    {
+      "course": "EDPSY 14",
+      "building": "",
+      "room_number": "",
+      "day": "",
+      "time": "",
+      "status": "WEB"
+    },
+    {
+      "course": "EDPSY 422",
+      "building": "sutherland",
+      "room_number": "215",
+      "day": "M W",
+      "time": "4:00 PM-5:15 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "EDSGN 100",
+      "building": "woodland",
+      "room_number": "135",
+      "day": "M W F",
+      "time": "1:25 PM-3:20 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "EDSGN 100",
+      "building": "woodland",
+      "room_number": "135",
+      "day": "T Th",
+      "time": "9:05 AM-11:50 AM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "EDSGN 294",
+      "building": "",
+      "room_number": "",
+      "day": "",
+      "time": "",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "EDSGN 402",
+      "building": "off campus",
+      "room_number": "",
+      "day": "T Th",
+      "time": "9:30 AM-12:00 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "EDSGN 420",
+      "building": "off campus",
+      "room_number": "",
+      "day": "T Th",
+      "time": "11:00 AM-12:15 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "EDSGN 495",
+      "building": "",
+      "room_number": "",
+      "day": "",
+      "time": "",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "EDTHP 115",
+      "building": "sutherland",
+      "room_number": "308",
+      "day": "M W",
+      "time": "9:45 AM-11:00 AM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "EDUC 205N",
+      "building": "sutherland",
+      "room_number": "311",
+      "day": "T Th",
+      "time": "12:05 PM-1:20 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "EDUC 466N",
+      "building": "sutherland",
+      "room_number": "201",
+      "day": "T Th",
+      "time": "9:05 AM-10:20 AM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "EDUC 495",
+      "building": "",
+      "room_number": "",
+      "day": "",
+      "time": "",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "EDUC 496",
+      "building": "",
+      "room_number": "",
+      "day": "",
+      "time": "",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "EE 210",
+      "building": "woodland",
+      "room_number": "135",
+      "day": "M W F",
+      "time": "8:35 AM-10:35 AM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "EE 310",
+      "building": "off campus",
+      "room_number": "",
+      "day": "T Th",
+      "time": "3:00 PM-5:30 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "EE 316",
+      "building": "off campus",
+      "room_number": "",
+      "day": "T Th",
+      "time": "1:30 PM-2:45 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "EGEE 101",
+      "building": "",
+      "room_number": "",
+      "day": "",
+      "time": "",
+      "status": "WEB"
+    },
+    {
+      "course": "EGEE 102",
+      "building": "",
+      "room_number": "",
+      "day": "",
+      "time": "",
+      "status": "WEB"
+    },
+    {
+      "course": "EMCH 211",
+      "building": "sutherland",
+      "room_number": "305",
+      "day": "M W F",
+      "time": "10:10 AM-11:00 AM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "EMCH 212",
+      "building": "woodland",
+      "room_number": "313",
+      "day": "M W F",
+      "time": "1:25 PM-2:15 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "EMCH 212",
+      "building": "woodland",
+      "room_number": "112",
+      "day": "M W F",
+      "time": "2:30 PM-3:20 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "EMCH 213",
+      "building": "woodland",
+      "room_number": "319",
+      "day": "M W F",
+      "time": "11:15 AM-12:05 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "EMCH 297",
+      "building": "",
+      "room_number": "",
+      "day": "",
+      "time": "",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "EME 200",
+      "building": "",
+      "room_number": "",
+      "day": "",
+      "time": "",
+      "status": "WEB"
+    },
+    {
+      "course": "EMSC 470W",
+      "building": "",
+      "room_number": "",
+      "day": "T Th",
+      "time": "12:05 PM-1:20 PM",
+      "status": "ZOOM"
+    },
+    {
+      "course": "ENGL 140H",
+      "building": "sutherland",
+      "room_number": "201",
+      "day": "T Th",
+      "time": "10:35 AM-11:50 AM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "ENGL 144",
+      "building": "sutherland",
+      "room_number": "222",
+      "day": "M W F",
+      "time": "11:15 AM-12:05 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "ENGL 15",
+      "building": "sutherland",
+      "room_number": "201",
+      "day": "M",
+      "time": "6:00 PM-9:00 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "ENGL 15",
+      "building": "sutherland",
+      "room_number": "211",
+      "day": "M W",
+      "time": "3:35 PM-4:25 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "ENGL 15",
+      "building": "spring house",
+      "room_number": "100",
+      "day": "M W F",
+      "time": "10:10 AM-11:00 AM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "ENGL 15",
+      "building": "spring house",
+      "room_number": "100",
+      "day": "M W F",
+      "time": "11:15 AM-12:05 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "ENGL 15",
+      "building": "spring house",
+      "room_number": "100",
+      "day": "M W F",
+      "time": "1:25 PM-2:15 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "ENGL 15",
+      "building": "sutherland",
+      "room_number": "308",
+      "day": "M W F",
+      "time": "1:25 PM-2:15 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "ENGL 15",
+      "building": "sutherland",
+      "room_number": "211",
+      "day": "M W F",
+      "time": "2:30 PM-3:20 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "ENGL 15",
+      "building": "sutherland",
+      "room_number": "213",
+      "day": "M W F",
+      "time": "8:00 AM-8:50 AM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "ENGL 15",
+      "building": "sutherland",
+      "room_number": "213",
+      "day": "M W F",
+      "time": "9:05 AM-9:55 AM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "ENGL 15",
+      "building": "",
+      "room_number": "",
+      "day": "M W F",
+      "time": "9:05 AM-9:55 AM",
+      "status": "ZOOM"
+    },
+    {
+      "course": "ENGL 15",
+      "building": "sutherland",
+      "room_number": "308",
+      "day": "T Th",
+      "time": "12:05 PM-1:20 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "ENGL 15",
+      "building": "",
+      "room_number": "",
+      "day": "T Th",
+      "time": "12:30 PM-1:45 PM",
+      "status": "ZOOM"
+    },
+    {
+      "course": "ENGL 15",
+      "building": "sutherland",
+      "room_number": "201",
+      "day": "T Th",
+      "time": "1:35 PM-2:50 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "ENGL 15",
+      "building": "sutherland",
+      "room_number": "206",
+      "day": "T Th",
+      "time": "3:05 PM-4:20 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "ENGL 15",
+      "building": "sutherland",
+      "room_number": "206",
+      "day": "T Th",
+      "time": "4:35 PM-5:50 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "ENGL 15",
+      "building": "",
+      "room_number": "",
+      "day": "",
+      "time": "",
+      "status": "WEB"
+    },
+    {
+      "course": "ENGL 183N",
+      "building": "sutherland",
+      "room_number": "208",
+      "day": "M W",
+      "time": "9:05 AM-9:55 AM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "ENGL 2",
+      "building": "sutherland",
+      "room_number": "305",
+      "day": "T Th",
+      "time": "12:05 PM-1:20 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "ENGL 200",
+      "building": "",
+      "room_number": "",
+      "day": "T Th",
+      "time": "3:05 PM-4:20 PM",
+      "status": "ZOOM"
+    },
+    {
+      "course": "ENGL 202A",
+      "building": "sutherland",
+      "room_number": "216",
+      "day": "M W F",
+      "time": "11:15 AM-12:05 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "ENGL 202A",
+      "building": "sutherland",
+      "room_number": "227",
+      "day": "M W F",
+      "time": "1:25 PM-2:15 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "ENGL 202A",
+      "building": "sutherland",
+      "room_number": "227",
+      "day": "M W F",
+      "time": "2:30 PM-3:20 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "ENGL 202A",
+      "building": "sutherland",
+      "room_number": "201",
+      "day": "T",
+      "time": "6:00 PM-9:00 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "ENGL 202A",
+      "building": "",
+      "room_number": "",
+      "day": "",
+      "time": "",
+      "status": "WEB"
+    },
+    {
+      "course": "ENGL 202B",
+      "building": "sutherland",
+      "room_number": "208",
+      "day": "M W F",
+      "time": "10:10 AM-11:00 AM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "ENGL 202C",
+      "building": "sutherland",
+      "room_number": "227",
+      "day": "M W",
+      "time": "3:35 PM-4:25 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "ENGL 202C",
+      "building": "sutherland",
+      "room_number": "227",
+      "day": "M W F",
+      "time": "10:10 AM-11:00 AM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "ENGL 202C",
+      "building": "sutherland",
+      "room_number": "227",
+      "day": "M W F",
+      "time": "11:15 AM-12:05 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "ENGL 202C",
+      "building": "sutherland",
+      "room_number": "201",
+      "day": "M W F",
+      "time": "1:25 PM-2:15 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "ENGL 202C",
+      "building": "",
+      "room_number": "",
+      "day": "",
+      "time": "",
+      "status": "WEB"
+    },
+    {
+      "course": "ENGL 202D",
+      "building": "sutherland",
+      "room_number": "208",
+      "day": "M",
+      "time": "6:00 PM-9:00 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "ENGL 202D",
+      "building": "sutherland",
+      "room_number": "320",
+      "day": "M W",
+      "time": "2:30 PM-3:20 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "ENGL 202D",
+      "building": "sutherland",
+      "room_number": "320",
+      "day": "M W",
+      "time": "3:35 PM-4:25 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "ENGL 202D",
+      "building": "sutherland",
+      "room_number": "208",
+      "day": "T",
+      "time": "6:00 PM-9:00 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "ENGL 202D",
+      "building": "",
+      "room_number": "",
+      "day": "",
+      "time": "",
+      "status": "WEB"
+    },
+    {
+      "course": "ENGL 211",
+      "building": "sutherland",
+      "room_number": "227",
+      "day": "T Th",
+      "time": "1:35 PM-2:50 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "ENGL 211W",
+      "building": "sutherland",
+      "room_number": "227",
+      "day": "T Th",
+      "time": "1:35 PM-2:50 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "ENGL 215",
+      "building": "sutherland",
+      "room_number": "216",
+      "day": "T Th",
+      "time": "10:35 AM-11:50 AM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "ENGL 221W",
+      "building": "sutherland",
+      "room_number": "215",
+      "day": "Th",
+      "time": "12:05 PM-1:20 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "ENGL 222",
+      "building": "sutherland",
+      "room_number": "305",
+      "day": "T Th",
+      "time": "1:35 PM-2:50 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "ENGL 223N",
+      "building": "sutherland",
+      "room_number": "206",
+      "day": "T Th",
+      "time": "1:35 PM-2:50 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "ENGL 227",
+      "building": "spring house",
+      "room_number": "101",
+      "day": "T Th",
+      "time": "9:05 AM-10:20 AM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "ENGL 294",
+      "building": "",
+      "room_number": "",
+      "day": "",
+      "time": "",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "ENGL 30H",
+      "building": "sutherland",
+      "room_number": "311",
+      "day": "T Th",
+      "time": "9:05 AM-10:20 AM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "ENGL 401",
+      "building": "sutherland",
+      "room_number": "309",
+      "day": "T Th",
+      "time": "10:35 AM-11:50 AM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "ENGL 403",
+      "building": "sutherland",
+      "room_number": "216",
+      "day": "T",
+      "time": "12:05 PM-1:20 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "ENGL 415",
+      "building": "sutherland",
+      "room_number": "216",
+      "day": "T Th",
+      "time": "10:35 AM-11:50 AM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "ENGL 420",
+      "building": "",
+      "room_number": "",
+      "day": "M",
+      "time": "10:35 AM-11:50 AM",
+      "status": "ZOOM"
+    },
+    {
+      "course": "ENGL 420",
+      "building": "sutherland",
+      "room_number": "215",
+      "day": "T Th",
+      "time": "9:05 AM-10:20 AM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "ENGL 428",
+      "building": "sutherland",
+      "room_number": "208",
+      "day": "M W",
+      "time": "2:30 PM-3:45 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "ENGL 452",
+      "building": "sutherland",
+      "room_number": "305",
+      "day": "T Th",
+      "time": "1:35 PM-2:50 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "ENGL 455",
+      "building": "sutherland",
+      "room_number": "215",
+      "day": "Th",
+      "time": "12:05 PM-1:20 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "ENGL 471",
+      "building": "sutherland",
+      "room_number": "222",
+      "day": "M W F",
+      "time": "11:15 AM-12:05 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "ENGL 487W",
+      "building": "sutherland",
+      "room_number": "309",
+      "day": "T Th",
+      "time": "10:35 AM-11:50 AM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "ENGL 494",
+      "building": "",
+      "room_number": "",
+      "day": "",
+      "time": "",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "ENGL 494H",
+      "building": "",
+      "room_number": "",
+      "day": "",
+      "time": "",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "ENGL 496",
+      "building": "",
+      "room_number": "",
+      "day": "",
+      "time": "",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "ENGL 5",
+      "building": "",
+      "room_number": "",
+      "day": "",
+      "time": "",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "ENGL 50",
+      "building": "sutherland",
+      "room_number": "309",
+      "day": "T",
+      "time": "9:05 AM-10:20 AM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "ENGL 50",
+      "building": "",
+      "room_number": "",
+      "day": "",
+      "time": "",
+      "status": "WEB"
+    },
+    {
+      "course": "ENGR 310",
+      "building": "woodland",
+      "room_number": "343",
+      "day": "M W",
+      "time": "1:25 PM-2:15 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "ENGR 407",
+      "building": "off campus",
+      "room_number": "",
+      "day": "T Th",
+      "time": "9:30 AM-10:45 AM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "ENGR 491W",
+      "building": "off campus",
+      "room_number": "",
+      "day": "T Th",
+      "time": "3:00 PM-4:15 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "ENGR 496",
+      "building": "",
+      "room_number": "",
+      "day": "",
+      "time": "",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "ETI 302",
+      "building": "",
+      "room_number": "",
+      "day": "",
+      "time": "",
+      "status": "WEB"
+    },
+    {
+      "course": "ETI 461",
+      "building": "woodland",
+      "room_number": "346",
+      "day": "T Th",
+      "time": "10:35 AM-11:50 AM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "ETI 461",
+      "building": "",
+      "room_number": "",
+      "day": "",
+      "time": "",
+      "status": "WEB"
+    },
+    {
+      "course": "FDSC 200",
+      "building": "",
+      "room_number": "",
+      "day": "",
+      "time": "",
+      "status": "WEB"
+    },
+    {
+      "course": "FIN 301",
+      "building": "sutherland",
+      "room_number": "331",
+      "day": "M W",
+      "time": "11:15 AM-12:05 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "FIN 301",
+      "building": "sutherland",
+      "room_number": "209",
+      "day": "M W",
+      "time": "2:30 PM-3:45 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "FIN 301",
+      "building": "sutherland",
+      "room_number": "209",
+      "day": "M W",
+      "time": "4:00 PM-5:15 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "FIN 301",
+      "building": "sutherland",
+      "room_number": "213",
+      "day": "T Th",
+      "time": "3:05 PM-4:20 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "FIN 301",
+      "building": "sutherland",
+      "room_number": "213",
+      "day": "T Th",
+      "time": "4:35 PM-5:50 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "FIN 302",
+      "building": "woodland",
+      "room_number": "342",
+      "day": "T",
+      "time": "6:00 PM-8:30 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "FIN 306W",
+      "building": "sutherland",
+      "room_number": "204",
+      "day": "M W",
+      "time": "1:00 PM-2:15 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "FIN 407",
+      "building": "sutherland",
+      "room_number": "213",
+      "day": "T Th",
+      "time": "1:35 PM-2:50 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "FIN 420",
+      "building": "sutherland",
+      "room_number": "305",
+      "day": "W",
+      "time": "6:00 PM-8:30 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "FIN 427",
+      "building": "sutherland",
+      "room_number": "308",
+      "day": "Th",
+      "time": "6:00 PM-9:00 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "FIN 475",
+      "building": "sutherland",
+      "room_number": "331",
+      "day": "W",
+      "time": "2:30 PM-5:30 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "FIN 494H",
+      "building": "",
+      "room_number": "",
+      "day": "",
+      "time": "",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "FIN 495",
+      "building": "",
+      "room_number": "",
+      "day": "",
+      "time": "",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "FIN 496",
+      "building": "",
+      "room_number": "",
+      "day": "",
+      "time": "",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "FR 1",
+      "building": "sutherland",
+      "room_number": "213",
+      "day": "M W",
+      "time": "2:30 PM-3:45 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "FR 2",
+      "building": "sutherland",
+      "room_number": "213",
+      "day": "M W",
+      "time": "11:15 AM-12:30 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "FRNSC 100",
+      "building": "",
+      "room_number": "",
+      "day": "",
+      "time": "",
+      "status": "WEB"
+    },
+    {
+      "course": "FRNSC 210",
+      "building": "",
+      "room_number": "",
+      "day": "",
+      "time": "",
+      "status": "WEB"
+    },
+    {
+      "course": "GAME 251",
+      "building": "",
+      "room_number": "",
+      "day": "M W",
+      "time": "4:35 PM-5:50 PM",
+      "status": "ZOOM"
+    },
+    {
+      "course": "GEOG 1N",
+      "building": "",
+      "room_number": "",
+      "day": "",
+      "time": "",
+      "status": "WEB"
+    },
+    {
+      "course": "GEOG 260",
+      "building": "",
+      "room_number": "",
+      "day": "",
+      "time": "",
+      "status": "WEB"
+    },
+    {
+      "course": "GEOG 2N",
+      "building": "",
+      "room_number": "",
+      "day": "",
+      "time": "",
+      "status": "WEB"
+    },
+    {
+      "course": "GEOG 30N",
+      "building": "",
+      "room_number": "",
+      "day": "Th",
+      "time": "5:00 PM-8:00 PM",
+      "status": "ZOOM"
+    },
+    {
+      "course": "GEOSC 10",
+      "building": "",
+      "room_number": "",
+      "day": "",
+      "time": "",
+      "status": "WEB"
+    },
+    {
+      "course": "GEOSC 50",
+      "building": "",
+      "room_number": "",
+      "day": "",
+      "time": "",
+      "status": "WEB"
+    },
+    {
+      "course": "GER 2",
+      "building": "",
+      "room_number": "",
+      "day": "T Th",
+      "time": "8:00 AM-9:55 AM",
+      "status": "ZOOM"
+    },
+    {
+      "course": "GER 200N",
+      "building": "",
+      "room_number": "",
+      "day": "T Th",
+      "time": "10:35 AM-11:50 AM",
+      "status": "ZOOM"
+    },
+    {
+      "course": "GLIS 102N",
+      "building": "",
+      "room_number": "",
+      "day": "M",
+      "time": "9:05 AM-9:55 AM",
+      "status": "ZOOM"
+    },
+    {
+      "course": "GLIS 102N",
+      "building": "",
+      "room_number": "",
+      "day": "W",
+      "time": "9:05 AM-9:55 AM",
+      "status": "ZOOM"
+    },
+    {
+      "course": "HCDD 311",
+      "building": "woodland",
+      "room_number": "132A",
+      "day": "T Th",
+      "time": "1:35 PM-2:50 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "HCDD 331",
+      "building": "woodland",
+      "room_number": "132A",
+      "day": "M",
+      "time": "6:00 PM-9:00 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "HCDD 331",
+      "building": "",
+      "room_number": "",
+      "day": "Th",
+      "time": "6:00 PM-7:55 PM",
+      "status": "ZOOM"
+    },
+    {
+      "course": "HCDD 331",
+      "building": "",
+      "room_number": "",
+      "day": "",
+      "time": "",
+      "status": "WEB"
+    },
+    {
+      "course": "HCDD 413",
+      "building": "",
+      "room_number": "",
+      "day": "",
+      "time": "",
+      "status": "WEB"
+    },
+    {
+      "course": "HDFS 108N",
+      "building": "rydal",
+      "room_number": "101",
+      "day": "T",
+      "time": "9:05 AM-10:20 AM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "HDFS 129",
+      "building": "sutherland",
+      "room_number": "009",
+      "day": "M W",
+      "time": "11:15 AM-12:05 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "HDFS 229",
+      "building": "sutherland",
+      "room_number": "222",
+      "day": "T Th",
+      "time": "3:05 PM-4:20 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "HDFS 301",
+      "building": "sutherland",
+      "room_number": "222",
+      "day": "T Th",
+      "time": "1:35 PM-2:50 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "HDFS 445",
+      "building": "sutherland",
+      "room_number": "222",
+      "day": "T Th",
+      "time": "12:05 PM-1:20 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "HHUM 294",
+      "building": "",
+      "room_number": "",
+      "day": "",
+      "time": "",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "HIED 302",
+      "building": "spring house",
+      "room_number": "100",
+      "day": "T Th",
+      "time": "1:35 PM-2:50 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "HIST 1",
+      "building": "sutherland",
+      "room_number": "309",
+      "day": "M",
+      "time": "6:00 PM-9:00 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "HIST 120N",
+      "building": "sutherland",
+      "room_number": "227",
+      "day": "T Th",
+      "time": "10:35 AM-11:50 AM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "HIST 120N",
+      "building": "sutherland",
+      "room_number": "227",
+      "day": "T Th",
+      "time": "9:05 AM-10:20 AM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "HIST 124",
+      "building": "sutherland",
+      "room_number": "309",
+      "day": "M W",
+      "time": "10:10 AM-11:00 AM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "HIST 124",
+      "building": "sutherland",
+      "room_number": "309",
+      "day": "M W",
+      "time": "11:15 AM-12:05 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "HIST 143N",
+      "building": "sutherland",
+      "room_number": "309",
+      "day": "M W F",
+      "time": "9:05 AM-9:55 AM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "HIST 179",
+      "building": "sutherland",
+      "room_number": "217",
+      "day": "T Th",
+      "time": "12:05 PM-1:20 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "HIST 179",
+      "building": "sutherland",
+      "room_number": "216",
+      "day": "T Th",
+      "time": "9:05 AM-10:20 AM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "HIST 2",
+      "building": "sutherland",
+      "room_number": "309",
+      "day": "M W F",
+      "time": "8:00 AM-8:50 AM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "HIST 20",
+      "building": "sutherland",
+      "room_number": "311",
+      "day": "M W",
+      "time": "4:00 PM-5:15 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "HIST 20",
+      "building": "sutherland",
+      "room_number": "216",
+      "day": "W",
+      "time": "6:00 PM-9:00 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "HIST 21",
+      "building": "sutherland",
+      "room_number": "215",
+      "day": "T Th",
+      "time": "10:35 AM-11:50 AM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "HIST 21",
+      "building": "sutherland",
+      "room_number": "216",
+      "day": "T Th",
+      "time": "1:35 PM-2:50 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "HIST 420",
+      "building": "sutherland",
+      "room_number": "201",
+      "day": "T Th",
+      "time": "3:05 PM-4:20 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "HIST 424",
+      "building": "sutherland",
+      "room_number": "215",
+      "day": "T Th",
+      "time": "1:35 PM-2:50 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "HIST 446",
+      "building": "woodland",
+      "room_number": "345",
+      "day": "M W F",
+      "time": "10:10 AM-11:00 AM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "HIST 455",
+      "building": "sutherland",
+      "room_number": "215",
+      "day": "M W",
+      "time": "1:25 PM-2:40 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "HIST 499",
+      "building": "woodland",
+      "room_number": "346",
+      "day": "T Th",
+      "time": "3:05 PM-4:20 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "HIST 5",
+      "building": "sutherland",
+      "room_number": "206",
+      "day": "M W",
+      "time": "9:05 AM-9:55 AM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "HONOR 401",
+      "building": "",
+      "room_number": "",
+      "day": "",
+      "time": "",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "HONOR 495",
+      "building": "",
+      "room_number": "",
+      "day": "",
+      "time": "",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "HORT 101",
+      "building": "",
+      "room_number": "",
+      "day": "",
+      "time": "",
+      "status": "WEB"
+    },
+    {
+      "course": "HPA 101",
+      "building": "",
+      "room_number": "",
+      "day": "W",
+      "time": "2:30 PM-3:45 PM",
+      "status": "ZOOM"
+    },
+    {
+      "course": "HPA 332",
+      "building": "",
+      "room_number": "",
+      "day": "",
+      "time": "",
+      "status": "WEB"
+    },
+    {
+      "course": "HUM 102",
+      "building": "sutherland",
+      "room_number": "208",
+      "day": "M W F",
+      "time": "8:00 AM-8:50 AM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "HUM 220N",
+      "building": "sutherland",
+      "room_number": "217",
+      "day": "T Th",
+      "time": "1:35 PM-2:50 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "IB 303",
+      "building": "sutherland",
+      "room_number": "209",
+      "day": "T Th",
+      "time": "9:05 AM-10:20 AM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "IB 303",
+      "building": "",
+      "room_number": "",
+      "day": "",
+      "time": "",
+      "status": "WEB"
+    },
+    {
+      "course": "INART 1",
+      "building": "sutherland",
+      "room_number": "217",
+      "day": "T Th",
+      "time": "9:05 AM-10:20 AM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "INART 10",
+      "building": "sutherland",
+      "room_number": "213",
+      "day": "T Th",
+      "time": "10:35 AM-11:50 AM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "INART 10",
+      "building": "sutherland",
+      "room_number": "210",
+      "day": "T Th",
+      "time": "1:35 PM-2:50 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "INART 100",
+      "building": "sutherland",
+      "room_number": "008",
+      "day": "M W F",
+      "time": "11:15 AM-12:05 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "INART 115",
+      "building": "sutherland",
+      "room_number": "008",
+      "day": "M W F",
+      "time": "10:10 AM-11:00 AM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "INART 258A",
+      "building": "woodland",
+      "room_number": "340",
+      "day": "M W F",
+      "time": "2:30 PM-3:20 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "INART 50",
+      "building": "woodland",
+      "room_number": "340",
+      "day": "M W",
+      "time": "4:30 PM-5:45 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "IST 110",
+      "building": "sutherland",
+      "room_number": "208",
+      "day": "T Th",
+      "time": "10:35 AM-11:50 AM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "IST 110",
+      "building": "",
+      "room_number": "",
+      "day": "",
+      "time": "",
+      "status": "WEB"
+    },
+    {
+      "course": "IST 140",
+      "building": "woodland",
+      "room_number": "343",
+      "day": "T Th",
+      "time": "10:35 AM-11:50 AM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "IST 140",
+      "building": "woodland",
+      "room_number": "132A",
+      "day": "T Th",
+      "time": "9:05 AM-10:20 AM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "IST 210",
+      "building": "woodland",
+      "room_number": "132B",
+      "day": "M",
+      "time": "5:30 PM-6:45 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "IST 210",
+      "building": "",
+      "room_number": "",
+      "day": "",
+      "time": "",
+      "status": "WEB"
+    },
+    {
+      "course": "IST 220",
+      "building": "woodland",
+      "room_number": "343",
+      "day": "T Th",
+      "time": "12:05 PM-1:20 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "IST 220",
+      "building": "woodland",
+      "room_number": "343",
+      "day": "T Th",
+      "time": "1:35 PM-2:50 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "IST 226",
+      "building": "woodland",
+      "room_number": "132B",
+      "day": "T Th",
+      "time": "10:35 AM-11:50 AM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "IST 230",
+      "building": "woodland",
+      "room_number": "342",
+      "day": "T Th",
+      "time": "1:35 PM-2:50 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "IST 242",
+      "building": "woodland",
+      "room_number": "132A",
+      "day": "T Th",
+      "time": "10:35 AM-11:50 AM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "IST 242",
+      "building": "woodland",
+      "room_number": "342",
+      "day": "T Th",
+      "time": "4:35 PM-5:50 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "IST 256",
+      "building": "",
+      "room_number": "",
+      "day": "T",
+      "time": "1:35 PM-2:50 PM",
+      "status": "ZOOM"
+    },
+    {
+      "course": "IST 256",
+      "building": "woodland",
+      "room_number": "132B",
+      "day": "T Th",
+      "time": "6:00 PM-7:15 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "IST 260W",
+      "building": "woodland",
+      "room_number": "132A",
+      "day": "M W F",
+      "time": "9:05 AM-9:55 AM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "IST 261",
+      "building": "woodland",
+      "room_number": "132B",
+      "day": "T Th",
+      "time": "3:05 PM-4:20 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "IST 390",
+      "building": "",
+      "room_number": "",
+      "day": "",
+      "time": "",
+      "status": "WEB"
+    },
+    {
+      "course": "IST 402",
+      "building": "woodland",
+      "room_number": "343",
+      "day": "T",
+      "time": "3:05 PM-4:20 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "IST 402",
+      "building": "",
+      "room_number": "",
+      "day": "",
+      "time": "",
+      "status": "WEB"
+    },
+    {
+      "course": "IST 432",
+      "building": "woodland",
+      "room_number": "342",
+      "day": "M",
+      "time": "6:30 PM-7:45 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "IST 432",
+      "building": "",
+      "room_number": "",
+      "day": "M W F",
+      "time": "9:05 AM-9:55 AM",
+      "status": "ZOOM"
+    },
+    {
+      "course": "IST 440W",
+      "building": "woodland",
+      "room_number": "346",
+      "day": "F",
+      "time": "1:00 PM-4:00 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "IST 440W",
+      "building": "woodland",
+      "room_number": "346",
+      "day": "T Th",
+      "time": "9:05 AM-10:20 AM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "IST 495",
+      "building": "",
+      "room_number": "",
+      "day": "",
+      "time": "",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "IST 496",
+      "building": "",
+      "room_number": "",
+      "day": "",
+      "time": "",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "JAPNS 3",
+      "building": "",
+      "room_number": "",
+      "day": "M W",
+      "time": "11:15 AM-12:30 PM",
+      "status": "ZOOM"
+    },
+    {
+      "course": "JST 114",
+      "building": "",
+      "room_number": "",
+      "day": "M W",
+      "time": "2:30 PM-3:45 PM",
+      "status": "ZOOM"
+    },
+    {
+      "course": "KEYBD 100",
+      "building": "",
+      "room_number": "",
+      "day": "",
+      "time": "",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "KINES 100",
+      "building": "",
+      "room_number": "",
+      "day": "",
+      "time": "",
+      "status": "WEB"
+    },
+    {
+      "course": "KINES 20",
+      "building": "athletic",
+      "room_number": "",
+      "day": "M W F",
+      "time": "11:15 AM-12:05 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "KINES 496",
+      "building": "",
+      "room_number": "",
+      "day": "",
+      "time": "",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "KINES 56",
+      "building": "athletic",
+      "room_number": "",
+      "day": "T Th",
+      "time": "10:35 AM-11:50 AM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "KINES 57",
+      "building": "athletic",
+      "room_number": "",
+      "day": "T Th",
+      "time": "1:35 PM-2:50 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "KINES 57",
+      "building": "athletic",
+      "room_number": "",
+      "day": "T Th",
+      "time": "9:05 AM-10:20 AM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "KINES 61",
+      "building": "rydal",
+      "room_number": "101",
+      "day": "T",
+      "time": "10:35 AM-11:50 AM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "KINES 68",
+      "building": "athletic",
+      "room_number": "",
+      "day": "T Th",
+      "time": "4:35 PM-5:50 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "KINES 77",
+      "building": "spring house",
+      "room_number": "100",
+      "day": "M",
+      "time": "2:30 PM-3:45 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "KINES 77",
+      "building": "spring house",
+      "room_number": "100",
+      "day": "T Th",
+      "time": "10:35 AM-11:50 AM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "KINES 77",
+      "building": "spring house",
+      "room_number": "100",
+      "day": "T Th",
+      "time": "12:05 PM-1:20 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "KINES 77",
+      "building": "spring house",
+      "room_number": "100",
+      "day": "T Th",
+      "time": "9:05 AM-10:20 AM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "KINES 77A",
+      "building": "spring house",
+      "room_number": "100",
+      "day": "M",
+      "time": "2:30 PM-3:45 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "KINES 77A",
+      "building": "spring house",
+      "room_number": "100",
+      "day": "T Th",
+      "time": "10:35 AM-11:50 AM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "KINES 77A",
+      "building": "spring house",
+      "room_number": "100",
+      "day": "T Th",
+      "time": "12:05 PM-1:20 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "KINES 77A",
+      "building": "spring house",
+      "room_number": "100",
+      "day": "T Th",
+      "time": "9:05 AM-10:20 AM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "KINES 85N",
+      "building": "",
+      "room_number": "",
+      "day": "",
+      "time": "",
+      "status": "WEB"
+    },
+    {
+      "course": "KINES 88",
+      "building": "rydal",
+      "room_number": "101",
+      "day": "T",
+      "time": "12:05 PM-1:20 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "KOR 121",
+      "building": "sutherland",
+      "room_number": "211",
+      "day": "T Th",
+      "time": "12:05 PM-1:20 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "LLED 215N",
+      "building": "sutherland",
+      "room_number": "311",
+      "day": "T Th",
+      "time": "1:35 PM-2:50 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "LLED 400",
+      "building": "sutherland",
+      "room_number": "210",
+      "day": "T Th",
+      "time": "12:05 PM-1:20 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "MATH 10",
+      "building": "woodland",
+      "room_number": "121",
+      "day": "M",
+      "time": "11:15 AM-12:05 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "MATH 110",
+      "building": "sutherland",
+      "room_number": "215",
+      "day": "M W F",
+      "time": "11:00 AM-12:15 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "MATH 110",
+      "building": "sutherland",
+      "room_number": "305",
+      "day": "M W F",
+      "time": "1:00 PM-2:15 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "MATH 110",
+      "building": "sutherland",
+      "room_number": "217",
+      "day": "M W F",
+      "time": "2:30 PM-3:45 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "MATH 110",
+      "building": "rydal",
+      "room_number": "101",
+      "day": "M W F",
+      "time": "9:30 AM-10:45 AM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "MATH 110",
+      "building": "sutherland",
+      "room_number": "211",
+      "day": "T Th",
+      "time": "3:05 PM-4:55 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "MATH 140",
+      "building": "off campus",
+      "room_number": "",
+      "day": "M",
+      "time": "6:00 PM-8:00 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "MATH 140",
+      "building": "",
+      "room_number": "",
+      "day": "M F",
+      "time": "11:00 AM-12:15 PM",
+      "status": "ZOOM"
+    },
+    {
+      "course": "MATH 140",
+      "building": "",
+      "room_number": "",
+      "day": "M F",
+      "time": "1:00 PM-2:15 PM",
+      "status": "ZOOM"
+    },
+    {
+      "course": "MATH 140",
+      "building": "sutherland",
+      "room_number": "210",
+      "day": "M W F",
+      "time": "2:30 PM-3:45 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "MATH 140",
+      "building": "sutherland",
+      "room_number": "306",
+      "day": "M W F",
+      "time": "4:00 PM-5:15 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "MATH 140",
+      "building": "woodland",
+      "room_number": "121",
+      "day": "M W F",
+      "time": "8:00 AM-9:15 AM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "MATH 140",
+      "building": "sutherland",
+      "room_number": "215",
+      "day": "M W F",
+      "time": "9:30 AM-10:45 AM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "MATH 141",
+      "building": "sutherland",
+      "room_number": "210",
+      "day": "M W F",
+      "time": "11:00 AM-12:15 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "MATH 141",
+      "building": "sutherland",
+      "room_number": "211",
+      "day": "M W F",
+      "time": "11:00 AM-12:15 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "MATH 141",
+      "building": "sutherland",
+      "room_number": "216",
+      "day": "M W F",
+      "time": "1:00 PM-2:15 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "MATH 141",
+      "building": "sutherland",
+      "room_number": "306",
+      "day": "M W F",
+      "time": "1:00 PM-2:15 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "MATH 141",
+      "building": "sutherland",
+      "room_number": "306",
+      "day": "M W F",
+      "time": "2:30 PM-3:45 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "MATH 141",
+      "building": "sutherland",
+      "room_number": "210",
+      "day": "M W F",
+      "time": "9:30 AM-10:45 AM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "MATH 141",
+      "building": "sutherland",
+      "room_number": "211",
+      "day": "M W F",
+      "time": "9:30 AM-10:45 AM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "MATH 141",
+      "building": "sutherland",
+      "room_number": "210",
+      "day": "W",
+      "time": "4:00 PM-5:15 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "MATH 21",
+      "building": "sutherland",
+      "room_number": "216",
+      "day": "M W F",
+      "time": "10:10 AM-11:00 AM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "MATH 21",
+      "building": "",
+      "room_number": "",
+      "day": "M W F",
+      "time": "4:40 PM-5:30 PM",
+      "status": "ZOOM"
+    },
+    {
+      "course": "MATH 21",
+      "building": "sutherland",
+      "room_number": "320",
+      "day": "T Th",
+      "time": "12:05 PM-1:20 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "MATH 21",
+      "building": "sutherland",
+      "room_number": "320",
+      "day": "T Th",
+      "time": "1:35 PM-2:50 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "MATH 21",
+      "building": "sutherland",
+      "room_number": "211",
+      "day": "T Th",
+      "time": "9:05 AM-10:20 AM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "MATH 21",
+      "building": "",
+      "room_number": "",
+      "day": "",
+      "time": "",
+      "status": "WEB"
+    },
+    {
+      "course": "MATH 22",
+      "building": "woodland",
+      "room_number": "132B",
+      "day": "M W F",
+      "time": "10:10 AM-11:00 AM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "MATH 22",
+      "building": "sutherland",
+      "room_number": "306",
+      "day": "M W F",
+      "time": "11:15 AM-12:05 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "MATH 22",
+      "building": "woodland",
+      "room_number": "132B",
+      "day": "M W F",
+      "time": "9:05 AM-9:55 AM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "MATH 22",
+      "building": "sutherland",
+      "room_number": "320",
+      "day": "T Th",
+      "time": "10:35 AM-11:50 AM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "MATH 22",
+      "building": "sutherland",
+      "room_number": "211",
+      "day": "T Th",
+      "time": "1:35 PM-2:50 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "MATH 220",
+      "building": "sutherland",
+      "room_number": "305",
+      "day": "M W F",
+      "time": "11:15 AM-12:05 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "MATH 220",
+      "building": "sutherland",
+      "room_number": "210",
+      "day": "M W F",
+      "time": "1:25 PM-2:15 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "MATH 220",
+      "building": "sutherland",
+      "room_number": "222",
+      "day": "M W F",
+      "time": "8:00 AM-8:50 AM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "MATH 230",
+      "building": "sutherland",
+      "room_number": "305",
+      "day": "T Th",
+      "time": "10:35 AM-11:50 AM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "MATH 230",
+      "building": "sutherland",
+      "room_number": "309",
+      "day": "T Th",
+      "time": "2:30 PM-3:45 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "MATH 231",
+      "building": "sutherland",
+      "room_number": "305",
+      "day": "T Th",
+      "time": "10:35 AM-11:50 AM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "MATH 231",
+      "building": "sutherland",
+      "room_number": "309",
+      "day": "T Th",
+      "time": "2:30 PM-3:45 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "MATH 250",
+      "building": "sutherland",
+      "room_number": "201",
+      "day": "W F",
+      "time": "11:15 AM-12:30 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "MATH 250",
+      "building": "sutherland",
+      "room_number": "201",
+      "day": "W F",
+      "time": "9:30 AM-10:45 AM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "MATH 251",
+      "building": "sutherland",
+      "room_number": "201",
+      "day": "W F",
+      "time": "11:15 AM-12:30 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "MATH 251",
+      "building": "sutherland",
+      "room_number": "201",
+      "day": "W F",
+      "time": "9:30 AM-10:45 AM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "MATH 26",
+      "building": "rydal",
+      "room_number": "101",
+      "day": "M W F",
+      "time": "11:15 AM-12:05 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "MATH 26",
+      "building": "sutherland",
+      "room_number": "306",
+      "day": "M W F",
+      "time": "9:05 AM-9:55 AM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "MATH 311W",
+      "building": "sutherland",
+      "room_number": "209",
+      "day": "M W F",
+      "time": "11:15 AM-12:30 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "MATH 311W",
+      "building": "sutherland",
+      "room_number": "209",
+      "day": "M W F",
+      "time": "9:30 AM-10:45 AM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "MATH 318",
+      "building": "sutherland",
+      "room_number": "305",
+      "day": "M W",
+      "time": "2:30 PM-3:45 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "MATH 318",
+      "building": "woodland",
+      "room_number": "220",
+      "day": "M W F",
+      "time": "10:10 AM-11:00 AM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "MATH 318",
+      "building": "woodland",
+      "room_number": "220",
+      "day": "M W F",
+      "time": "1:25 PM-2:15 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "MATH 34",
+      "building": "spring house",
+      "room_number": "101",
+      "day": "M W F",
+      "time": "10:10 AM-11:00 AM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "MATH 34",
+      "building": "woodland",
+      "room_number": "132B",
+      "day": "M W F",
+      "time": "8:00 AM-8:50 AM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "MATH 35",
+      "building": "sutherland",
+      "room_number": "204",
+      "day": "T Th",
+      "time": "10:35 AM-11:50 AM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "MATH 4",
+      "building": "sutherland",
+      "room_number": "216",
+      "day": "M W F",
+      "time": "9:05 AM-9:55 AM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "MATH 414",
+      "building": "",
+      "room_number": "",
+      "day": "",
+      "time": "",
+      "status": "WEB"
+    },
+    {
+      "course": "MATH 497",
+      "building": "sutherland",
+      "room_number": "309",
+      "day": "T Th",
+      "time": "1:05 PM-2:20 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "MATSE 202",
+      "building": "",
+      "room_number": "",
+      "day": "",
+      "time": "",
+      "status": "WEB"
+    },
+    {
+      "course": "ME 300",
+      "building": "woodland",
+      "room_number": "112",
+      "day": "T Th",
+      "time": "1:35 PM-2:50 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "METEO 101",
+      "building": "",
+      "room_number": "",
+      "day": "",
+      "time": "",
+      "status": "WEB"
+    },
+    {
+      "course": "METEO 1N",
+      "building": "",
+      "room_number": "",
+      "day": "",
+      "time": "",
+      "status": "WEB"
+    },
+    {
+      "course": "METEO 3",
+      "building": "",
+      "room_number": "",
+      "day": "",
+      "time": "",
+      "status": "WEB"
+    },
+    {
+      "course": "METEO 6N",
+      "building": "",
+      "room_number": "",
+      "day": "",
+      "time": "",
+      "status": "WEB"
+    },
+    {
+      "course": "MGMT 215",
+      "building": "woodland",
+      "room_number": "345",
+      "day": "M",
+      "time": "2:30 PM-5:30 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "MGMT 301",
+      "building": "sutherland",
+      "room_number": "008",
+      "day": "M W",
+      "time": "2:30 PM-3:45 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "MGMT 301",
+      "building": "sutherland",
+      "room_number": "008",
+      "day": "M W",
+      "time": "4:00 PM-5:15 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "MGMT 301",
+      "building": "sutherland",
+      "room_number": "008",
+      "day": "T Th",
+      "time": "10:35 AM-11:50 AM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "MGMT 301",
+      "building": "sutherland",
+      "room_number": "331",
+      "day": "T Th",
+      "time": "3:05 PM-4:20 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "MGMT 301",
+      "building": "sutherland",
+      "room_number": "331",
+      "day": "T Th",
+      "time": "4:35 PM-5:50 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "MGMT 326",
+      "building": "sutherland",
+      "room_number": "306",
+      "day": "T Th",
+      "time": "3:05 PM-4:20 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "MGMT 341",
+      "building": "",
+      "room_number": "",
+      "day": "M",
+      "time": "6:00 PM-9:00 PM",
+      "status": "ZOOM"
+    },
+    {
+      "course": "MGMT 341",
+      "building": "sutherland",
+      "room_number": "305",
+      "day": "M W",
+      "time": "4:00 PM-5:15 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "MGMT 365",
+      "building": "woodland",
+      "room_number": "343",
+      "day": "M W",
+      "time": "1:25 PM-2:15 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "MGMT 401",
+      "building": "sutherland",
+      "room_number": "305",
+      "day": "Th",
+      "time": "6:00 PM-7:15 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "MGMT 401",
+      "building": "",
+      "room_number": "",
+      "day": "",
+      "time": "",
+      "status": "WEB"
+    },
+    {
+      "course": "MGMT 415",
+      "building": "",
+      "room_number": "",
+      "day": "",
+      "time": "",
+      "status": "WEB"
+    },
+    {
+      "course": "MGMT 418",
+      "building": "woodland",
+      "room_number": "342",
+      "day": "M W",
+      "time": "4:00 PM-5:15 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "MGMT 420",
+      "building": "",
+      "room_number": "",
+      "day": "Th",
+      "time": "6:00 PM-7:30 PM",
+      "status": "ZOOM"
+    },
+    {
+      "course": "MGMT 425",
+      "building": "woodland",
+      "room_number": "346",
+      "day": "M",
+      "time": "6:00 PM-9:00 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "MGMT 427",
+      "building": "woodland",
+      "room_number": "346",
+      "day": "W",
+      "time": "6:00 PM-7:15 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "MGMT 433",
+      "building": "sutherland",
+      "room_number": "306",
+      "day": "T Th",
+      "time": "1:35 PM-2:50 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "MGMT 461",
+      "building": "sutherland",
+      "room_number": "211",
+      "day": "T",
+      "time": "10:35 AM-11:50 AM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "MICRB 106",
+      "building": "",
+      "room_number": "",
+      "day": "",
+      "time": "",
+      "status": "WEB"
+    },
+    {
+      "course": "MICRB 201",
+      "building": "woodland",
+      "room_number": "112",
+      "day": "M W F",
+      "time": "9:05 AM-9:55 AM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "MICRB 202",
+      "building": "woodland",
+      "room_number": "238",
+      "day": "T Th",
+      "time": "10:35 AM-12:25 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "MIS 250",
+      "building": "woodland",
+      "room_number": "132A",
+      "day": "M",
+      "time": "4:00 PM-5:15 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "MIS 250",
+      "building": "sutherland",
+      "room_number": "307",
+      "day": "T",
+      "time": "4:35 PM-5:50 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "MIS 250",
+      "building": "woodland",
+      "room_number": "132A",
+      "day": "T Th",
+      "time": "3:05 PM-4:20 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "MIS 250",
+      "building": "",
+      "room_number": "",
+      "day": "",
+      "time": "",
+      "status": "WEB"
+    },
+    {
+      "course": "MIS 301",
+      "building": "sutherland",
+      "room_number": "208",
+      "day": "T",
+      "time": "1:35 PM-2:50 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "MIS 301",
+      "building": "",
+      "room_number": "",
+      "day": "Th",
+      "time": "6:00 PM-9:00 PM",
+      "status": "ZOOM"
+    },
+    {
+      "course": "MIS 301",
+      "building": "",
+      "room_number": "",
+      "day": "",
+      "time": "",
+      "status": "WEB"
+    },
+    {
+      "course": "MIS 336",
+      "building": "woodland",
+      "room_number": "132B",
+      "day": "T",
+      "time": "4:35 PM-5:50 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "MIS 345",
+      "building": "woodland",
+      "room_number": "132B",
+      "day": "M W",
+      "time": "4:00 PM-5:15 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "MIS 390",
+      "building": "woodland",
+      "room_number": "313",
+      "day": "M",
+      "time": "2:30 PM-5:30 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "MIS 390",
+      "building": "",
+      "room_number": "",
+      "day": "",
+      "time": "",
+      "status": "WEB"
+    },
+    {
+      "course": "MIS 404",
+      "building": "",
+      "room_number": "",
+      "day": "",
+      "time": "",
+      "status": "WEB"
+    },
+    {
+      "course": "MIS 494",
+      "building": "",
+      "room_number": "",
+      "day": "",
+      "time": "",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "MIS 496",
+      "building": "",
+      "room_number": "",
+      "day": "",
+      "time": "",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "MKTG 301",
+      "building": "sutherland",
+      "room_number": "209",
+      "day": "M",
+      "time": "6:00 PM-8:30 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "MKTG 301",
+      "building": "",
+      "room_number": "",
+      "day": "M W F",
+      "time": "10:10 AM-11:00 AM",
+      "status": "ZOOM"
+    },
+    {
+      "course": "MKTG 301",
+      "building": "sutherland",
+      "room_number": "222",
+      "day": "T",
+      "time": "4:35 PM-5:50 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "MKTG 301",
+      "building": "sutherland",
+      "room_number": "215",
+      "day": "T Th",
+      "time": "3:05 PM-4:20 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "MKTG 310",
+      "building": "sutherland",
+      "room_number": "305",
+      "day": "M",
+      "time": "6:00 PM-7:15 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "MKTG 410",
+      "building": "",
+      "room_number": "",
+      "day": "",
+      "time": "",
+      "status": "WEB"
+    },
+    {
+      "course": "MKTG 441",
+      "building": "",
+      "room_number": "",
+      "day": "T Th",
+      "time": "1:35 PM-2:50 PM",
+      "status": "ZOOM"
+    },
+    {
+      "course": "MKTG 445",
+      "building": "",
+      "room_number": "",
+      "day": "",
+      "time": "",
+      "status": "WEB"
+    },
+    {
+      "course": "MKTG 473",
+      "building": "sutherland",
+      "room_number": "208",
+      "day": "W",
+      "time": "6:00 PM-7:15 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "MKTG 495",
+      "building": "",
+      "room_number": "",
+      "day": "",
+      "time": "",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "MTHED 240",
+      "building": "sutherland",
+      "room_number": "211",
+      "day": "M W",
+      "time": "5:30 PM-6:45 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "MUSIC 104",
+      "building": "",
+      "room_number": "",
+      "day": "",
+      "time": "",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "MUSIC 421",
+      "building": "sutherland",
+      "room_number": "009",
+      "day": "M",
+      "time": "6:00 PM-9:00 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "MUSIC 423",
+      "building": "woodland",
+      "room_number": "340",
+      "day": "M W F",
+      "time": "1:25 PM-2:15 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "MUSIC 496",
+      "building": "",
+      "room_number": "",
+      "day": "",
+      "time": "",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "MUSIC 82",
+      "building": "sutherland",
+      "room_number": "009",
+      "day": "M",
+      "time": "6:00 PM-9:00 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "MUSIC 88",
+      "building": "sutherland",
+      "room_number": "009",
+      "day": "M W",
+      "time": "4:00 PM-5:15 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "NUTR 251",
+      "building": "sutherland",
+      "room_number": "206",
+      "day": "M W",
+      "time": "10:10 AM-11:00 AM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "NUTR 251",
+      "building": "sutherland",
+      "room_number": "204",
+      "day": "M W",
+      "time": "11:15 AM-12:05 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "NUTR 251",
+      "building": "sutherland",
+      "room_number": "008",
+      "day": "T Th",
+      "time": "1:35 PM-2:50 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "NUTR 251",
+      "building": "",
+      "room_number": "",
+      "day": "",
+      "time": "",
+      "status": "WEB"
+    },
+    {
+      "course": "PHIL 103",
+      "building": "sutherland",
+      "room_number": "008",
+      "day": "M W F",
+      "time": "9:05 AM-9:55 AM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "PHIL 103W",
+      "building": "sutherland",
+      "room_number": "008",
+      "day": "M W F",
+      "time": "9:05 AM-9:55 AM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "PHIL 132",
+      "building": "sutherland",
+      "room_number": "206",
+      "day": "M W F",
+      "time": "3:35 PM-4:25 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "PHIL 432",
+      "building": "sutherland",
+      "room_number": "208",
+      "day": "M W F",
+      "time": "4:40 PM-5:30 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "PHOTO 100",
+      "building": "",
+      "room_number": "",
+      "day": "M",
+      "time": "1:35 PM-4:20 PM",
+      "status": "ZOOM"
+    },
+    {
+      "course": "PHOTO 100",
+      "building": "",
+      "room_number": "",
+      "day": "M",
+      "time": "4:35 PM-7:15 PM",
+      "status": "ZOOM"
+    },
+    {
+      "course": "PHOTO 100",
+      "building": "woodland",
+      "room_number": "341",
+      "day": "T Th",
+      "time": "3:05 PM-4:20 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "PHOTO 100",
+      "building": "woodland",
+      "room_number": "341",
+      "day": "T Th",
+      "time": "6:00 PM-7:15 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "PHOTO 200",
+      "building": "woodland",
+      "room_number": "341",
+      "day": "T Th",
+      "time": "3:05 PM-5:50 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "PHOTO 300",
+      "building": "woodland",
+      "room_number": "341",
+      "day": "T Th",
+      "time": "3:05 PM-5:50 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "PHOTO 400",
+      "building": "woodland",
+      "room_number": "341",
+      "day": "T Th",
+      "time": "3:05 PM-5:50 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "PHYS 211",
+      "building": "woodland",
+      "room_number": "124",
+      "day": "M W F",
+      "time": "1:25 PM-3:05 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "PHYS 211",
+      "building": "woodland",
+      "room_number": "124",
+      "day": "M W F",
+      "time": "8:15 AM-9:55 AM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "PHYS 211",
+      "building": "woodland",
+      "room_number": "124",
+      "day": "T Th",
+      "time": "10:45 AM-1:15 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "PHYS 211",
+      "building": "woodland",
+      "room_number": "124",
+      "day": "T Th",
+      "time": "1:30 PM-4:00 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "PHYS 211",
+      "building": "woodland",
+      "room_number": "119",
+      "day": "T Th",
+      "time": "2:00 PM-4:30 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "PHYS 211",
+      "building": "off campus",
+      "room_number": "",
+      "day": "T Th",
+      "time": "6:00 PM-8:00 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "PHYS 211",
+      "building": "woodland",
+      "room_number": "124",
+      "day": "T Th",
+      "time": "8:00 AM-10:30 AM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "PHYS 212",
+      "building": "woodland",
+      "room_number": "119",
+      "day": "M W F",
+      "time": "10:10 AM-11:50 AM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "PHYS 212",
+      "building": "woodland",
+      "room_number": "135",
+      "day": "M W F",
+      "time": "10:45 AM-12:25 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "PHYS 212",
+      "building": "woodland",
+      "room_number": "119",
+      "day": "M W F",
+      "time": "8:15 AM-9:55 AM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "PHYS 213",
+      "building": "woodland",
+      "room_number": "119",
+      "day": "M W F",
+      "time": "1:25 PM-3:05 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "PHYS 214",
+      "building": "woodland",
+      "room_number": "119",
+      "day": "M W F",
+      "time": "1:25 PM-3:05 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "PHYS 250",
+      "building": "woodland",
+      "room_number": "124",
+      "day": "M W F",
+      "time": "3:35 PM-5:15 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "PHYS 250",
+      "building": "",
+      "room_number": "",
+      "day": "M W F",
+      "time": "9:05 AM-9:55 AM",
+      "status": "ZOOM"
+    },
+    {
+      "course": "PHYS 251",
+      "building": "woodland",
+      "room_number": "119",
+      "day": "M W F",
+      "time": "3:35 PM-5:15 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "PLANT 200",
+      "building": "",
+      "room_number": "",
+      "day": "",
+      "time": "",
+      "status": "WEB"
+    },
+    {
+      "course": "PLSC 1",
+      "building": "",
+      "room_number": "",
+      "day": "",
+      "time": "",
+      "status": "WEB"
+    },
+    {
+      "course": "PLSC 210N",
+      "building": "sutherland",
+      "room_number": "210",
+      "day": "T",
+      "time": "6:00 PM-7:15 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "PSU 1",
+      "building": "sutherland",
+      "room_number": "217",
+      "day": "M",
+      "time": "1:25 PM-2:15 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "PSU 1",
+      "building": "sutherland",
+      "room_number": "226",
+      "day": "M",
+      "time": "9:05 AM-9:55 AM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "PSYCH 100",
+      "building": "sutherland",
+      "room_number": "009",
+      "day": "M W",
+      "time": "10:10 AM-11:00 AM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "PSYCH 100",
+      "building": "sutherland",
+      "room_number": "009",
+      "day": "T Th",
+      "time": "9:05 AM-10:20 AM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "PSYCH 150N",
+      "building": "woodland",
+      "room_number": "346",
+      "day": "T Th",
+      "time": "3:05 PM-4:20 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "PSYCH 200",
+      "building": "woodland",
+      "room_number": "132B",
+      "day": "M W F",
+      "time": "1:00 PM-2:15 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "PSYCH 200",
+      "building": "woodland",
+      "room_number": "132B",
+      "day": "M W F",
+      "time": "2:30 PM-3:45 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "PSYCH 212",
+      "building": "sutherland",
+      "room_number": "308",
+      "day": "W",
+      "time": "5:30 PM-8:30 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "PSYCH 221",
+      "building": "sutherland",
+      "room_number": "217",
+      "day": "M W",
+      "time": "10:10 AM-11:00 AM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "PSYCH 221",
+      "building": "sutherland",
+      "room_number": "217",
+      "day": "M W",
+      "time": "9:05 AM-9:55 AM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "PSYCH 243",
+      "building": "",
+      "room_number": "",
+      "day": "",
+      "time": "",
+      "status": "WEB"
+    },
+    {
+      "course": "PSYCH 244",
+      "building": "sutherland",
+      "room_number": "307",
+      "day": "T Th",
+      "time": "12:05 PM-1:20 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "PSYCH 270",
+      "building": "",
+      "room_number": "",
+      "day": "",
+      "time": "",
+      "status": "WEB"
+    },
+    {
+      "course": "PSYCH 294",
+      "building": "",
+      "room_number": "",
+      "day": "",
+      "time": "",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "PSYCH 301W",
+      "building": "sutherland",
+      "room_number": "311",
+      "day": "T Th",
+      "time": "10:35 AM-11:50 AM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "PSYCH 301W",
+      "building": "sutherland",
+      "room_number": "307",
+      "day": "T Th",
+      "time": "1:35 PM-2:50 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "PSYCH 404",
+      "building": "woodland",
+      "room_number": "132A",
+      "day": "W",
+      "time": "5:30 PM-8:30 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "PSYCH 416",
+      "building": "sutherland",
+      "room_number": "222",
+      "day": "T Th",
+      "time": "12:05 PM-1:20 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "PSYCH 420",
+      "building": "sutherland",
+      "room_number": "201",
+      "day": "M",
+      "time": "11:15 AM-1:10 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "PSYCH 424",
+      "building": "",
+      "room_number": "",
+      "day": "",
+      "time": "",
+      "status": "WEB"
+    },
+    {
+      "course": "PSYCH 470",
+      "building": "sutherland",
+      "room_number": "213",
+      "day": "T Th",
+      "time": "9:05 AM-10:20 AM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "PSYCH 478",
+      "building": "sutherland",
+      "room_number": "209",
+      "day": "M W",
+      "time": "1:25 PM-2:15 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "PSYCH 492",
+      "building": "sutherland",
+      "room_number": "331",
+      "day": "T Th",
+      "time": "1:35 PM-2:50 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "PSYCH 494",
+      "building": "sutherland",
+      "room_number": "307",
+      "day": "T Th",
+      "time": "10:35 AM-11:50 AM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "PSYCH 495",
+      "building": "",
+      "room_number": "",
+      "day": "",
+      "time": "",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "PSYCH 496",
+      "building": "",
+      "room_number": "",
+      "day": "",
+      "time": "",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "PSYCH 497",
+      "building": "woodland",
+      "room_number": "121",
+      "day": "M W",
+      "time": "9:30 AM-10:45 AM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "PSYCH 497",
+      "building": "woodland",
+      "room_number": "121",
+      "day": "T",
+      "time": "6:00 PM-9:00 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "PSYCH 499",
+      "building": "woodland",
+      "room_number": "346",
+      "day": "T Th",
+      "time": "3:05 PM-4:20 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "RHS 100",
+      "building": "",
+      "room_number": "",
+      "day": "",
+      "time": "",
+      "status": "WEB"
+    },
+    {
+      "course": "RHS 226",
+      "building": "",
+      "room_number": "",
+      "day": "",
+      "time": "",
+      "status": "WEB"
+    },
+    {
+      "course": "RHS 302",
+      "building": "sutherland",
+      "room_number": "209",
+      "day": "T Th",
+      "time": "12:05 PM-1:20 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "RHS 401",
+      "building": "",
+      "room_number": "",
+      "day": "",
+      "time": "",
+      "status": "WEB"
+    },
+    {
+      "course": "RHS 402",
+      "building": "",
+      "room_number": "",
+      "day": "",
+      "time": "",
+      "status": "WEB"
+    },
+    {
+      "course": "RHS 403",
+      "building": "rydal",
+      "room_number": "101",
+      "day": "T Th",
+      "time": "1:35 PM-2:50 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "RHS 493",
+      "building": "",
+      "room_number": "",
+      "day": "",
+      "time": "",
+      "status": "WEB"
+    },
+    {
+      "course": "RHS 495A",
+      "building": "",
+      "room_number": "",
+      "day": "Th",
+      "time": "4:35 PM-5:50 PM",
+      "status": "ZOOM"
+    },
+    {
+      "course": "RHS 496",
+      "building": "",
+      "room_number": "",
+      "day": "",
+      "time": "",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "RLST 114",
+      "building": "",
+      "room_number": "",
+      "day": "M W",
+      "time": "2:30 PM-3:45 PM",
+      "status": "ZOOM"
+    },
+    {
+      "course": "RLST 140Y",
+      "building": "sutherland",
+      "room_number": "331",
+      "day": "T Th",
+      "time": "10:35 AM-11:50 AM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "RLST 140Y",
+      "building": "sutherland",
+      "room_number": "331",
+      "day": "T Th",
+      "time": "12:05 PM-1:20 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "RPTM 101",
+      "building": "sutherland",
+      "room_number": "305",
+      "day": "M W F",
+      "time": "9:05 AM-9:55 AM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "RPTM 120",
+      "building": "sutherland",
+      "room_number": "308",
+      "day": "M W F",
+      "time": "11:15 AM-12:05 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "RPTM 199",
+      "building": "sutherland",
+      "room_number": "306",
+      "day": "T",
+      "time": "12:05 PM-1:20 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "RPTM 201",
+      "building": "",
+      "room_number": "",
+      "day": "",
+      "time": "",
+      "status": "WEB"
+    },
+    {
+      "course": "RPTM 210",
+      "building": "",
+      "room_number": "",
+      "day": "",
+      "time": "",
+      "status": "WEB"
+    },
+    {
+      "course": "RPTM 220",
+      "building": "",
+      "room_number": "",
+      "day": "",
+      "time": "",
+      "status": "WEB"
+    },
+    {
+      "course": "RPTM 277",
+      "building": "sutherland",
+      "room_number": "308",
+      "day": "T Th",
+      "time": "10:35 AM-11:50 AM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "RPTM 294",
+      "building": "",
+      "room_number": "",
+      "day": "",
+      "time": "",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "RPTM 394",
+      "building": "",
+      "room_number": "",
+      "day": "",
+      "time": "",
+      "status": "WEB"
+    },
+    {
+      "course": "RPTM 415",
+      "building": "",
+      "room_number": "",
+      "day": "",
+      "time": "",
+      "status": "WEB"
+    },
+    {
+      "course": "RPTM 435",
+      "building": "",
+      "room_number": "",
+      "day": "",
+      "time": "",
+      "status": "WEB"
+    },
+    {
+      "course": "RPTM 494",
+      "building": "",
+      "room_number": "",
+      "day": "",
+      "time": "",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "RPTM 495A",
+      "building": "",
+      "room_number": "",
+      "day": "",
+      "time": "",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "RPTM 496",
+      "building": "",
+      "room_number": "",
+      "day": "",
+      "time": "",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "SC 120N",
+      "building": "woodland",
+      "room_number": "243",
+      "day": "T",
+      "time": "1:35 PM-2:50 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "SCM 200",
+      "building": "",
+      "room_number": "",
+      "day": "T Th",
+      "time": "3:35 PM-5:30 PM",
+      "status": "ZOOM"
+    },
+    {
+      "course": "SCM 200",
+      "building": "woodland",
+      "room_number": "319",
+      "day": "T Th",
+      "time": "6:00 PM-7:55 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "SCM 301",
+      "building": "sutherland",
+      "room_number": "222",
+      "day": "M",
+      "time": "6:00 PM-9:00 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "SCM 301",
+      "building": "sutherland",
+      "room_number": "215",
+      "day": "Th",
+      "time": "6:00 PM-9:00 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "SCM 301",
+      "building": "woodland",
+      "room_number": "313",
+      "day": "W",
+      "time": "2:30 PM-5:30 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "SCM 301",
+      "building": "sutherland",
+      "room_number": "008",
+      "day": "W",
+      "time": "6:00 PM-9:00 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "SCM 455",
+      "building": "",
+      "room_number": "",
+      "day": "M W",
+      "time": "1:25 PM-2:15 PM",
+      "status": "ZOOM"
+    },
+    {
+      "course": "SCM 455",
+      "building": "",
+      "room_number": "",
+      "day": "T Th",
+      "time": "10:35 AM-11:50 AM",
+      "status": "ZOOM"
+    },
+    {
+      "course": "SOC 1",
+      "building": "sutherland",
+      "room_number": "009",
+      "day": "M W",
+      "time": "1:25 PM-2:15 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "SOC 1",
+      "building": "sutherland",
+      "room_number": "209",
+      "day": "W",
+      "time": "5:45 PM-7:00 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "SOC 119N",
+      "building": "woodland",
+      "room_number": "319",
+      "day": "T Th",
+      "time": "10:35 AM-11:50 AM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "SOC 119N",
+      "building": "woodland",
+      "room_number": "319",
+      "day": "T Th",
+      "time": "12:05 PM-1:20 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "SOC 12",
+      "building": "sutherland",
+      "room_number": "226",
+      "day": "M W",
+      "time": "10:10 AM-11:00 AM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "SOC 12",
+      "building": "sutherland",
+      "room_number": "226",
+      "day": "M W",
+      "time": "2:30 PM-3:20 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "SOC 12",
+      "building": "sutherland",
+      "room_number": "226",
+      "day": "T",
+      "time": "4:35 PM-5:50 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "SOC 12",
+      "building": "sutherland",
+      "room_number": "226",
+      "day": "T Th",
+      "time": "12:05 PM-1:20 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "SOC 13",
+      "building": "",
+      "room_number": "",
+      "day": "",
+      "time": "",
+      "status": "WEB"
+    },
+    {
+      "course": "SOC 150N",
+      "building": "",
+      "room_number": "",
+      "day": "",
+      "time": "",
+      "status": "WEB"
+    },
+    {
+      "course": "SOC 19",
+      "building": "sutherland",
+      "room_number": "210",
+      "day": "T Th",
+      "time": "9:05 AM-10:20 AM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "SOC 205N",
+      "building": "sutherland",
+      "room_number": "311",
+      "day": "T Th",
+      "time": "12:05 PM-1:20 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "SOC 294",
+      "building": "",
+      "room_number": "",
+      "day": "",
+      "time": "",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "SOC 413",
+      "building": "sutherland",
+      "room_number": "216",
+      "day": "M W",
+      "time": "2:30 PM-3:45 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "SOC 456",
+      "building": "sutherland",
+      "room_number": "311",
+      "day": "M W",
+      "time": "2:30 PM-3:45 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "SOC 477",
+      "building": "woodland",
+      "room_number": "319",
+      "day": "T Th",
+      "time": "3:05 PM-4:20 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "SOC 494",
+      "building": "",
+      "room_number": "",
+      "day": "",
+      "time": "",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "SPAN 1",
+      "building": "sutherland",
+      "room_number": "213",
+      "day": "M W",
+      "time": "1:00 PM-2:15 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "SPAN 1",
+      "building": "sutherland",
+      "room_number": "307",
+      "day": "M W",
+      "time": "2:30 PM-3:45 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "SPAN 1",
+      "building": "sutherland",
+      "room_number": "307",
+      "day": "M W",
+      "time": "9:30 AM-10:45 AM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "SPAN 100",
+      "building": "",
+      "room_number": "",
+      "day": "",
+      "time": "",
+      "status": "WEB"
+    },
+    {
+      "course": "SPAN 2",
+      "building": "woodland",
+      "room_number": "346",
+      "day": "M W",
+      "time": "8:00 AM-9:15 AM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "SPAN 2",
+      "building": "woodland",
+      "room_number": "346",
+      "day": "M W",
+      "time": "9:35 AM-10:50 AM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "SPAN 2",
+      "building": "woodland",
+      "room_number": "342",
+      "day": "W",
+      "time": "6:00 PM-7:55 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "SPAN 20",
+      "building": "woodland",
+      "room_number": "132A",
+      "day": "M W F",
+      "time": "10:10 AM-12:05 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "SPAN 296",
+      "building": "",
+      "room_number": "",
+      "day": "",
+      "time": "",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "SPAN 299",
+      "building": "",
+      "room_number": "",
+      "day": "",
+      "time": "",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "SPAN 3",
+      "building": "woodland",
+      "room_number": "346",
+      "day": "M W",
+      "time": "1:00 PM-2:15 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "SPAN 3",
+      "building": "sutherland",
+      "room_number": "307",
+      "day": "M W",
+      "time": "8:00 AM-9:15 AM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "SPAN 3",
+      "building": "woodland",
+      "room_number": "346",
+      "day": "T Th",
+      "time": "12:05 PM-1:20 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "SPAN 3",
+      "building": "",
+      "room_number": "",
+      "day": "",
+      "time": "",
+      "status": "WEB"
+    },
+    {
+      "course": "SPAN 412",
+      "building": "",
+      "room_number": "",
+      "day": "",
+      "time": "",
+      "status": "WEB"
+    },
+    {
+      "course": "SPLED 403A",
+      "building": "spring house",
+      "room_number": "101",
+      "day": "M W",
+      "time": "11:15 AM-12:45 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "SPLED 419",
+      "building": "spring house",
+      "room_number": "101",
+      "day": "M W",
+      "time": "1:00 PM-2:15 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "SRA 111",
+      "building": "",
+      "room_number": "",
+      "day": "T Th",
+      "time": "12:05 PM-1:20 PM",
+      "status": "ZOOM"
+    },
+    {
+      "course": "SRA 111",
+      "building": "",
+      "room_number": "",
+      "day": "",
+      "time": "",
+      "status": "WEB"
+    },
+    {
+      "course": "SRA 211",
+      "building": "",
+      "room_number": "",
+      "day": "",
+      "time": "",
+      "status": "WEB"
+    },
+    {
+      "course": "SRA 231",
+      "building": "",
+      "room_number": "",
+      "day": "",
+      "time": "",
+      "status": "WEB"
+    },
+    {
+      "course": "SRA 311",
+      "building": "woodland",
+      "room_number": "346",
+      "day": "T",
+      "time": "6:00 PM-9:00 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "SRA 365",
+      "building": "",
+      "room_number": "",
+      "day": "M W",
+      "time": "10:10 AM-11:00 AM",
+      "status": "ZOOM"
+    },
+    {
+      "course": "SSED 430W",
+      "building": "sutherland",
+      "room_number": "217",
+      "day": "T Th",
+      "time": "3:05 PM-4:20 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "STAT 100",
+      "building": "sutherland",
+      "room_number": "211",
+      "day": "M W",
+      "time": "7:00 PM-8:15 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "STAT 200",
+      "building": "woodland",
+      "room_number": "220",
+      "day": "M W",
+      "time": "4:00 PM-5:50 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "STAT 200",
+      "building": "rydal",
+      "room_number": "101",
+      "day": "M W F",
+      "time": "1:00 PM-2:15 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "STAT 200",
+      "building": "rydal",
+      "room_number": "101",
+      "day": "M W F",
+      "time": "2:30 PM-3:45 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "STAT 200",
+      "building": "woodland",
+      "room_number": "319",
+      "day": "M W F",
+      "time": "2:30 PM-3:45 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "STAT 200",
+      "building": "woodland",
+      "room_number": "319",
+      "day": "M W F",
+      "time": "4:00 PM-5:15 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "STAT 200",
+      "building": "woodland",
+      "room_number": "220",
+      "day": "M W F",
+      "time": "8:00 AM-9:15 AM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "STAT 200",
+      "building": "sutherland",
+      "room_number": "008",
+      "day": "T Th",
+      "time": "3:35 PM-5:30 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "STAT 200",
+      "building": "sutherland",
+      "room_number": "008",
+      "day": "T Th",
+      "time": "6:00 PM-7:55 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "STAT 318",
+      "building": "sutherland",
+      "room_number": "305",
+      "day": "M W",
+      "time": "2:30 PM-3:45 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "STAT 318",
+      "building": "woodland",
+      "room_number": "220",
+      "day": "M W F",
+      "time": "10:10 AM-11:00 AM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "STAT 318",
+      "building": "woodland",
+      "room_number": "220",
+      "day": "M W F",
+      "time": "1:25 PM-2:15 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "STAT 401",
+      "building": "",
+      "room_number": "",
+      "day": "",
+      "time": "",
+      "status": "WEB"
+    },
+    {
+      "course": "STAT 414",
+      "building": "",
+      "room_number": "",
+      "day": "",
+      "time": "",
+      "status": "WEB"
+    },
+    {
+      "course": "STRNG 100",
+      "building": "",
+      "room_number": "",
+      "day": "",
+      "time": "",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "STRNG 104",
+      "building": "",
+      "room_number": "",
+      "day": "",
+      "time": "",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "SUST 150N",
+      "building": "woodland",
+      "room_number": "319",
+      "day": "T Th",
+      "time": "1:35 PM-2:50 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "THEA 100",
+      "building": "sutherland",
+      "room_number": "227",
+      "day": "T Th",
+      "time": "12:05 PM-1:20 PM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "THEA 101N",
+      "building": "",
+      "room_number": "",
+      "day": "W",
+      "time": "6:00 PM-9:00 PM",
+      "status": "ZOOM"
+    },
+    {
+      "course": "VOICE 100",
+      "building": "",
+      "room_number": "",
+      "day": "",
+      "time": "",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "WMNST 227",
+      "building": "spring house",
+      "room_number": "101",
+      "day": "T Th",
+      "time": "9:05 AM-10:20 AM",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "WWNDS 100",
+      "building": "",
+      "room_number": "",
+      "day": "",
+      "time": "",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "WWNDS 102",
+      "building": "",
+      "room_number": "",
+      "day": "",
+      "time": "",
+      "status": "IN PERSON"
+    },
+    {
+      "course": "WWNDS 104",
+      "building": "",
+      "room_number": "",
+      "day": "",
+      "time": "",
+      "status": "IN PERSON"
+    }
+  ]
+}
