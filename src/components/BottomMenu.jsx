@@ -4,26 +4,32 @@ import {
   Text,
   Pressable,
   StyleSheet,
-  Image,
 } from "react-native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
+import Logo from "../assets/psulogo.svg";
 
 const PSU = {
   blue: "#001E44",
   white: "#FFFFFF",
   light: "#F5F7FA",
   border: "#E6ECF2",
-  text: "#0B1220",
   muted: "#5B6776",
   activeBg: "#EAF1FF",
   activeBorder: "#C9D9FF",
 };
 
+export const BOTTOM_MENU_HEIGHT = 108;
+
 export default function BottomMenu({ navigation, active = "" }) {
+  const insets = useSafeAreaInsets();
+
+  const isSearch = active === "Search";
   const isBuildings = active === "Buildings";
   const isMap = active === "Map";
+  const isSchedule = active === "Schedule";
 
   return (
-    <View style={s.wrap}>
+    <View style={[s.wrap, { paddingBottom: 18 + insets.bottom }]}>
       <Pressable
         style={[s.item, isMap && s.itemActive]}
         onPress={() => {
@@ -35,14 +41,27 @@ export default function BottomMenu({ navigation, active = "" }) {
       </Pressable>
 
       <Pressable
-        style={s.logoWrap}
-        onPress={() => navigation.navigate("Search")}
+        style={[s.item, isSchedule && s.itemActive]}
+        onPress={() => {
+          if (!isSchedule) navigation.navigate("MySchedule");
+        }}
       >
-        <Image
-          source={require("../assets/psu-logo.png")}
-          style={s.logo}
-          resizeMode="contain"
-        />
+        <Text style={[s.icon, isSchedule && s.activeText]}>📅</Text>
+        <Text style={[s.label, isSchedule && s.activeText]}>Schedule</Text>
+      </Pressable>
+
+      <Pressable
+        style={s.centerItem}
+        onPress={() => {
+          if (!isSearch) navigation.navigate("Search");
+        }}
+      >
+        <View style={s.logoCircle}>
+          <Logo width={42} height={42} />
+        </View>
+        <Text style={[s.centerLabel, isSearch && s.activeText]}>
+          Main Page
+        </Text>
       </Pressable>
 
       <Pressable
@@ -62,26 +81,32 @@ export default function BottomMenu({ navigation, active = "" }) {
 
 const s = StyleSheet.create({
   wrap: {
+    position: "absolute",
+    left: 0,
+    right: 0,
+    bottom: 0,
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
-    paddingHorizontal: 20,
+    paddingHorizontal: 14,
     paddingTop: 12,
-    paddingBottom: 18,
     borderTopWidth: 1,
     borderTopColor: PSU.border,
     backgroundColor: PSU.white,
-    minHeight: 108,
+    minHeight: BOTTOM_MENU_HEIGHT,
+    zIndex: 100,
+    elevation: 20,
   },
 
   item: {
-    width: 84,
+    width: 72,
     minHeight: 70,
     alignItems: "center",
     justifyContent: "center",
     paddingVertical: 8,
     borderRadius: 16,
   },
+
   itemActive: {
     backgroundColor: PSU.activeBg,
     borderWidth: 1,
@@ -92,35 +117,43 @@ const s = StyleSheet.create({
     fontSize: 22,
     color: PSU.muted,
   },
+
   label: {
     marginTop: 4,
     fontSize: 12,
     fontWeight: "700",
     color: PSU.muted,
+    textAlign: "center",
   },
+
   activeText: {
     color: PSU.blue,
   },
 
-  logoWrap: {
-    width: 76,
-    height: 76,
-    borderRadius: 38,
-    backgroundColor: PSU.white,
+  centerItem: {
+    width: 100,
+    minHeight: 75,
     alignItems: "center",
     justifyContent: "center",
-    marginTop: -28,
-    borderWidth: 4,
-    borderColor: PSU.light,
-    shadowColor: "#000",
-    shadowOpacity: 0.08,
-    shadowRadius: 10,
-    shadowOffset: { width: 0, height: 5 },
-    elevation: 4,
+    paddingVertical: 8,
   },
 
-  logo: {
-    width: 52,
-    height: 52,
+  logoCircle: {
+    width: 64,
+    height: 64,
+    borderRadius: 32,
+    backgroundColor: PSU.white,
+    borderWidth: 2,
+    borderColor: PSU.blue,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+
+  centerLabel: {
+    marginTop: 4,
+    fontSize: 12,
+    fontWeight: "700",
+    color: PSU.muted,
+    textAlign: "center",
   },
 });
