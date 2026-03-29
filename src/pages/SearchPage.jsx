@@ -6,14 +6,14 @@ import {
   Pressable,
   StyleSheet,
   Modal,
-  SafeAreaView,
   ScrollView,
 } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 import { Picker } from "@react-native-picker/picker";
 
 import { findRoom, getAllBuildings } from "../utils/findRoom";
 import { findCourse } from "../utils/findCourse";
-import BottomMenu from "../components/BottomMenu";
+import BottomMenu, { BOTTOM_MENU_HEIGHT } from "../components/BottomMenu";
 
 const PSU = {
   blue: "#001E44",
@@ -26,57 +26,6 @@ const PSU = {
   successBg: "#EEF8F1",
   successBorder: "#B7DEC1",
 };
-
-function getCourseLocation(course) {
-  const building =
-    course?.building ||
-    course?.buildingId ||
-    course?.building_id ||
-    course?.location_building ||
-    "";
-
-  const roomNumber =
-    course?.room_number ||
-    course?.room ||
-    course?.classroom ||
-    course?.location_room ||
-    "";
-
-  return {
-    building: String(building || "").trim(),
-    roomNumber: String(roomNumber || "").trim(),
-  };
-}
-
-function isOnlineCourse(course) {
-  const mode =
-    String(
-      course?.mode ||
-        course?.delivery_mode ||
-        course?.instruction_mode ||
-        course?.location ||
-        ""
-    )
-      .trim()
-      .toLowerCase();
-
-  const room =
-    String(course?.room || course?.room_number || course?.classroom || "")
-      .trim()
-      .toLowerCase();
-
-  const building =
-    String(course?.building || course?.buildingId || course?.building_id || "")
-      .trim()
-      .toLowerCase();
-
-  return (
-    mode.includes("online") ||
-    mode.includes("remote") ||
-    room === "online" ||
-    building === "online"
-  );
-}
 
 function getCourseLabel(course) {
   const code =
@@ -171,8 +120,8 @@ export default function SearchPage({ navigation }) {
     const query = String(courseQuery || "").trim();
 
     if (!query) {
-       setStatus("Please enter a course.");
-       return;
+      setStatus("Please enter a course.");
+      return;
     }
 
     const courseResult = findCourse(query);
@@ -205,9 +154,10 @@ export default function SearchPage({ navigation }) {
   };
 
   return (
-    <SafeAreaView style={s.safe}>
+    <SafeAreaView style={s.safe} edges={["top"]}>
       <View style={s.page}>
         <ScrollView
+          style={{ flex: 1 }}
           contentContainerStyle={s.scrollContent}
           keyboardShouldPersistTaps="handled"
         >
@@ -415,7 +365,10 @@ function ResultCard({ result, navigation }) {
 const s = StyleSheet.create({
   safe: { flex: 1, backgroundColor: PSU.light },
   page: { flex: 1, backgroundColor: PSU.light },
-  scrollContent: { paddingBottom: 16 },
+  scrollContent: {
+    flexGrow: 1,
+    paddingBottom: BOTTOM_MENU_HEIGHT + 32,
+  },
 
   header: {
     paddingTop: 18,
