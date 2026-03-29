@@ -8,6 +8,7 @@ import BuildingDetail from "./src/pages/BuildingDetail";
 import NavigationPage from "./src/pages/NavigationPage";
 import MapView from "./src/pages/MapView";
 import FloorMapScreen from "./src/pages/FloorMapScreen";
+import MySchedule from "./src/pages/MySchedule";
 
 const Stack = createNativeStackNavigator();
 
@@ -57,6 +58,12 @@ export default function App() {
           name="FloorMap"
           component={FloorMapScreen}
           options={{ title: "Floor Maps" }}
+        />
+
+        <Stack.Screen
+          name="MySchedule"
+          component={MySchedule}
+          options={{ title: "My Schedule" }}
         />
       </Stack.Navigator>
     </NavigationContainer>
