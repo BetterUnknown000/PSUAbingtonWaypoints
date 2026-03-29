@@ -11,12 +11,14 @@ import {
   Modal,
 } from "react-native";
 import { CameraView, useCameraPermissions } from "expo-camera";
+import * as Location from "expo-location";
 import DirectionArrow from "../components/DirectionArrow";
 
 const PSU = {
   blue: "#001E44",
   blue2: "#0B3D91",
   green: "#18794E",
+  orange: "#B45309",
   light: "#F5F7FA",
   border: "#DCE5F0",
   text: "#0B1220",
@@ -26,7 +28,9 @@ const PSU = {
   nextBorder: "#C9D9FF",
   arrivalBg: "rgba(238,248,241,0.97)",
   arrivalBorder: "#B7DEC1",
-  cardBg: "rgba(255,255,255,0.98)",
+  stageBg: "rgba(255,255,255,0.96)",
+  stageBorder: "#DCE5F0",
+  cardBg: "rgba(255,255,255,0.985)",
   overlayDark: "rgba(0,0,0,0.16)",
   overlayDarkStrong: "rgba(0,0,0,0.34)",
   modalBackdrop: "rgba(0,0,0,0.40)",
@@ -35,12 +39,21 @@ const PSU = {
 };
 
 const DEMO_STEPS = [
-  { id: "step-0", text: "Start at Sutherland Main Entrance." },
+  { id: "step-0", text: "Start at the entrance." },
   { id: "step-1", text: "Walk toward the main hallway." },
   { id: "step-2", text: "Turn left near the stairs." },
   { id: "step-3", text: "Continue down the hallway." },
-  { id: "step-4", text: "Arrive at Room 209." },
+  { id: "step-4", text: "Arrive at the classroom." },
 ];
+
+function SectionTitle({ icon, text }) {
+  return (
+    <View style={s.sectionTitleRow}>
+      <Text style={s.sectionIcon}>{icon}</Text>
+      <Text style={s.sectionTitleText}>{text}</Text>
+    </View>
+  );
+}
 
 function getArrowDirectionFromStep(stepText = "") {
   const t = String(stepText).toLowerCase();
@@ -50,13 +63,99 @@ function getArrowDirectionFromStep(stepText = "") {
   return "straight";
 }
 
-function SectionTitle({ icon, text }) {
-  return (
-    <View style={s.sectionTitleRow}>
-      <Text style={s.sectionIcon}>{icon}</Text>
-      <Text style={s.sectionTitleText}>{text}</Text>
-    </View>
-  );
+function haversineMeters(lat1, lon1, lat2, lon2) {
+  const toRad = (v) => (v * Math.PI) / 180;
+  const R = 6371000;
+
+  const dLat = toRad(lat2 - lat1);
+  const dLon = toRad(lon2 - lon1);
+
+  const a =
+    Math.sin(dLat / 2) ** 2 +
+    Math.cos(toRad(lat1)) *
+      Math.cos(toRad(lat2)) *
+      Math.sin(dLon / 2) ** 2;
+
+  return 2 * R * Math.asin(Math.sqrt(a));
+}
+
+function formatDistance(meters) {
+  if (meters == null || Number.isNaN(meters)) {
+    return {
+      metersText: "-- m",
+      feetText: "-- ft",
+    };
+  }
+
+  const m = Number(meters);
+  const ft = m * 3.28084;
+
+  return {
+    metersText: `${m.toFixed(1)} m`,
+    feetText: `${ft.toFixed(0)} ft`,
+  };
+}
+
+function getStage({
+  currentBuildingId,
+  destinationBuildingId,
+  currentWaypointLabel,
+}) {
+  const current = String(currentBuildingId || "").toLowerCase();
+  const destination = String(destinationBuildingId || "").toLowerCase();
+
+  if (current && destination && current === destination) {
+    return {
+      key: "indoor_destination",
+      label: "Indoor Navigation",
+      description: "You are in the destination building.",
+    };
+  }
+
+  if (current && destination && current !== destination) {
+    return {
+      key: "exit_current_building",
+      label: "Exit Guidance",
+      description: "You are in a different building. Head to the nearest exit first.",
+    };
+  }
+
+  if (!currentWaypointLabel || currentWaypointLabel === "Waiting for scan") {
+    return {
+      key: "outdoor_guidance",
+      label: "Outdoor Guidance",
+      description: "Use GPS to head toward the destination building.",
+    };
+  }
+
+  return {
+    key: "outdoor_guidance",
+    label: "Outdoor Guidance",
+    description: "Head toward the destination building.",
+  };
+}
+
+function getNextStepText({
+  arrived,
+  destinationRoom,
+  stage,
+  demoSteps,
+  activeStepIndex,
+  destinationBuildingName,
+}) {
+  if (arrived) {
+    return `You have arrived at Room ${destinationRoom?.room_number || ""}.`;
+  }
+
+  if (stage.key === "exit_current_building") {
+    return "Proceed to the nearest exit of your current building.";
+  }
+
+  if (stage.key === "outdoor_guidance") {
+    return `Head toward ${destinationBuildingName || "the destination building"}.`;
+  }
+
+  return demoSteps[activeStepIndex]?.text || "Continue toward your destination.";
 }
 
 export default function NavigationPage({ route, navigation }) {
@@ -68,12 +167,17 @@ export default function NavigationPage({ route, navigation }) {
   const [cameraEnabled, setCameraEnabled] = useState(true);
 
   const [currentWaypointLabel, setCurrentWaypointLabel] = useState("Waiting for scan");
+  const [currentBuildingId, setCurrentBuildingId] = useState("");
   const [lastScannedText, setLastScannedText] = useState("");
   const [steps, setSteps] = useState(DEMO_STEPS);
   const [activeStepIndex, setActiveStepIndex] = useState(1);
   const [arrived, setArrived] = useState(false);
   const [scanFlashVisible, setScanFlashVisible] = useState(false);
   const [detailsVisible, setDetailsVisible] = useState(false);
+
+  const [gpsPermissionGranted, setGpsPermissionGranted] = useState(false);
+  const [gpsLoading, setGpsLoading] = useState(true);
+  const [userGps, setUserGps] = useState(null);
 
   const nextStepFade = useRef(new Animated.Value(1)).current;
   const nextStepScale = useRef(new Animated.Value(1)).current;
@@ -134,22 +238,120 @@ export default function NavigationPage({ route, navigation }) {
     return () => loop.stop();
   }, [arrived, arrivalPulse]);
 
-  const nextStepText = useMemo(() => {
-    if (arrived) {
-      return `You have arrived at Room ${destinationRoom?.room_number || ""}.`;
+  useEffect(() => {
+    let subscription = null;
+
+    async function setupLocation() {
+      try {
+        setGpsLoading(true);
+
+        const { status } = await Location.requestForegroundPermissionsAsync();
+        if (status !== "granted") {
+          setGpsPermissionGranted(false);
+          setGpsLoading(false);
+          return;
+        }
+
+        setGpsPermissionGranted(true);
+
+        const current = await Location.getCurrentPositionAsync({
+          accuracy: Location.Accuracy.Balanced,
+        });
+
+        setUserGps({
+          latitude: current.coords.latitude,
+          longitude: current.coords.longitude,
+        });
+
+        subscription = await Location.watchPositionAsync(
+          {
+            accuracy: Location.Accuracy.Balanced,
+            timeInterval: 3000,
+            distanceInterval: 3,
+          },
+          (position) => {
+            setUserGps({
+              latitude: position.coords.latitude,
+              longitude: position.coords.longitude,
+            });
+          }
+        );
+
+        setGpsLoading(false);
+      } catch (error) {
+        console.log("Location setup error:", error);
+        setGpsLoading(false);
+      }
     }
-    return steps[activeStepIndex]?.text || "Scan a QR code to begin navigation.";
-  }, [steps, activeStepIndex, arrived, destinationRoom]);
+
+    setupLocation();
+
+    return () => {
+      if (subscription) {
+        subscription.remove();
+      }
+    };
+  }, []);
+
+  const stage = useMemo(() => {
+    return getStage({
+      currentBuildingId,
+      destinationBuildingId:
+        destinationBuilding?.id || destinationRoom?.building || "",
+      currentWaypointLabel,
+    });
+  }, [currentBuildingId, destinationBuilding, destinationRoom, currentWaypointLabel]);
+
+  const nextStepText = useMemo(() => {
+    return getNextStepText({
+      arrived,
+      destinationRoom,
+      stage,
+      demoSteps: steps,
+      activeStepIndex,
+      destinationBuildingName: destinationBuilding?.name,
+    });
+  }, [arrived, destinationRoom, stage, steps, activeStepIndex, destinationBuilding]);
 
   const arrowDirection = useMemo(() => {
     if (arrived) return "straight";
+
+    if (stage.key === "exit_current_building") {
+      return "straight";
+    }
+
+    if (stage.key === "outdoor_guidance") {
+      return "straight";
+    }
+
     return getArrowDirectionFromStep(steps[activeStepIndex]?.text || "");
-  }, [steps, activeStepIndex, arrived]);
+  }, [steps, activeStepIndex, arrived, stage]);
 
   const remainingSteps = useMemo(() => {
     if (arrived) return 0;
     return Math.max(steps.length - activeStepIndex - 1, 0);
   }, [steps, activeStepIndex, arrived]);
+
+  const distanceToBuildingMeters = useMemo(() => {
+    if (
+      !userGps ||
+      destinationBuilding?.latitude == null ||
+      destinationBuilding?.longitude == null
+    ) {
+      return null;
+    }
+
+    return haversineMeters(
+      userGps.latitude,
+      userGps.longitude,
+      Number(destinationBuilding.latitude),
+      Number(destinationBuilding.longitude)
+    );
+  }, [userGps, destinationBuilding]);
+
+  const distanceText = useMemo(() => {
+    return formatDistance(distanceToBuildingMeters);
+  }, [distanceToBuildingMeters]);
 
   const showScanBadge = (text) => {
     setScanFlashVisible(true);
@@ -187,24 +389,35 @@ export default function NavigationPage({ route, navigation }) {
     setCurrentWaypointLabel(`Scanned: ${qrText}`);
     showScanBadge(qrText);
 
-    setActiveStepIndex((prev) => {
-      if (prev >= steps.length - 1) {
-        setArrived(true);
-        return prev;
-      }
+    // Temporary UI-only building detection from QR text.
+    // Later your teammate can replace this with real waypoint/building parsing.
+    const lowered = qrText.toLowerCase();
+    if (lowered.includes("woodland")) setCurrentBuildingId("woodland");
+    else if (lowered.includes("sutherland")) setCurrentBuildingId("sutherland");
+    else if (lowered.includes("lares")) setCurrentBuildingId("lares");
+    else if (lowered.includes("rydal")) setCurrentBuildingId("rydal");
+    else if (lowered.includes("springhouse")) setCurrentBuildingId("springhouse");
+    else if (lowered.includes("athletic")) setCurrentBuildingId("athletic");
 
-      const next = prev + 1;
+    if (stage.key === "indoor_destination") {
+      setActiveStepIndex((prev) => {
+        if (prev >= steps.length - 1) {
+          setArrived(true);
+          return prev;
+        }
 
-      if (next >= steps.length - 1) {
-        setArrived(true);
-      }
-
-      return next;
-    });
+        const next = prev + 1;
+        if (next >= steps.length - 1) {
+          setArrived(true);
+        }
+        return next;
+      });
+    }
   };
 
   const handleReset = () => {
     setCurrentWaypointLabel("Waiting for scan");
+    setCurrentBuildingId("");
     setLastScannedText("");
     setSteps(DEMO_STEPS);
     setActiveStepIndex(1);
@@ -342,21 +555,19 @@ export default function NavigationPage({ route, navigation }) {
             <Text style={s.summarySub} numberOfLines={2}>
               {lastScannedText
                 ? "Location updated from QR scan."
-                : "Scan a QR code to set your location."}
+                : gpsLoading
+                ? "Getting GPS location..."
+                : "Scan a QR code to set your indoor location."}
             </Text>
           </View>
 
           <View style={s.summaryCard}>
-            <SectionTitle icon="🧭" text="Route Summary" />
+            <SectionTitle icon="📏" text="Distance" />
             <Text style={s.summaryValue}>
-              {arrived
-                ? "Destination reached"
-                : `${remainingSteps} step(s) remaining`}
+              {distanceText.feetText} / {distanceText.metersText}
             </Text>
             <Text style={s.summarySub}>
-              {arrived
-                ? `You are at Room ${destinationRoom?.room_number || ""}.`
-                : "UI demo mode is active until routing logic is connected."}
+              Distance to destination building
             </Text>
           </View>
         </View>
@@ -372,7 +583,20 @@ export default function NavigationPage({ route, navigation }) {
           <View style={s.miniStatusCard}>
             <Text style={s.miniStatusLabel}>Status</Text>
             <Text style={[s.miniStatusValue, arrived && s.miniStatusValueArrived]}>
-              {arrived ? "Arrived" : "In Progress"}
+              {arrived
+                ? "Arrived"
+                : stage.key === "exit_current_building"
+                ? "Exiting Building"
+                : stage.key === "outdoor_guidance"
+                ? "Heading Outside"
+                : "Indoor Routing"}
+            </Text>
+          </View>
+
+          <View style={s.miniStatusCard}>
+            <Text style={s.miniStatusLabel}>Steps Left</Text>
+            <Text style={s.miniStatusValue}>
+              {arrived ? "0" : String(remainingSteps)}
             </Text>
           </View>
         </View>
@@ -487,6 +711,19 @@ export default function NavigationPage({ route, navigation }) {
                   </Text>
                 </View>
               </View>
+
+              <View style={s.detailSection}>
+                <SectionTitle icon="📍" text="GPS Status" />
+                <View style={s.detailInfoCard}>
+                  <Text style={s.detailBody}>
+                    {gpsPermissionGranted
+                      ? userGps
+                        ? `Lat: ${userGps.latitude.toFixed(6)}, Lng: ${userGps.longitude.toFixed(6)}`
+                        : "Waiting for GPS coordinates..."
+                      : "GPS permission not granted."}
+                  </Text>
+                </View>
+              </View>
             </ScrollView>
           </View>
         </View>
@@ -581,7 +818,7 @@ const s = StyleSheet.create({
 
   arrowCenterWrap: {
     position: "absolute",
-    top: "20%",
+    top: "19%",
     left: 0,
     right: 0,
     alignItems: "center",
@@ -618,7 +855,7 @@ const s = StyleSheet.create({
     position: "absolute",
     left: 16,
     right: 16,
-    bottom: 118,
+    bottom: 15,
   },
   nextStepCard: {
     backgroundColor: PSU.nextBg,
