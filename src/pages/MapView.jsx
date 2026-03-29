@@ -13,7 +13,7 @@ import {
 import Svg, { Path } from "react-native-svg";
 import { Picker } from "@react-native-picker/picker";
 import { useNavigation } from "@react-navigation/native";
-import BottomMenu from "../components/BottomMenu";
+import BottomMenu, { BOTTOM_MENU_HEIGHT } from "../components/BottomMenu";
 import campusData from "../data/campusData.json";
 
 const PSU = {
@@ -228,7 +228,8 @@ const styles = StyleSheet.create({
     backgroundColor: PSU.light,
   },
   scrollContent: {
-    paddingBottom: 16,
+    flexGrow: 1,
+    paddingBottom: BOTTOM_MENU_HEIGHT + 20,
   },
   brandRow: {
     paddingTop: 18,
