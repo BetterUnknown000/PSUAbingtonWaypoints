@@ -8,9 +8,11 @@ import {
   StyleSheet,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { getAllBuildings } from "../utils/findRoom";
 import campusData from "../data/campusData.json";
-import BottomMenu from "../components/BottomMenu";
+import BottomMenu, { BOTTOM_MENU_HEIGHT } from "../components/BottomMenu";
+
 
 const PSU = {
   blue: "#001E44",
@@ -60,6 +62,7 @@ function countRoomsForBuilding(buildingId) {
 
 export default function Buildings({ navigation }) {
   const buildings = useMemo(() => getAllBuildings(), []);
+  const insets = useSafeAreaInsets();
 
   return (
       <SafeAreaView style={s.safe} edges={["top"]}>
@@ -80,7 +83,7 @@ export default function Buildings({ navigation }) {
             gap: 14,
             paddingHorizontal: 20,
             paddingTop: 18,
-            paddingBottom: 16,
+            paddingBottom: BOTTOM_MENU_HEIGHT + insets.bottom + 30,
           }}
           renderItem={({ item }) => {
             const entranceCount = countEntrancesForBuilding(item.id);
@@ -131,7 +134,6 @@ const s = StyleSheet.create({
   },
   header: {
     paddingHorizontal: 20,
-    paddingTop: 16,
   },
   title: {
     fontSize: 30,
