@@ -6,9 +6,8 @@ import {
   Image,
   Pressable,
   StyleSheet,
-  SafeAreaView,
 } from "react-native";
-
+import { SafeAreaView } from "react-native-safe-area-context";
 import { getAllBuildings } from "../utils/findRoom";
 import campusData from "../data/campusData.json";
 import BottomMenu from "../components/BottomMenu";
@@ -63,7 +62,7 @@ export default function Buildings({ navigation }) {
   const buildings = useMemo(() => getAllBuildings(), []);
 
   return (
-    <SafeAreaView style={s.safe}>
+      <SafeAreaView style={s.safe} edges={["top"]}>
       <View style={s.page}>
         <View style={s.header}>
           <Text style={s.title}>Campus Buildings</Text>
