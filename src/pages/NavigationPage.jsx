@@ -13,6 +13,8 @@ import {
 import { CameraView, useCameraPermissions } from "expo-camera";
 import * as Location from "expo-location";
 import DirectionArrow from "../components/DirectionArrow";
+import campusData from "../data/campusData.json";
+import { findWaypointByQrData } from "../utils/navigation";
 
 const PSU = {
   blue: "#001E44",
@@ -142,7 +144,14 @@ function getNextStepText({
   demoSteps,
   activeStepIndex,
   destinationBuildingName,
+  currentWaypointLabel,
 }) {
+  if (!destinationRoom) {
+    return currentWaypointLabel === "Waiting for scan"
+      ? "Scan a QR code or open the app from a building QR to set your starting location."
+      : "Starting point set. Go back and choose a room or course to begin directions.";
+  }
+
   if (arrived) {
     return `You have arrived at Room ${destinationRoom?.room_number || ""}.`;
   }
@@ -162,6 +171,24 @@ export default function NavigationPage({ route, navigation }) {
   const { destination } = route.params || {};
   const destinationRoom = destination?.room || null;
   const destinationBuilding = destination?.building || null;
+  const linkedStartWaypoint = useMemo(() => {
+    const params = route.params || {};
+    const startWaypointId =
+      params.startWaypointId || params.waypoint_id || params.waypointId || "";
+    const startQrId = params.startQrId || params.qr_id || params.qrCode || "";
+
+    if (!startWaypointId && !startQrId) {
+      return null;
+    }
+
+    return (
+      (campusData.waypoints || []).find((waypoint) => {
+        return (
+          waypoint.id === startWaypointId || waypoint.qr_code === startQrId
+        );
+      }) || null
+    );
+  }, [route.params]);
 
   const [permission, requestPermission] = useCameraPermissions();
   const [cameraEnabled, setCameraEnabled] = useState(true);
@@ -186,9 +213,18 @@ export default function NavigationPage({ route, navigation }) {
   const scanCooldownRef = useRef(false);
 
   const destinationTitle = useMemo(() => {
-    if (!destinationRoom) return "Unknown Destination";
+    if (!destinationRoom) return "Choose a Destination";
     return `${destinationBuilding?.name || destinationRoom.building} ${destinationRoom.room_number}`;
   }, [destinationRoom, destinationBuilding]);
+
+  useEffect(() => {
+    if (!linkedStartWaypoint) return;
+
+    setCurrentWaypointLabel(linkedStartWaypoint.label || linkedStartWaypoint.id);
+    setCurrentBuildingId(linkedStartWaypoint.building || "");
+    setLastScannedText(linkedStartWaypoint.qr_code || linkedStartWaypoint.id);
+    setArrived(false);
+  }, [linkedStartWaypoint]);
 
   useEffect(() => {
     nextStepFade.setValue(0.55);
@@ -310,8 +346,17 @@ export default function NavigationPage({ route, navigation }) {
       demoSteps: steps,
       activeStepIndex,
       destinationBuildingName: destinationBuilding?.name,
+      currentWaypointLabel,
     });
-  }, [arrived, destinationRoom, stage, steps, activeStepIndex, destinationBuilding]);
+  }, [
+    arrived,
+    destinationRoom,
+    stage,
+    steps,
+    activeStepIndex,
+    destinationBuilding,
+    currentWaypointLabel,
+  ]);
 
   const arrowDirection = useMemo(() => {
     if (arrived) return "straight";
@@ -385,19 +430,17 @@ export default function NavigationPage({ route, navigation }) {
     }, 1200);
 
     const qrText = String(data);
-    setLastScannedText(qrText);
-    setCurrentWaypointLabel(`Scanned: ${qrText}`);
-    showScanBadge(qrText);
+    const scannedWaypoint = findWaypointByQrData(qrText);
 
-    // Temporary UI-only building detection from QR text.
-    // Later your teammate can replace this with real waypoint/building parsing.
-    const lowered = qrText.toLowerCase();
-    if (lowered.includes("woodland")) setCurrentBuildingId("woodland");
-    else if (lowered.includes("sutherland")) setCurrentBuildingId("sutherland");
-    else if (lowered.includes("lares")) setCurrentBuildingId("lares");
-    else if (lowered.includes("rydal")) setCurrentBuildingId("rydal");
-    else if (lowered.includes("springhouse")) setCurrentBuildingId("springhouse");
-    else if (lowered.includes("athletic")) setCurrentBuildingId("athletic");
+    setLastScannedText(qrText);
+    if (scannedWaypoint) {
+      setCurrentWaypointLabel(scannedWaypoint.label || scannedWaypoint.id);
+      setCurrentBuildingId(scannedWaypoint.building || "");
+      showScanBadge(scannedWaypoint.label || scannedWaypoint.id);
+    } else {
+      setCurrentWaypointLabel(`Scanned: ${qrText}`);
+      showScanBadge(qrText);
+    }
 
     if (stage.key === "indoor_destination") {
       setActiveStepIndex((prev) => {
@@ -487,7 +530,8 @@ export default function NavigationPage({ route, navigation }) {
                 {destinationTitle}
               </Text>
               <Text style={s.destinationPillSub} numberOfLines={1}>
-                {destinationRoom?.room_name || "Classroom destination"}
+                {destinationRoom?.room_name ||
+                  "Open from a QR code or choose a room to start."}
               </Text>
             </View>
           </View>

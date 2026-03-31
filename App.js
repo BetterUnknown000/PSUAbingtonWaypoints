@@ -11,10 +11,24 @@ import FloorMapScreen from "./src/pages/FloorMapScreen";
 import MySchedule from "./src/pages/MySchedule";
 
 const Stack = createNativeStackNavigator();
+const linking = {
+  prefixes: ["psuabingtonwaypoints://"],
+  config: {
+    screens: {
+      Search: "search",
+      Buildings: "buildings",
+      BuildingDetail: "building-detail",
+      Navigation: "navigation",
+      MapView: "map-view",
+      FloorMap: "floor-map",
+      MySchedule: "my-schedule",
+    },
+  },
+};
 
 export default function App() {
   return (
-    <NavigationContainer>
+    <NavigationContainer linking={linking}>
       <Stack.Navigator
         initialRouteName="Search"
         screenOptions={{

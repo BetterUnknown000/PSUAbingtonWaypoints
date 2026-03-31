@@ -1,4 +1,5 @@
 import campusData from "../data/campusData.json";
+import { findWaypointFromQrPayload, parseQrPayload } from "./qrPayload";
 
 function getWaypointById(id) {
   return (campusData.waypoints || []).find((w) => w.id === id) || null;
@@ -162,6 +163,10 @@ export function buildStepInstructions(pathIds = []) {
 }
 
 export function findWaypointByQrData(qrData) {
+  const payload = parseQrPayload(qrData);
+  const payloadMatch = findWaypointFromQrPayload(payload);
+  if (payloadMatch) return payloadMatch;
+
   const normalized = String(qrData || "").trim().toLowerCase();
 
   return (
