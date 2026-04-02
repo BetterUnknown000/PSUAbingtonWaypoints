@@ -2,6 +2,7 @@
 // src/utils/findRoom.js
 import campusData from "../data/campusData.json";
 
+/*
 // ---- CONNECTION CHECK ----
 console.log("campusData loaded:", {
     buildings: campusData.buildings?.length ?? "NOT FOUND",
@@ -9,6 +10,7 @@ console.log("campusData loaded:", {
     waypoints: campusData.waypoints?.length ?? "NOT FOUND",
 });
 // ---- END CONNECTION CHECK ----
+*/
 
 /**
  * findRoom
