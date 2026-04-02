@@ -22,7 +22,7 @@ import {
   requestForegroundLocationPermission,
   watchUserLocation,
 } from "../utils/location";
-import { findWaypointByQrData } from "../utils/navigation";
+import { findWaypointByQrData } from "../utils/qrWaypointLookup";
 import { findRouteToRoom } from "../utils/pathfinding";
 import { buildStepsFromPath } from "../utils/routeSteps";
 
