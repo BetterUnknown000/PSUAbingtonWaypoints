@@ -41,14 +41,6 @@ const PSU = {
   scanBadgeBorder: "#CFE0FF",
 };
 
-const DEMO_STEPS = [
-  { id: "step-0", text: "Start at the entrance." },
-  { id: "step-1", text: "Walk toward the main hallway." },
-  { id: "step-2", text: "Turn left near the stairs." },
-  { id: "step-3", text: "Continue down the hallway." },
-  { id: "step-4", text: "Arrive at the classroom." },
-];
-
 function SectionTitle({ icon, text }) {
   return (
     <View style={s.sectionTitleRow}>
@@ -142,30 +134,89 @@ function getNextStepText({
   arrived,
   destinationRoom,
   stage,
-  demoSteps,
+  steps,
   activeStepIndex,
   destinationBuildingName,
   currentWaypointLabel,
 }) {
+  // If no destination was chosen yet, show a helpful message.
   if (!destinationRoom) {
     return currentWaypointLabel === "Waiting for scan"
       ? "Scan a QR code or open the app from a building QR to set your starting location."
       : "Starting point set. Go back and choose a room or course to begin directions.";
   }
 
+  // If the destination was reached, show the arrival message.
   if (arrived) {
     return `You have arrived at Room ${destinationRoom?.room_number || ""}.`;
   }
 
+  // If the user is in the wrong building, tell them to leave first.
   if (stage.key === "exit_current_building") {
     return "Proceed to the nearest exit of your current building.";
   }
 
+  // If the user is still outside, guide them toward the destination building.
   if (stage.key === "outdoor_guidance") {
     return `Head toward ${destinationBuildingName || "the destination building"}.`;
   }
 
-  return demoSteps[activeStepIndex]?.text || "Continue toward your destination.";
+  // Otherwise, show the current indoor direction step.
+  return steps[activeStepIndex]?.text || "Continue toward your destination.";
+}
+
+// Finds one waypoint object by its id.
+// We use this later to turn route ids into actual waypoint info.
+function getWaypointById(id) {
+  return (campusData.waypoints || []).find((wp) => wp.id === id) || null;
+}
+
+// Takes the path of waypoint ids and turns it into readable directions.
+// Example: ["A", "B", "C"] becomes step text the user can follow.
+function buildStepsFromPath(pathIds = []) {
+  // If there is no path, there are no steps.
+  if (!Array.isArray(pathIds) || pathIds.length === 0) {
+    return [];
+  }
+
+  return pathIds.map((id, index) => {
+    const current = getWaypointById(id);
+    const prev = index > 0 ? getWaypointById(pathIds[index - 1]) : null;
+
+    let text = "";
+
+    // First point in the path is where the user starts.
+    if (index === 0) {
+      text = `Start at ${current?.label || id}.`;
+    }
+    // If the next point is stairs, mention that.
+    else if (current?.type === "stairs") {
+      text = `Go from ${prev?.label || pathIds[index - 1]} to ${current?.label || id}. Use the stairs.`;
+    }
+    // If the next point is an elevator, mention that.
+    else if (current?.type === "elevator") {
+      text = `Go from ${prev?.label || pathIds[index - 1]} to ${current?.label || id}. Use the elevator.`;
+    }
+    // If the next point is an entrance, mention that.
+    else if (current?.type === "entrance") {
+      text = `Go from ${prev?.label || pathIds[index - 1]} to ${current?.label || id}. Head toward the entrance.`;
+    }
+    // If the next point is a room, then that is basically the destination.
+    else if (current?.type === "room") {
+      text = `Go to ${current?.label || id}. Your destination is here.`;
+    }
+    // Default step text for regular hallway / waypoint movement.
+    else {
+      text = `Go from ${prev?.label || pathIds[index - 1]} to ${current?.label || id}.`;
+    }
+
+    // Return each step as an object so the UI can display it.
+    return {
+      id: `step-${index}`,
+      waypointId: id,
+      text,
+    };
+  });
 }
 
 export default function NavigationPage({ route, navigation }) {
@@ -194,14 +245,30 @@ export default function NavigationPage({ route, navigation }) {
   const [permission, requestPermission] = useCameraPermissions();
   const [cameraEnabled, setCameraEnabled] = useState(true);
 
+  // Stores the actual waypoint object the user is currently at
+  const [currentWaypoint, setCurrentWaypoint] = useState(linkedStartWaypoint || null);
+  // Text shown in the UI for the user's current location
   const [currentWaypointLabel, setCurrentWaypointLabel] = useState("Waiting for scan");
+  // Keeps track of which building the user is currently in
   const [currentBuildingId, setCurrentBuildingId] = useState("");
+  // Saves the raw QR text from the last scan
   const [lastScannedText, setLastScannedText] = useState("");
-  const [steps, setSteps] = useState(DEMO_STEPS);
-  const [activeStepIndex, setActiveStepIndex] = useState(1);
+  // Stores the full route path as waypoint IDs from Dijkstra
+  const [routePath, setRoutePath] = useState([]);
+  // Stores the total route distance returned from pathfinding
+  const [routeDistance, setRouteDistance] = useState(0);
+  // Stores the step-by-step directions built from the route path
+  const [steps, setSteps] = useState([]);
+  // Keeps track of which direction step the user is currently on
+  const [activeStepIndex, setActiveStepIndex] = useState(0);
+  // Becomes true when the user scans the destination waypoint
   const [arrived, setArrived] = useState(false);
+  // Controls the little scan success popup animation
   const [scanFlashVisible, setScanFlashVisible] = useState(false);
+  // Controls whether the details modal is open
   const [detailsVisible, setDetailsVisible] = useState(false);
+  // Stores route errors, like when no path can be found
+  const [routeError, setRouteError] = useState("");
 
   const [gpsPermissionGranted, setGpsPermissionGranted] = useState(false);
   const [gpsLoading, setGpsLoading] = useState(true);
@@ -218,14 +285,61 @@ export default function NavigationPage({ route, navigation }) {
     return `${destinationBuilding?.name || destinationRoom.building} ${destinationRoom.room_number}`;
   }, [destinationRoom, destinationBuilding]);
 
+  // Builds a real indoor route from the current waypoint to the destination room.
+  const applyRouteFromWaypoint = (startWaypoint) => {
+    // If we are missing important destination info, stop here.
+    if (!startWaypoint || !destinationBuilding?.id || !destinationRoom?.room_number) {
+      return;
+    }
+  
+    // Use the utils pathfinding.
+    const result = findRouteToRoom(
+      startWaypoint.id,
+      destinationBuilding.id,
+      destinationRoom.room_number,
+      { accessibleOnly: false }
+    );
+  
+    // ERROR CASE
+    if (
+      !result ||
+      !result.route ||
+      !Array.isArray(result.route.path) ||
+      result.route.path.length === 0
+    ) {
+      setRoutePath([]);
+      setRouteDistance(0);
+      setSteps([]);
+      setActiveStepIndex(0);
+      setRouteError("No route could be found from this waypoint.");
+      return;
+    }
+  
+    // Save the real route path, distance, and generated step text.
+    setRoutePath(result.route.path);
+    setRouteDistance(result.route.distance || 0);
+    setSteps(buildStepsFromPath(result.route.path));
+    setActiveStepIndex(0);
+    setRouteError("");
+  };
+    
   useEffect(() => {
+    // If the page was not opened with a starting waypoint, do nothing.
     if (!linkedStartWaypoint) return;
-
+  
+    // Set the user's starting location info.
+    setCurrentWaypoint(linkedStartWaypoint);
     setCurrentWaypointLabel(linkedStartWaypoint.label || linkedStartWaypoint.id);
     setCurrentBuildingId(linkedStartWaypoint.building || "");
     setLastScannedText(linkedStartWaypoint.qr_code || linkedStartWaypoint.id);
     setArrived(false);
-  }, [linkedStartWaypoint]);
+  
+    // If the starting point is already inside the destination building,
+    // build the indoor route right away.
+    if (linkedStartWaypoint.building === destinationBuilding?.id) {
+      applyRouteFromWaypoint(linkedStartWaypoint);
+    }
+  }, [linkedStartWaypoint, destinationBuilding, destinationRoom]);
 
   useEffect(() => {
     nextStepFade.setValue(0.55);
@@ -344,7 +458,7 @@ export default function NavigationPage({ route, navigation }) {
       arrived,
       destinationRoom,
       stage,
-      demoSteps: steps,
+      steps,
       activeStepIndex,
       destinationBuildingName: destinationBuilding?.name,
       currentWaypointLabel,
@@ -423,50 +537,87 @@ export default function NavigationPage({ route, navigation }) {
   };
 
   const handleScan = ({ data }) => {
+    // Ignore empty scans or scans that happen too fast.
     if (!data || scanCooldownRef.current) return;
-
+  
+    // Small cooldown so the camera does not keep scanning the same code nonstop.
     scanCooldownRef.current = true;
     setTimeout(() => {
       scanCooldownRef.current = false;
     }, 1200);
-
-    const qrText = String(data);
+  
+    // Clean up the scanned text.
+    const qrText = String(data).trim();
+  
+    // Try to match the QR scan to a real waypoint.
     const scannedWaypoint = findWaypointByQrData(qrText);
-
+  
+    // Save the raw QR text.
     setLastScannedText(qrText);
-    if (scannedWaypoint) {
-      setCurrentWaypointLabel(scannedWaypoint.label || scannedWaypoint.id);
-      setCurrentBuildingId(scannedWaypoint.building || "");
-      showScanBadge(scannedWaypoint.label || scannedWaypoint.id);
-    } else {
+  
+    // If it was not a real waypoint, still show what was scanned.
+    if (!scannedWaypoint) {
+      setCurrentWaypoint(null);
       setCurrentWaypointLabel(`Scanned: ${qrText}`);
+      setCurrentBuildingId("");
       showScanBadge(qrText);
+      return;
     }
-
-    if (stage.key === "indoor_destination") {
-      setActiveStepIndex((prev) => {
-        if (prev >= steps.length - 1) {
-          setArrived(true);
-          return prev;
-        }
-
-        const next = prev + 1;
-        if (next >= steps.length - 1) {
-          setArrived(true);
-        }
-        return next;
-      });
+  
+    // Update the user's current indoor location.
+    setCurrentWaypoint(scannedWaypoint);
+    setCurrentWaypointLabel(scannedWaypoint.label || scannedWaypoint.id);
+    setCurrentBuildingId(scannedWaypoint.building || "");
+    showScanBadge(scannedWaypoint.label || scannedWaypoint.id);
+  
+    // If the user scanned the destination waypoint, they arrived.
+    if (scannedWaypoint.id === destination?.waypoint?.id) {
+      setArrived(true);
+      setActiveStepIndex(Math.max(routePath.length - 1, 0));
+      return;
+    }
+  
+    // If the user is now in the destination building,
+    // either continue on the route or rebuild the route from here.
+    if (scannedWaypoint.building === destinationBuilding?.id) {
+      const existingIndex = routePath.indexOf(scannedWaypoint.id);
+  
+      // If this waypoint is already on the current route,
+      // move the user to that step.
+      if (existingIndex >= 0) {
+        setActiveStepIndex(existingIndex);
+        setArrived(false);
+        setRouteError("");
+      } else {
+        // Otherwise, make a brand new route from the scanned location.
+        applyRouteFromWaypoint(scannedWaypoint);
+        setArrived(false);
+      }
     }
   };
-
+  
   const handleReset = () => {
-    setCurrentWaypointLabel("Waiting for scan");
-    setCurrentBuildingId("");
-    setLastScannedText("");
-    setSteps(DEMO_STEPS);
-    setActiveStepIndex(1);
+    // Reset everything back to the starting state.
+    setCurrentWaypoint(linkedStartWaypoint || null);
+    setCurrentWaypointLabel(linkedStartWaypoint?.label || "Waiting for scan");
+    setCurrentBuildingId(linkedStartWaypoint?.building || "");
+    setLastScannedText(linkedStartWaypoint?.qr_code || linkedStartWaypoint?.id || "");
+    setRoutePath([]);
+    setRouteDistance(0);
+    setSteps([]);
+    setActiveStepIndex(0);
     setArrived(false);
+    setRouteError("");
     setDetailsVisible(false);
+  
+    // If a start waypoint already exists in the destination building,
+    // rebuild the route right away after reset.
+    if (
+      linkedStartWaypoint &&
+      linkedStartWaypoint.building === destinationBuilding?.id
+    ) {
+      applyRouteFromWaypoint(linkedStartWaypoint);
+    }
   };
 
   if (!permission) {
@@ -604,6 +755,10 @@ export default function NavigationPage({ route, navigation }) {
                 ? "Getting GPS location..."
                 : "Scan a QR code to set your indoor location."}
             </Text>
+
+            {routeError ? (
+              <Text style={s.summarySub}>{routeError}</Text>
+            ) : null}
           </View>
 
           <View style={s.summaryCard}>
