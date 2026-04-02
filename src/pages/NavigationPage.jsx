@@ -11,9 +11,17 @@ import {
   Modal,
 } from "react-native";
 import { CameraView, useCameraPermissions } from "expo-camera";
-import * as Location from "expo-location";
+
 import DirectionArrow from "../components/DirectionArrow";
 import campusData from "../data/campusData.json";
+
+import {
+  formatDistanceMeters,
+  getCurrentUserLocation,
+  haversineMeters,
+  requestForegroundLocationPermission,
+  watchUserLocation,
+} from "../utils/location";
 import { findWaypointByQrData } from "../utils/navigation";
 import { findRouteToRoom } from "../utils/pathfinding";
 
@@ -56,39 +64,6 @@ function getArrowDirectionFromStep(stepText = "") {
   if (t.includes("right")) return "right";
   if (t.includes("back")) return "back";
   return "straight";
-}
-
-function haversineMeters(lat1, lon1, lat2, lon2) {
-  const toRad = (v) => (v * Math.PI) / 180;
-  const R = 6371000;
-
-  const dLat = toRad(lat2 - lat1);
-  const dLon = toRad(lon2 - lon1);
-
-  const a =
-    Math.sin(dLat / 2) ** 2 +
-    Math.cos(toRad(lat1)) *
-      Math.cos(toRad(lat2)) *
-      Math.sin(dLon / 2) ** 2;
-
-  return 2 * R * Math.asin(Math.sqrt(a));
-}
-
-function formatDistance(meters) {
-  if (meters == null || Number.isNaN(meters)) {
-    return {
-      metersText: "-- m",
-      feetText: "-- ft",
-    };
-  }
-
-  const m = Number(meters);
-  const ft = m * 3.28084;
-
-  return {
-    metersText: `${m.toFixed(1)} m`,
-    feetText: `${ft.toFixed(0)} ft`,
-  };
 }
 
 function getStage({
@@ -391,52 +366,40 @@ export default function NavigationPage({ route, navigation }) {
 
   useEffect(() => {
     let subscription = null;
-
+  
     async function setupLocation() {
       try {
         setGpsLoading(true);
-
-        const { status } = await Location.requestForegroundPermissionsAsync();
-        if (status !== "granted") {
+  
+        // Ask the user for GPS permission.
+        const result = await requestForegroundLocationPermission();
+  
+        if (result.status !== "granted") {
           setGpsPermissionGranted(false);
           setGpsLoading(false);
           return;
         }
-
+  
         setGpsPermissionGranted(true);
-
-        const current = await Location.getCurrentPositionAsync({
-          accuracy: Location.Accuracy.Balanced,
+  
+        // Get the user's current location one time.
+        const current = await getCurrentUserLocation();
+        setUserGps(current);
+  
+        // Start watching the user's location as they move.
+        subscription = await watchUserLocation((position) => {
+          setUserGps(position);
         });
-
-        setUserGps({
-          latitude: current.coords.latitude,
-          longitude: current.coords.longitude,
-        });
-
-        subscription = await Location.watchPositionAsync(
-          {
-            accuracy: Location.Accuracy.Balanced,
-            timeInterval: 3000,
-            distanceInterval: 3,
-          },
-          (position) => {
-            setUserGps({
-              latitude: position.coords.latitude,
-              longitude: position.coords.longitude,
-            });
-          }
-        );
-
+  
         setGpsLoading(false);
       } catch (error) {
         console.log("Location setup error:", error);
         setGpsLoading(false);
       }
     }
-
+  
     setupLocation();
-
+  
     return () => {
       if (subscription) {
         subscription.remove();
@@ -510,7 +473,7 @@ export default function NavigationPage({ route, navigation }) {
   }, [userGps, destinationBuilding]);
 
   const distanceText = useMemo(() => {
-    return formatDistance(distanceToBuildingMeters);
+    return formatDistanceMeters(distanceToBuildingMeters);
   }, [distanceToBuildingMeters]);
 
   const showScanBadge = (text) => {
