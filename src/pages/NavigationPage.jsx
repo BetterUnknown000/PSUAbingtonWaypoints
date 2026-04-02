@@ -24,6 +24,7 @@ import {
 } from "../utils/location";
 import { findWaypointByQrData } from "../utils/navigation";
 import { findRouteToRoom } from "../utils/pathfinding";
+import { buildStepsFromPath } from "../utils/routeSteps";
 
 const PSU = {
   blue: "#001E44",
@@ -139,20 +140,6 @@ function getNextStepText({
   // Otherwise, show the current indoor direction step.
   return steps[activeStepIndex]?.text || "Continue toward your destination.";
 }
-
-// Finds one waypoint object by its id.
-// We use this later to turn route ids into actual waypoint info.
-function getWaypointById(id) {
-  return (campusData.waypoints || []).find((wp) => wp.id === id) || null;
-}
-
-// Takes the path of waypoint ids and turns it into readable directions.
-// Example: ["A", "B", "C"] becomes step text the user can follow.
-function buildStepsFromPath(pathIds = []) {
-  // If there is no path, there are no steps.
-  if (!Array.isArray(pathIds) || pathIds.length === 0) {
-    return [];
-  }
 
   return pathIds.map((id, index) => {
     const current = getWaypointById(id);
