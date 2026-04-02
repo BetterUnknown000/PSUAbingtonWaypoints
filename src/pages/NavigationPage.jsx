@@ -141,46 +141,6 @@ function getNextStepText({
   return steps[activeStepIndex]?.text || "Continue toward your destination.";
 }
 
-  return pathIds.map((id, index) => {
-    const current = getWaypointById(id);
-    const prev = index > 0 ? getWaypointById(pathIds[index - 1]) : null;
-
-    let text = "";
-
-    // First point in the path is where the user starts.
-    if (index === 0) {
-      text = `Start at ${current?.label || id}.`;
-    }
-    // If the next point is stairs, mention that.
-    else if (current?.type === "stairs") {
-      text = `Go from ${prev?.label || pathIds[index - 1]} to ${current?.label || id}. Use the stairs.`;
-    }
-    // If the next point is an elevator, mention that.
-    else if (current?.type === "elevator") {
-      text = `Go from ${prev?.label || pathIds[index - 1]} to ${current?.label || id}. Use the elevator.`;
-    }
-    // If the next point is an entrance, mention that.
-    else if (current?.type === "entrance") {
-      text = `Go from ${prev?.label || pathIds[index - 1]} to ${current?.label || id}. Head toward the entrance.`;
-    }
-    // If the next point is a room, then that is basically the destination.
-    else if (current?.type === "room") {
-      text = `Go to ${current?.label || id}. Your destination is here.`;
-    }
-    // Default step text for regular hallway / waypoint movement.
-    else {
-      text = `Go from ${prev?.label || pathIds[index - 1]} to ${current?.label || id}.`;
-    }
-
-    // Return each step as an object so the UI can display it.
-    return {
-      id: `step-${index}`,
-      waypointId: id,
-      text,
-    };
-  });
-}
-
 export default function NavigationPage({ route, navigation }) {
   const { destination } = route.params || {};
   const destinationRoom = destination?.room || null;
