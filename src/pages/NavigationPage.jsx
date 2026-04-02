@@ -15,6 +15,7 @@ import * as Location from "expo-location";
 import DirectionArrow from "../components/DirectionArrow";
 import campusData from "../data/campusData.json";
 import { findWaypointByQrData } from "../utils/navigation";
+import { findRouteToRoom } from "../utils/pathfinding";
 
 const PSU = {
   blue: "#001E44",
