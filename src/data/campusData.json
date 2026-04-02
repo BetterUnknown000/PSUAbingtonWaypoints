@@ -179,18 +179,6 @@
     { "id": "wp_spring_101", "building": "springhouse", "floor": "1", "label": "Room 101", "type": "classroom", "latitude": 40.117485, "longitude": -75.109767, "x": 0, "y": 0, "qr_code": "QR_SPRING_101" },
     { "id": "wp_ath_main_entrance", "building": "athletic", "floor": "1", "label": "Athletic Building Main Entrance", "type": "entrance", "latitude": 40.114817, "longitude": -75.111579, "x": 0, "y": 0, "qr_code": "QR_ATH_F1_MAIN_ENTRANCE" },
     { "id": "wp_ath_basketball_court", "building": "athletic", "floor": "1", "label": "Basketball Court", "type": "recreation", "latitude": 40.114532, "longitude": -75.111789, "x": 0, "y": 0, "qr_code": "QR_ATH_F1_BASKETBALL_COURT" },
-
-
-
-
-    { "id": "wp_ath_f1_hall_01", "building": "athletic", "floor": "1", "label": "Athletic First Floor Hall", "type": "hallway", "latitude": 40.114736, "longitude": -75.111598, "x": 0, "y": 0, "qr_code": "QR_ATH_F1_HALL_01" },
-    { "id": "wp_ath_f1_gym", "building": "athletic", "floor": "1", "label": "Athletic First Floor Gym", "type": "recreation", "latitude": 40.114735, "longitude": -75.111628, "x": 0, "y": 0, "qr_code": "QR_ATH_F1_GYM" },
-    { "id": "wp_ath_elevator_f1", "building": "athletic", "floor": "1", "label": "Athletic Elevator (Floor 1)", "type": "elevator", "latitude": 40.114734, "longitude": -75.111664, "x": 0, "y": 0, "qr_code": "QR_ATH_F1_ELEVATOR" },
-    { "id": "wp_ath_f1_stairs", "building": "athletic", "floor": "1", "label": "Athletic First Floor Stairs", "type": "stairs", "latitude": 40.114755, "longitude": -75.111601, "x": 0, "y": 0, "qr_code": "QR_ATH_F1_STAIRS" },
-    { "id": "wp_ath_f2_classroom", "building": "athletic", "floor": "2", "label": "Athletic Second Floor Classroom", "type": "classroom", "latitude": 40.114745, "longitude": -75.111528, "x": 0, "y": 0, "qr_code": "QR_ATH_F2_CLASSROOM" },
-
-
-
     { "id": "wp_lares_ground_hall_01", "building": "lares", "floor": "ground", "label": "Lares Ground Floor Hallway 1", "type": "hallway", "latitude": 40.11695, "longitude": -75.109303, "x": 0, "y": 0, "qr_code": "QR_LARES_GND_HALL_01" },
     { "id": "wp_lares_ground_hall_02", "building": "lares", "floor": "ground", "label": "Lares Ground Floor Hallway 2", "type": "hallway", "latitude": 40.116711, "longitude": -75.10902, "x": 0, "y": 0, "qr_code": "QR_LARES_GND_HALL_02" },
     { "id": "wp_lares_stairs_ground", "building": "lares", "floor": "ground", "label": "Lares Stairs (Ground Floor)", "type": "stairs", "latitude": 40.116713, "longitude": -75.109021, "x": 0, "y": 0, "qr_code": "QR_LARES_GND_STAIRS" },
