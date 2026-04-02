@@ -35,7 +35,7 @@ The main navigation system is split into a few parts:
 - `pathfinding.js`  
   Connects room lookup, graph building, and Dijkstra shortest path logic
 
-- `navigation.js`  
+- `qrWaypointLookup.js`  
   Handles QR-based waypoint lookup
 
 - `location.js`  
