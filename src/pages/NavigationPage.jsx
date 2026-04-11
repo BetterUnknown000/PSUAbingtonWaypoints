@@ -1,3 +1,4 @@
+// srcNew
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import {
   View,
@@ -25,6 +26,12 @@ import {
 import { findWaypointByQrData } from "../utils/qrWaypointLookup";
 import { findRouteToRoom } from "../utils/pathfinding";
 import { buildStepsFromPath } from "../utils/routeSteps";
+
+import {
+  initializeImageModel,
+  loadReferenceImageDatabase,
+  identifyLocationFromFrame,
+} from "../utils/imageRecognition";
 
 const PSU = {
   blue: "#001E44",
@@ -115,29 +122,24 @@ function getNextStepText({
   destinationBuildingName,
   currentWaypointLabel,
 }) {
-  // If no destination was chosen yet, show a helpful message.
   if (!destinationRoom) {
     return currentWaypointLabel === "Waiting for scan"
-      ? "Scan a QR code or open the app from a building QR to set your starting location."
+      ? "Scan a QR code or point the camera at a known location to set your starting point."
       : "Starting point set. Go back and choose a room or course to begin directions.";
   }
 
-  // If the destination was reached, show the arrival message.
   if (arrived) {
     return `You have arrived at Room ${destinationRoom?.room_number || ""}.`;
   }
 
-  // If the user is in the wrong building, tell them to leave first.
   if (stage.key === "exit_current_building") {
     return "Proceed to the nearest exit of your current building.";
   }
 
-  // If the user is still outside, guide them toward the destination building.
   if (stage.key === "outdoor_guidance") {
     return `Head toward ${destinationBuildingName || "the destination building"}.`;
   }
 
-  // Otherwise, show the current indoor direction step.
   return steps[activeStepIndex]?.text || "Continue toward your destination.";
 }
 
@@ -145,56 +147,47 @@ export default function NavigationPage({ route, navigation }) {
   const { destination } = route.params || {};
   const destinationRoom = destination?.room || null;
   const destinationBuilding = destination?.building || null;
+
   const linkedStartWaypoint = useMemo(() => {
     const params = route.params || {};
     const startWaypointId =
       params.startWaypointId || params.waypoint_id || params.waypointId || "";
     const startQrId = params.startQrId || params.qr_id || params.qrCode || "";
 
-    if (!startWaypointId && !startQrId) {
-      return null;
-    }
+    if (!startWaypointId && !startQrId) return null;
 
     return (
-      (campusData.waypoints || []).find((waypoint) => {
-        return (
-          waypoint.id === startWaypointId || waypoint.qr_code === startQrId
-        );
-      }) || null
+      (campusData.waypoints || []).find(
+        (wp) => wp.id === startWaypointId || wp.qr_code === startQrId
+      ) || null
     );
   }, [route.params]);
 
   const [permission, requestPermission] = useCameraPermissions();
   const [cameraEnabled, setCameraEnabled] = useState(true);
 
-  // Stores the actual waypoint object the user is currently at
   const [currentWaypoint, setCurrentWaypoint] = useState(linkedStartWaypoint || null);
-  // Text shown in the UI for the user's current location
   const [currentWaypointLabel, setCurrentWaypointLabel] = useState("Waiting for scan");
-  // Keeps track of which building the user is currently in
   const [currentBuildingId, setCurrentBuildingId] = useState("");
-  // Saves the raw QR text from the last scan
   const [lastScannedText, setLastScannedText] = useState("");
-  // Stores the full route path as waypoint IDs from Dijkstra
   const [routePath, setRoutePath] = useState([]);
-  // Stores the total route distance returned from pathfinding
   const [routeDistance, setRouteDistance] = useState(0);
-  // Stores the step-by-step directions built from the route path
   const [steps, setSteps] = useState([]);
-  // Keeps track of which direction step the user is currently on
   const [activeStepIndex, setActiveStepIndex] = useState(0);
-  // Becomes true when the user scans the destination waypoint
   const [arrived, setArrived] = useState(false);
-  // Controls the little scan success popup animation
   const [scanFlashVisible, setScanFlashVisible] = useState(false);
-  // Controls whether the details modal is open
   const [detailsVisible, setDetailsVisible] = useState(false);
-  // Stores route errors, like when no path can be found
   const [routeError, setRouteError] = useState("");
 
   const [gpsPermissionGranted, setGpsPermissionGranted] = useState(false);
   const [gpsLoading, setGpsLoading] = useState(true);
   const [userGps, setUserGps] = useState(null);
+
+  // Vision state
+  const [visionReady, setVisionReady] = useState(false);
+  const [visionSource, setVisionSource] = useState(null); // "qr" | "vision" | null
+  const cameraRef = useRef(null);
+  const visionBusyRef = useRef(false);
 
   const nextStepFade = useRef(new Animated.Value(1)).current;
   const nextStepScale = useRef(new Animated.Value(1)).current;
@@ -207,22 +200,21 @@ export default function NavigationPage({ route, navigation }) {
     return `${destinationBuilding?.name || destinationRoom.building} ${destinationRoom.room_number}`;
   }, [destinationRoom, destinationBuilding]);
 
-  // Builds a real indoor route from the current waypoint to the destination room.
+  // -------------------------------------------------------
+  // Route helpers
+  // -------------------------------------------------------
   const applyRouteFromWaypoint = (startWaypoint) => {
-    // If we are missing important destination info, stop here.
     if (!startWaypoint || !destinationBuilding?.id || !destinationRoom?.room_number) {
       return;
     }
-  
-    // Use the utils pathfinding.
+
     const result = findRouteToRoom(
       startWaypoint.id,
       destinationBuilding.id,
       destinationRoom.room_number,
       { accessibleOnly: false }
     );
-  
-    // ERROR CASE
+
     if (
       !result ||
       !result.route ||
@@ -236,33 +228,130 @@ export default function NavigationPage({ route, navigation }) {
       setRouteError("No route could be found from this waypoint.");
       return;
     }
-  
-    // Save the real route path, distance, and generated step text.
+
     setRoutePath(result.route.path);
     setRouteDistance(result.route.distance || 0);
     setSteps(buildStepsFromPath(result.route.path));
     setActiveStepIndex(0);
     setRouteError("");
   };
-    
+
+  // Shared handler for both QR and vision matches
+  const applyWaypointMatch = (waypoint, source) => {
+    setCurrentWaypoint(waypoint);
+    setCurrentWaypointLabel(waypoint.label || waypoint.id);
+    setCurrentBuildingId(waypoint.building || "");
+    setVisionSource(source);
+    showScanBadge(waypoint.label || waypoint.id);
+
+    if (waypoint.id === destination?.waypoint?.id) {
+      setArrived(true);
+      setActiveStepIndex(Math.max(routePath.length - 1, 0));
+      return;
+    }
+
+    if (waypoint.building === destinationBuilding?.id) {
+      const existingIndex = routePath.indexOf(waypoint.id);
+      if (existingIndex >= 0) {
+        setActiveStepIndex(existingIndex);
+        setArrived(false);
+        setRouteError("");
+      } else {
+        applyRouteFromWaypoint(waypoint);
+        setArrived(false);
+      }
+    }
+  };
+
+  // -------------------------------------------------------
+  // Initialise vision model + reference DB on mount
+  // -------------------------------------------------------
   useEffect(() => {
-    // If the page was not opened with a starting waypoint, do nothing.
+    let cancelled = false;
+
+    async function setupVision() {
+      try {
+        await initializeImageModel();
+        await loadReferenceImageDatabase();
+        if (!cancelled) setVisionReady(true);
+      } catch (err) {
+        console.warn("[VPR] Setup failed:", err.message);
+      }
+    }
+
+    setupVision();
+    return () => { cancelled = true; };
+  }, []);
+
+  // -------------------------------------------------------
+  // Silent vision scan loop — async while, never concurrent,
+  // unmount-safe, no visible shutter indication to the user.
+  // -------------------------------------------------------
+  useEffect(() => {
+    if (!visionReady || !cameraEnabled) return;
+
+    let cancelled = false;
+
+    const runLoop = async () => {
+      while (!cancelled) {
+        // Wait 3 seconds between attempts regardless of outcome
+        await new Promise((res) => setTimeout(res, 3000));
+        if (cancelled) break;
+
+        // Skip if QR already locked the location, camera gone, or still busy
+        if (visionSource === "qr") continue;
+        if (visionBusyRef.current || !cameraRef.current) continue;
+
+        visionBusyRef.current = true;
+        try {
+          const photo = await cameraRef.current.takePictureAsync({
+            quality: 0.15,        // minimal quality — fingerprint needs no detail
+            base64: false,
+            skipProcessing: true, // skip EXIF/rotation processing
+          });
+
+          if (cancelled || !photo?.uri) continue;
+
+          const result = await identifyLocationFromFrame(photo.uri);
+
+          if (cancelled || !result) continue;
+
+          const wp = (campusData.waypoints || []).find(
+            (w) => w.id === result.location.waypoint_id
+          );
+          if (wp) applyWaypointMatch(wp, "vision");
+        } catch (err) {
+          if (!cancelled) console.warn("[VPR] Scan loop error:", err.message);
+        } finally {
+          visionBusyRef.current = false;
+        }
+      }
+    };
+
+    runLoop();
+    return () => { cancelled = true; };
+  }, [visionReady, cameraEnabled, visionSource]);
+
+  // -------------------------------------------------------
+  // Linked start waypoint bootstrap
+  // -------------------------------------------------------
+  useEffect(() => {
     if (!linkedStartWaypoint) return;
-  
-    // Set the user's starting location info.
+
     setCurrentWaypoint(linkedStartWaypoint);
     setCurrentWaypointLabel(linkedStartWaypoint.label || linkedStartWaypoint.id);
     setCurrentBuildingId(linkedStartWaypoint.building || "");
     setLastScannedText(linkedStartWaypoint.qr_code || linkedStartWaypoint.id);
     setArrived(false);
-  
-    // If the starting point is already inside the destination building,
-    // build the indoor route right away.
+
     if (linkedStartWaypoint.building === destinationBuilding?.id) {
       applyRouteFromWaypoint(linkedStartWaypoint);
     }
   }, [linkedStartWaypoint, destinationBuilding, destinationRoom]);
 
+  // -------------------------------------------------------
+  // Step-change animation
+  // -------------------------------------------------------
   useEffect(() => {
     nextStepFade.setValue(0.55);
     nextStepScale.setValue(0.97);
@@ -283,6 +372,9 @@ export default function NavigationPage({ route, navigation }) {
     ]).start();
   }, [activeStepIndex, arrived, nextStepFade, nextStepScale]);
 
+  // -------------------------------------------------------
+  // Arrival pulse animation
+  // -------------------------------------------------------
   useEffect(() => {
     if (!arrived) {
       arrivalPulse.stopAnimation();
@@ -311,96 +403,81 @@ export default function NavigationPage({ route, navigation }) {
     return () => loop.stop();
   }, [arrived, arrivalPulse]);
 
+  // -------------------------------------------------------
+  // GPS
+  // -------------------------------------------------------
   useEffect(() => {
     let subscription = null;
-  
+
     async function setupLocation() {
       try {
         setGpsLoading(true);
-  
-        // Ask the user for GPS permission.
         const result = await requestForegroundLocationPermission();
-  
+
         if (result.status !== "granted") {
           setGpsPermissionGranted(false);
           setGpsLoading(false);
           return;
         }
-  
+
         setGpsPermissionGranted(true);
-  
-        // Get the user's current location one time.
         const current = await getCurrentUserLocation();
         setUserGps(current);
-  
-        // Start watching the user's location as they move.
+
         subscription = await watchUserLocation((position) => {
           setUserGps(position);
         });
-  
+
         setGpsLoading(false);
       } catch (error) {
         console.log("Location setup error:", error);
         setGpsLoading(false);
       }
     }
-  
+
     setupLocation();
-  
-    return () => {
-      if (subscription) {
-        subscription.remove();
-      }
-    };
+    return () => { if (subscription) subscription.remove(); };
   }, []);
 
-  const stage = useMemo(() => {
-    return getStage({
-      currentBuildingId,
-      destinationBuildingId:
-        destinationBuilding?.id || destinationRoom?.building || "",
-      currentWaypointLabel,
-    });
-  }, [currentBuildingId, destinationBuilding, destinationRoom, currentWaypointLabel]);
+  // -------------------------------------------------------
+  // Derived display values
+  // -------------------------------------------------------
+  const stage = useMemo(
+    () =>
+      getStage({
+        currentBuildingId,
+        destinationBuildingId:
+          destinationBuilding?.id || destinationRoom?.building || "",
+        currentWaypointLabel,
+      }),
+    [currentBuildingId, destinationBuilding, destinationRoom, currentWaypointLabel]
+  );
 
-  const nextStepText = useMemo(() => {
-    return getNextStepText({
-      arrived,
-      destinationRoom,
-      stage,
-      steps,
-      activeStepIndex,
-      destinationBuildingName: destinationBuilding?.name,
-      currentWaypointLabel,
-    });
-  }, [
-    arrived,
-    destinationRoom,
-    stage,
-    steps,
-    activeStepIndex,
-    destinationBuilding,
-    currentWaypointLabel,
-  ]);
+  const nextStepText = useMemo(
+    () =>
+      getNextStepText({
+        arrived,
+        destinationRoom,
+        stage,
+        steps,
+        activeStepIndex,
+        destinationBuildingName: destinationBuilding?.name,
+        currentWaypointLabel,
+      }),
+    [arrived, destinationRoom, stage, steps, activeStepIndex, destinationBuilding, currentWaypointLabel]
+  );
 
   const arrowDirection = useMemo(() => {
     if (arrived) return "straight";
-
-    if (stage.key === "exit_current_building") {
-      return "straight";
-    }
-
-    if (stage.key === "outdoor_guidance") {
-      return "straight";
-    }
-
+    if (stage.key === "exit_current_building") return "straight";
+    if (stage.key === "outdoor_guidance") return "straight";
     return getArrowDirectionFromStep(steps[activeStepIndex]?.text || "");
   }, [steps, activeStepIndex, arrived, stage]);
 
-  const remainingSteps = useMemo(() => {
-    if (arrived) return 0;
-    return Math.max(steps.length - activeStepIndex - 1, 0);
-  }, [steps, activeStepIndex, arrived]);
+  const remainingSteps = useMemo(
+    () => (arrived ? 0 : Math.max(steps.length - activeStepIndex - 1, 0)),
+    [steps, activeStepIndex, arrived]
+  );
 
   const distanceToBuildingMeters = useMemo(() => {
     if (
@@ -410,7 +487,6 @@ export default function NavigationPage({ route, navigation }) {
     ) {
       return null;
     }
-
     return haversineMeters(
       userGps.latitude,
       userGps.longitude,
@@ -419,10 +495,14 @@ export default function NavigationPage({ route, navigation }) {
     );
   }, [userGps, destinationBuilding]);
 
-  const distanceText = useMemo(() => {
-    return formatDistanceMeters(distanceToBuildingMeters);
-  }, [distanceToBuildingMeters]);
+  const distanceText = useMemo(
+    () => formatDistanceMeters(distanceToBuildingMeters),
+    [distanceToBuildingMeters]
+  );
 
+  // -------------------------------------------------------
+  // Scan badge animation
+  // -------------------------------------------------------
   const showScanBadge = (text) => {
     setScanFlashVisible(true);
     scanBadgeAnim.setValue(0);
@@ -441,73 +521,39 @@ export default function NavigationPage({ route, navigation }) {
         easing: Easing.in(Easing.cubic),
         useNativeDriver: true,
       }),
-    ]).start(() => {
-      setScanFlashVisible(false);
-    });
+    ]).start(() => setScanFlashVisible(false));
   };
 
+  // -------------------------------------------------------
+  // QR scan handler
+  // -------------------------------------------------------
   const handleScan = ({ data }) => {
-    // Ignore empty scans or scans that happen too fast.
     if (!data || scanCooldownRef.current) return;
-  
-    // Small cooldown so the camera does not keep scanning the same code nonstop.
+
     scanCooldownRef.current = true;
-    setTimeout(() => {
-      scanCooldownRef.current = false;
-    }, 1200);
-  
-    // Clean up the scanned text.
+    setTimeout(() => { scanCooldownRef.current = false; }, 1200);
+
     const qrText = String(data).trim();
-  
-    // Try to match the QR scan to a real waypoint.
     const scannedWaypoint = findWaypointByQrData(qrText);
-  
-    // Save the raw QR text.
+
     setLastScannedText(qrText);
-  
-    // If it was not a real waypoint, still show what was scanned.
+
     if (!scannedWaypoint) {
       setCurrentWaypoint(null);
       setCurrentWaypointLabel(`Scanned: ${qrText}`);
       setCurrentBuildingId("");
+      setVisionSource(null);
       showScanBadge(qrText);
       return;
     }
-  
-    // Update the user's current indoor location.
-    setCurrentWaypoint(scannedWaypoint);
-    setCurrentWaypointLabel(scannedWaypoint.label || scannedWaypoint.id);
-    setCurrentBuildingId(scannedWaypoint.building || "");
-    showScanBadge(scannedWaypoint.label || scannedWaypoint.id);
-  
-    // If the user scanned the destination waypoint, they arrived.
-    if (scannedWaypoint.id === destination?.waypoint?.id) {
-      setArrived(true);
-      setActiveStepIndex(Math.max(routePath.length - 1, 0));
-      return;
-    }
-  
-    // If the user is now in the destination building,
-    // either continue on the route or rebuild the route from here.
-    if (scannedWaypoint.building === destinationBuilding?.id) {
-      const existingIndex = routePath.indexOf(scannedWaypoint.id);
-  
-      // If this waypoint is already on the current route,
-      // move the user to that step.
-      if (existingIndex >= 0) {
-        setActiveStepIndex(existingIndex);
-        setArrived(false);
-        setRouteError("");
-      } else {
-        // Otherwise, make a brand new route from the scanned location.
-        applyRouteFromWaypoint(scannedWaypoint);
-        setArrived(false);
-      }
-    }
+
+    applyWaypointMatch(scannedWaypoint, "qr");
   };
-  
+
+  // -------------------------------------------------------
+  // Reset
+  // -------------------------------------------------------
   const handleReset = () => {
-    // Reset everything back to the starting state.
     setCurrentWaypoint(linkedStartWaypoint || null);
     setCurrentWaypointLabel(linkedStartWaypoint?.label || "Waiting for scan");
     setCurrentBuildingId(linkedStartWaypoint?.building || "");
@@ -519,9 +565,8 @@ export default function NavigationPage({ route, navigation }) {
     setArrived(false);
     setRouteError("");
     setDetailsVisible(false);
-  
-    // If a start waypoint already exists in the destination building,
-    // rebuild the route right away after reset.
+    setVisionSource(null);
+
     if (
       linkedStartWaypoint &&
       linkedStartWaypoint.building === destinationBuilding?.id
@@ -530,6 +575,9 @@ export default function NavigationPage({ route, navigation }) {
     }
   };
 
+  // -------------------------------------------------------
+  // Permission gates
+  // -------------------------------------------------------
   if (!permission) {
     return (
       <SafeAreaView style={s.permissionSafe}>
@@ -548,11 +596,9 @@ export default function NavigationPage({ route, navigation }) {
           <Text style={s.permissionText}>
             The camera is needed to display the navigation view and detect QR codes.
           </Text>
-
           <Pressable style={s.permissionBtn} onPress={requestPermission}>
             <Text style={s.permissionBtnText}>Allow Camera Access</Text>
           </Pressable>
-
           <Pressable style={s.permissionBackBtn} onPress={() => navigation.goBack()}>
             <Text style={s.permissionBackText}>Go Back</Text>
           </Pressable>
@@ -561,11 +607,15 @@ export default function NavigationPage({ route, navigation }) {
     );
   }
 
+  // -------------------------------------------------------
+  // Render
+  // -------------------------------------------------------
   return (
     <View style={s.screen}>
       <View style={s.cameraLayer}>
         {cameraEnabled ? (
           <CameraView
+            ref={cameraRef}
             style={s.camera}
             facing="back"
             barcodeScannerSettings={{ barcodeTypes: ["qr"] }}
@@ -602,6 +652,13 @@ export default function NavigationPage({ route, navigation }) {
             <DirectionArrow direction={arrowDirection} arrived={arrived} />
           </View>
 
+          {/* Vision-ready status badge (subtle, top-right area) */}
+          {!visionReady && (
+            <View style={s.visionLoadingBadge}>
+              <Text style={s.visionLoadingText}>📷 Loading vision…</Text>
+            </View>
+          )}
+
           {scanFlashVisible ? (
             <Animated.View
               style={[
@@ -619,9 +676,11 @@ export default function NavigationPage({ route, navigation }) {
                 },
               ]}
             >
-              <Text style={s.scanFeedbackTitle}>✅ Location Updated</Text>
+              <Text style={s.scanFeedbackTitle}>
+                {visionSource === "vision" ? "📷 Location Recognised" : "✅ Location Updated"}
+              </Text>
               <Text style={s.scanFeedbackText} numberOfLines={1}>
-                {lastScannedText}
+                {lastScannedText || currentWaypointLabel}
               </Text>
             </Animated.View>
           ) : null}
@@ -659,13 +718,16 @@ export default function NavigationPage({ route, navigation }) {
               {currentWaypointLabel}
             </Text>
             <Text style={s.summarySub} numberOfLines={2}>
-              {lastScannedText
+              {visionSource === "vision"
+                ? "Location set by visual recognition."
+                : lastScannedText
                 ? "Location updated from QR scan."
                 : gpsLoading
-                ? "Getting GPS location..."
-                : "Scan a QR code to set your indoor location."}
+                ? "Getting GPS location…"
+                : visionReady
+                ? "Scanning for known location…"
+                : "Loading visual recognition…"}
             </Text>
-
             {routeError ? (
               <Text style={s.summarySub}>{routeError}</Text>
             ) : null}
@@ -676,9 +738,7 @@ export default function NavigationPage({ route, navigation }) {
             <Text style={s.summaryValue}>
               {distanceText.feetText} / {distanceText.metersText}
             </Text>
-            <Text style={s.summarySub}>
-              Distance to destination building
-            </Text>
+            <Text style={s.summarySub}>Distance to destination building</Text>
           </View>
         </View>
 
@@ -738,15 +798,20 @@ export default function NavigationPage({ route, navigation }) {
         onRequestClose={() => setDetailsVisible(false)}
       >
         <View style={s.modalBackdropWrap}>
-          <Pressable style={s.modalBackdropTap} onPress={() => setDetailsVisible(false)} />
+          <Pressable
+            style={s.modalBackdropTap}
+            onPress={() => setDetailsVisible(false)}
+          />
           <View style={s.modalSheet}>
             <View style={s.modalHeader}>
               <View>
                 <Text style={s.modalTitle}>Navigation Details</Text>
                 <Text style={s.modalSubtitle}>Directions and scan history</Text>
               </View>
-
-              <Pressable style={s.modalCloseBtn} onPress={() => setDetailsVisible(false)}>
+              <Pressable
+                style={s.modalCloseBtn}
+                onPress={() => setDetailsVisible(false)}
+              >
                 <Text style={s.modalCloseBtnText}>Done</Text>
               </Pressable>
             </View>
@@ -758,17 +823,12 @@ export default function NavigationPage({ route, navigation }) {
             >
               <View style={s.detailSection}>
                 <SectionTitle icon="📝" text="Directions" />
-
                 {steps.map((step, index) => {
                   const isActive = index === activeStepIndex;
-
                   return (
                     <View key={step.id} style={s.stepRow}>
                       <View
-                        style={[
-                          s.stepNumber,
-                          isActive && s.stepNumberActive,
-                        ]}
+                        style={[s.stepNumber, isActive && s.stepNumberActive]}
                       >
                         <Text
                           style={[
@@ -784,7 +844,9 @@ export default function NavigationPage({ route, navigation }) {
                         style={[
                           s.stepContent,
                           isActive && s.stepContentActive,
-                          arrived && index === activeStepIndex && s.stepContentArrived,
+                          arrived &&
+                            index === activeStepIndex &&
+                            s.stepContentArrived,
                         ]}
                       >
                         {isActive ? (
@@ -797,12 +859,13 @@ export default function NavigationPage({ route, navigation }) {
                             {arrived ? "Arrived" : "Current Step"}
                           </Text>
                         ) : null}
-
                         <Text
                           style={[
                             s.stepText,
                             isActive && s.stepTextActive,
-                            arrived && index === activeStepIndex && s.stepTextArrived,
+                            arrived &&
+                              index === activeStepIndex &&
+                              s.stepTextArrived,
                           ]}
                         >
                           {step.text}
@@ -814,11 +877,16 @@ export default function NavigationPage({ route, navigation }) {
               </View>
 
               <View style={s.detailSection}>
-                <SectionTitle icon="🔎" text="Last QR Scan" />
+                <SectionTitle icon="🔎" text="Last QR / Vision Scan" />
                 <View style={s.detailInfoCard}>
                   <Text style={s.detailBody}>
-                    {lastScannedText || "Nothing scanned yet."}
+                    {lastScannedText || currentWaypointLabel || "Nothing detected yet."}
                   </Text>
+                  {visionSource ? (
+                    <Text style={[s.detailBody, { marginTop: 4 }]}>
+                      Source: {visionSource === "vision" ? "📷 Visual recognition" : "QR code"}
+                    </Text>
+                  ) : null}
                 </View>
               </View>
 
@@ -829,8 +897,19 @@ export default function NavigationPage({ route, navigation }) {
                     {gpsPermissionGranted
                       ? userGps
                         ? `Lat: ${userGps.latitude.toFixed(6)}, Lng: ${userGps.longitude.toFixed(6)}`
-                        : "Waiting for GPS coordinates..."
+                        : "Waiting for GPS coordinates…"
                       : "GPS permission not granted."}
+                  </Text>
+                </View>
+              </View>
+
+              <View style={s.detailSection}>
+                <SectionTitle icon="🧠" text="Vision Status" />
+                <View style={s.detailInfoCard}>
+                  <Text style={s.detailBody}>
+                    {visionReady
+                      ? `Ready — ${visionSource === "qr" ? "paused (QR location locked)" : "scanning every 3 s"}`
+                      : "Loading reference fingerprints…"}
                   </Text>
                 </View>
               </View>
@@ -851,11 +930,7 @@ const s = StyleSheet.create({
     justifyContent: "center",
     backgroundColor: "#111827",
   },
-  cameraPausedText: {
-    color: "#fff",
-    fontSize: 18,
-    fontWeight: "900",
-  },
+  cameraPausedText: { color: "#fff", fontSize: 18, fontWeight: "900" },
 
   topGradient: {
     position: "absolute",
@@ -893,11 +968,7 @@ const s = StyleSheet.create({
     borderWidth: 1,
     borderColor: "rgba(255,255,255,0.55)",
   },
-  backChipText: {
-    color: PSU.text,
-    fontWeight: "800",
-    fontSize: 14,
-  },
+  backChipText: { color: PSU.text, fontWeight: "800", fontSize: 14 },
 
   destinationPill: {
     flex: 1,
@@ -914,17 +985,8 @@ const s = StyleSheet.create({
     fontWeight: "900",
     letterSpacing: 0.8,
   },
-  destinationPillTitle: {
-    marginTop: 4,
-    fontSize: 18,
-    fontWeight: "900",
-    color: PSU.text,
-  },
-  destinationPillSub: {
-    marginTop: 4,
-    fontSize: 13,
-    color: PSU.muted,
-  },
+  destinationPillTitle: { marginTop: 4, fontSize: 18, fontWeight: "900", color: PSU.text },
+  destinationPillSub: { marginTop: 4, fontSize: 13, color: PSU.muted },
 
   arrowCenterWrap: {
     position: "absolute",
@@ -934,6 +996,19 @@ const s = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
   },
+
+  visionLoadingBadge: {
+    position: "absolute",
+    top: 112,
+    right: 16,
+    backgroundColor: "rgba(255,255,255,0.88)",
+    borderRadius: 12,
+    paddingHorizontal: 10,
+    paddingVertical: 5,
+    borderWidth: 1,
+    borderColor: PSU.scanBadgeBorder,
+  },
+  visionLoadingText: { fontSize: 11, fontWeight: "700", color: PSU.muted },
 
   scanFeedback: {
     position: "absolute",
@@ -949,17 +1024,8 @@ const s = StyleSheet.create({
     paddingVertical: 10,
     alignItems: "center",
   },
-  scanFeedbackTitle: {
-    color: PSU.blue2,
-    fontSize: 12,
-    fontWeight: "900",
-  },
-  scanFeedbackText: {
-    marginTop: 3,
-    color: PSU.text,
-    fontSize: 12,
-    fontWeight: "700",
-  },
+  scanFeedbackTitle: { color: PSU.blue2, fontSize: 12, fontWeight: "900" },
+  scanFeedbackText: { marginTop: 3, color: PSU.text, fontSize: 12, fontWeight: "700" },
 
   middleInstructionWrap: {
     position: "absolute",
@@ -974,29 +1040,11 @@ const s = StyleSheet.create({
     borderWidth: 1,
     borderColor: PSU.nextBorder,
   },
-  arrivalCard: {
-    backgroundColor: PSU.arrivalBg,
-    borderColor: PSU.arrivalBorder,
-  },
-  nextStepEyebrow: {
-    color: PSU.blue2,
-    fontSize: 11,
-    fontWeight: "900",
-    letterSpacing: 0.8,
-  },
-  arrivalEyebrow: {
-    color: PSU.green,
-  },
-  nextStepText: {
-    marginTop: 6,
-    color: PSU.text,
-    fontSize: 16,
-    fontWeight: "800",
-    lineHeight: 22,
-  },
-  arrivalText: {
-    color: PSU.green,
-  },
+  arrivalCard: { backgroundColor: PSU.arrivalBg, borderColor: PSU.arrivalBorder },
+  nextStepEyebrow: { color: PSU.blue2, fontSize: 11, fontWeight: "900", letterSpacing: 0.8 },
+  arrivalEyebrow: { color: PSU.green },
+  nextStepText: { marginTop: 6, color: PSU.text, fontSize: 16, fontWeight: "800", lineHeight: 22 },
+  arrivalText: { color: PSU.green },
 
   bottomCardsArea: {
     backgroundColor: PSU.cardBg,
@@ -1009,10 +1057,7 @@ const s = StyleSheet.create({
     borderTopColor: "#E5ECF4",
   },
 
-  summaryRow: {
-    flexDirection: "row",
-    gap: 10,
-  },
+  summaryRow: { flexDirection: "row", gap: 10 },
   summaryCard: {
     flex: 1,
     backgroundColor: "#F8FAFC",
@@ -1022,14 +1067,8 @@ const s = StyleSheet.create({
     padding: 12,
   },
 
-  sectionTitleRow: {
-    flexDirection: "row",
-    alignItems: "center",
-    gap: 6,
-  },
-  sectionIcon: {
-    fontSize: 14,
-  },
+  sectionTitleRow: { flexDirection: "row", alignItems: "center", gap: 6 },
+  sectionIcon: { fontSize: 14 },
   sectionTitleText: {
     fontSize: 12,
     fontWeight: "900",
@@ -1038,24 +1077,10 @@ const s = StyleSheet.create({
     letterSpacing: 0.8,
   },
 
-  summaryValue: {
-    marginTop: 7,
-    fontSize: 14,
-    fontWeight: "800",
-    color: PSU.text,
-  },
-  summarySub: {
-    marginTop: 6,
-    fontSize: 12,
-    lineHeight: 17,
-    color: PSU.muted,
-  },
+  summaryValue: { marginTop: 7, fontSize: 14, fontWeight: "800", color: PSU.text },
+  summarySub: { marginTop: 6, fontSize: 12, lineHeight: 17, color: PSU.muted },
 
-  miniStatusRow: {
-    flexDirection: "row",
-    gap: 10,
-    marginTop: 10,
-  },
+  miniStatusRow: { flexDirection: "row", gap: 10, marginTop: 10 },
   miniStatusCard: {
     flex: 1,
     backgroundColor: "#F8FAFC",
@@ -1064,27 +1089,11 @@ const s = StyleSheet.create({
     borderColor: PSU.border,
     padding: 10,
   },
-  miniStatusLabel: {
-    fontSize: 11,
-    fontWeight: "900",
-    color: PSU.muted,
-    textTransform: "uppercase",
-  },
-  miniStatusValue: {
-    marginTop: 6,
-    fontSize: 13,
-    fontWeight: "800",
-    color: PSU.text,
-  },
-  miniStatusValueArrived: {
-    color: PSU.green,
-  },
+  miniStatusLabel: { fontSize: 11, fontWeight: "900", color: PSU.muted, textTransform: "uppercase" },
+  miniStatusValue: { marginTop: 6, fontSize: 13, fontWeight: "800", color: PSU.text },
+  miniStatusValueArrived: { color: PSU.green },
 
-  actionRow: {
-    flexDirection: "row",
-    gap: 10,
-    marginTop: 10,
-  },
+  actionRow: { flexDirection: "row", gap: 10, marginTop: 10 },
   controlBtn: {
     flex: 1,
     height: 44,
@@ -1095,11 +1104,7 @@ const s = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
   },
-  controlBtnText: {
-    color: PSU.text,
-    fontSize: 13,
-    fontWeight: "800",
-  },
+  controlBtnText: { color: PSU.text, fontSize: 13, fontWeight: "800" },
   moreInfoBtn: {
     flex: 1,
     height: 44,
@@ -1108,20 +1113,14 @@ const s = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
   },
-  moreInfoBtnText: {
-    color: PSU.white,
-    fontSize: 13,
-    fontWeight: "900",
-  },
+  moreInfoBtnText: { color: PSU.white, fontSize: 13, fontWeight: "900" },
 
   modalBackdropWrap: {
     flex: 1,
     backgroundColor: PSU.modalBackdrop,
     justifyContent: "flex-end",
   },
-  modalBackdropTap: {
-    flex: 1,
-  },
+  modalBackdropTap: { flex: 1 },
   modalSheet: {
     maxHeight: "72%",
     backgroundColor: PSU.white,
@@ -1137,16 +1136,8 @@ const s = StyleSheet.create({
     justifyContent: "space-between",
     marginBottom: 10,
   },
-  modalTitle: {
-    fontSize: 20,
-    fontWeight: "900",
-    color: PSU.text,
-  },
-  modalSubtitle: {
-    marginTop: 4,
-    fontSize: 13,
-    color: PSU.muted,
-  },
+  modalTitle: { fontSize: 20, fontWeight: "900", color: PSU.text },
+  modalSubtitle: { marginTop: 4, fontSize: 13, color: PSU.muted },
   modalCloseBtn: {
     paddingHorizontal: 14,
     height: 38,
@@ -1155,22 +1146,12 @@ const s = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
   },
-  modalCloseBtnText: {
-    color: PSU.blue2,
-    fontWeight: "900",
-    fontSize: 14,
-  },
+  modalCloseBtnText: { color: PSU.blue2, fontWeight: "900", fontSize: 14 },
 
-  modalScroll: {
-    marginTop: 4,
-  },
-  modalScrollContent: {
-    paddingBottom: 12,
-  },
+  modalScroll: { marginTop: 4 },
+  modalScrollContent: { paddingBottom: 12 },
 
-  detailSection: {
-    marginBottom: 16,
-  },
+  detailSection: { marginBottom: 16 },
   detailInfoCard: {
     marginTop: 8,
     backgroundColor: "#F8FAFC",
@@ -1179,17 +1160,9 @@ const s = StyleSheet.create({
     borderColor: PSU.border,
     padding: 12,
   },
-  detailBody: {
-    color: PSU.muted,
-    lineHeight: 20,
-    fontSize: 14,
-  },
+  detailBody: { color: PSU.muted, lineHeight: 20, fontSize: 14 },
 
-  stepRow: {
-    flexDirection: "row",
-    alignItems: "flex-start",
-    marginTop: 10,
-  },
+  stepRow: { flexDirection: "row", alignItems: "flex-start", marginTop: 10 },
   stepNumber: {
     width: 30,
     height: 30,
@@ -1200,18 +1173,9 @@ const s = StyleSheet.create({
     marginRight: 10,
     marginTop: 2,
   },
-  stepNumberActive: {
-    backgroundColor: PSU.blue2,
-    transform: [{ scale: 1.08 }],
-  },
-  stepNumberText: {
-    color: PSU.white,
-    fontSize: 12,
-    fontWeight: "900",
-  },
-  stepNumberTextActive: {
-    color: PSU.white,
-  },
+  stepNumberActive: { backgroundColor: PSU.blue2, transform: [{ scale: 1.08 }] },
+  stepNumberText: { color: PSU.white, fontSize: 12, fontWeight: "900" },
+  stepNumberTextActive: { color: PSU.white },
   stepContent: {
     flex: 1,
     backgroundColor: "#F8FAFC",
@@ -1221,14 +1185,8 @@ const s = StyleSheet.create({
     borderWidth: 1,
     borderColor: "#EEF2F7",
   },
-  stepContentActive: {
-    backgroundColor: "#EEF4FF",
-    borderColor: "#C9D9FF",
-  },
-  stepContentArrived: {
-    backgroundColor: "#EEF8F1",
-    borderColor: "#B7DEC1",
-  },
+  stepContentActive: { backgroundColor: "#EEF4FF", borderColor: "#C9D9FF" },
+  stepContentArrived: { backgroundColor: "#EEF8F1", borderColor: "#B7DEC1" },
   stepCurrentBadge: {
     alignSelf: "flex-start",
     marginBottom: 8,
@@ -1241,44 +1199,15 @@ const s = StyleSheet.create({
     fontWeight: "900",
     overflow: "hidden",
   },
-  stepCurrentBadgeArrived: {
-    backgroundColor: PSU.green,
-  },
-  stepText: {
-    color: PSU.text,
-    lineHeight: 20,
-    fontWeight: "600",
-  },
-  stepTextActive: {
-    color: PSU.blue,
-    fontWeight: "800",
-  },
-  stepTextArrived: {
-    color: PSU.green,
-  },
+  stepCurrentBadgeArrived: { backgroundColor: PSU.green },
+  stepText: { color: PSU.text, lineHeight: 20, fontWeight: "600" },
+  stepTextActive: { color: PSU.blue, fontWeight: "800" },
+  stepTextArrived: { color: PSU.green },
 
-  permissionSafe: {
-    flex: 1,
-    backgroundColor: PSU.light,
-  },
-  permissionCenter: {
-    flex: 1,
-    alignItems: "center",
-    justifyContent: "center",
-    padding: 24,
-  },
-  permissionTitle: {
-    fontSize: 24,
-    fontWeight: "900",
-    color: PSU.text,
-    textAlign: "center",
-  },
-  permissionText: {
-    marginTop: 12,
-    color: PSU.muted,
-    textAlign: "center",
-    lineHeight: 22,
-  },
+  permissionSafe: { flex: 1, backgroundColor: PSU.light },
+  permissionCenter: { flex: 1, alignItems: "center", justifyContent: "center", padding: 24 },
+  permissionTitle: { fontSize: 24, fontWeight: "900", color: PSU.text, textAlign: "center" },
+  permissionText: { marginTop: 12, color: PSU.muted, textAlign: "center", lineHeight: 22 },
   permissionBtn: {
     marginTop: 18,
     backgroundColor: PSU.blue,
@@ -1288,17 +1217,7 @@ const s = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
   },
-  permissionBtnText: {
-    color: PSU.white,
-    fontSize: 15,
-    fontWeight: "900",
-  },
-  permissionBackBtn: {
-    marginTop: 12,
-    padding: 10,
-  },
-  permissionBackText: {
-    color: PSU.blue,
-    fontWeight: "800",
-  },
+  permissionBtnText: { color: PSU.white, fontSize: 15, fontWeight: "900" },
+  permissionBackBtn: { marginTop: 12, padding: 10 },
+  permissionBackText: { color: PSU.blue, fontWeight: "800" },
 });
