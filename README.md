@@ -44,7 +44,7 @@ The main navigation system is split into a few parts:
 - `routeSteps.js`  
   Converts route waypoint IDs into readable step-by-step directions
 
-- `imageRecognition`
+- `imageRecognition.js`
   Determines the indoor location of the user using image recognition provided by a database of photos from imageMap.js
 
 - `imageMap.js`
