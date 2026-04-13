@@ -215,6 +215,13 @@ export default function BuildingDetail({ route, navigation }) {
             </Text>
 
             <Pressable
+              style={s.secondaryBtn}
+              onPress={() => navigation.navigate("FloorMap", { buildingId })}
+            >
+              <Text style={s.secondaryBtnText}>View Floor Plans</Text>
+            </Pressable>
+
+            <Pressable
               style={s.btn}
               onPress={() => navigation.navigate("Search")}
             >
@@ -273,6 +280,20 @@ const s = StyleSheet.create({
   },
   btnText: {
     color: PSU.white,
+    fontWeight: "900",
+  },
+  secondaryBtn: {
+    marginTop: 14,
+    height: 46,
+    borderRadius: 14,
+    backgroundColor: "#EEF4FF",
+    borderWidth: 1,
+    borderColor: "#C9D9FF",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  secondaryBtnText: {
+    color: PSU.blue,
     fontWeight: "900",
   },
   slideshowContainer: {

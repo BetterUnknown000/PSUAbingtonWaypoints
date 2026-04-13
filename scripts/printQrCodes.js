@@ -1,86 +1,11 @@
 const QRCode = require("qrcode");
-const campusData = require("../src/data/campusData.json");
-
-const APP_SCHEME = "psuabingtonwaypoints";
-const QR_NAVIGATION_ROUTE = "navigation";
-
-function normalizeLabel(value) {
-  return String(value || "").trim().toLowerCase();
-}
-
-function getMainEntranceWaypoints() {
-  return (campusData.waypoints || []).filter((waypoint) => {
-    if (waypoint.type !== "entrance") return false;
-
-    const label = normalizeLabel(waypoint.label);
-    if (label.startsWith("room ")) return false;
-
-    return (
-      label.includes("main entrance") ||
-      label === "springhouse main entrance" ||
-      label === "athletic building main entrance"
-    );
-  });
-}
-
-function getElevatorWaypoints() {
-  return (campusData.waypoints || []).filter((waypoint) => waypoint.type === "elevator");
-}
-
-function getStairWaypoints() {
-  return (campusData.waypoints || [])
-    .filter((waypoint) => waypoint.type === "stairs")
-    .filter((waypoint) => {
-      const label = normalizeLabel(waypoint.label);
-      return label.includes("main") || waypoint.building === "lares";
-    });
-}
-
-function buildPayload(waypoint) {
-  return {
-    version: 2,
-    qr_id: waypoint.qr_code,
-    waypoint_id: waypoint.id,
-    building: waypoint.building,
-    floor: waypoint.floor,
-    latitude: waypoint.latitude,
-    longitude: waypoint.longitude,
-    label: waypoint.label,
-    type: waypoint.type,
-    app_url: buildAppUrl(waypoint),
-  };
-}
-
-function buildAppUrl(waypoint) {
-  const params = [
-    ["startWaypointId", waypoint.id],
-    ["startQrId", waypoint.qr_code],
-    ["building", waypoint.building],
-    ["floor", waypoint.floor],
-    ["latitude", waypoint.latitude],
-    ["longitude", waypoint.longitude],
-    ["label", waypoint.label],
-    ["type", waypoint.type],
-  ]
-    .filter(([, value]) => value != null && value !== "")
-    .map(([key, value]) => `${encodeURIComponent(key)}=${encodeURIComponent(String(value))}`)
-    .join("&");
-
-  return `${APP_SCHEME}://${QR_NAVIGATION_ROUTE}?${params}`;
-}
-
-function getTargets() {
-  const targets = [
-    ...getMainEntranceWaypoints().map((waypoint) => ({ waypoint, category: "Entrance" })),
-    ...getElevatorWaypoints().map((waypoint) => ({ waypoint, category: "Elevator" })),
-    ...getStairWaypoints().map((waypoint) => ({ waypoint, category: "Stairs" })),
-  ];
-
-  return Array.from(new Map(targets.map((item) => [item.waypoint.id, item])).values());
-}
+const { buildPayload, getQrTargets } = require("./qrCodeTargets");
 
 async function main() {
-  const targets = getTargets();
+  const targets = getQrTargets().map(({ waypoint, category }) => ({
+    waypoint,
+    category: category.charAt(0).toUpperCase() + category.slice(1),
+  }));
 
   for (let index = 0; index < targets.length; index += 1) {
     const { waypoint, category } = targets[index];

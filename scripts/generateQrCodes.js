@@ -1,12 +1,9 @@
 const fs = require("fs");
 const path = require("path");
 const QRCode = require("qrcode");
-
-const campusData = require("../src/data/campusData.json");
+const { buildPayload, getQrTargets } = require("./qrCodeTargets");
 
 const outputDir = path.join(__dirname, "..", "src", "assets", "qrcodes");
-const APP_SCHEME = "psuabingtonwaypoints";
-const QR_NAVIGATION_ROUTE = "navigation";
 
 function ensureDir(dirPath) {
   fs.mkdirSync(dirPath, { recursive: true });
@@ -18,67 +15,6 @@ function slugify(value) {
     .toLowerCase()
     .replace(/[^a-z0-9]+/g, "-")
     .replace(/^-+|-+$/g, "");
-}
-
-function getMainEntranceWaypoints() {
-  return (campusData.waypoints || []).filter((waypoint) => {
-    if (waypoint.type !== "entrance") return false;
-
-    const label = String(waypoint.label || "").toLowerCase();
-    if (label.startsWith("room ")) return false;
-
-    return (
-      label.includes("main entrance") ||
-      label === "springhouse main entrance" ||
-      label === "athletic building main entrance"
-    );
-  });
-}
-
-function getElevatorWaypoints() {
-  return (campusData.waypoints || []).filter((waypoint) => waypoint.type === "elevator");
-}
-
-function getStairWaypoints() {
-  const stairs = (campusData.waypoints || []).filter((waypoint) => waypoint.type === "stairs");
-
-  return stairs.filter((waypoint) => {
-    const label = String(waypoint.label || "").toLowerCase();
-    return label.includes("main") || waypoint.building === "lares";
-  });
-}
-
-function buildPayload(waypoint) {
-  return {
-    version: 2,
-    qr_id: waypoint.qr_code,
-    waypoint_id: waypoint.id,
-    building: waypoint.building,
-    floor: waypoint.floor,
-    latitude: waypoint.latitude,
-    longitude: waypoint.longitude,
-    label: waypoint.label,
-    type: waypoint.type,
-    app_url: buildAppUrl(waypoint),
-  };
-}
-
-function buildAppUrl(waypoint) {
-  const params = [
-    ["startWaypointId", waypoint.id],
-    ["startQrId", waypoint.qr_code],
-    ["building", waypoint.building],
-    ["floor", waypoint.floor],
-    ["latitude", waypoint.latitude],
-    ["longitude", waypoint.longitude],
-    ["label", waypoint.label],
-    ["type", waypoint.type],
-  ]
-    .filter(([, value]) => value != null && value !== "")
-    .map(([key, value]) => `${encodeURIComponent(key)}=${encodeURIComponent(String(value))}`)
-    .join("&");
-
-  return `${APP_SCHEME}://${QR_NAVIGATION_ROUTE}?${params}`;
 }
 
 async function writeQrFile(waypoint, category) {
@@ -109,16 +45,7 @@ async function writeQrFile(waypoint, category) {
 
 async function main() {
   ensureDir(outputDir);
-
-  const targets = [
-    ...getMainEntranceWaypoints().map((waypoint) => ({ waypoint, category: "entrance" })),
-    ...getElevatorWaypoints().map((waypoint) => ({ waypoint, category: "elevator" })),
-    ...getStairWaypoints().map((waypoint) => ({ waypoint, category: "stairs" })),
-  ];
-
-  const uniqueTargets = Array.from(
-    new Map(targets.map((item) => [item.waypoint.id, item])).values()
-  );
+  const uniqueTargets = getQrTargets();
 
   const manifest = [];
 
