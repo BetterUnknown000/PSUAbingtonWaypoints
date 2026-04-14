@@ -2,6 +2,7 @@ import React, { useCallback, useMemo, useState } from "react";
 import {
   Alert,
   Modal,
+  Platform,
   Pressable,
   ScrollView,
   StyleSheet,
@@ -12,11 +13,15 @@ import {
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Picker } from "@react-native-picker/picker";
 import { useFocusEffect } from "@react-navigation/native";
+import * as Calendar from "expo-calendar";
+import * as DocumentPicker from "expo-document-picker";
+import { File } from "expo-file-system";
 
 import BottomMenu, { BOTTOM_MENU_HEIGHT } from "../components/BottomMenu";
 import { getAllBuildings, findRoom } from "../utils/findRoom";
 import {
   loadSchedule,
+  saveSchedule,
   addScheduleItem,
   deleteScheduleItem,
   clearSchedule,
@@ -31,15 +36,46 @@ const PSU = {
   border: "#E6ECF2",
   text: "#0B1220",
   muted: "#5B6776",
-  successBg: "#EEF8F1",
-  successBorder: "#B7DEC1",
-  dangerBg: "#FFF1F1",
-  dangerBorder: "#F3C7C7",
-  onlineBg: "#F4F6FB",
-  onlineBorder: "#D6DEEE",
+  danger: "#B42318",
+  card: "#FFFFFF",
+  gold: "#FFC857",
 };
 
 const DAY_OPTIONS = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
+const DAY_TO_INDEX = {
+  Sun: 0,
+  Mon: 1,
+  Tue: 2,
+  Wed: 3,
+  Thu: 4,
+  Fri: 5,
+  Sat: 6,
+};
+
+const BUILDING_ALIASES = {
+  SUTH: "sutherland",
+  SUTHERLAND: "sutherland",
+  WOOD: "woodland",
+  WOODLAND: "woodland",
+  RYDAL: "rydal",
+  LARES: "lares",
+  SPRING: "springhouse",
+  SPRINGHOUSE: "springhouse",
+  ATH: "athletic",
+  ATHLETIC: "athletic",
+};
+
+const ICS_DAY_MAP = {
+  MO: "Mon",
+  TU: "Tue",
+  WE: "Wed",
+  TH: "Thu",
+  FR: "Fri",
+  SA: "Sat",
+  SU: "Sun",
+};
+
+const APP_CALENDAR_NAME = "PSU Abington Waypoints";
 
 function makeId() {
   return `${Date.now()}_${Math.random().toString(36).slice(2, 8)}`;
@@ -73,8 +109,19 @@ function parseTimeToMinutes(value) {
   return h * 60 + m;
 }
 
+function pad2(n) {
+  return String(n).padStart(2, "0");
+}
+
+function timeTo24String(date) {
+  return `${pad2(date.getHours())}:${pad2(date.getMinutes())}`;
+}
+
 function parse12HourTo24(timeStr) {
-  const raw = String(timeStr || "").trim().toUpperCase();
+  const raw = String(timeStr || "")
+    .trim()
+    .toUpperCase()
+    .replace(/\./g, "");
   const match = raw.match(/^(\d{1,2}):(\d{2})\s*(AM|PM)$/);
 
   if (!match) return "";
@@ -86,11 +133,11 @@ function parse12HourTo24(timeStr) {
   if (ampm === "PM" && hour !== 12) hour += 12;
   if (ampm === "AM" && hour === 12) hour = 0;
 
-  return `${String(hour).padStart(2, "0")}:${String(minute).padStart(2, "0")}`;
+  return `${pad2(hour)}:${pad2(minute)}`;
 }
 
 function parseTimeRange(value) {
-  const raw = String(value || "").trim();
+  const raw = String(value || "").trim().replace(/\./g, "");
   if (!raw || !raw.includes("-")) {
     return { startTime: "", endTime: "" };
   }
@@ -104,32 +151,24 @@ function parseTimeRange(value) {
 }
 
 function parseDayString(value) {
-  const raw = String(value || "").trim().toUpperCase();
+  const raw = String(value || "")
+    .trim()
+    .toUpperCase()
+    .replace(/\s+/g, "")
+    .replace(/TH/g, "R");
+
   if (!raw) return [];
 
-  const compact = raw.replace(/\s+/g, "");
-
   const tokens = [];
-  let i = 0;
-
-  while (i < compact.length) {
-    if (compact.slice(i, i + 2) === "TH") {
-      tokens.push("Thu");
-      i += 2;
-      continue;
-    }
-
-    const ch = compact[i];
-
+  for (let i = 0; i < raw.length; i += 1) {
+    const ch = raw[i];
     if (ch === "M") tokens.push("Mon");
     else if (ch === "T") tokens.push("Tue");
     else if (ch === "W") tokens.push("Wed");
+    else if (ch === "R") tokens.push("Thu");
     else if (ch === "F") tokens.push("Fri");
     else if (ch === "S") tokens.push("Sat");
     else if (ch === "U") tokens.push("Sun");
-    else if (ch === "R") tokens.push("Thu");
-
-    i += 1;
   }
 
   return [...new Set(tokens)];
@@ -137,6 +176,17 @@ function parseDayString(value) {
 
 function sortByStartTime(items) {
   return [...items].sort((a, b) => {
+    const dayA =
+      Array.isArray(a.days) && a.days.length > 0
+        ? DAY_OPTIONS.indexOf(a.days[0])
+        : 99;
+    const dayB =
+      Array.isArray(b.days) && b.days.length > 0
+        ? DAY_OPTIONS.indexOf(b.days[0])
+        : 99;
+
+    if (dayA !== dayB) return dayA - dayB;
+
     const aTime = parseTimeToMinutes(a.startTime) ?? 9999;
     const bTime = parseTimeToMinutes(b.startTime) ?? 9999;
     return aTime - bTime;
@@ -180,6 +230,16 @@ function findBuildingObject(buildings, rawBuilding) {
   );
 }
 
+function formatDays(days = []) {
+  if (!Array.isArray(days) || days.length === 0) return "No days";
+  return days.join(" • ");
+}
+
+function formatTimeRange(startTime, endTime) {
+  if (!startTime || !endTime) return "Time not set";
+  return `${startTime} - ${endTime}`;
+}
+
 function formatSectionLabel(entry, buildings) {
   const status = String(entry?.status || "").trim().toUpperCase();
   const buildingObj = findBuildingObject(buildings, entry?.building);
@@ -212,7 +272,9 @@ function buildScheduleItemFromCourseEntry(entry, buildings) {
     sourceType: "course",
     courseCode: String(entry?.course || "").trim(),
     courseName: "",
-    buildingId: isOnline ? "" : buildingObj?.id || String(entry?.building || "").trim(),
+    buildingId: isOnline
+      ? ""
+      : buildingObj?.id || String(entry?.building || "").trim().toLowerCase(),
     buildingName: isOnline
       ? status
       : buildingObj?.name || String(entry?.building || "").trim() || "TBD",
@@ -224,6 +286,288 @@ function buildScheduleItemFromCourseEntry(entry, buildings) {
     isOnline,
     createdAt: new Date().toISOString(),
   };
+}
+
+function tryExtractCourseCode(line) {
+  const match = String(line || "")
+    .toUpperCase()
+    .match(/\b([A-Z]{2,}\s?\d{2,3}[A-Z]?)\b/);
+  return match ? match[1].replace(/\s+/g, " ").trim() : "";
+}
+/*
+function buildScheduleItemsFromCourseCode(courseCode, buildings, sourceType = "import") {
+  const normalizedQuery = normalizeText(courseCode);
+
+  const courseList = Array.isArray(courseData?.courses)
+    ? courseData.courses
+    : Array.isArray(courseData)
+    ? courseData
+    : [];
+
+  const matches = courseList.filter(
+    (entry) => normalizeText(entry?.course) === normalizedQuery
+  );
+
+  return matches.map((entry) => {
+    const built = buildScheduleItemFromCourseEntry(entry, buildings);
+    return {
+      ...built,
+      sourceType,
+    };
+  });
+}
+*/
+function normalizeDayList(days = []) {
+  return [...new Set(days)].sort(
+    (a, b) => DAY_OPTIONS.indexOf(a) - DAY_OPTIONS.indexOf(b)
+  );
+}
+
+function sameDays(daysA = [], daysB = []) {
+  const a = normalizeDayList(daysA);
+  const b = normalizeDayList(daysB);
+
+  if (a.length !== b.length) return false;
+  return a.every((day, index) => day === b[index]);
+}
+
+function timeDistanceMinutes(a, b) {
+  const aMin = parseTimeToMinutes(a);
+  const bMin = parseTimeToMinutes(b);
+  if (aMin === null || bMin === null) return 99999;
+  return Math.abs(aMin - bMin);
+}
+
+function buildScheduleItemFromCourseEntryWithSource(entry, buildings, sourceType) {
+  const built = buildScheduleItemFromCourseEntry(entry, buildings);
+  return {
+    ...built,
+    sourceType,
+  };
+}
+
+function pickBestCourseMatch(courseCode, importedDays, importedStartTime) {
+  const normalizedQuery = normalizeText(courseCode);
+
+  const courseList = Array.isArray(courseData?.courses)
+    ? courseData.courses
+    : Array.isArray(courseData)
+    ? courseData
+    : [];
+
+  const matches = courseList.filter(
+    (entry) => normalizeText(entry?.course) === normalizedQuery
+  );
+
+  if (matches.length === 0) return null;
+  if (matches.length === 1) return matches[0];
+
+  const normalizedImportedDays = normalizeDayList(importedDays || []);
+
+  const scored = matches.map((entry) => {
+    const parsedDays = parseDayString(entry?.day);
+    const parsedTime = parseTimeRange(entry?.time);
+
+    let score = 0;
+
+    if (sameDays(parsedDays, normalizedImportedDays)) {
+      score += 1000;
+    } else {
+      const overlapCount = parsedDays.filter((d) =>
+        normalizedImportedDays.includes(d)
+      ).length;
+      score += overlapCount * 100;
+    }
+
+    if (parsedTime.startTime && importedStartTime) {
+      score += Math.max(0, 60 - timeDistanceMinutes(parsedTime.startTime, importedStartTime));
+    }
+
+    return { entry, score };
+  });
+
+  scored.sort((a, b) => b.score - a.score);
+
+  return scored[0]?.entry || null;
+}
+
+function buildScheduleItemsFromCourseCode(
+  courseCode,
+  buildings,
+  sourceType = "import",
+  importedDays = [],
+  importedStartTime = ""
+) {
+  const bestMatch = pickBestCourseMatch(courseCode, importedDays, importedStartTime);
+
+  if (!bestMatch) return [];
+
+  return [
+    buildScheduleItemFromCourseEntryWithSource(bestMatch, buildings, sourceType),
+  ];
+}
+
+
+function buildScheduleItemFromCalendarEvent(event, buildings) {
+  const title = String(event?.title || "").trim();
+  const notes = String(event?.notes || "").trim();
+  const courseCode = tryExtractCourseCode(`${title} ${notes}`);
+
+  if (!courseCode) return [];
+
+  const startDate = new Date(event.startDate);
+  const importedDay = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"][startDate.getDay()];
+  const importedStartTime = timeTo24String(startDate);
+
+  return buildScheduleItemsFromCourseCode(
+    courseCode,
+    buildings,
+    "calendar_import",
+    [importedDay],
+    importedStartTime
+  );
+}
+
+function unfoldICSLines(text) {
+  return String(text || "").replace(/\r\n[ \t]/g, "").replace(/\n[ \t]/g, "");
+}
+
+function extractICSField(block, fieldName) {
+  const regex = new RegExp(`${fieldName}(?:;[^:]+)?:([^\\n\\r]+)`, "i");
+  const match = block.match(regex);
+  return match ? match[1].trim() : "";
+}
+
+function parseICSDateTo24(value) {
+  const raw = String(value || "").trim();
+  const match = raw.match(/T(\d{2})(\d{2})/);
+  if (!match) return "";
+  return `${match[1]}:${match[2]}`;
+}
+
+function parseICSDays(rrule) {
+  const raw = String(rrule || "");
+  const match = raw.match(/BYDAY=([^;\n\r]+)/i);
+  if (!match) return [];
+
+  return match[1]
+    .split(",")
+    .map((d) => ICS_DAY_MAP[d.trim().toUpperCase()])
+    .filter(Boolean);
+}
+
+function buildScheduleItemFromICSBlock(block, buildings) {
+  const summary = extractICSField(block, "SUMMARY");
+  const description = extractICSField(block, "DESCRIPTION");
+  const dtStart = extractICSField(block, "DTSTART");
+  const rrule = extractICSField(block, "RRULE");
+
+  const courseCode = tryExtractCourseCode(summary || description);
+  if (!courseCode) return [];
+
+  const importedDays = parseICSDays(rrule);
+  const importedStartTime = parseICSDateTo24(dtStart);
+
+  return buildScheduleItemsFromCourseCode(
+    courseCode,
+    buildings,
+    "ics_import",
+    importedDays,
+    importedStartTime
+  );
+}
+
+function parseICSFileText(text, buildings) {
+  const normalized = unfoldICSLines(text);
+  const blocks = normalized.match(/BEGIN:VEVENT[\s\S]*?END:VEVENT/g) || [];
+
+  return blocks.flatMap((block) => buildScheduleItemFromICSBlock(block, buildings));
+}
+
+function dedupeScheduleItems(items = []) {
+  const seen = new Set();
+  const output = [];
+
+  for (const item of items) {
+    const key = [
+      item.courseCode,
+      item.buildingId,
+      item.roomNumber,
+      (item.days || []).join(","),
+      item.startTime,
+      item.endTime,
+      item.status,
+    ].join("|");
+
+    if (!seen.has(key)) {
+      seen.add(key);
+      output.push(item);
+    }
+  }
+
+  return output;
+}
+
+function nextOccurrenceForDay(dayName, startTime, endTime, weekOffset = 0) {
+  const now = new Date();
+  const targetDay = DAY_TO_INDEX[dayName];
+  if (targetDay == null) return null;
+
+  const [startH, startM] = String(startTime || "00:00")
+    .split(":")
+    .map(Number);
+  const [endH, endM] = String(endTime || "00:00")
+    .split(":")
+    .map(Number);
+
+  const start = new Date(now);
+  start.setHours(0, 0, 0, 0);
+
+  let diff = targetDay - start.getDay();
+  if (diff < 0) diff += 7;
+
+  start.setDate(start.getDate() + diff + weekOffset * 7);
+  start.setHours(startH || 0, startM || 0, 0, 0);
+
+  const end = new Date(start);
+  end.setHours(endH || 0, endM || 0, 0, 0);
+
+  if (weekOffset === 0 && start < now) {
+    start.setDate(start.getDate() + 7);
+    end.setDate(end.getDate() + 7);
+  }
+
+  return { start, end };
+}
+
+async function ensureAppCalendar() {
+  const calendars = await Calendar.getCalendarsAsync(Calendar.EntityTypes.EVENT);
+  const existing = calendars.find((c) => c.title === APP_CALENDAR_NAME);
+  if (existing) return existing.id;
+
+  if (Platform.OS === "ios") {
+    const defaultCalendar = await Calendar.getDefaultCalendarAsync();
+    return Calendar.createCalendarAsync({
+      title: APP_CALENDAR_NAME,
+      color: "#001E44",
+      entityType: Calendar.EntityTypes.EVENT,
+      sourceId: defaultCalendar.source?.id,
+      source: defaultCalendar.source,
+      name: APP_CALENDAR_NAME,
+      ownerAccount: "personal",
+      accessLevel: Calendar.CalendarAccessLevel.OWNER,
+    });
+  }
+
+  return Calendar.createCalendarAsync({
+    title: APP_CALENDAR_NAME,
+    color: "#001E44",
+    entityType: Calendar.EntityTypes.EVENT,
+    name: APP_CALENDAR_NAME,
+    ownerAccount: "personal",
+    accessLevel: Calendar.CalendarAccessLevel.OWNER,
+    source: { isLocalAccount: true, name: APP_CALENDAR_NAME },
+  });
 }
 
 export default function MySchedule({ navigation }) {
@@ -247,6 +591,8 @@ export default function MySchedule({ navigation }) {
 
   const [pendingCourseMatches, setPendingCourseMatches] = useState([]);
   const [selectedCourseMatchIndex, setSelectedCourseMatchIndex] = useState(0);
+
+  const [calendarBusy, setCalendarBusy] = useState(false);
 
   const refreshSchedule = useCallback(async () => {
     setLoading(true);
@@ -294,10 +640,7 @@ export default function MySchedule({ navigation }) {
       ? courseData
       : [];
 
-    return courseList.filter((entry) => {
-      const courseValue = normalizeText(entry?.course);
-      return courseValue === normalizedQuery;
-    });
+    return courseList.filter((entry) => normalizeText(entry?.course) === normalizedQuery);
   }
 
   async function saveScheduleItem(item) {
@@ -310,22 +653,12 @@ export default function MySchedule({ navigation }) {
 
   async function handleConfirmCourseSection() {
     const selected = pendingCourseMatches[selectedCourseMatchIndex];
-
     if (!selected) {
       Alert.alert("No section selected", "Please select one course section.");
       return;
     }
 
     const newItem = buildScheduleItemFromCourseEntry(selected, buildings);
-
-    if (!newItem.startTime || !newItem.endTime || newItem.days.length === 0) {
-      Alert.alert(
-        "Missing schedule info",
-        "This course entry does not contain enough day/time information to save automatically."
-      );
-      return;
-    }
-
     await saveScheduleItem(newItem);
   }
 
@@ -351,15 +684,6 @@ export default function MySchedule({ navigation }) {
 
       if (matches.length === 1) {
         const newItem = buildScheduleItemFromCourseEntry(matches[0], buildings);
-
-        if (!newItem.startTime || !newItem.endTime || newItem.days.length === 0) {
-          Alert.alert(
-            "Missing schedule info",
-            "This course was found, but its day/time info is incomplete."
-          );
-          return;
-        }
-
         await saveScheduleItem(newItem);
         return;
       }
@@ -381,7 +705,7 @@ export default function MySchedule({ navigation }) {
     }
 
     if (!trimmedRoom) {
-      Alert.alert("Missing room number", "Please enter a room number.");
+      Alert.alert("Missing room", "Please enter a room number.");
       return;
     }
 
@@ -421,9 +745,7 @@ export default function MySchedule({ navigation }) {
       buildingId,
       buildingName: building?.name || buildingId,
       roomNumber: trimmedRoom,
-      days: [...days].sort(
-        (a, b) => DAY_OPTIONS.indexOf(a) - DAY_OPTIONS.indexOf(b)
-      ),
+      days: [...days].sort((a, b) => DAY_OPTIONS.indexOf(a) - DAY_OPTIONS.indexOf(b)),
       startTime: trimmedStart,
       endTime: trimmedEnd,
       status: "IN PERSON",
@@ -441,10 +763,7 @@ export default function MySchedule({ navigation }) {
 
   function handleNavigate(item) {
     if (item.isOnline || item.status === "ZOOM" || item.status === "WEB") {
-      Alert.alert(
-        "Online class",
-        "This class is online, so there is no classroom navigation."
-      );
+      Alert.alert("Online class", "This class is online, so there is no classroom navigation.");
       return;
     }
 
@@ -473,6 +792,167 @@ export default function MySchedule({ navigation }) {
   function handleOpenAddModal() {
     resetForm();
     setModalVisible(true);
+  }
+
+  async function handleExportScheduleToCalendar() {
+    if (schedule.length === 0) {
+      Alert.alert("No schedule", "Add classes before exporting to the phone calendar.");
+      return;
+    }
+
+    setCalendarBusy(true);
+
+    try {
+      const { status } = await Calendar.requestCalendarPermissionsAsync();
+      if (status !== "granted") {
+        Alert.alert("Permission denied", "Calendar permission is required.");
+        return;
+      }
+
+      const calendarId = await ensureAppCalendar();
+
+      const oldEvents = await Calendar.getEventsAsync(
+        [calendarId],
+        new Date(),
+        new Date(Date.now() + 1000 * 60 * 60 * 24 * 180)
+      );
+
+      for (const event of oldEvents) {
+        await Calendar.deleteEventAsync(event.id);
+      }
+
+      let createdCount = 0;
+
+      for (const item of schedule) {
+        if (!Array.isArray(item.days) || item.days.length === 0) continue;
+        if (!item.startTime || !item.endTime) continue;
+
+        for (const dayName of item.days) {
+          for (let week = 0; week < 14; week += 1) {
+            const occurrence = nextOccurrenceForDay(
+              dayName,
+              item.startTime,
+              item.endTime,
+              week
+            );
+
+            if (!occurrence) continue;
+
+            await Calendar.createEventAsync(calendarId, {
+              title: item.courseCode || "Class",
+              startDate: occurrence.start,
+              endDate: occurrence.end,
+              location: item.isOnline
+                ? item.status || "ZOOM"
+                : `${item.buildingName || item.buildingId} ${item.roomNumber || ""}`.trim(),
+              notes: item.courseName
+                ? `${item.courseName}\nImported by PSU Abington Waypoints`
+                : "Imported by PSU Abington Waypoints",
+            });
+
+            createdCount += 1;
+          }
+        }
+      }
+
+      Alert.alert("Exported", `${createdCount} calendar event(s) were added.`);
+    } catch (error) {
+      console.log("Calendar export failed:", error);
+      Alert.alert("Export failed", "Could not export classes to your phone calendar.");
+    } finally {
+      setCalendarBusy(false);
+    }
+  }
+
+  async function handleImportFromDeviceCalendar() {
+    setCalendarBusy(true);
+
+    try {
+      const { status } = await Calendar.requestCalendarPermissionsAsync();
+      if (status !== "granted") {
+        Alert.alert("Permission denied", "Calendar permission is required.");
+        return;
+      }
+
+      const calendars = await Calendar.getCalendarsAsync(Calendar.EntityTypes.EVENT);
+      const events = await Calendar.getEventsAsync(
+        calendars.map((c) => c.id),
+        new Date(),
+        new Date(Date.now() + 1000 * 60 * 60 * 24 * 120)
+      );
+
+      const imported = events.flatMap((event) =>
+        buildScheduleItemFromCalendarEvent(event, buildings)
+      );
+
+      if (imported.length === 0) {
+        Alert.alert(
+          "Nothing found",
+          "No recognizable course codes were found in the next 120 days, or they were not found in courseData.json."
+        );
+        return;
+      }
+
+      const merged = dedupeScheduleItems([...imported, ...schedule]);
+      await saveSchedule(merged);
+      setSchedule(merged);
+
+      Alert.alert(
+        "Imported",
+        `${dedupeScheduleItems(imported).length} class item(s) were added from course data.`
+      );
+    } catch (error) {
+      console.log("Calendar import failed:", error);
+      Alert.alert("Import failed", "Could not import classes from your phone calendar.");
+    } finally {
+      setCalendarBusy(false);
+    }
+  }
+
+  async function handleImportFromICSFile() {
+    setCalendarBusy(true);
+
+    try {
+      const result = await DocumentPicker.getDocumentAsync({
+        type: ["text/calendar", "application/octet-stream", "*/*"],
+        copyToCacheDirectory: true,
+        multiple: false,
+      });
+
+      if (result.canceled) return;
+
+      const file = result.assets?.[0];
+      if (!file?.uri) {
+        Alert.alert("File error", "Could not read the selected file.");
+        return;
+      }
+
+      const pickedFile = new File(file.uri);
+      const text = await pickedFile.text();
+      const imported = parseICSFileText(text, buildings);
+
+      if (imported.length === 0) {
+        Alert.alert(
+          "Nothing found",
+          "No recognizable course codes were found in this file, or they were not found in courseData.json."
+        );
+        return;
+      }
+
+      const merged = dedupeScheduleItems([...imported, ...schedule]);
+      await saveSchedule(merged);
+      setSchedule(merged);
+
+      Alert.alert(
+        "Imported",
+        `${dedupeScheduleItems(imported).length} class item(s) were added from course data.`
+      );
+    } catch (error) {
+      console.log("ICS import failed:", error);
+      Alert.alert("Import failed", "Could not import classes from the .ics file.");
+    } finally {
+      setCalendarBusy(false);
+    }
   }
 
   function handleClearAll() {
@@ -507,103 +987,131 @@ export default function MySchedule({ navigation }) {
             <Text style={s.brand}>PENN STATE ABINGTON</Text>
             <Text style={s.title}>My Schedule</Text>
             <Text style={s.subtitle}>
-              Save your classes on this device for quick access to classroom
-              navigation.
+              Add classes manually, use course lookup, sync with your phone calendar, or import an .ics file.
             </Text>
           </View>
 
           {nextClass ? (
-            <View style={[s.nextCard, nextClass.isOnline && s.onlineCard]}>
-              <Text style={s.nextLabel}>Next class today</Text>
-              <Text style={s.nextTitle}>
-                {nextClass.courseCode}
-                {nextClass.courseName ? ` — ${nextClass.courseName}` : ""}
+            <View style={s.nextCard}>
+              <Text style={s.nextEyebrow}>NEXT CLASS</Text>
+              <Text style={s.nextCourse}>{nextClass.courseCode || "Unnamed class"}</Text>
+              <Text style={s.nextMeta}>
+                {formatDays(nextClass.days)} • {formatTimeRange(nextClass.startTime, nextClass.endTime)}
               </Text>
               <Text style={s.nextMeta}>
-                {nextClass.isOnline
-                  ? nextClass.status
-                  : `${nextClass.buildingName} ${nextClass.roomNumber}`}
-              </Text>
-              <Text style={s.nextMeta}>
-                {nextClass.days.join(" • ")} • {nextClass.startTime} - {nextClass.endTime}
+                {nextClass.buildingName}
+                {nextClass.roomNumber ? ` • ${nextClass.roomNumber}` : ""}
               </Text>
 
-              <Pressable
-                style={[s.primaryBtn, nextClass.isOnline && s.disabledBtn]}
-                onPress={() => handleNavigate(nextClass)}
-              >
-                <Text style={s.primaryBtnText}>
-                  {nextClass.isOnline ? "Online Class" : "Navigate to next class"}
+              <Pressable style={s.navigateBtn} onPress={() => handleNavigate(nextClass)}>
+                <Text style={s.navigateBtnText}>
+                  {nextClass.isOnline ? "Online Class" : "Navigate to Class"}
                 </Text>
               </Pressable>
             </View>
           ) : (
-            <View style={s.emptyCard}>
-              <Text style={s.emptyTitle}>No upcoming class today</Text>
-              <Text style={s.emptyText}>
-                Add your classes once and open them later for quick navigation.
+            <View style={s.emptyNextCard}>
+              <Text style={s.emptyNextTitle}>No upcoming class today</Text>
+              <Text style={s.emptyNextText}>
+                Add a class or import from your calendar to see your next destination here.
               </Text>
             </View>
           )}
 
-          <View style={s.actionsRow}>
-            <Pressable style={s.addBtn} onPress={handleOpenAddModal}>
-              <Text style={s.addBtnText}>+ Add Class</Text>
-            </Pressable>
-
-            <Pressable style={s.clearBtn} onPress={handleClearAll}>
-              <Text style={s.clearBtnText}>Clear All</Text>
+          <View style={s.actionRow}>
+            <Pressable style={s.primaryAction} onPress={handleOpenAddModal}>
+              <Text style={s.primaryActionText}>＋ Add Class</Text>
             </Pressable>
           </View>
 
-          <View style={s.listCard}>
-            <Text style={s.sectionTitle}>Saved Classes</Text>
+          <View style={s.calendarColumn}>
+            <View style={s.calendarRow}>
+              <Pressable
+                style={[s.calendarBtn, calendarBusy && s.disabledBtn]}
+                onPress={handleImportFromDeviceCalendar}
+                disabled={calendarBusy}
+              >
+                <Text style={s.calendarBtnText}>
+                  {calendarBusy ? "Working..." : "📅 Import Calendar"}
+                </Text>
+              </Pressable>
+
+              <Pressable
+                style={[s.calendarBtnBlue, calendarBusy && s.disabledBtn]}
+                onPress={handleExportScheduleToCalendar}
+                disabled={calendarBusy}
+              >
+                <Text style={s.calendarBtnBlueText}>
+                  {calendarBusy ? "Working..." : "📆 Export Calendar"}
+                </Text>
+              </Pressable>
+            </View>
+
+            <Pressable
+              style={[s.calendarBtn, calendarBusy && s.disabledBtn, s.fileImportBtn]}
+              onPress={handleImportFromICSFile}
+              disabled={calendarBusy}
+            >
+              <Text style={s.calendarBtnText}>
+                {calendarBusy ? "Working..." : "📂 Import .ics File"}
+              </Text>
+            </Pressable>
+          </View>
+
+          <View style={s.card}>
+            <View style={s.cardHeaderRow}>
+              <Text style={s.cardTitle}>Saved Classes</Text>
+              {schedule.length > 0 ? (
+                <Pressable onPress={handleClearAll}>
+                  <Text style={s.clearText}>Clear All</Text>
+                </Pressable>
+              ) : null}
+            </View>
 
             {loading ? (
-              <Text style={s.infoText}>Loading saved schedule...</Text>
+              <Text style={s.placeholderText}>Loading schedule...</Text>
             ) : schedule.length === 0 ? (
-              <Text style={s.infoText}>
-                Nothing saved yet. Tap “Add Class” to build your schedule.
+              <Text style={s.placeholderText}>
+                No classes saved yet. Add one manually, import from your phone calendar, or upload an .ics file.
               </Text>
             ) : (
               sortByStartTime(schedule).map((item) => (
                 <View
                   key={item.id}
-                  style={[s.courseCard, item.isOnline && s.onlineCourseCard]}
+                  style={[s.scheduleItem, item.isOnline && s.onlineItem]}
                 >
-                  <View style={s.courseTopRow}>
-                    <View style={{ flex: 1 }}>
-                      <Text style={s.courseCode}>{item.courseCode}</Text>
-                      {item.courseName ? (
-                        <Text style={s.courseName}>{item.courseName}</Text>
-                      ) : null}
-                    </View>
+                  <View style={{ flex: 1 }}>
+                    <Text style={s.scheduleCode}>{item.courseCode || "Class"}</Text>
+                    {!!item.courseName && (
+                      <Text style={s.scheduleName}>{item.courseName}</Text>
+                    )}
+                    <Text style={s.scheduleMeta}>
+                      {formatDays(item.days)} • {formatTimeRange(item.startTime, item.endTime)}
+                    </Text>
+                    <Text style={s.scheduleMeta}>
+                      {item.buildingName}
+                      {item.roomNumber ? ` • ${item.roomNumber}` : ""}
+                    </Text>
+                    <Text style={s.scheduleStatus}>{item.status || "IN PERSON"}</Text>
                   </View>
 
-                  <Text style={s.courseMeta}>
-                    {item.isOnline
-                      ? item.status || "ONLINE"
-                      : `${item.buildingName} ${item.roomNumber}`}
-                  </Text>
-                  <Text style={s.courseMeta}>
-                    {item.days.join(" • ")} • {item.startTime} - {item.endTime}
-                  </Text>
-
-                  <View style={s.cardButtonsRow}>
+                  <View style={s.itemActions}>
                     <Pressable
-                      style={[s.navigateBtn, item.isOnline && s.disabledBtn]}
+                      style={[s.smallAction, item.isOnline && s.disabledSmallAction]}
                       onPress={() => handleNavigate(item)}
                     >
-                      <Text style={s.navigateBtnText}>
-                        {item.isOnline ? "Online" : "Navigate"}
+                      <Text style={s.smallActionText}>
+                        {item.isOnline ? "Online" : "Go"}
                       </Text>
                     </Pressable>
 
                     <Pressable
-                      style={s.deleteBtn}
+                      style={[s.smallAction, s.deleteAction]}
                       onPress={() => handleDelete(item.id)}
                     >
-                      <Text style={s.deleteBtnText}>Delete</Text>
+                      <Text style={[s.smallActionText, s.deleteActionText]}>
+                        Delete
+                      </Text>
                     </Pressable>
                   </View>
                 </View>
@@ -613,672 +1121,439 @@ export default function MySchedule({ navigation }) {
         </ScrollView>
 
         <BottomMenu navigation={navigation} active="Schedule" />
-
-        <Modal
-          visible={modalVisible}
-          animationType="slide"
-          transparent
-          onRequestClose={() => setModalVisible(false)}
-        >
-          <View style={s.modalBackdrop}>
-            <View style={s.modalSheet}>
-              <View style={s.modalHeader}>
-                <Pressable onPress={() => setModalVisible(false)}>
-                  <Text style={s.modalCancel}>Cancel</Text>
-                </Pressable>
-
-                <Text style={s.modalTitle}>Add Class</Text>
-
-                <Pressable onPress={handleAddCourse}>
-                  <Text style={s.modalDone}>Save</Text>
-                </Pressable>
-              </View>
-
-              <ScrollView
-                contentContainerStyle={s.modalBody}
-                keyboardShouldPersistTaps="handled"
-              >
-                <Text style={s.label}>Add class by</Text>
-                <View style={s.modeRow}>
-                  <Pressable
-                    style={[s.modeBtn, addMode === "course" && s.modeBtnActive]}
-                    onPress={() => setAddMode("course")}
-                  >
-                    <Text
-                      style={[
-                        s.modeBtnText,
-                        addMode === "course" && s.modeBtnTextActive,
-                      ]}
-                    >
-                      By Course
-                    </Text>
-                  </Pressable>
-
-                  <Pressable
-                    style={[s.modeBtn, addMode === "room" && s.modeBtnActive]}
-                    onPress={() => setAddMode("room")}
-                  >
-                    <Text
-                      style={[
-                        s.modeBtnText,
-                        addMode === "room" && s.modeBtnTextActive,
-                      ]}
-                    >
-                      By Room
-                    </Text>
-                  </Pressable>
-                </View>
-
-                {addMode === "course" ? (
-                  <>
-                    <Text style={s.label}>Course</Text>
-                    <TextInput
-                      value={courseQuery}
-                      onChangeText={setCourseQuery}
-                      placeholder="e.g. CMPSC 472"
-                      placeholderTextColor="#8B97A7"
-                      style={s.input}
-                      autoCapitalize="characters"
-                    />
-
-                    <View style={s.courseHintBox}>
-                      <Text style={s.courseHintText}>
-                        Days, time, and location will be filled automatically
-                        from courseData.json. If there are multiple sections,
-                        you will choose one.
-                      </Text>
-                    </View>
-                  </>
-                ) : (
-                  <>
-                    <Text style={s.label}>Class label</Text>
-                    <TextInput
-                      value={courseCode}
-                      onChangeText={setCourseCode}
-                      placeholder="e.g. CMPSC 472"
-                      placeholderTextColor="#8B97A7"
-                      style={s.input}
-                      autoCapitalize="characters"
-                    />
-
-                    <Text style={s.label}>Class name (optional)</Text>
-                    <TextInput
-                      value={courseName}
-                      onChangeText={setCourseName}
-                      placeholder="Optional"
-                      placeholderTextColor="#8B97A7"
-                      style={s.input}
-                    />
-
-                    <Text style={s.label}>Building</Text>
-                    <View style={s.pickerWrap}>
-                      <Picker
-                        selectedValue={buildingId}
-                        onValueChange={(value) => setBuildingId(value)}
-                      >
-                        {buildings.map((building) => (
-                          <Picker.Item
-                            key={building.id}
-                            label={building.name}
-                            value={building.id}
-                            color={PSU.text}
-                          />
-                        ))}
-                      </Picker>
-                    </View>
-
-                    <Text style={s.label}>Room number</Text>
-                    <TextInput
-                      value={roomNumber}
-                      onChangeText={setRoomNumber}
-                      placeholder="111"
-                      placeholderTextColor="#8B97A7"
-                      style={s.input}
-                      autoCapitalize="characters"
-                    />
-
-                    <Text style={s.label}>Days</Text>
-                    <View style={s.daysRow}>
-                      {DAY_OPTIONS.map((day) => {
-                        const active = days.includes(day);
-                        return (
-                          <Pressable
-                            key={day}
-                            style={[s.dayChip, active && s.dayChipActive]}
-                            onPress={() => toggleDay(day)}
-                          >
-                            <Text
-                              style={[
-                                s.dayChipText,
-                                active && s.dayChipTextActive,
-                              ]}
-                            >
-                              {day}
-                            </Text>
-                          </Pressable>
-                        );
-                      })}
-                    </View>
-
-                    <Text style={s.label}>Start time</Text>
-                    <TextInput
-                      value={startTime}
-                      onChangeText={setStartTime}
-                      placeholder="10:05"
-                      placeholderTextColor="#8B97A7"
-                      style={s.input}
-                    />
-
-                    <Text style={s.label}>End time</Text>
-                    <TextInput
-                      value={endTime}
-                      onChangeText={setEndTime}
-                      placeholder="11:20"
-                      placeholderTextColor="#8B97A7"
-                      style={s.input}
-                    />
-                  </>
-                )}
-              </ScrollView>
-            </View>
-          </View>
-        </Modal>
-
-        <Modal
-          visible={sectionModalVisible}
-          animationType="slide"
-          transparent
-          onRequestClose={() => setSectionModalVisible(false)}
-        >
-          <View style={s.modalBackdrop}>
-            <View style={s.modalSheet}>
-              <View style={s.modalHeader}>
-                <Pressable onPress={() => setSectionModalVisible(false)}>
-                  <Text style={s.modalCancel}>Cancel</Text>
-                </Pressable>
-
-                <Text style={s.modalTitle}>Choose Section</Text>
-
-                <Pressable onPress={handleConfirmCourseSection}>
-                  <Text style={s.modalDone}>Save</Text>
-                </Pressable>
-              </View>
-
-              <View style={s.modalBody}>
-                <Text style={s.label}>Matching sections</Text>
-                <View style={s.pickerWrap}>
-                  <Picker
-                    selectedValue={selectedCourseMatchIndex}
-                    onValueChange={(value) => setSelectedCourseMatchIndex(value)}
-                  >
-                    {pendingCourseMatches.map((entry, index) => (
-                      <Picker.Item
-                        key={`${entry.course}_${entry.day}_${entry.time}_${index}`}
-                        label={formatSectionLabel(entry, buildings)}
-                        value={index}
-                        color={PSU.text}
-                      />
-                    ))}
-                  </Picker>
-                </View>
-
-                {pendingCourseMatches[selectedCourseMatchIndex] ? (
-                  <View style={s.sectionPreview}>
-                    <Text style={s.sectionPreviewTitle}>
-                      {pendingCourseMatches[selectedCourseMatchIndex].course}
-                    </Text>
-                    <Text style={s.sectionPreviewText}>
-                      {formatSectionLabel(
-                        pendingCourseMatches[selectedCourseMatchIndex],
-                        buildings
-                      )}
-                    </Text>
-                  </View>
-                ) : null}
-              </View>
-            </View>
-          </View>
-        </Modal>
       </View>
+
+      <Modal visible={modalVisible} animationType="slide" transparent>
+        <View style={s.modalBackdrop}>
+          <View style={s.modalCard}>
+            <Text style={s.modalTitle}>Add Class</Text>
+
+            <View style={s.segmentRow}>
+              <Pressable
+                style={[s.segmentBtn, addMode === "course" && s.segmentBtnActive]}
+                onPress={() => setAddMode("course")}
+              >
+                <Text
+                  style={[
+                    s.segmentBtnText,
+                    addMode === "course" && s.segmentBtnTextActive,
+                  ]}
+                >
+                  Course Lookup
+                </Text>
+              </Pressable>
+
+              <Pressable
+                style={[s.segmentBtn, addMode === "room" && s.segmentBtnActive]}
+                onPress={() => setAddMode("room")}
+              >
+                <Text
+                  style={[
+                    s.segmentBtnText,
+                    addMode === "room" && s.segmentBtnTextActive,
+                  ]}
+                >
+                  By Room
+                </Text>
+              </Pressable>
+            </View>
+
+            <ScrollView keyboardShouldPersistTaps="handled">
+              {addMode === "course" ? (
+                <View>
+                  <Text style={s.fieldLabel}>Course code</Text>
+                  <TextInput
+                    style={s.input}
+                    value={courseQuery}
+                    onChangeText={setCourseQuery}
+                    placeholder="Example: CMPSC 472"
+                    autoCapitalize="characters"
+                  />
+                  <Text style={s.helperText}>
+                    Days, time, and location will be pulled from your course data.
+                  </Text>
+                </View>
+              ) : (
+                <View>
+                  <Text style={s.fieldLabel}>Class label</Text>
+                  <TextInput
+                    style={s.input}
+                    value={courseCode}
+                    onChangeText={setCourseCode}
+                    placeholder="Example: CMPSC 472"
+                    autoCapitalize="characters"
+                  />
+
+                  <Text style={s.fieldLabel}>Class name (optional)</Text>
+                  <TextInput
+                    style={s.input}
+                    value={courseName}
+                    onChangeText={setCourseName}
+                    placeholder="Optional"
+                  />
+
+                  <Text style={s.fieldLabel}>Building</Text>
+                  <View style={s.pickerWrap}>
+                    <Picker
+                      selectedValue={buildingId}
+                      onValueChange={(value) => setBuildingId(value)}
+                    >
+                      {buildings.map((building) => (
+                        <Picker.Item
+                          key={building.id}
+                          label={building.name}
+                          value={building.id}
+                        />
+                      ))}
+                    </Picker>
+                  </View>
+
+                  <Text style={s.fieldLabel}>Room number</Text>
+                  <TextInput
+                    style={s.input}
+                    value={roomNumber}
+                    onChangeText={setRoomNumber}
+                    placeholder="Example: 342"
+                    autoCapitalize="characters"
+                  />
+
+                  <Text style={s.fieldLabel}>Days</Text>
+                  <View style={s.dayRow}>
+                    {DAY_OPTIONS.map((day) => {
+                      const active = days.includes(day);
+                      return (
+                        <Pressable
+                          key={day}
+                          style={[s.dayChip, active && s.dayChipActive]}
+                          onPress={() => toggleDay(day)}
+                        >
+                          <Text style={[s.dayChipText, active && s.dayChipTextActive]}>
+                            {day}
+                          </Text>
+                        </Pressable>
+                      );
+                    })}
+                  </View>
+
+                  <Text style={s.fieldLabel}>Start time (24-hour)</Text>
+                  <TextInput
+                    style={s.input}
+                    value={startTime}
+                    onChangeText={setStartTime}
+                    placeholder="11:15"
+                  />
+
+                  <Text style={s.fieldLabel}>End time (24-hour)</Text>
+                  <TextInput
+                    style={s.input}
+                    value={endTime}
+                    onChangeText={setEndTime}
+                    placeholder="12:05"
+                  />
+                </View>
+              )}
+            </ScrollView>
+
+            <View style={s.modalActions}>
+              <Pressable
+                style={[s.modalBtn, s.modalCancelBtn]}
+                onPress={() => {
+                  setModalVisible(false);
+                  resetForm();
+                }}
+              >
+                <Text style={s.modalCancelText}>Cancel</Text>
+              </Pressable>
+
+              <Pressable style={[s.modalBtn, s.modalSaveBtn]} onPress={handleAddCourse}>
+                <Text style={s.modalSaveText}>Save</Text>
+              </Pressable>
+            </View>
+          </View>
+        </View>
+      </Modal>
+
+      <Modal visible={sectionModalVisible} animationType="fade" transparent>
+        <View style={s.modalBackdrop}>
+          <View style={s.modalCard}>
+            <Text style={s.modalTitle}>Choose Course Section</Text>
+
+            <View style={s.pickerWrap}>
+              <Picker
+                selectedValue={selectedCourseMatchIndex}
+                onValueChange={(value) => setSelectedCourseMatchIndex(Number(value))}
+              >
+                {pendingCourseMatches.map((entry, index) => (
+                  <Picker.Item
+                    key={`${entry.course}_${entry.day}_${entry.time}_${index}`}
+                    label={formatSectionLabel(entry, buildings)}
+                    value={index}
+                  />
+                ))}
+              </Picker>
+            </View>
+
+            <View style={s.modalActions}>
+              <Pressable
+                style={[s.modalBtn, s.modalCancelBtn]}
+                onPress={() => setSectionModalVisible(false)}
+              >
+                <Text style={s.modalCancelText}>Cancel</Text>
+              </Pressable>
+
+              <Pressable
+                style={[s.modalBtn, s.modalSaveBtn]}
+                onPress={handleConfirmCourseSection}
+              >
+                <Text style={s.modalSaveText}>Add Section</Text>
+              </Pressable>
+            </View>
+          </View>
+        </View>
+      </Modal>
     </SafeAreaView>
   );
 }
 
 const s = StyleSheet.create({
-  safe: {
-    flex: 1,
-    backgroundColor: PSU.light,
-  },
-
+  safe: { flex: 1, backgroundColor: PSU.light },
   page: {
     flex: 1,
     backgroundColor: PSU.light,
+    paddingBottom: BOTTOM_MENU_HEIGHT,
   },
-
-  scrollContent: {
-    flexGrow: 1,
-    paddingBottom: BOTTOM_MENU_HEIGHT + 32,
-  },
-
-  header: {
-    paddingTop: 18,
-    paddingHorizontal: 20,
-  },
-
+  scrollContent: { padding: 16, paddingBottom: 42 },
+  header: { marginBottom: 14 },
   brand: {
-    color: PSU.blue,
-    fontWeight: "900",
-    letterSpacing: 1.5,
-    fontSize: 12,
-  },
-
-  title: {
-    marginTop: 10,
-    fontSize: 38,
-    fontWeight: "900",
-    color: PSU.text,
-    lineHeight: 42,
-  },
-
-  subtitle: {
-    marginTop: 10,
-    fontSize: 15,
-    color: PSU.muted,
-    lineHeight: 22,
-  },
-
-  nextCard: {
-    marginTop: 18,
-    marginHorizontal: 20,
-    backgroundColor: PSU.successBg,
-    borderColor: PSU.successBorder,
-    borderWidth: 1,
-    borderRadius: 22,
-    padding: 18,
-  },
-
-  onlineCard: {
-    backgroundColor: PSU.onlineBg,
-    borderColor: PSU.onlineBorder,
-  },
-
-  nextLabel: {
     color: PSU.blue2,
-    fontWeight: "900",
-    fontSize: 13,
+    fontSize: 12,
+    fontWeight: "800",
+    letterSpacing: 1.2,
     marginBottom: 6,
   },
-
-  nextTitle: {
+  title: {
     color: PSU.text,
+    fontSize: 30,
     fontWeight: "900",
-    fontSize: 22,
+    marginBottom: 6,
   },
+  subtitle: { color: PSU.muted, fontSize: 15, lineHeight: 21 },
 
-  nextMeta: {
-    marginTop: 6,
-    color: "#2C4A36",
-    fontSize: 14,
-    fontWeight: "700",
-  },
-
-  emptyCard: {
-    marginTop: 18,
-    marginHorizontal: 20,
-    backgroundColor: PSU.white,
-    borderColor: PSU.border,
-    borderWidth: 1,
-    borderRadius: 22,
-    padding: 18,
-  },
-
-  emptyTitle: {
-    color: PSU.text,
-    fontWeight: "900",
-    fontSize: 20,
-  },
-
-  emptyText: {
-    marginTop: 8,
-    color: PSU.muted,
-    fontSize: 14,
-    lineHeight: 21,
-    fontWeight: "600",
-  },
-
-  actionsRow: {
-    marginTop: 14,
-    marginHorizontal: 20,
-    flexDirection: "row",
-    gap: 10,
-  },
-
-  addBtn: {
-    flex: 1,
-    height: 52,
-    borderRadius: 16,
+  nextCard: {
     backgroundColor: PSU.blue,
-    alignItems: "center",
-    justifyContent: "center",
+    borderRadius: 20,
+    padding: 18,
+    marginBottom: 14,
   },
-
-  addBtnText: {
+  nextEyebrow: {
+    color: "#CFE0FF",
+    fontSize: 12,
+    fontWeight: "800",
+    letterSpacing: 1,
+    marginBottom: 6,
+  },
+  nextCourse: {
     color: PSU.white,
+    fontSize: 24,
     fontWeight: "900",
-    fontSize: 15,
+    marginBottom: 8,
   },
+  nextMeta: { color: "#E8F0FF", fontSize: 14, lineHeight: 20, marginBottom: 2 },
+  navigateBtn: {
+    marginTop: 14,
+    backgroundColor: PSU.gold,
+    borderRadius: 12,
+    paddingVertical: 12,
+    alignItems: "center",
+  },
+  navigateBtnText: { color: PSU.blue, fontWeight: "900", fontSize: 15 },
 
-  clearBtn: {
-    width: 110,
-    height: 52,
-    borderRadius: 16,
+  emptyNextCard: {
+    backgroundColor: PSU.card,
+    borderColor: PSU.border,
+    borderWidth: 1,
+    borderRadius: 20,
+    padding: 18,
+    marginBottom: 14,
+  },
+  emptyNextTitle: { color: PSU.text, fontSize: 18, fontWeight: "800", marginBottom: 6 },
+  emptyNextText: { color: PSU.muted, fontSize: 14, lineHeight: 20 },
+
+  actionRow: { flexDirection: "row", gap: 10, marginBottom: 10 },
+  primaryAction: {
+    flex: 1,
+    backgroundColor: PSU.blue,
+    borderRadius: 14,
+    paddingVertical: 14,
+    alignItems: "center",
+  },
+  primaryActionText: { color: PSU.white, fontWeight: "900", fontSize: 15 },
+
+  calendarColumn: { marginBottom: 14 },
+  calendarRow: { flexDirection: "row", gap: 10, marginBottom: 10 },
+  calendarBtn: {
+    flex: 1,
     backgroundColor: PSU.white,
     borderWidth: 1,
     borderColor: PSU.border,
+    borderRadius: 14,
+    paddingVertical: 13,
     alignItems: "center",
-    justifyContent: "center",
   },
-
-  clearBtnText: {
-    color: PSU.text,
-    fontWeight: "800",
-    fontSize: 14,
+  calendarBtnText: { color: PSU.text, fontWeight: "800", fontSize: 14 },
+  calendarBtnBlue: {
+    flex: 1,
+    backgroundColor: PSU.blue2,
+    borderRadius: 14,
+    paddingVertical: 13,
+    alignItems: "center",
   },
+  calendarBtnBlueText: { color: PSU.white, fontWeight: "900", fontSize: 14 },
+  disabledBtn: { opacity: 0.55 },
+  fileImportBtn: { marginBottom: 0 },
 
-  listCard: {
-    marginTop: 16,
-    marginHorizontal: 20,
-    backgroundColor: PSU.white,
-    borderRadius: 22,
+  card: {
+    backgroundColor: PSU.card,
+    borderRadius: 20,
     borderWidth: 1,
     borderColor: PSU.border,
     padding: 16,
   },
-
-  sectionTitle: {
-    color: PSU.text,
-    fontSize: 22,
-    fontWeight: "900",
+  cardHeaderRow: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
     marginBottom: 10,
   },
+  cardTitle: { color: PSU.text, fontSize: 20, fontWeight: "900" },
+  clearText: { color: PSU.danger, fontWeight: "800" },
+  placeholderText: { color: PSU.muted, fontSize: 14, lineHeight: 20, paddingVertical: 10 },
 
-  infoText: {
-    color: PSU.muted,
-    fontSize: 14,
-    lineHeight: 20,
-    fontWeight: "600",
-  },
-
-  courseCard: {
-    marginTop: 12,
+  scheduleItem: {
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: PSU.light,
+    borderRadius: 16,
     borderWidth: 1,
     borderColor: PSU.border,
-    borderRadius: 16,
     padding: 14,
-    backgroundColor: "#FBFCFE",
+    marginTop: 10,
+    gap: 12,
   },
-
-  onlineCourseCard: {
-    backgroundColor: PSU.onlineBg,
-    borderColor: PSU.onlineBorder,
+  onlineItem: {
+    backgroundColor: "#F4F6FB",
+    borderColor: "#D6DEEE",
   },
+  scheduleCode: { color: PSU.text, fontSize: 17, fontWeight: "900", marginBottom: 2 },
+  scheduleName: { color: PSU.muted, fontSize: 13, marginBottom: 4 },
+  scheduleMeta: { color: PSU.muted, fontSize: 13, lineHeight: 18 },
+  scheduleStatus: { marginTop: 6, color: PSU.blue2, fontSize: 12, fontWeight: "800" },
 
-  courseTopRow: {
-    flexDirection: "row",
-    alignItems: "flex-start",
-  },
-
-  courseCode: {
-    color: PSU.text,
-    fontSize: 18,
-    fontWeight: "900",
-  },
-
-  courseName: {
-    color: PSU.muted,
-    fontSize: 13,
-    fontWeight: "700",
-    marginTop: 3,
-  },
-
-  courseMeta: {
-    marginTop: 6,
-    color: PSU.text,
-    fontSize: 13,
-    fontWeight: "700",
-  },
-
-  cardButtonsRow: {
-    marginTop: 12,
-    flexDirection: "row",
-    gap: 10,
-  },
-
-  navigateBtn: {
-    flex: 1,
-    height: 44,
-    borderRadius: 12,
-    backgroundColor: PSU.blue2,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-
-  navigateBtnText: {
-    color: PSU.white,
-    fontWeight: "900",
-    fontSize: 14,
-  },
-
-  disabledBtn: {
-    backgroundColor: "#8B97A7",
-  },
-
-  deleteBtn: {
-    width: 88,
-    height: 44,
-    borderRadius: 12,
-    backgroundColor: PSU.dangerBg,
-    borderWidth: 1,
-    borderColor: PSU.dangerBorder,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-
-  deleteBtnText: {
-    color: "#B42318",
-    fontWeight: "900",
-    fontSize: 14,
-  },
-
-  primaryBtn: {
-    marginTop: 14,
-    height: 50,
-    borderRadius: 14,
+  itemActions: { gap: 8 },
+  smallAction: {
+    minWidth: 76,
     backgroundColor: PSU.blue,
+    borderRadius: 10,
+    paddingVertical: 10,
+    paddingHorizontal: 12,
     alignItems: "center",
-    justifyContent: "center",
   },
-
-  primaryBtnText: {
-    color: PSU.white,
-    fontWeight: "900",
-    fontSize: 15,
+  disabledSmallAction: {
+    backgroundColor: "#AAB4C3",
   },
+  smallActionText: { color: PSU.white, fontWeight: "800", fontSize: 13 },
+  deleteAction: {
+    backgroundColor: "#FFF1F1",
+    borderWidth: 1,
+    borderColor: "#F3C7C7",
+  },
+  deleteActionText: { color: PSU.danger },
 
   modalBackdrop: {
     flex: 1,
-    backgroundColor: "rgba(15,23,42,0.28)",
-    justifyContent: "flex-end",
-  },
-
-  modalSheet: {
-    maxHeight: "88%",
-    backgroundColor: PSU.white,
-    borderTopLeftRadius: 22,
-    borderTopRightRadius: 22,
-    paddingBottom: 20,
-  },
-
-  modalHeader: {
-    height: 54,
-    paddingHorizontal: 16,
-    borderBottomWidth: 1,
-    borderBottomColor: PSU.border,
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-  },
-
-  modalCancel: {
-    color: PSU.muted,
-    fontWeight: "700",
-    fontSize: 16,
-  },
-
-  modalTitle: {
-    color: PSU.text,
-    fontWeight: "900",
-    fontSize: 16,
-  },
-
-  modalDone: {
-    color: PSU.blue2,
-    fontWeight: "900",
-    fontSize: 16,
-  },
-
-  modalBody: {
+    backgroundColor: "rgba(10,16,24,0.45)",
+    justifyContent: "center",
     padding: 18,
-    paddingBottom: 30,
   },
-
-  label: {
-    marginTop: 10,
-    marginBottom: 8,
-    fontSize: 14,
-    fontWeight: "800",
-    color: PSU.text,
+  modalCard: {
+    backgroundColor: PSU.white,
+    borderRadius: 22,
+    padding: 18,
+    maxHeight: "90%",
   },
+  modalTitle: { color: PSU.text, fontSize: 22, fontWeight: "900", marginBottom: 14 },
 
-  modeRow: {
+  segmentRow: {
     flexDirection: "row",
-    backgroundColor: "#F3F6FA",
-    borderRadius: 16,
+    backgroundColor: PSU.light,
+    borderRadius: 14,
     padding: 4,
-    marginBottom: 10,
+    marginBottom: 14,
   },
-
-  modeBtn: {
+  segmentBtn: {
     flex: 1,
-    height: 42,
-    borderRadius: 12,
+    borderRadius: 10,
+    paddingVertical: 10,
     alignItems: "center",
-    justifyContent: "center",
   },
+  segmentBtnActive: { backgroundColor: PSU.blue },
+  segmentBtnText: { color: PSU.blue, fontWeight: "800" },
+  segmentBtnTextActive: { color: PSU.white },
 
-  modeBtnActive: {
-    backgroundColor: PSU.blue,
-  },
-
-  modeBtnText: {
-    fontWeight: "800",
-    color: PSU.muted,
+  fieldLabel: {
+    color: PSU.text,
     fontSize: 14,
+    fontWeight: "800",
+    marginBottom: 6,
+    marginTop: 10,
   },
-
-  modeBtnTextActive: {
-    color: PSU.white,
-  },
-
   input: {
-    height: 54,
+    backgroundColor: PSU.light,
     borderWidth: 1,
     borderColor: PSU.border,
-    borderRadius: 14,
-    backgroundColor: "#FBFCFE",
-    paddingHorizontal: 14,
-    color: PSU.text,
-    fontSize: 16,
-    fontWeight: "600",
-  },
-
-  pickerWrap: {
-    borderWidth: 1,
-    borderColor: PSU.border,
-    borderRadius: 14,
-    backgroundColor: "#FBFCFE",
-    overflow: "hidden",
-  },
-
-  courseHintBox: {
-    marginTop: 12,
-    borderWidth: 1,
-    borderColor: PSU.border,
-    borderRadius: 14,
-    backgroundColor: "#FAFBFD",
-    padding: 12,
-  },
-
-  courseHintText: {
-    color: PSU.muted,
-    fontSize: 13,
-    lineHeight: 19,
-    fontWeight: "600",
-  },
-
-  sectionPreview: {
-    marginTop: 14,
-    padding: 14,
-    borderRadius: 14,
-    borderWidth: 1,
-    borderColor: PSU.border,
-    backgroundColor: "#FAFBFD",
-  },
-
-  sectionPreviewTitle: {
-    color: PSU.text,
-    fontWeight: "900",
-    fontSize: 16,
-  },
-
-  sectionPreviewText: {
-    marginTop: 6,
-    color: PSU.muted,
-    fontWeight: "600",
-    fontSize: 13,
-    lineHeight: 20,
-  },
-
-  daysRow: {
-    flexDirection: "row",
-    flexWrap: "wrap",
-    gap: 8,
-  },
-
-  dayChip: {
-    minWidth: 54,
-    height: 38,
-    paddingHorizontal: 12,
     borderRadius: 12,
+    paddingHorizontal: 12,
+    paddingVertical: 12,
+    color: PSU.text,
+  },
+  helperText: { color: PSU.muted, fontSize: 13, lineHeight: 18, marginTop: 6 },
+  pickerWrap: {
+    overflow: "hidden",
+    borderWidth: 1,
+    borderColor: PSU.border,
+    borderRadius: 12,
+    backgroundColor: PSU.light,
+  },
+
+  dayRow: { flexDirection: "row", flexWrap: "wrap", gap: 8, marginTop: 4 },
+  dayChip: {
     borderWidth: 1,
     borderColor: PSU.border,
     backgroundColor: PSU.white,
-    alignItems: "center",
-    justifyContent: "center",
+    borderRadius: 999,
+    paddingHorizontal: 12,
+    paddingVertical: 8,
   },
-
   dayChipActive: {
     backgroundColor: PSU.blue,
     borderColor: PSU.blue,
   },
+  dayChipText: { color: PSU.blue, fontWeight: "800", fontSize: 12 },
+  dayChipTextActive: { color: PSU.white },
 
-  dayChipText: {
-    color: PSU.text,
-    fontWeight: "800",
-    fontSize: 13,
+  modalActions: { flexDirection: "row", gap: 10, marginTop: 18 },
+  modalBtn: {
+    flex: 1,
+    borderRadius: 12,
+    paddingVertical: 13,
+    alignItems: "center",
   },
-
-  dayChipTextActive: {
-    color: PSU.white,
+  modalCancelBtn: {
+    backgroundColor: PSU.light,
+    borderWidth: 1,
+    borderColor: PSU.border,
   },
+  modalSaveBtn: { backgroundColor: PSU.blue },
+  modalCancelText: { color: PSU.text, fontWeight: "800" },
+  modalSaveText: { color: PSU.white, fontWeight: "900" },
 });
