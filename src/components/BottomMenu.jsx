@@ -27,55 +27,70 @@ export default function BottomMenu({ navigation, active = "" }) {
   const isBuildings = active === "Buildings";
   const isMap = active === "Map";
   const isSchedule = active === "Schedule";
+  const isHelp = active === "UserHelp"
 
   return (
-    <View style={[s.wrap, { paddingBottom: 18 + insets.bottom }]}>
-      <Pressable
-        style={[s.item, isMap && s.itemActive]}
-        onPress={() => {
-          if (!isMap) navigation.navigate("MapView");
-        }}
-      >
-        <Text style={[s.icon, isMap && s.activeText]}>🗺️</Text>
-        <Text style={[s.label, isMap && s.activeText]}>Map</Text>
-      </Pressable>
+      <View style={[s.wrap, { paddingBottom: 18 + insets.bottom }]}>
+        <Pressable
+            style={[s.item, isMap && s.itemActive]}
+            onPress={() => {
+              if (!isMap) navigation.navigate("MapView");
+            }}
+        >
+          <Text style={[s.icon, isMap && s.activeText]}>🗺️</Text>
+          <Text style={[s.label, isMap && s.activeText]}>Map</Text>
+        </Pressable>
 
-      <Pressable
-        style={[s.item, isSchedule && s.itemActive]}
-        onPress={() => {
-          if (!isSchedule) navigation.navigate("MySchedule");
-        }}
-      >
-        <Text style={[s.icon, isSchedule && s.activeText]}>📅</Text>
-        <Text style={[s.label, isSchedule && s.activeText]}>Schedule</Text>
-      </Pressable>
+        <Pressable
+            style={[s.item, isSchedule && s.itemActive]}
+            onPress={() => {
+              if (!isSchedule) navigation.navigate("MySchedule");
+            }}
+        >
+          <Text style={[s.icon, isSchedule && s.activeText]}>📅</Text>
+          <Text style={[s.label, isSchedule && s.activeText]}>Schedule</Text>
+        </Pressable>
 
-      <Pressable
-        style={s.centerItem}
-        onPress={() => {
-          if (!isSearch) navigation.navigate("Search");
-        }}
-      >
-        <View style={s.logoCircle}>
-          <Logo width={42} height={42} />
-        </View>
-        <Text style={[s.centerLabel, isSearch && s.activeText]}>
-          Main Page
-        </Text>
-      </Pressable>
+        <Pressable
+            style={s.centerItem}
+            onPress={() => {
+              if (!isSearch) navigation.navigate("Search");
+            }}
+        >
+          <View style={s.logoCircle}>
+            <Logo width={42} height={42} />
+          </View>
+          <Text style={[s.centerLabel, isSearch && s.activeText]}>
+            Main Page
+          </Text>
+        </Pressable>
 
-      <Pressable
-        style={[s.item, isBuildings && s.itemActive]}
-        onPress={() => {
-          if (!isBuildings) navigation.navigate("Buildings");
-        }}
-      >
-        <Text style={[s.icon, isBuildings && s.activeText]}>🏛️</Text>
-        <Text style={[s.label, isBuildings && s.activeText]}>
-          Buildings
-        </Text>
-      </Pressable>
-    </View>
+        <Pressable
+            style={[s.item, isBuildings && s.itemActive]}
+            onPress={() => {
+              if (!isBuildings) navigation.navigate("Buildings");
+            }}
+        >
+          <Text style={[s.icon, isBuildings && s.activeText]}>🏛️</Text>
+          <Text style={[s.label, isBuildings && s.activeText]}>
+            Buildings
+          </Text>
+        </Pressable>
+
+        <Pressable
+            style={[s.item, isHelp && s.itemActive]}
+            onPress={() => {
+              if (!isHelp) navigation.navigate("UserHelp");
+            }}
+        >
+          <Text style={[s.icon, isHelp && s.activeText]}>❓</Text>
+          <Text style={[s.label, isHelp && s.activeText]}>User Help</Text>
+        </Pressable>
+      </View>
+
+
+
+
   );
 }
 
