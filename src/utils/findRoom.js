@@ -1,22 +1,36 @@
-
 // src/utils/findRoom.js
 import campusData from "../data/campusData.json";
 
 /*
 // ---- CONNECTION CHECK ----
 console.log("campusData loaded:", {
-    buildings: campusData.buildings?.length ?? "NOT FOUND",
-    rooms:     campusData.rooms?.length     ?? "NOT FOUND",
-    waypoints: campusData.waypoints?.length ?? "NOT FOUND",
+  buildings: campusData.buildings?.length ?? "NOT FOUND",
+  rooms: campusData.rooms?.length ?? "NOT FOUND",
+  waypoints: campusData.waypoints?.length ?? "NOT FOUND",
 });
 // ---- END CONNECTION CHECK ----
 */
 
+// Normalize any general string-like value
+function normalizeValue(value) {
+  return String(value || "").trim();
+}
+
+// Normalize building IDs for safe matching
+function normalizeBuildingId(value) {
+  return normalizeValue(value).toLowerCase();
+}
+
+// Normalize room numbers for safe matching
+function normalizeRoomNumber(value) {
+  return normalizeValue(value).toUpperCase();
+}
+
 /**
  * findRoom
- * @param {string} buildingId   - e.g. "sutherland"
- * @param {string} roomNumber   - e.g. "209", "132B", "G04"
- * @returns {object|null}  result object or null if not found
+ * @param {string} buildingId - e.g. "sutherland"
+ * @param {string} roomNumber - e.g. "209", "132B", "G04"
+ * @returns {object|null} result object or null if not found
  *
  * Returned object shape:
  * {
@@ -26,30 +40,35 @@ console.log("campusData loaded:", {
  * }
  */
 export function findRoom(buildingId, roomNumber) {
-    if (!buildingId || !roomNumber) return null;
+  if (!buildingId || !roomNumber) return null;
 
-    const bid = String(buildingId).trim().toLowerCase();
-    const rnum = String(roomNumber).trim().toLowerCase();
+  const bid = normalizeBuildingId(buildingId);
+  const rnum = normalizeRoomNumber(roomNumber);
 
-    // 1. Match room
-    const room = (campusData.rooms || []).find(
-        (r) =>
-            String(r.building).toLowerCase() === bid &&
-            String(r.room_number).toLowerCase() === rnum
-    );
-    if (!room) return null;
+  // 1. Match room
+  const room = (campusData.rooms || []).find(
+    (r) =>
+      normalizeBuildingId(r.building) === bid &&
+      normalizeRoomNumber(r.room_number) === rnum
+  );
 
-    // 2. Match waypoint
-    const waypoint = (campusData.waypoints || []).find(
-        (w) => w.id === room.waypoint_id
-    );
+  if (!room) return null;
 
-    // 3. Match building metadata
-    const building = (campusData.buildings || []).find(
-        (b) => String(b.id).toLowerCase() === bid
-    );
+  // 2. Match waypoint
+  const waypoint = (campusData.waypoints || []).find(
+    (w) => w.id === room.waypoint_id
+  );
 
-    return { room, waypoint: waypoint || null, building: building || null };
+  // 3. Match building metadata
+  const building = (campusData.buildings || []).find(
+    (b) => normalizeBuildingId(b.id) === bid
+  );
+
+  return {
+    room,
+    waypoint: waypoint || null,
+    building: building || null
+  };
 }
 
 /**
@@ -59,20 +78,22 @@ export function findRoom(buildingId, roomNumber) {
  * @returns {Array}
  */
 export function findRoomsByBuilding(buildingId) {
-    if (!buildingId) return [];
-    const bid = String(buildingId).trim().toLowerCase();
-    return (campusData.rooms || []).filter(
-        (r) => String(r.building).toLowerCase() === bid
-    );
+  if (!buildingId) return [];
+
+  const bid = normalizeBuildingId(buildingId);
+
+  return (campusData.rooms || []).filter(
+    (r) => normalizeBuildingId(r.building) === bid
+  );
 }
 
 /**
  * getAllBuildings
- * Returns sorted list of buildings.
+ * Returns a sorted list of all buildings.
  * @returns {Array}
  */
 export function getAllBuildings() {
-    return [...(campusData.buildings || [])].sort((a, b) =>
-        String(a.name).localeCompare(String(b.name))
-    );
+  return [...(campusData.buildings || [])].sort((a, b) =>
+    String(a.name).localeCompare(String(b.name))
+  );
 }
