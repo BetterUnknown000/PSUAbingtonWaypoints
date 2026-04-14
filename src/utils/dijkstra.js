@@ -1,69 +1,92 @@
 // Code by EJ Hibbs
 
-// Dijkstra's algorithm for finding the shortest path. We will utilize this when finding waypoints.
-// graph is going to be all the waypoint connections
-
-// start = where the user is
-// end   = where the user wants to go
+// Dijkstra's algorithm for finding the shortest path between two waypoints.
+// graph = adjacency-list object
+// start = user's current waypoint
+// end   = destination waypoint
 
 export function dijkstra(graph, start, end) {
-  // FAIL CASE: If start or end doesn't exist
-  // Will output an error in case this happens
+  // Fail if graph is missing or empty
+  if (!graph || typeof graph !== "object" || Object.keys(graph).length === 0) {
+    console.warn("Dijkstra error: Graph is empty or invalid.");
+    return { path: [], distance: Infinity };
+  }
+
+  // Fail if start or end is missing
+  if (!start || !end) {
+    console.warn("Dijkstra error: START or END is invalid.");
+    return { path: [], distance: Infinity };
+  }
+
+  // Fail if start or end does not exist in graph
   if (!graph[start] || !graph[end]) {
     console.warn("Dijkstra error: START or END waypoint was not found on the graph.");
     return { path: [], distance: Infinity };
+  }
+
+  // Easy case: already at destination
+  if (start === end) {
+    return { path: [start], distance: 0 };
   }
 
   const distances = {};
   const previous = {};
   const unvisited = new Set(Object.keys(graph));
 
-  // In Dijkstra's, we set every distance to infinity first. We don't know how far they are.
+  // Set every node distance to infinity at first
   for (const node of unvisited) {
     distances[node] = Infinity;
     previous[node] = null;
   }
 
-  // initialize the starting waypoint as 0.
+  // Starting point always has distance 0
   distances[start] = 0;
 
-  // Start the Dijkstra loop
+  // Main Dijkstra loop
   while (unvisited.size > 0) {
     let current = null;
 
-    // Find unvisited node with smallest known distance
+    // Find the unvisited node with the smallest known distance
     for (const node of unvisited) {
       if (current === null || distances[node] < distances[current]) {
         current = node;
       }
     }
 
-    // FAIL CASE: If current is still null.
+    // Fail case: no valid current node found
     if (current === null) {
-      console.warn("Dijkstra error: Current Node is still null.");
+      console.warn("Dijkstra error: Current node is null.");
       break;
     }
 
-    // FAIL CASE: Smallest distance is still infinity. There is no possible path.
+    // Fail case: remaining nodes are unreachable
     if (distances[current] === Infinity) {
-      console.warn("Dijkstra error: No Path could be found.");
+      console.warn("Dijkstra error: No path could be found.");
       break;
     }
 
-    // Stop early if we reach the destination.
-    if (current === end) break;
-
-    // Current node will be marked as visited
+    // Mark current node as visited
     unvisited.delete(current);
 
+    // Stop early if destination is reached
+    if (current === end) {
+      break;
+    }
+
+    // Safely get neighbor list
+    const neighbors = Array.isArray(graph[current]) ? graph[current] : [];
+
     // Check each neighbor connected to current node
-    for (const neighbor of graph[current]) {
-      // if it is already visited, skip it.
+    for (const neighbor of neighbors) {
+      // Skip bad neighbor entries
+      if (!neighbor || !neighbor.id) continue;
+      if (!(neighbor.id in distances)) continue;
       if (!unvisited.has(neighbor.id)) continue;
+      if (typeof neighbor.weight !== "number" || neighbor.weight < 0) continue;
 
       const newDistance = distances[current] + neighbor.weight;
 
-      // if going through the current node is shorter, then update the saved value's distance to the new one
+      // If this path is shorter, update it
       if (newDistance < distances[neighbor.id]) {
         distances[neighbor.id] = newDistance;
         previous[neighbor.id] = current;
@@ -71,7 +94,7 @@ export function dijkstra(graph, start, end) {
     }
   }
 
-  // build the final path, starting from the end and going backwards
+  // Build final path by walking backward from end to start
   const path = [];
   let current = end;
 
@@ -80,9 +103,9 @@ export function dijkstra(graph, start, end) {
     current = previous[current];
   }
 
-  // FAIL CASE: If the path doesn't actually start where it should, then no real path is going to be found.
+  // Fail case: path did not actually connect back to start
   if (path[0] !== start) {
-    console.warn("Dijkstra error: Finished running, however no valid path was built.");
+    console.warn("Dijkstra error: No valid path was built.");
     return { path: [], distance: Infinity };
   }
 
