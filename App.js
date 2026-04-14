@@ -9,6 +9,7 @@ import NavigationPage from "./src/pages/NavigationPage";
 import MapView from "./src/pages/MapView";
 import FloorMapScreen from "./src/pages/FloorMapScreen";
 import MySchedule from "./src/pages/MySchedule";
+import UserHelp from "./src/pages/UserHelp";
 
 const Stack = createNativeStackNavigator();
 const linking = {
@@ -22,6 +23,7 @@ const linking = {
       MapView: "map-view",
       FloorMap: "floor-map",
       MySchedule: "my-schedule",
+      UserHelp: "user-help",
     },
   },
 };
@@ -78,6 +80,12 @@ export default function App() {
           name="MySchedule"
           component={MySchedule}
           options={{ title: "My Schedule" }}
+        />
+          
+        <Stack.Screen
+          name="UserHelp"
+          component={UserHelp}
+          options={{ title: "User Help" }}
         />
       </Stack.Navigator>
     </NavigationContainer>
