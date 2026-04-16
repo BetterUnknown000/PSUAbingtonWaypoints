@@ -87,6 +87,7 @@ src/
     MySchedule.jsx
     NavigationPage.jsx
     SearchPage.jsx
+    UserHelp.jsx
 
   utils/
     buildGraph.js
