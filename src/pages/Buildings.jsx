@@ -34,6 +34,8 @@ const IMAGE_BY_BUILDING_ID = {
     "https://upload.wikimedia.org/wikipedia/commons/e/e0/Rydal_Building%2C_Penn_State_Abington_01.JPG",
   springhouse:
     "https://upload.wikimedia.org/wikipedia/commons/f/fa/Springhouse%2C_Penn_State_Abington_02.JPG",
+  cloverly:
+    "https://upload.wikimedia.org/wikipedia/commons/6/63/Clovery_Building%2C_Penn_State_Abington_01.JPG"
 };
 
 function getImage(id) {
