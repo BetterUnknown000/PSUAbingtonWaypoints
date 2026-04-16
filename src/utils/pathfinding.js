@@ -1,7 +1,7 @@
 import campusData from "../data/campusData.json";
 import { findRoom } from "./findRoom";
 import { buildGraph } from "./buildGraph";
-import { dijkstra } from "./dijkstra";
+import { aStar } from "./astar";
 import {
   getBuildingById,
   getBuildingEntrances,
@@ -41,7 +41,7 @@ export function calculateShortestPath(startId, endId, options = {}) {
     accessibleOnly,
   });
 
-  const result = dijkstra(graph, startId, endId);
+  const result = aStar(graph, startId, endId);
   return result.path || [];
 }
 
@@ -179,7 +179,7 @@ export function rerouteFromWaypoint(startWaypointId, destinationWaypointId, opti
     accessibleOnly: options.accessibleOnly === true,
   });
 
-  const result = dijkstra(graph, startWaypointId, destinationWaypointId);
+  const result = aStar(graph, startWaypointId, destinationWaypointId);
   const path = result.path || [];
 
   const { buildStepInstructions, getNextWaypointId, isAtDestination } = require("./routeSteps");
