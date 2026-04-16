@@ -372,7 +372,14 @@
     { "id": "wp_suth_329", "building": "sutherland", "floor": "3", "label": "Room 329", "type": "office", "latitude": 40.1158412222, "longitude": -75.1083312778, "x": 0, "y": 0, "qr_code": "QR_SUTH_F3_329" },
     { "id": "wp_suth_330", "building": "sutherland", "floor": "3", "label": "Room 330", "type": "office", "latitude": 40.1157690000, "longitude": -75.1084149722, "x": 0, "y": 0, "qr_code": "QR_SUTH_F3_330" },
     { "id": "wp_suth_317", "building": "sutherland", "floor": "3", "label": "Room 317", "type": "office", "latitude": 40.1156872778, "longitude": -75.1085506944, "x": 0, "y": 0, "qr_code": "QR_SUTH_F3_317" },
-    { "id": "wp_suth_332", "building": "sutherland", "floor": "3", "label": "Room 332", "type": "office", "latitude": 40.1146335278, "longitude": -75.1101987222, "x": 0, "y": 0, "qr_code": "QR_SUTH_F3_332" }
+    { "id": "wp_suth_332", "building": "sutherland", "floor": "3", "label": "Room 332", "type": "office", "latitude": 40.1146335278, "longitude": -75.1101987222, "x": 0, "y": 0, "qr_code": "QR_SUTH_F3_332" },
+    { "id": "wp_suth_333", "building": "sutherland", "floor": "3", "label": "Room 333", "type": "office", "latitude": 40.1151632222, "longitude": -75.1095846667, "x": 0, "y": 0, "qr_code": "QR_SUTH_F3_333" },
+    { "id": "wp_suth_316", "building": "sutherland", "floor": "3", "label": "Room 316", "type": "office", "latitude": 40.1159619167, "longitude": -75.1087069167, "x": 0, "y": 0, "qr_code": "QR_SUTH_F3_316" },
+    { "id": "wp_suth_334", "building": "sutherland", "floor": "3", "label": "Room 334", "type": "office", "latitude": 40.1159621667, "longitude": -75.1087061111, "x": 0, "y": 0, "qr_code": "QR_SUTH_F3_334" },
+    { "id": "wp_suth_335", "building": "sutherland", "floor": "3", "label": "Room 335", "type": "office", "latitude": 40.1159920278, "longitude": -75.1089317778, "x": 0, "y": 0, "qr_code": "QR_SUTH_F3_335" },
+    { "id": "wp_suth_301", "building": "sutherland", "floor": "3", "label": "Room 301", "type": "office", "latitude": 40.1159188056, "longitude": -75.1089958333, "x": 0, "y": 0, "qr_code": "QR_SUTH_F3_301" },
+    { "id": "wp_suth_315", "building": "sutherland", "floor": "3", "label": "Room 315 - Chaiken Center", "type": "office", "latitude": 40.1158121667, "longitude": -75.1090147778, "x": 0, "y": 0, "qr_code": "QR_SUTH_F3_315" },
+    { "id": "wp_suth_302", "building": "sutherland", "floor": "3", "label": "Room 302", "type": "office", "latitude": 40.1157614722, "longitude": -75.1087601667, "x": 0, "y": 0, "qr_code": "QR_SUTH_F3_302" }
   ],
   "edges": [
     { "from": "wp_suth_main_entrance", "to": "wp_suth_106", "distance": 18, "accessible": true },
@@ -654,7 +661,22 @@
     { "from": "wp_suth_320", "to": "wp_suth_317", "distance": 4, "accessible": true },
     { "from": "wp_suth_317", "to": "wp_suth_320", "distance": 4, "accessible": true },
     { "from": "wp_suth_331", "to": "wp_suth_332", "distance": 2, "accessible": true },
-    { "from": "wp_suth_332", "to": "wp_suth_331", "distance": 2, "accessible": true }
+    { "from": "wp_suth_332", "to": "wp_suth_331", "distance": 2, "accessible": true },
+    { "from": "wp_suth_320", "to": "wp_suth_317", "distance": 4, "accessible": true },
+    { "from": "wp_suth_332", "to": "wp_suth_333", "distance": 2, "accessible": true },
+    { "from": "wp_suth_333", "to": "wp_suth_332", "distance": 2, "accessible": true },
+    { "from": "wp_suth_315", "to": "wp_suth_316", "distance": 2, "accessible": true },
+    { "from": "wp_suth_316", "to": "wp_suth_315", "distance": 2, "accessible": true },
+    { "from": "wp_suth_316", "to": "wp_suth_334", "distance": 2, "accessible": true },
+    { "from": "wp_suth_334", "to": "wp_suth_316", "distance": 2, "accessible": true },
+    { "from": "wp_suth_315", "to": "wp_suth_335", "distance": 3, "accessible": true },
+    { "from": "wp_suth_335", "to": "wp_suth_315", "distance": 3, "accessible": true },
+    { "from": "wp_suth_315", "to": "wp_suth_301", "distance": 3, "accessible": true },
+    { "from": "wp_suth_301", "to": "wp_suth_315", "distance": 3, "accessible": true },
+    { "from": "wp_suth_elevator_f3", "to": "wp_suth_315", "distance": 3, "accessible": true },
+    { "from": "wp_suth_315", "to": "wp_suth_elevator_f3", "distance": 3, "accessible": true },
+    { "from": "wp_suth_301", "to": "wp_suth_302", "distance": 2, "accessible": true },
+    { "from": "wp_suth_302", "to": "wp_suth_301", "distance": 2, "accessible": true }
   ],
   "rooms": [
     { "building": "sutherland", "room_number": "106", "floor": "1", "waypoint_id": "wp_suth_106", "room_name": "Financial Aid Office", "type": "office" },
@@ -811,7 +833,14 @@
     { "building": "sutherland", "room_number": "329", "floor": "3", "waypoint_id": "wp_suth_329", "room_name": "Room 329", "type": "office" },
     { "building": "sutherland", "room_number": "330", "floor": "3", "waypoint_id": "wp_suth_330", "room_name": "Room 330", "type": "office" },
     { "building": "sutherland", "room_number": "317", "floor": "3", "waypoint_id": "wp_suth_317", "room_name": "Room 317", "type": "office" },
-    { "building": "sutherland", "room_number": "332", "floor": "3", "waypoint_id": "wp_suth_332", "room_name": "Room 332", "type": "office" }
+    { "building": "sutherland", "room_number": "332", "floor": "3", "waypoint_id": "wp_suth_332", "room_name": "Room 332", "type": "office" },
+    { "building": "sutherland", "room_number": "333", "floor": "3", "waypoint_id": "wp_suth_333", "room_name": "Room 333", "type": "office" },
+    { "building": "sutherland", "room_number": "316", "floor": "3", "waypoint_id": "wp_suth_316", "room_name": "Room 316", "type": "office" },
+    { "building": "sutherland", "room_number": "334", "floor": "3", "waypoint_id": "wp_suth_334", "room_name": "Room 334", "type": "office" },
+    { "building": "sutherland", "room_number": "335", "floor": "3", "waypoint_id": "wp_suth_335", "room_name": "Room 335", "type": "office" },
+    { "building": "sutherland", "room_number": "301", "floor": "3", "waypoint_id": "wp_suth_301", "room_name": "Room 301", "type": "office" },
+    { "building": "sutherland", "room_number": "315", "floor": "3", "waypoint_id": "wp_suth_315", "room_name": "Chaiken Center", "type": "office" },
+    { "building": "sutherland", "room_number": "302", "floor": "3", "waypoint_id": "wp_suth_302", "room_name": "Room 302", "type": "office" }
   ],
   "qrAnchors": [
     { "qr_id": "QR_SUTH_F1_MAIN_ENTRANCE", "waypoint_id": "wp_suth_main_entrance", "building": "sutherland", "floor": "1" },
@@ -1049,6 +1078,13 @@
     { "qr_id": "QR_SUTH_F3_329", "waypoint_id": "wp_suth_329", "building": "sutherland", "floor": "3" },
     { "qr_id": "QR_SUTH_F3_330", "waypoint_id": "wp_suth_330", "building": "sutherland", "floor": "3" },
     { "qr_id": "QR_SUTH_F3_317", "waypoint_id": "wp_suth_317", "building": "sutherland", "floor": "3" },
-    { "qr_id": "QR_SUTH_F3_332", "waypoint_id": "wp_suth_332", "building": "sutherland", "floor": "3" }
+    { "qr_id": "QR_SUTH_F3_332", "waypoint_id": "wp_suth_332", "building": "sutherland", "floor": "3" },
+    { "qr_id": "QR_SUTH_F3_333", "waypoint_id": "wp_suth_333", "building": "sutherland", "floor": "3" },
+    { "qr_id": "QR_SUTH_F3_316", "waypoint_id": "wp_suth_316", "building": "sutherland", "floor": "3" },
+    { "qr_id": "QR_SUTH_F3_334", "waypoint_id": "wp_suth_334", "building": "sutherland", "floor": "3" },
+    { "qr_id": "QR_SUTH_F3_335", "waypoint_id": "wp_suth_335", "building": "sutherland", "floor": "3" },
+    { "qr_id": "QR_SUTH_F3_301", "waypoint_id": "wp_suth_301", "building": "sutherland", "floor": "3" },
+    { "qr_id": "QR_SUTH_F3_315", "waypoint_id": "wp_suth_315", "building": "sutherland", "floor": "3" },
+    { "qr_id": "QR_SUTH_F3_302", "waypoint_id": "wp_suth_302", "building": "sutherland", "floor": "3" }
   ]
 }
