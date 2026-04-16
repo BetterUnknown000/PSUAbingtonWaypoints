@@ -2,6 +2,8 @@
 //
 // A* shortest path algorithm
 // This uses the same graph format as dijkstra.js
+// This should add some optimization to help make the app faster.
+// Dijkstra will still be in the src file, but A* is going to be better and probably be utilized.
 
 import campusData from "../data/campusData.json";
 
