@@ -1,7 +1,8 @@
 import React, { useMemo, useState } from "react";
 import { ScrollView, View, Text, StyleSheet, Pressable } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import BottomMenu, { BOTTOM_MENU_HEIGHT } from "../components/BottomMenu";
+import BottomMenu from "../components/BottomMenu";
+import { useBottomMenuSpacing } from "../utils/useBottomMenuSpacing";
 import { getFloorPlanConfig } from "../data/floorPlans";
 
 const PSU = {
@@ -29,13 +30,15 @@ export default function FloorMapScreen({ route, navigation }) {
   }, [config, selectedFloorId]);
 
   const SelectedPlan = selectedFloor?.component || null;
+  const { scrollContentStyle } = useBottomMenuSpacing(28);
 
   return (
     <SafeAreaView style={styles.safe} edges={["top"]}>
       <View style={styles.page}>
         <ScrollView
           style={styles.container}
-          contentContainerStyle={styles.content}
+          contentContainerStyle={scrollContentStyle}
+          keyboardShouldPersistTaps="handled"
           showsVerticalScrollIndicator={false}
         >
           <Text style={styles.title}>Floor Plans</Text>
@@ -112,7 +115,6 @@ const styles = StyleSheet.create({
   },
   content: {
     paddingTop: 8,
-    paddingBottom: BOTTOM_MENU_HEIGHT + 28,
   },
   title: {
     fontSize: 26,

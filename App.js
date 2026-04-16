@@ -10,6 +10,7 @@ import MapView from "./src/pages/MapView";
 import FloorMapScreen from "./src/pages/FloorMapScreen";
 import MySchedule from "./src/pages/MySchedule";
 import UserHelp from "./src/pages/UserHelp";
+import VisualLocateScreen from "./src/pages/VisualLocateScreen";
 
 const Stack = createNativeStackNavigator();
 const linking = {
@@ -62,6 +63,12 @@ export default function App() {
           name="Navigation"
           component={NavigationPage}
           options={{ title: "Navigation" }}
+        />
+
+        <Stack.Screen
+          name="VisualLocateScreen"
+          component={VisualLocateScreen}
+          options={{ title: "Locate Visually" }}
         />
 
         <Stack.Screen

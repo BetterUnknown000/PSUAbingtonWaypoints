@@ -9,6 +9,7 @@ import {
   ScrollView,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { useBottomMenuSpacing } from "../utils/useBottomMenuSpacing";
 import { Picker } from "@react-native-picker/picker";
 
 import { findRoom, getAllBuildings } from "../utils/findRoom";
@@ -63,6 +64,8 @@ export default function SearchPage({ navigation }) {
   const [pendingBuildingId, setPendingBuildingId] = useState(
     buildings[0]?.id || ""
   );
+
+  const { bottomMenuSpace } = useBottomMenuSpacing(32);
 
   const selectedBuilding = useMemo(
     () => buildings.find((b) => b.id === selectedBuildingId) || null,
@@ -158,7 +161,7 @@ export default function SearchPage({ navigation }) {
       <View style={s.page}>
         <ScrollView
           style={{ flex: 1 }}
-          contentContainerStyle={s.scrollContent}
+          contentContainerStyle={[s.scrollContent, { paddingBottom: bottomMenuSpace }]}
           keyboardShouldPersistTaps="handled"
         >
           <View style={s.header}>
@@ -367,7 +370,6 @@ const s = StyleSheet.create({
   page: { flex: 1, backgroundColor: PSU.light },
   scrollContent: {
     flexGrow: 1,
-    paddingBottom: BOTTOM_MENU_HEIGHT + 32,
   },
 
   header: {

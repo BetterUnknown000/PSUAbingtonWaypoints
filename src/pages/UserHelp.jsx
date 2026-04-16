@@ -9,7 +9,8 @@ import {
     Linking
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import BottomMenu, { BOTTOM_MENU_HEIGHT } from "../components/BottomMenu";
+import BottomMenu from "../components/BottomMenu";
+import { useBottomMenuSpacing } from "../utils/useBottomMenuSpacing";
 
 const PSU = {
     blue: "#001E44",
@@ -83,14 +84,16 @@ function FaqItem({ item, isOpen, onToggle }) {
 
 export default function UserHelp({ navigation }) {
     const [openFaq, setOpenFaq] = useState(null);
+    const { bottomMenuSpace } = useBottomMenuSpacing(40);
 
     return (
         <SafeAreaView style={s.safe} edges={["top"]}>
             <View style={s.page}>
                 <ScrollView
                     style={s.scroll}
-                    contentContainerStyle={{ paddingBottom: BOTTOM_MENU_HEIGHT + 40 }}
+                    contentContainerStyle={{ flexGrow: 1, paddingBottom: bottomMenuSpace }}
                     showsVerticalScrollIndicator={false}
+                    keyboardShouldPersistTaps="handled"
                 >
                     <View style={s.hero}>
                         <View style={s.heroTag}>

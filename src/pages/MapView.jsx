@@ -13,7 +13,9 @@ import {
 import Svg, { Path } from "react-native-svg";
 import { Picker } from "@react-native-picker/picker";
 import { useNavigation } from "@react-navigation/native";
-import BottomMenu, { BOTTOM_MENU_HEIGHT } from "../components/BottomMenu";
+import { SafeAreaView } from "react-native-safe-area-context";
+import BottomMenu from "../components/BottomMenu";
+import { useBottomMenuSpacing } from "../utils/useBottomMenuSpacing";
 import campusData from "../data/campusData.json";
 
 const PSU = {
@@ -55,16 +57,19 @@ export default function MapView() {
     setBuildingModalOpen(false);
   };
 
+  const { bottomMenuSpace } = useBottomMenuSpacing(20);
+
   const screenWidth = Dimensions.get("window").width;
   const panelInnerWidth = screenWidth - 40 - 36; // 20+20 margins, 18+18 panel padding
   const mapWidth = panelInnerWidth;
   const mapHeight = (mapWidth * MAP_H) / MAP_W;
 
   return (
-    <View style={styles.screen}>
+    <SafeAreaView style={styles.screen} edges={["top"]}>
       <ScrollView
-        contentContainerStyle={styles.scrollContent}
+        contentContainerStyle={[styles.scrollContent, { paddingBottom: bottomMenuSpace }]}
         showsVerticalScrollIndicator={false}
+        keyboardShouldPersistTaps="handled"
       >
         <View style={styles.brandRow}>
           <View style={styles.psuBadge}>
@@ -218,7 +223,7 @@ export default function MapView() {
       </ScrollView>
 
       <BottomMenu navigation={navigation} active="Map" />
-    </View>
+    </SafeAreaView>
   );
 }
 
@@ -229,7 +234,6 @@ const styles = StyleSheet.create({
   },
   scrollContent: {
     flexGrow: 1,
-    paddingBottom: BOTTOM_MENU_HEIGHT + 20,
   },
   brandRow: {
     paddingTop: 18,

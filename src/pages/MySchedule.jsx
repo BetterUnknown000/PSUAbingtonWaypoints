@@ -11,6 +11,7 @@ import {
   View,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { useBottomMenuSpacing } from "../utils/useBottomMenuSpacing";
 import { Picker } from "@react-native-picker/picker";
 import { useFocusEffect } from "@react-navigation/native";
 import * as Calendar from "expo-calendar";
@@ -590,6 +591,7 @@ export default function MySchedule({ navigation }) {
   const [endTime, setEndTime] = useState("");
 
   const [pendingCourseMatches, setPendingCourseMatches] = useState([]);
+  const { bottomMenuSpace } = useBottomMenuSpacing(42);
   const [selectedCourseMatchIndex, setSelectedCourseMatchIndex] = useState(0);
 
   const [calendarBusy, setCalendarBusy] = useState(false);
@@ -980,7 +982,7 @@ export default function MySchedule({ navigation }) {
       <View style={s.page}>
         <ScrollView
           style={{ flex: 1 }}
-          contentContainerStyle={s.scrollContent}
+          contentContainerStyle={[s.scrollContent, { paddingBottom: bottomMenuSpace }]}
           keyboardShouldPersistTaps="handled"
         >
           <View style={s.header}>
@@ -1320,9 +1322,8 @@ const s = StyleSheet.create({
   page: {
     flex: 1,
     backgroundColor: PSU.light,
-    paddingBottom: BOTTOM_MENU_HEIGHT,
   },
-  scrollContent: { padding: 16, paddingBottom: 42 },
+  scrollContent: { padding: 16 },
   header: { marginBottom: 14 },
   brand: {
     color: PSU.blue2,
