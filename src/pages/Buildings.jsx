@@ -7,12 +7,10 @@ import {
   Pressable,
   StyleSheet,
 } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { SafeAreaView, useSafeAreaInsets } from "react-native-safe-area-context";
 import { getAllBuildings } from "../utils/findRoom";
 import campusData from "../data/campusData.json";
 import BottomMenu, { BOTTOM_MENU_HEIGHT } from "../components/BottomMenu";
-
 
 const PSU = {
   blue: "#001E44",
@@ -35,7 +33,7 @@ const IMAGE_BY_BUILDING_ID = {
   springhouse:
     "https://upload.wikimedia.org/wikipedia/commons/f/fa/Springhouse%2C_Penn_State_Abington_02.JPG",
   cloverly:
-    "https://upload.wikimedia.org/wikipedia/commons/6/63/Clovery_Building%2C_Penn_State_Abington_01.JPG"
+    "https://upload.wikimedia.org/wikipedia/commons/6/63/Clovery_Building%2C_Penn_State_Abington_01.JPG",
 };
 
 function getImage(id) {
@@ -67,7 +65,7 @@ export default function Buildings({ navigation }) {
   const insets = useSafeAreaInsets();
 
   return (
-      <SafeAreaView style={s.safe} edges={["top"]}>
+    <SafeAreaView style={s.safe} edges={["top"]}>
       <View style={s.page}>
         <View style={s.header}>
           <Text style={s.title}>Campus Buildings</Text>
@@ -110,7 +108,6 @@ export default function Buildings({ navigation }) {
                   <Text style={s.meta}>
                     Floors: {Array.isArray(item.floors) ? item.floors.length : "N/A"}
                   </Text>
-
                   <Text style={s.meta}>Entrances: {entranceCount || "N/A"}</Text>
                   <Text style={s.meta}>Rooms: {roomCount || "N/A"}</Text>
                 </View>
