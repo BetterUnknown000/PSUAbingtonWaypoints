@@ -29,7 +29,9 @@ const PSU = {
 };
 
 const buildings = campusData.buildings.filter((b) =>
-  ["woodland", "rydal", "sutherland", "lares", "springhouse", "athletic"].includes(b.id)
+  ["woodland", "rydal", "sutherland", "lares", "springhouse", "athletic"].includes(
+    b.id
+  )
 );
 
 const MAP_W = 1481.3333;
@@ -60,7 +62,7 @@ export default function MapView() {
   const { bottomMenuSpace } = useBottomMenuSpacing(20);
 
   const screenWidth = Dimensions.get("window").width;
-  const panelInnerWidth = screenWidth - 40 - 36; // 20+20 margins, 18+18 panel padding
+  const panelInnerWidth = screenWidth - 40 - 36;
   const mapWidth = panelInnerWidth;
   const mapHeight = (mapWidth * MAP_H) / MAP_W;
 
@@ -136,12 +138,7 @@ export default function MapView() {
             </View>
           </Modal>
 
-          <View
-            style={[
-              styles.mapContainer,
-              { width: mapWidth, height: mapHeight },
-            ]}
-          >
+          <View style={[styles.mapContainer, { width: mapWidth, height: mapHeight }]}>
             <Image
               source={require("../assets/psu-abington-map.jpeg")}
               style={{ width: mapWidth, height: mapHeight }}
@@ -211,9 +208,7 @@ export default function MapView() {
               <TouchableOpacity
                 style={styles.primaryBtn}
                 activeOpacity={0.9}
-                onPress={() =>
-                  navigation.navigate("FloorMap", { buildingId: selected })
-                }
+                onPress={() => navigation.navigate("FloorMap", { buildingId: selected })}
               >
                 <Text style={styles.primaryBtnText}>View Floor Map →</Text>
               </TouchableOpacity>
