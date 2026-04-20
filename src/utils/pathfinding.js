@@ -36,12 +36,37 @@ export function calculateShortestPath(startId, endId, options = {}) {
   if (!startId || !endId) return [];
   if (startId === endId) return [startId];
 
-  const graph = buildGraph({
+  let graph = buildGraph({
     buildingId,
-    accessibleOnly,
+    accessibleOnly: options.accessibleOnly === true,
   });
 
-  const result = aStar(graph, startId, endId);
+  if (options.stairsOnly === true) {
+    const filteredGraph = {};
+
+    for (const [fromId, neighbors] of Object.entries(graph)) {
+      const fromWp = getWaypointById(fromId);
+
+      // do not allow starting from elevator transitions to continue through elevator graph
+      if (fromWp?.type === "elevator") {
+        filteredGraph[fromId] = [];
+        continue;
+      }
+
+      filteredGraph[fromId] = (neighbors || []).filter((neighbor) => {
+        const toWp = getWaypointById(neighbor.id);
+
+        // block elevator nodes completely
+        if (toWp?.type === "elevator") return false;
+
+        return true;
+      });
+    }
+
+    graph = filteredGraph;
+  }
+
+  const result = aStar(graph, startId, endId);  
   return result.path || [];
 }
 
@@ -60,9 +85,158 @@ export function estimateTotalDistance(pathIds = []) {
   return total;
 }
 
+function isOnDestinationFloor(waypoint, destinationFloor) {
+  return String(waypoint?.floor || "") === String(destinationFloor || "");
+}
+
+function buildSameFloorGraph({ buildingId, floor, accessibleOnly = false }) {
+  const graph = buildGraph({
+    buildingId,
+    accessibleOnly,
+  });
+
+  const allowedIds = new Set(
+    (campusData.waypoints || [])
+      .filter((w) => {
+        return (
+          normalize(w.building) === normalize(buildingId) &&
+          String(w.floor || "") === String(floor || "")
+        );
+      })
+      .map((w) => w.id)
+  );
+
+  const filteredGraph = {};
+
+  for (const [fromId, neighbors] of Object.entries(graph)) {
+    if (!allowedIds.has(fromId)) continue;
+
+    filteredGraph[fromId] = (neighbors || []).filter((neighbor) =>
+      allowedIds.has(neighbor.id)
+    );
+  }
+
+  return filteredGraph;
+}
+
+function rerouteSameFloorFromWaypoint(
+  startWaypointId,
+  destinationWaypointId,
+  options = {}
+) {
+  if (!startWaypointId || !destinationWaypointId) {
+    return {
+      path: [],
+      steps: [],
+      distance: Infinity,
+      nextWaypoint: null,
+      arrived: false,
+    };
+  }
+
+  const startWaypoint = getWaypointById(startWaypointId);
+  const destinationWaypoint = getWaypointById(destinationWaypointId);
+
+  if (!startWaypoint || !destinationWaypoint) {
+    return {
+      path: [],
+      steps: [],
+      distance: Infinity,
+      nextWaypoint: null,
+      arrived: false,
+    };
+  }
+
+  const buildingId =
+    options.buildingId ||
+    startWaypoint.building ||
+    destinationWaypoint.building ||
+    null;
+
+  const floor = options.floor || startWaypoint.floor || destinationWaypoint.floor;
+
+  const graph = buildSameFloorGraph({
+    buildingId,
+    floor,
+    accessibleOnly: options.accessibleOnly === true,
+  });
+
+  const result = aStar(graph, startWaypointId, destinationWaypointId);
+  const path = result.path || [];
+
+  const { buildStepInstructions, getNextWaypointId, isAtDestination } = require("./routeSteps");
+
+  const steps = buildStepInstructions(path);
+  const nextWaypointId = getNextWaypointId(path, startWaypointId);
+
+  return {
+    path,
+    steps,
+    distance: estimateTotalDistance(path),
+    nextWaypoint: nextWaypointId ? getWaypointById(nextWaypointId) : null,
+    arrived: isAtDestination(path, startWaypointId),
+  };
+}
+
+function findNearestSameFloorVerticalTarget(
+  currentWaypoint,
+  destinationBuildingId,
+  accessibleOnly
+) {
+  const candidates = (campusData.waypoints || []).filter((w) => {
+    if (normalize(w.building) !== normalize(destinationBuildingId)) return false;
+    if (String(w.floor || "") !== String(currentWaypoint.floor || "")) return false;
+
+    if (accessibleOnly) {
+      return w.type === "elevator";
+    }
+
+    return w.type === "elevator" || w.type === "stairs";
+  });
+
+  const targetIds = candidates.map((w) => w.id);
+
+  return findNearestPathToAnyTarget(currentWaypoint.id, targetIds, {
+    buildingId: destinationBuildingId,
+    accessibleOnly,
+  });
+}
+
 function sameVerticalGroup(a, b) {
   if (!a || !b) return false;
   return a.type === b.type && a.building === b.building;
+}
+
+function getContinuousVerticalTarget(pathIds = [], currentWaypointId) {
+  if (!Array.isArray(pathIds) || pathIds.length === 0 || !currentWaypointId) {
+    return null;
+  }
+
+  const startIndex = pathIds.indexOf(currentWaypointId);
+  if (startIndex === -1 || startIndex >= pathIds.length - 1) {
+    return null;
+  }
+
+  const startWaypoint = getWaypointById(currentWaypointId);
+  if (!isVerticalWaypoint(startWaypoint)) {
+    return null;
+  }
+
+  let lastMatch = null;
+
+  for (let i = startIndex + 1; i < pathIds.length; i++) {
+    const candidate = getWaypointById(pathIds[i]);
+    if (!candidate) break;
+
+    if (sameVerticalGroup(startWaypoint, candidate)) {
+      lastMatch = candidate;
+      continue;
+    }
+
+    break;
+  }
+
+  return lastMatch;
 }
 
 export function isVerticalWaypoint(waypoint) {
@@ -174,10 +348,35 @@ export function rerouteFromWaypoint(startWaypointId, destinationWaypointId, opti
     destinationWaypoint.building ||
     null;
 
-  const graph = buildGraph({
+  let graph = buildGraph({
     buildingId,
     accessibleOnly: options.accessibleOnly === true,
   });
+
+  if (options.stairsOnly === true) {
+    const filteredGraph = {};
+
+    for (const [fromId, neighbors] of Object.entries(graph)) {
+      const fromWp = getWaypointById(fromId);
+
+      // block elevator nodes as sources
+      if (fromWp?.type === "elevator") {
+        filteredGraph[fromId] = [];
+        continue;
+      }
+
+      filteredGraph[fromId] = (neighbors || []).filter((neighbor) => {
+        const toWp = getWaypointById(neighbor.id);
+
+        // block elevator nodes as destinations
+        if (toWp?.type === "elevator") return false;
+
+        return true;
+      });
+    }
+
+    graph = filteredGraph;
+  }
 
   const result = aStar(graph, startWaypointId, destinationWaypointId);
   const path = result.path || [];
@@ -228,6 +427,7 @@ export function findNearestExitRoute(startWaypointId, buildingId, options = {}) 
     const result = rerouteFromWaypoint(startWaypointId, entrance.id, {
       buildingId,
       accessibleOnly: options.accessibleOnly === true,
+      stairsOnly: options.stairsOnly === true,
     });
 
     if (result.path.length > 0 && result.distance < best.distance) {
@@ -281,13 +481,25 @@ function buildIndoorRouteWithVerticalHandling({
     };
   }
 
-  if (String(currentWaypoint.floor || "") === String(destinationFloor)) {
-    const route = rerouteFromWaypoint(currentWaypointId, destinationWaypointId, {
+  const { getNavigationStateForCurrentWaypoint } = require("./routeSteps");
+
+  // RULE A:
+  // Once user is on the destination floor, never send them to another floor again.
+  if (isOnDestinationFloor(currentWaypoint, destinationFloor)) {
+    let route = rerouteSameFloorFromWaypoint(currentWaypointId, destinationWaypointId, {
       buildingId: destinationBuildingId,
+      floor: destinationFloor,
       accessibleOnly,
     });
 
-    const { getNavigationStateForCurrentWaypoint } = require("./routeSteps");
+    // Only if same-floor graph truly fails, fall back to full-building route.
+    if (!route.path || route.path.length === 0) {
+      route = rerouteFromWaypoint(currentWaypointId, destinationWaypointId, {
+        buildingId: destinationBuildingId,
+        accessibleOnly,
+      });
+    }
+
     const navState = getNavigationStateForCurrentWaypoint(route.path, currentWaypointId);
 
     return {
@@ -305,65 +517,67 @@ function buildIndoorRouteWithVerticalHandling({
     };
   }
 
+  // If user is standing at elevator/stairs,
+  // calculate the full route, but compress consecutive elevator/stairs floors
+  // into one human-friendly instruction.
   if (isVerticalWaypoint(currentWaypoint)) {
-    const destinationFloorTransport = findBestVerticalWaypointForDestination(
-      destinationBuildingId,
-      destinationFloor,
-      currentWaypoint.type === "elevator"
+    const route = rerouteFromWaypoint(
+      currentWaypointId,
+      destinationWaypointId,
+      {
+        buildingId: destinationBuildingId,
+        accessibleOnly,
+      }
     );
 
-    if (
-      destinationFloorTransport &&
-      sameVerticalGroup(currentWaypoint, destinationFloorTransport)
-    ) {
+    const navState = getNavigationStateForCurrentWaypoint(
+      route.path,
+      currentWaypointId
+    );
+
+    const verticalTarget = getContinuousVerticalTarget(
+      route.path,
+      currentWaypointId
+    );
+
+    if (verticalTarget) {
+      const transportLabel =
+        currentWaypoint.type === "elevator" ? "elevator" : "stairs";
+
       return {
         mode: "vertical_transfer",
-        path: [currentWaypoint.id, destinationFloorTransport.id],
-        steps: [
-          {
-            id: "step-0",
-            waypointId: currentWaypoint.id,
-            floor: currentWaypoint.floor || null,
-            text: `You are at ${currentWaypoint.label}.`,
-          },
-          {
-            id: "step-1",
-            waypointId: destinationFloorTransport.id,
-            floor: destinationFloorTransport.floor || null,
-            text:
-              currentWaypoint.type === "elevator"
-                ? `Take the elevator and scan the QR code for the elevator on floor ${destinationFloor}.`
-                : `Take the stairs and scan the QR code for the stairs on floor ${destinationFloor}.`,
-          },
-        ],
-        nextWaypoint: destinationFloorTransport,
-        distance: 0,
+        path: route.path,
+        steps: route.steps,
+        nextWaypoint: verticalTarget,
+        distance: navState.remainingDistance ?? route.distance,
         arrived: false,
         transportMode: currentWaypoint.type,
-        message:
-          currentWaypoint.type === "elevator"
-            ? `Take the elevator and scan the elevator QR on floor ${destinationFloor}.`
-            : `Take the stairs and scan the stairs QR on floor ${destinationFloor}.`,
+        message: `Take the ${transportLabel} to floor ${verticalTarget.floor} and scan the ${transportLabel} QR code there.`,
       };
     }
+
+    return {
+      mode: "indoor_destination",
+      path: route.path,
+      steps: route.steps,
+      nextWaypoint: navState.nextWaypoint || route.nextWaypoint || null,
+      distance: navState.remainingDistance ?? route.distance,
+      arrived: navState.arrived || route.arrived,
+      transportMode: "arrow",
+      message: navState.arrived
+        ? `You have arrived at Room ${destinationRoomNumber}.`
+        : route.steps.find(
+            (step) => step.waypointId === navState.nextWaypoint?.id
+          )?.text || "Continue toward your destination.",
+    };
   }
 
-  const currentFloorVerticalCandidates = (campusData.waypoints || []).filter((w) => {
-    if (normalize(w.building) !== normalize(destinationBuildingId)) return false;
-    if (String(w.floor || "") !== String(currentWaypoint.floor || "")) return false;
-
-    if (accessibleOnly) {
-      return w.type === "elevator";
-    }
-    return w.type === "elevator" || w.type === "stairs";
-  });
-
-  const targetIds = currentFloorVerticalCandidates.map((w) => w.id);
-
-  const bestVerticalRoute = findNearestPathToAnyTarget(currentWaypointId, targetIds, {
-    buildingId: destinationBuildingId,
-    accessibleOnly,
-  });
+  // Otherwise, guide user to the nearest elevator/stairs anchor on their current floor.
+  const bestVerticalRoute = findNearestSameFloorVerticalTarget(
+    currentWaypoint,
+    destinationBuildingId,
+    accessibleOnly
+  );
 
   if (bestVerticalRoute.path.length > 0 && bestVerticalRoute.targetWaypoint) {
     const { buildStepInstructions, getNavigationStateForCurrentWaypoint } = require("./routeSteps");
