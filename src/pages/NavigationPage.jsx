@@ -1,4 +1,5 @@
-import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
+import { ActivityIndicator } from "react-native";
 import {
   View,
   Text,
@@ -9,20 +10,24 @@ import {
   Easing,
   Modal,
   TextInput,
-  ActivityIndicator,
 } from "react-native";
 import { SafeAreaView, useSafeAreaInsets } from "react-native-safe-area-context";
 import { CameraView, useCameraPermissions } from "expo-camera";
 import * as Location from "expo-location";
 import MapView, { Polyline, Marker } from "react-native-maps";
-
+import { loadAccessibilityMode } from "../utils/preferencesStorage";
 import DirectionArrow from "../components/DirectionArrow";
+import {
+  initializeImageModel,
+  loadReferenceImageDatabase,
+  identifyLocationFromFrame,
+} from "../utils/imageRecognition";
 import campusData from "../data/campusData.json";
 import { findRoom } from "../utils/findRoom";
 import { findWaypointByQrData, getWaypointById, getBuildingEntrances } from "../utils/qrWaypointLookup";
-import { buildStageNavigation } from "../utils/pathfinding";
+import { buildStageNavigation, findNearestExitRoute  } from "../utils/pathfinding";
 import { calculateBearingDegrees } from "../utils/location";
-import { advanceRouteIfNeeded } from "../utils/routeSteps";
+import { advanceRouteIfNeeded, getNextWaypointId } from "../utils/routeSteps";
 import { fetchOrsRoute } from "../utils/orsRouting";
 
 const PSU = {
@@ -66,10 +71,7 @@ const VIEW_MODE = {
   INDOOR: "indoor",
 };
 
-// How close (meters) to an entrance waypoint before we
-// show the "Scan entrance QR" prompt instead of continuing to navigate.
 const ENTRANCE_REACHED_THRESHOLD_METERS = 20;
-const DEBUG_NAV = true;
 
 function normalize(value) {
   return String(value || "").trim().toLowerCase();
@@ -85,11 +87,12 @@ function SectionTitle({ icon, text }) {
 }
 
 function formatDistance(meters) {
-  if (meters == null || Number.isNaN(meters) || !Number.isFinite(meters)) {
+  const m = Number(meters);
+
+  if (!Number.isFinite(m)) {
     return { metersText: "-- m", feetText: "-- ft" };
   }
 
-  const m = Number(meters);
   const ft = m * 3.28084;
 
   return {
@@ -191,6 +194,33 @@ export default function NavigationPage({ route, navigation }) {
   const destinationRoom = destination?.room || null;
   const destinationBuilding = destination?.building || null;
 
+  
+  const routeAccessibilityMode = route.params?.accessibilityMode;
+  const routeEmergencyMode = route.params?.emergencyMode;
+  const emergencyMode = routeEmergencyMode === true && !destinationRoom;
+
+  const [savedAccessibilityMode, setSavedAccessibilityMode] = useState(false);
+  const [preferencesReady, setPreferencesReady] = useState(false);
+  useEffect(() => {
+    let mounted = true;
+
+    async function loadSavedPreferences() {
+      const savedAccessibility = await loadAccessibilityMode();
+
+      if (mounted) {
+        setSavedAccessibilityMode(savedAccessibility);
+        setPreferencesReady(true);
+      }
+    }
+
+    loadSavedPreferences();
+
+    return () => {
+      mounted = false;
+    };
+  }, []);
+  
+  
   const linkedStartWaypoint = useMemo(() => {
     const params = route.params || {};
     const startWaypointId =
@@ -240,51 +270,31 @@ export default function NavigationPage({ route, navigation }) {
   const [helpRoomNumber, setHelpRoomNumber] = useState("");
   const [helpError, setHelpError] = useState("");
 
+  const [batterySaverMode, setBatterySaverMode] = useState(false);
   const [outdoorScannerVisible, setOutdoorScannerVisible] = useState(false);
   const [forceIndoorAfterScan, setForceIndoorAfterScan] = useState(false);
 
+  const [visionReady, setVisionReady] = useState(false);
   const [visionSource, setVisionSource] = useState(null); // "qr" | "vision" | null
 
-  // ─── ORS outdoor route state ──────────────────────────────────────────────
-  const [orsCoords, setOrsCoords] = useState([]); // [{latitude, longitude}]
-  const [orsSteps, setOrsSteps] = useState([]);   // [{instruction, distance}]
+  const [orsCoords, setOrsCoords] = useState([]);
+  const [orsSteps, setOrsSteps] = useState([]);
   const [orsMeters, setOrsMeters] = useState(null);
   const [orsLoading, setOrsLoading] = useState(false);
   const [orsError, setOrsError] = useState(null);
 
-  // ─── Transition gate state ────────────────────────────────────────────────
-  // "entrance" — user has reached destination building entrance, needs to scan
-  // "exit"     — user is at wrong-building exit, needs to scan to go outdoor
-  // null       — no pending transition
   const [pendingTransitionType, setPendingTransitionType] = useState(null);
-  const [debugEvents, setDebugEvents] = useState([]);
-  const [debugVisible, setDebugVisible] = useState(true);
-  const [indoorCameraMounted, setIndoorCameraMounted] = useState(false);
-  const [indoorBootReady, setIndoorBootReady] = useState(false);
 
   const cameraRef = useRef(null);
-  const indoorCameraTimerRef = useRef(null);
-  const indoorBootTimerRef = useRef(null);
-  const orsAbortRef = useRef(null);
+  const visionBusyRef = useRef(false);
+  const lastOrsFetchRef = useRef(null);
+  const mapRef = useRef(null);
 
   const nextStepFade = useRef(new Animated.Value(1)).current;
   const nextStepScale = useRef(new Animated.Value(1)).current;
   const arrivalPulse = useRef(new Animated.Value(1)).current;
   const scanBadgeAnim = useRef(new Animated.Value(0)).current;
   const scanCooldownRef = useRef(false);
-
-  const pushDebug = useCallback((message, details) => {
-    const time = new Date().toLocaleTimeString();
-    const detailText =
-      details == null
-        ? ""
-        : typeof details === "string"
-        ? ` — ${details}`
-        : ` — ${JSON.stringify(details)}`;
-    const line = `${time} • ${message}${detailText}`;
-    console.log("[NavDebug]", line);
-    setDebugEvents((current) => [line, ...current].slice(0, 40));
-  }, []);
 
   const destinationTitle = useMemo(() => {
     if (!destinationRoom) return "Choose a Destination";
@@ -323,12 +333,11 @@ export default function NavigationPage({ route, navigation }) {
   }, [userGps, nextWaypoint]);
 
   const formattedDistance = useMemo(() => {
-    // Prefer ORS total when outdoors and ORS route is available
     if (orsMeters !== null && viewMode === VIEW_MODE.OUTDOOR) {
       return formatDistance(orsMeters);
     }
     return formatDistance(routeDistance);
-  }, [routeDistance, orsMeters]);
+  }, [routeDistance, orsMeters, viewMode]);
 
   const gpsBuildingGuess = useMemo(() => {
     return guessBuildingFromGps(userGps);
@@ -393,23 +402,66 @@ export default function NavigationPage({ route, navigation }) {
     });
   }, [stageMode, destinationBuilding, gpsBuildingGuess]);
 
-  // ─── Entrance waypoints for destination building ───────────────────────────
+
   const destinationEntranceWaypoints = useMemo(() => {
     const buildingId = destinationBuilding?.id || destinationRoom?.building || "";
     if (!buildingId) return [];
     return getBuildingEntrances(buildingId);
   }, [destinationBuilding, destinationRoom]);
 
-  // ─── Exit (entrance) waypoints for the current wrong building ─────────────
   const currentBuildingEntranceWaypoints = useMemo(() => {
     if (!currentBuildingId) return [];
     return getBuildingEntrances(currentBuildingId);
   }, [currentBuildingId]);
 
-  // ─── Best GPS target for ORS: nearest entrance waypoint of dest building ──
+  useEffect(() => {
+    if (viewMode !== VIEW_MODE.INDOOR) return;
+    if (!userGps) return;
+    if (!currentBuildingId) return;
+    if (!destinationBuilding && !destinationRoom) return;
+
+    const destinationBuildingId =
+      destinationBuilding?.id || destinationRoom?.building || "";
+
+    // Only care if user is in the wrong building
+    if (
+      !destinationBuildingId ||
+      normalize(currentBuildingId) === normalize(destinationBuildingId)
+    ) {
+      if (pendingTransitionType === "exit") {
+        setPendingTransitionType(null);
+      }
+      return;
+    }
+
+    const nearExit = currentBuildingEntranceWaypoints.some((wp) => {
+      if (wp.latitude == null || wp.longitude == null) return false;
+
+      return (
+        haversineMeters(
+          Number(userGps.latitude),
+          Number(userGps.longitude),
+          Number(wp.latitude),
+          Number(wp.longitude)
+        ) <= ENTRANCE_REACHED_THRESHOLD_METERS
+      );
+    });
+
+    setPendingTransitionType(nearExit ? "exit" : null);
+  }, [
+    viewMode,
+    userGps,
+    currentBuildingId,
+    destinationBuilding,
+    destinationRoom,
+    currentBuildingEntranceWaypoints,
+    pendingTransitionType,
+  ]);
+
+
+
   const orsDestinationGps = useMemo(() => {
     if (!userGps || destinationEntranceWaypoints.length === 0) {
-      // Fall back to building centroid
       if (outdoorTargetBuilding?.latitude && outdoorTargetBuilding?.longitude) {
         return {
           latitude: Number(outdoorTargetBuilding.latitude),
@@ -419,7 +471,6 @@ export default function NavigationPage({ route, navigation }) {
       return null;
     }
 
-    // Pick nearest entrance to user
     let nearest = null;
     let nearestDist = Infinity;
     for (const wp of destinationEntranceWaypoints) {
@@ -439,9 +490,272 @@ export default function NavigationPage({ route, navigation }) {
     return { latitude: Number(nearest.latitude), longitude: Number(nearest.longitude) };
   }, [userGps, destinationEntranceWaypoints, outdoorTargetBuilding]);
 
+  useEffect(() => {
+    if (viewMode !== VIEW_MODE.OUTDOOR) {
+      setOrsLoading(false);
+      return;
+    }
 
+    if (lastOrsFetchRef.current) {
+      const moved = haversineMeters(
+        lastOrsFetchRef.current.latitude,
+        lastOrsFetchRef.current.longitude,
+        userGps.latitude,
+        userGps.longitude
+      );
+      if (moved < 15) return;
+    }
 
-  // ─── Apply linked start waypoint from deep-link / QR ──────────────────────
+    lastOrsFetchRef.current = userGps;
+
+    if (!userGps || !orsDestinationGps) {
+      setOrsCoords([]);
+      setOrsSteps([]);
+      setOrsMeters(null);
+      setOrsError(null);
+      setOrsLoading(false);
+      return;
+    }
+
+    const fetchKey = [
+      userGps.latitude?.toFixed?.(5) ?? userGps.latitude,
+      userGps.longitude?.toFixed?.(5) ?? userGps.longitude,
+      orsDestinationGps.latitude?.toFixed?.(5) ?? orsDestinationGps.latitude,
+      orsDestinationGps.longitude?.toFixed?.(5) ?? orsDestinationGps.longitude,
+      stageMode || "",
+      pendingTransitionType || "",
+    ].join("|");
+
+    if (lastOrsFetchRef.current === fetchKey) {
+      return;
+    }
+
+    lastOrsFetchRef.current = fetchKey;
+
+    let cancelled = false;
+
+    async function loadOutdoorRoute() {
+      try {
+        setOrsLoading(true);
+        setOrsError(null);
+
+        const route = await fetchOrsRoute(
+          {
+            latitude: Number(userGps.latitude),
+            longitude: Number(userGps.longitude),
+          },
+          {
+            latitude: Number(orsDestinationGps.latitude),
+            longitude: Number(orsDestinationGps.longitude),
+          }
+        );
+
+        if (cancelled) return;
+
+        const coordinates = Array.isArray(route?.coordinates)
+          ? route.coordinates
+            .map((point) => {
+              // case 1: already { latitude, longitude }
+              if (
+                point &&
+                typeof point === "object" &&
+                point.latitude != null &&
+                point.longitude != null
+              ) {
+                return {
+                  latitude: Number(point.latitude),
+                  longitude: Number(point.longitude),
+                };
+              }
+
+              // case 2: ORS style [longitude, latitude]
+              if (Array.isArray(point) && point.length >= 2) {
+                return {
+                  latitude: Number(point[1]),
+                  longitude: Number(point[0]),
+                };
+              }
+
+              return null;
+            })
+            .filter(Boolean)
+        : [];
+
+        const steps = Array.isArray(route?.steps) ? route.steps : [];
+        const distance =
+          typeof route?.totalMeters  === "number" && route.totalMeters > 0
+            ? route.totalMeters
+            : typeof route?.distance === "number" && route.distance > 0
+            ? route.distance
+            : typeof route?.meters === "number" && route.meters > 0
+            ? route.meters
+            : coordinates.length > 1
+            ? coordinates.reduce((sum, point, index) => {
+                if (index === 0) return 0;
+                const prev = coordinates[index - 1];
+                return (
+                  sum +
+                  haversineMeters(
+                    prev.latitude,
+                    prev.longitude,
+                    point.latitude,
+                    point.longitude
+                  )
+                );
+              }, 0)
+            : null;
+
+        setOrsCoords(coordinates);
+        console.log("ORS coordinates count:", coordinates.length);
+        console.log("First ORS point:", coordinates[0]);
+        setOrsSteps(steps);
+        setOrsMeters(distance);
+        console.log("setOrsMeters distance:", distance, typeof distance);
+        setOrsError(null);
+
+        if (
+          pendingTransitionType !== "entrance" &&
+          destinationEntranceWaypoints.length > 0 &&
+          userGps
+        ) {
+          let nearestEntranceDistance = Infinity;
+
+          for (const wp of destinationEntranceWaypoints) {
+            if (wp.latitude == null || wp.longitude == null) continue;
+
+            const d = haversineMeters(
+              Number(userGps.latitude),
+              Number(userGps.longitude),
+              Number(wp.latitude),
+              Number(wp.longitude)
+            );
+
+            if (d < nearestEntranceDistance) {
+              nearestEntranceDistance = d;
+            }
+          }
+
+          if (
+            Number.isFinite(nearestEntranceDistance) &&
+            nearestEntranceDistance <= ENTRANCE_REACHED_THRESHOLD_METERS
+          ) {
+            setPendingTransitionType("entrance");
+          } else if (pendingTransitionType === "entrance") {
+            setPendingTransitionType(null);
+          }
+        }
+      } catch (error) {
+        if (cancelled) return;
+
+        setOrsCoords([]);
+        setOrsSteps([]);
+        setOrsMeters(null);
+        setOrsError("Failed to load outdoor route.");
+      } finally {
+        if (!cancelled) {
+          setOrsLoading(false);
+        }
+      }
+    }
+
+    loadOutdoorRoute();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [
+    viewMode,
+    userGps,
+    orsDestinationGps,
+    stageMode,
+    pendingTransitionType,
+    destinationEntranceWaypoints,
+  ]);
+
+  useEffect(() => {
+    if (!mapRef.current) return;
+    if (!Array.isArray(orsCoords) || orsCoords.length < 2) return;
+
+    mapRef.current.fitToCoordinates(orsCoords, {
+      edgePadding: {
+        top: 80,
+        right: 40,
+        bottom: 80,
+        left: 40,
+    },
+    animated: true,
+    });
+  }, [orsCoords]);
+
+  useEffect(() => {
+    let cancelled = false;
+
+    async function setupVision() {
+      try {
+        await initializeImageModel();
+        await loadReferenceImageDatabase();
+        if (!cancelled) setVisionReady(true);
+      } catch (error) {
+        console.log("Vision setup failed:", error);
+      }
+    }
+
+    setupVision();
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  useEffect(() => {
+    if (viewMode !== VIEW_MODE.INDOOR || !visionReady || !cameraEnabled) return;
+
+    let cancelled = false;
+
+    async function runLoop() {
+      while (!cancelled) {
+        await new Promise((resolve) =>
+          setTimeout(resolve, batterySaverMode ? 7000 : 3000)
+        );
+        if (cancelled) break;
+        if (visionSource === "qr") continue;
+        if (visionBusyRef.current || !cameraRef.current) continue;
+
+        visionBusyRef.current = true;
+        try {
+          const photo = await cameraRef.current.takePictureAsync({
+            quality: 0.15,
+            base64: false,
+            skipProcessing: true,
+          });
+
+          if (cancelled || !photo?.uri) continue;
+
+          const result = await identifyLocationFromFrame(photo.uri);
+          const waypointId = result?.location?.waypoint_id;
+          if (!waypointId) continue;
+
+          const matchedWaypoint = (campusData.waypoints || []).find(
+            (waypoint) => waypoint.id === waypointId
+          );
+
+          if (matchedWaypoint) {
+            applyScannedWaypoint(matchedWaypoint, "vision");
+          }
+        } catch (error) {
+          if (!cancelled) console.log("Vision scan failed:", error);
+        } finally {
+          visionBusyRef.current = false;
+        }
+      }
+    }
+
+    runLoop();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [viewMode, visionReady, cameraEnabled, visionSource, batterySaverMode]);
+
   useEffect(() => {
     if (!linkedStartWaypoint) return;
 
@@ -452,7 +766,7 @@ export default function NavigationPage({ route, navigation }) {
     setVisionSource("qr");
   }, [linkedStartWaypoint]);
 
-  // ─── Apply visual-locate result returned from separate screen ──────────────
+
   useEffect(() => {
     const result = route.params?.visualLocateResult;
     if (!result?.waypointId) return;
@@ -463,7 +777,6 @@ export default function NavigationPage({ route, navigation }) {
 
     if (!matchedWaypoint) return;
 
-    pushDebug("visual locate applied", matchedWaypoint.id || matchedWaypoint.label || "unknown");
     setCurrentWaypointLabel(matchedWaypoint.label || matchedWaypoint.id);
     setCurrentBuildingId(matchedWaypoint.building || "");
     setCurrentWaypointId(matchedWaypoint.id || "");
@@ -474,9 +787,8 @@ export default function NavigationPage({ route, navigation }) {
     if (navigation?.setParams) {
       navigation.setParams({ visualLocateResult: undefined });
     }
-  }, [route.params?.visualLocateResult, navigation, pushDebug]);
+  }, [route.params?.visualLocateResult, navigation]);
 
-  // ─── GPS building fallback ─────────────────────────────────────────────────
   useEffect(() => {
     if (currentBuildingId) return;
     if (gpsBuildingGuess.building && gpsBuildingGuess.confidence === "high") {
@@ -484,32 +796,30 @@ export default function NavigationPage({ route, navigation }) {
     }
   }, [gpsBuildingGuess, currentBuildingId]);
 
-  // ─── Step card animation ───────────────────────────────────────────────────
-  useEffect(() => {
-    if (viewMode !== VIEW_MODE.INDOOR) return;
+    useEffect(() => {
+      if (viewMode !== VIEW_MODE.INDOOR) return;
 
-    nextStepFade.setValue(0.55);
-    nextStepScale.setValue(0.97);
+      nextStepFade.setValue(0.55);
+      nextStepScale.setValue(0.97);
 
-    Animated.parallel([
-      Animated.timing(nextStepFade, {
-        toValue: 1,
-        duration: 240,
-        easing: Easing.out(Easing.cubic),
-        useNativeDriver: true,
-      }),
-      Animated.timing(nextStepScale, {
-        toValue: 1,
-        duration: 240,
-        easing: Easing.out(Easing.cubic),
-        useNativeDriver: true,
-      }),
-    ]).start();
-  }, [activeStepIndex, arrived, nextStepFade, nextStepScale, viewMode]);
+      Animated.parallel([
+        Animated.timing(nextStepFade, {
+          toValue: 1,
+          duration: 240,
+          easing: Easing.out(Easing.cubic),
+          useNativeDriver: true,
+        }),
+        Animated.timing(nextStepScale, {
+          toValue: 1,
+          duration: 240,
+          easing: Easing.out(Easing.cubic),
+          useNativeDriver: true,
+        }),
+      ]).start();
+    }, [activeStepIndex, arrived, nextStepFade, nextStepScale, viewMode]);
 
-  // ─── Arrival pulse ─────────────────────────────────────────────────────────
-  useEffect(() => {
-    if (!arrived) {
+    useEffect(() => {
+    if (!arrived || batterySaverMode) {
       arrivalPulse.stopAnimation();
       arrivalPulse.setValue(1);
       return;
@@ -534,18 +844,17 @@ export default function NavigationPage({ route, navigation }) {
 
     loop.start();
     return () => loop.stop();
-  }, [arrived, arrivalPulse]);
+  }, [arrived, arrivalPulse, batterySaverMode]);
 
-  // ─── Location (GPS only) ──────────────────────────────────────────────────
   useEffect(() => {
     let locationSubscription = null;
+    let headingSubscription = null;
 
     async function setupLocation() {
       try {
         setGpsLoading(true);
 
         const { status } = await Location.requestForegroundPermissionsAsync();
-        pushDebug("gps permission", status);
         if (status !== "granted") {
           setGpsPermissionGranted(false);
           setGpsLoading(false);
@@ -559,10 +868,6 @@ export default function NavigationPage({ route, navigation }) {
         });
 
         setUserGps({
-          latitude: current.coords.latitude,
-          longitude: current.coords.longitude,
-        });
-        pushDebug("gps initial fix", {
           latitude: current.coords.latitude,
           longitude: current.coords.longitude,
         });
@@ -580,8 +885,15 @@ export default function NavigationPage({ route, navigation }) {
             });
           }
         );
+
+        headingSubscription = await Location.watchHeadingAsync((heading) => {
+          if (typeof heading?.trueHeading === "number" && heading.trueHeading >= 0) {
+            setDeviceHeading(heading.trueHeading);
+          } else if (typeof heading?.magHeading === "number") {
+            setDeviceHeading(heading.magHeading);
+          }
+        });
       } catch (error) {
-        pushDebug("gps setup failed", error?.message || "unknown error");
         console.log("Location setup failed:", error);
       } finally {
         setGpsLoading(false);
@@ -592,118 +904,95 @@ export default function NavigationPage({ route, navigation }) {
 
     return () => {
       if (locationSubscription?.remove) locationSubscription.remove();
-    };
-  }, [pushDebug]);
-
-  // ─── Indoor boot gate ──────────────────────────────────────────────────────
-  useEffect(() => {
-    if (indoorBootTimerRef.current) {
-      clearTimeout(indoorBootTimerRef.current);
-      indoorBootTimerRef.current = null;
-    }
-
-    if (viewMode !== VIEW_MODE.INDOOR) {
-      setIndoorBootReady(false);
-      setIndoorCameraMounted(false);
-      setCameraEnabled(true);
-      return;
-    }
-
-    pushDebug("indoor boot", "shell");
-    setIndoorBootReady(false);
-    setIndoorCameraMounted(false);
-    setCameraEnabled(false);
-
-    indoorBootTimerRef.current = setTimeout(() => {
-      setIndoorBootReady(true);
-      pushDebug("indoor boot", "ready");
-    }, 1000);
-
-    return () => {
-      if (indoorBootTimerRef.current) {
-        clearTimeout(indoorBootTimerRef.current);
-        indoorBootTimerRef.current = null;
-      }
-      setIndoorBootReady(false);
-      setIndoorCameraMounted(false);
-    };
-  }, [viewMode, pushDebug]);
-
-  // ─── Heading (indoor only) ─────────────────────────────────────────────────
-  useEffect(() => {
-    if (viewMode !== VIEW_MODE.INDOOR || !indoorBootReady) return;
-
-    let headingSubscription = null;
-    let cancelled = false;
-
-    async function setupHeading() {
-      try {
-        pushDebug("heading watcher", "starting (indoor only)");
-
-        headingSubscription = await Location.watchHeadingAsync((heading) => {
-          if (cancelled) return;
-
-          if (typeof heading?.trueHeading === "number" && heading.trueHeading >= 0) {
-            setDeviceHeading(heading.trueHeading);
-          } else if (typeof heading?.magHeading === "number") {
-            setDeviceHeading(heading.magHeading);
-          }
-        });
-      } catch (error) {
-        pushDebug("heading setup failed", error?.message || "unknown error");
-        console.log("Heading setup failed:", error);
-      }
-    }
-
-    setupHeading();
-
-    return () => {
-      cancelled = true;
-      pushDebug("heading watcher", "stopped");
       if (headingSubscription?.remove) headingSubscription.remove();
     };
-  }, [viewMode, indoorBootReady, pushDebug]);
+  }, [batterySaverMode]);
 
-  // ─── Indoor camera mount (after boot) ──────────────────────────────────────
+  const accessibilityMode =
+    typeof routeAccessibilityMode === "boolean"
+      ? routeAccessibilityMode
+      : savedAccessibilityMode;
+      
   useEffect(() => {
-    if (indoorCameraTimerRef.current) {
-      clearTimeout(indoorCameraTimerRef.current);
-      indoorCameraTimerRef.current = null;
-    }
+    if (!preferencesReady) return;
 
-    if (viewMode !== VIEW_MODE.INDOOR || !indoorBootReady) {
-      setIndoorCameraMounted(false);
-      return;
-    }
+    let nav;
 
-    pushDebug("indoor camera", "mount scheduled");
+    if (emergencyMode) {
+      if (!currentWaypointId || !currentBuildingId) {
+        nav = {
+          mode: "emergency_wait_for_scan",
+          path: [],
+          steps: [
+            {
+              id: "step-0",
+              text: "Emergency Mode is active.",
+            },
+            {
+              id: "step-1",
+              text: "Scan the nearest QR code so the app can route you to the closest exit.",
+            },
+          ],
+          nextWaypoint: null,
+          distance: Infinity,
+          arrived: false,
+          transportMode: "arrow",
+          message:
+            "Emergency Mode is active. Scan the nearest QR code to begin exit routing.",
+        };
+      } else {
+        const exitRoute = findNearestExitRoute(currentWaypointId, currentBuildingId, {
+          accessibleOnly: false,
+          stairsOnly: true,
+        });
 
-    indoorCameraTimerRef.current = setTimeout(() => {
-      setCameraEnabled(true);
-      setIndoorCameraMounted(true);
-      pushDebug("indoor camera", "mounted");
-    }, 450);
+        const path = Array.isArray(exitRoute.path) ? exitRoute.path : [];
+        const nextWaypointId = getNextWaypointId(path, currentWaypointId);
 
-    return () => {
-      if (indoorCameraTimerRef.current) {
-        clearTimeout(indoorCameraTimerRef.current);
-        indoorCameraTimerRef.current = null;
+        if (!path.length) {
+          nav = {
+            mode: "emergency_stairs_required",
+            path: [],
+            steps: [
+              {
+                id: "step-0",
+                text: "Emergency Mode uses stairs only.",
+              },
+              {
+                id: "step-1",
+                text: "Scan the nearest stairs QR code to begin the fastest exit route.",
+              },
+            ],
+            nextWaypoint: null,
+            distance: Infinity,
+            arrived: false,
+            transportMode: "arrow",
+            message: "Emergency Mode uses stairs only. Scan the nearest stairs QR code.",
+          };
+        } else {
+          nav = {
+            mode: "emergency_exit",
+            path,
+            steps: Array.isArray(exitRoute.steps) ? exitRoute.steps : [],
+            nextWaypoint: nextWaypointId ? getWaypointById(nextWaypointId) : null,
+            distance: exitRoute.distance ?? Infinity,
+            arrived: path.length > 0 && path[path.length - 1] === currentWaypointId,
+            transportMode: "arrow",
+            message: "Fastest stairs-only route to the nearest exit found.",
+          };
+        }
       }
-      setIndoorCameraMounted(false);
-      pushDebug("indoor camera", "unmounted");
-    };
-  }, [viewMode, indoorBootReady, pushDebug]);
-
-  // ─── Indoor pathfinding ────────────────────────────────────────────────────
-  useEffect(() => {
-    const nav = buildStageNavigation({
-      currentWaypointId,
-      currentBuildingId,
-      destinationBuildingId: destinationBuilding?.id || destinationRoom?.building || "",
-      destinationRoomNumber: destinationRoom?.room_number || "",
-      userGps,
-      accessibleOnly: true,
-    });
+    } else {
+      nav = buildStageNavigation({
+        currentWaypointId,
+        currentBuildingId,
+        destinationBuildingId:
+          destinationBuilding?.id || destinationRoom?.building || "",
+        destinationRoomNumber: destinationRoom?.room_number || "",
+        userGps,
+        accessibleOnly: accessibilityMode,
+      });
+    }
 
     setSteps(Array.isArray(nav.steps) ? nav.steps : []);
     setPathIds(Array.isArray(nav.path) ? nav.path : []);
@@ -715,8 +1004,12 @@ export default function NavigationPage({ route, navigation }) {
     setArrived(Boolean(nav.arrived));
 
     if (Array.isArray(nav.steps) && nav.steps.length > 0) {
-      const idx = nav.steps.findIndex((step) => step.waypointId === nav.nextWaypoint?.id);
-      setActiveStepIndex(idx >= 0 ? idx : nav.arrived ? nav.steps.length - 1 : 0);
+      const idx = nav.steps.findIndex(
+        (step) => step.waypointId === nav.nextWaypoint?.id
+      );
+      setActiveStepIndex(
+        idx >= 0 ? idx : nav.arrived ? nav.steps.length - 1 : 0
+      );
     } else {
       setActiveStepIndex(0);
     }
@@ -726,9 +1019,11 @@ export default function NavigationPage({ route, navigation }) {
     destinationBuilding,
     destinationRoom,
     userGps,
+    accessibilityMode,
+    emergencyMode,
+    preferencesReady,
   ]);
 
-  // ─── Indoor route advancement ──────────────────────────────────────────────
   useEffect(() => {
     if (!userGps || !currentWaypointId || pathIds.length === 0 || arrived) return;
 
@@ -747,127 +1042,6 @@ export default function NavigationPage({ route, navigation }) {
     }
   }, [userGps, currentWaypointId, pathIds, arrived]);
 
-  // ─── ORS outdoor route fetch ───────────────────────────────────────────────
-  // Fires whenever we are in outdoor mode and both user GPS + ORS destination are available.
-  // Re-fetches every time userGps changes by >15 m (handled by debounce ref below).
-  const lastOrsFetchRef = useRef(null);
-  useEffect(() => {
-    if (viewMode !== VIEW_MODE.OUTDOOR) return;
-    if (!userGps || !orsDestinationGps) return;
-    pushDebug("ors fetch candidate", { userGps, orsDestinationGps });
-
-    // Debounce: don't re-fetch if user hasn't moved >15 m since last fetch
-    if (lastOrsFetchRef.current) {
-      const moved = haversineMeters(
-        lastOrsFetchRef.current.latitude,
-        lastOrsFetchRef.current.longitude,
-        userGps.latitude,
-        userGps.longitude
-      );
-      if (moved < 15) return;
-    }
-
-    lastOrsFetchRef.current = userGps;
-
-    // Cancel previous in-flight fetch
-    if (orsAbortRef.current) {
-      orsAbortRef.current.cancelled = true;
-    }
-    const handle = { cancelled: false };
-    orsAbortRef.current = handle;
-
-    setOrsLoading(true);
-    setOrsError(null);
-
-    fetchOrsRoute(userGps, orsDestinationGps)
-      .then((result) => {
-        if (handle.cancelled) return;
-        pushDebug("ors fetch success", { points: result.coordinates?.length || 0, steps: result.steps?.length || 0, meters: result.totalMeters ?? null });
-        setOrsCoords(result.coordinates);
-        setOrsSteps(result.steps);
-        setOrsMeters(result.totalMeters);
-        setOrsLoading(false);
-      })
-      .catch((err) => {
-        if (handle.cancelled) return;
-        pushDebug("ors fetch failed", err?.message || "unknown error");
-        console.warn("[ORS] Route fetch failed:", err.message);
-        setOrsError("Route unavailable");
-        setOrsLoading(false);
-      });
-  }, [viewMode, userGps, orsDestinationGps]);
-
-  // ─── Entrance proximity detection ─────────────────────────────────────────
-  // Case A/B: outdoor → approaching destination building entrance
-  useEffect(() => {
-    if (viewMode !== VIEW_MODE.OUTDOOR) {
-      // Clear entrance-reached if we go indoor
-      if (pendingTransitionType === "entrance") setPendingTransitionType(null);
-      return;
-    }
-    if (!userGps || destinationEntranceWaypoints.length === 0) return;
-
-    const nearAny = destinationEntranceWaypoints.some((wp) => {
-      if (wp.latitude == null || wp.longitude == null) return false;
-      return (
-        haversineMeters(
-          userGps.latitude,
-          userGps.longitude,
-          Number(wp.latitude),
-          Number(wp.longitude)
-        ) <= ENTRANCE_REACHED_THRESHOLD_METERS
-      );
-    });
-
-    setPendingTransitionType(nearAny ? "entrance" : null);
-  }, [viewMode, userGps, destinationEntranceWaypoints]);
-
-  // ─── Exit proximity detection (wrong building) ────────────────────────────
-  // Case C: indoor in wrong building → approaching an exit entrance waypoint
-  useEffect(() => {
-    if (viewMode !== VIEW_MODE.INDOOR) {
-      if (pendingTransitionType === "exit") setPendingTransitionType(null);
-      return;
-    }
-
-    const destinationBuildingId =
-      destinationBuilding?.id || destinationRoom?.building || "";
-
-    // Only show exit prompt when user is in the WRONG building
-    const inCorrectBuilding =
-      !destinationBuildingId ||
-      normalize(currentBuildingId) === normalize(destinationBuildingId);
-
-    if (inCorrectBuilding) {
-      if (pendingTransitionType === "exit") setPendingTransitionType(null);
-      return;
-    }
-
-    if (!userGps || currentBuildingEntranceWaypoints.length === 0) return;
-
-    const nearExit = currentBuildingEntranceWaypoints.some((wp) => {
-      if (wp.latitude == null || wp.longitude == null) return false;
-      return (
-        haversineMeters(
-          userGps.latitude,
-          userGps.longitude,
-          Number(wp.latitude),
-          Number(wp.longitude)
-        ) <= ENTRANCE_REACHED_THRESHOLD_METERS
-      );
-    });
-
-    setPendingTransitionType(nearExit ? "exit" : null);
-  }, [
-    viewMode,
-    userGps,
-    currentBuildingId,
-    destinationBuilding,
-    destinationRoom,
-    currentBuildingEntranceWaypoints,
-  ]);
-
-  // ─── Helpers ───────────────────────────────────────────────────────────────
   function showScanBadge(label) {
     setScanFlashVisible(true);
     scanBadgeAnim.setValue(0);
@@ -890,8 +1064,28 @@ export default function NavigationPage({ route, navigation }) {
 
     if (label) setLastScannedText(label);
   }
+  function applyScannedWaypoint(scannedWaypoint, source = "qr") {
+    if (!scannedWaypoint) return;
 
-  // ─── Indoor QR scan ────────────────────────────────────────────────────────
+    const scannedId = scannedWaypoint.id || "";
+    const isOnCurrentPath = Array.isArray(pathIds) && pathIds.includes(scannedId);
+
+    setCurrentWaypointLabel(scannedWaypoint.label || scannedWaypoint.id);
+    setCurrentBuildingId(scannedWaypoint.building || "");
+    setCurrentWaypointId(scannedId);
+    setForceIndoorAfterScan(true);
+    setVisionSource(source);
+
+    // If the user scanned a waypoint off the planned path,
+    // the route effect will rebuild from this new location automatically.
+    // Clearing the active step index makes the UI feel like a reroute instead of a stale continuation.
+    if (!isOnCurrentPath) {
+      setActiveStepIndex(0);
+    }
+
+    showScanBadge(scannedWaypoint.label || scannedWaypoint.id);
+  }
+
   function handleScan({ data }) {
     if (scanCooldownRef.current) return;
     scanCooldownRef.current = true;
@@ -901,29 +1095,64 @@ export default function NavigationPage({ route, navigation }) {
 
     const qrText = String(data || "").trim();
     if (!qrText) return;
-    pushDebug("indoor qr scan", qrText);
 
     const scannedWaypoint = findWaypointByQrData(qrText);
     setLastScannedText(qrText);
 
-    if (scannedWaypoint) {
-      pushDebug("indoor qr matched", scannedWaypoint.id || scannedWaypoint.label || "unknown");
-      setCurrentWaypointLabel(scannedWaypoint.label || scannedWaypoint.id);
-      setCurrentBuildingId(scannedWaypoint.building || "");
-      setCurrentWaypointId(scannedWaypoint.id || "");
-      setForceIndoorAfterScan(true);
-      setVisionSource("qr");
-      showScanBadge(scannedWaypoint.label || scannedWaypoint.id);
-    } else {
-      pushDebug("indoor qr unmatched", qrText);
+    if (!scannedWaypoint) {
       setCurrentWaypointLabel(`Scanned: ${qrText}`);
       setVisionSource(null);
       showScanBadge(qrText);
+      return;
     }
+
+    const destinationBuildingId =
+      destinationBuilding?.id || destinationRoom?.building || "";
+
+    const scannedBuildingId = scannedWaypoint.building || "";
+    const scannedType = String(scannedWaypoint.type || "").toLowerCase();
+    const scannedLabel = String(scannedWaypoint.label || "").toLowerCase();
+
+    const isEntranceLike =
+      scannedType === "entrance" ||
+      scannedLabel.includes("entrance") ||
+      scannedLabel.includes("exit");
+
+    const isWrongBuildingExitScan =
+      isEntranceLike &&
+      destinationBuildingId &&
+      scannedBuildingId &&
+      normalize(scannedBuildingId) !== normalize(destinationBuildingId);
+
+    // If user scans an entrance/exit QR from the WRONG building,
+    // switch back to outdoor navigation immediately.
+    if (isWrongBuildingExitScan || pendingTransitionType === "exit") {
+      setCurrentWaypointLabel(scannedWaypoint.label || scannedWaypoint.id);
+      setCurrentBuildingId("");
+      setCurrentWaypointId("");
+      setForceIndoorAfterScan(false);
+      setVisionSource("qr");
+      setPendingTransitionType(null);
+
+      setOrsCoords([]);
+      setOrsSteps([]);
+      setOrsMeters(null);
+      setOrsError(null);
+      lastOrsFetchRef.current = null;
+
+      setStageMode("outdoor_guidance");
+      setStageMessage(
+        "Exit confirmed. Continuing outdoor navigation to the destination building."
+      );
+
+      showScanBadge(`Exited ${scannedWaypoint.building || "building"}`);
+      return;
+    }
+
+    // Normal indoor scan
+    applyScannedWaypoint(scannedWaypoint, "qr");
   }
 
-  // ─── Outdoor QR scan (entrance or exit) ───────────────────────────────────
-  // Used for both Case A (entrance → indoor) and Case C (exit → outdoor continuation).
   function handleOutdoorQrScan({ data }) {
     if (scanCooldownRef.current) return;
     scanCooldownRef.current = true;
@@ -935,87 +1164,109 @@ export default function NavigationPage({ route, navigation }) {
     const qrText = String(data || "").trim();
     if (!qrText) return;
 
-    const transitionType = pendingTransitionType || "none";
-    pushDebug("outdoor qr scan", { qrText, transition: transitionType });
-
     const scannedWaypoint = findWaypointByQrData(qrText);
     setLastScannedText(qrText);
 
     if (!scannedWaypoint) {
-      pushDebug("outdoor qr unmatched", qrText);
       showScanBadge(qrText);
       return;
     }
 
-    pushDebug("outdoor qr matched", scannedWaypoint.id || scannedWaypoint.label || "unknown");
-    setCameraEnabled(false);
-    setIndoorCameraMounted(false);
-    setIndoorBootReady(false);
-    setVisionSource("qr");
-    setDetailsVisible(false);
-    setHelpVisible(false);
-    showScanBadge(scannedWaypoint.label || scannedWaypoint.id);
+    const destinationBuildingId =
+      destinationBuilding?.id || destinationRoom?.building || "";
 
-    // Close outdoor scanner first so Android can release that camera.
-    setOutdoorScannerVisible(false);
-    setPendingTransitionType(null);
+    const scannedBuildingId = scannedWaypoint.building || "";
+    const scannedType = String(scannedWaypoint.type || "").toLowerCase();
+    const scannedLabel = String(scannedWaypoint.label || "").toLowerCase();
 
-    setTimeout(() => {
+    const isEntranceLike =
+      scannedType === "entrance" ||
+      scannedLabel.includes("entrance") ||
+      scannedLabel.includes("exit");
+
+    const isWrongBuildingExitScan =
+      isEntranceLike &&
+      destinationBuildingId &&
+      scannedBuildingId &&
+      normalize(scannedBuildingId) !== normalize(destinationBuildingId);
+
+    // destination entrance -> switch INTO indoor mode
+    if (pendingTransitionType === "entrance" && !isWrongBuildingExitScan) {
       setCurrentWaypointLabel(scannedWaypoint.label || scannedWaypoint.id);
       setCurrentBuildingId(scannedWaypoint.building || "");
       setCurrentWaypointId(scannedWaypoint.id || "");
+      setForceIndoorAfterScan(true);
+      setVisionSource("qr");
+      setPendingTransitionType(null);
+      showScanBadge(scannedWaypoint.label || scannedWaypoint.id);
+    }
 
-      if (transitionType === "entrance") {
-        setForceIndoorAfterScan(true);
-        setOrsCoords([]);
-        setOrsSteps([]);
-        setOrsMeters(null);
-        lastOrsFetchRef.current = null;
-      } else if (transitionType === "exit") {
-        setForceIndoorAfterScan(false);
-        setCurrentWaypointId("");
-        lastOrsFetchRef.current = null;
-      } else {
-        setForceIndoorAfterScan(true);
-      }
+    // wrong building exit -> switch BACK to outdoor mode
+    else if (pendingTransitionType === "exit" || isWrongBuildingExitScan) {
+      setCurrentWaypointLabel(scannedWaypoint.label || scannedWaypoint.id);
+      setCurrentBuildingId("");
+      setCurrentWaypointId("");
+      setForceIndoorAfterScan(false);
+      setVisionSource("qr");
+      setPendingTransitionType(null);
+      setStageMode("outdoor_guidance");
+      setStageMessage(
+        "Exit confirmed. Continuing outdoor navigation to the destination building."
+      );
 
-      pushDebug("outdoor->indoor transition", "completed");
-    }, 700);
+      setOrsCoords([]);
+      setOrsSteps([]);
+      setOrsMeters(null);
+      setOrsError(null);
+      lastOrsFetchRef.current = null;
+
+      showScanBadge(`Exited ${scannedWaypoint.building || "building"}`);
+    }
+
+    // fallback manual scan
+    else {
+      applyScannedWaypoint(scannedWaypoint, "qr");
+    }
+
+    setOutdoorScannerVisible(false);
+    setDetailsVisible(false);
+    setHelpVisible(false);
   }
 
-
   function openOutdoorScanner() {
-    pushDebug("open outdoor scanner", pendingTransitionType || "manual");
     setOutdoorScannerVisible(true);
   }
 
   function handleReset() {
-    pushDebug("reset navigation");
     setForceIndoorAfterScan(false);
     setPendingTransitionType(null);
+
     setOrsCoords([]);
     setOrsSteps([]);
     setOrsMeters(null);
+    setOrsError(null);
+    setOrsLoading(false);
+
     lastOrsFetchRef.current = null;
 
-    if (linkedStartWaypoint) {
-      setCurrentWaypointLabel(linkedStartWaypoint.label || linkedStartWaypoint.id);
-      setCurrentBuildingId(linkedStartWaypoint.building || "");
-      setCurrentWaypointId(linkedStartWaypoint.id || "");
-      setLastScannedText(linkedStartWaypoint.qr_code || linkedStartWaypoint.id);
-    } else {
-      setCurrentWaypointLabel("Waiting for scan");
-      setCurrentWaypointId("");
-      setLastScannedText("");
-      if (gpsBuildingGuess.building && gpsBuildingGuess.confidence === "high") {
-        setCurrentBuildingId(gpsBuildingGuess.building.id);
-      } else {
-        setCurrentBuildingId("");
-      }
-    }
+    setCurrentWaypointLabel("Waiting for scan");
+    setCurrentWaypointId("");
+    setCurrentBuildingId("");
+    setLastScannedText("");
+    setVisionSource(null);
+
+    setSteps([]);
+    setPathIds([]);
+    setNextWaypoint(null);
+    setRouteDistance(Infinity);
+    setStageMode("idle");
+    setStageMessage("Outdoor navigation reset. Route will rebuild from current GPS.");
+    setArrived(false);
+    setActiveStepIndex(0);
 
     setDetailsVisible(false);
-    setVisionSource(linkedStartWaypoint ? "qr" : null);
+    setHelpVisible(false);
+    setOutdoorScannerVisible(false);
   }
 
   function detectHelpMode() {
@@ -1081,7 +1332,7 @@ export default function NavigationPage({ route, navigation }) {
 
     if (!result?.waypoint) {
       setHelpError(
-        `We couldn't find room ${roomNumber} in this building. Check the number or choose another building.`
+        `We couldn’t find room ${roomNumber} in this building. Check the number or choose another building.`
       );
       return;
     }
@@ -1102,12 +1353,9 @@ export default function NavigationPage({ route, navigation }) {
     setCurrentWaypointId("");
     setCurrentWaypointLabel("Heading to destination building");
     setCurrentBuildingId(gpsBuildingGuess.building?.id || currentBuildingId || "");
-    setPendingTransitionType(null);
-    lastOrsFetchRef.current = null; // force ORS re-fetch
     showScanBadge(`Route set to ${destinationBuilding?.name || "destination building"}`);
   }
 
-  // ─── Render helpers ────────────────────────────────────────────────────────
   function renderHelpError() {
     if (!helpError) return null;
 
@@ -1118,12 +1366,16 @@ export default function NavigationPage({ route, navigation }) {
     );
   }
 
+  useEffect(() => {
+    console.log("orsMeters state changed:", orsMeters, typeof orsMeters);
+  }, [orsMeters]);
+
   function renderOutsideHelp() {
     return (
       <>
-        <Text style={s.helpTitle}>You're outside campus</Text>
+        <Text style={s.helpTitle}>You’re outside campus</Text>
         <Text style={s.helpSubtitle}>
-          We'll guide you to {destinationBuilding?.name || "the destination building"} first.
+          We’ll guide you to {destinationBuilding?.name || "the destination building"} first.
         </Text>
 
         <View style={s.helpInfoCard}>
@@ -1153,10 +1405,10 @@ export default function NavigationPage({ route, navigation }) {
     return (
       <>
         <Text style={s.helpTitle}>
-          You're near {destinationBuilding?.name || "the correct building"}
+          You’re near {destinationBuilding?.name || "the correct building"}
         </Text>
         <Text style={s.helpSubtitle}>
-          Enter a room number you can see nearby. The app will use that room's waypoint
+          Enter a room number you can see nearby. The app will use that room’s waypoint
           as your indoor location.
         </Text>
 
@@ -1202,11 +1454,11 @@ export default function NavigationPage({ route, navigation }) {
     return (
       <>
         <Text style={s.helpTitle}>
-          You're near {gpsBuildingGuess.building?.name || "another building"}
+          You’re near {gpsBuildingGuess.building?.name || "another building"}
         </Text>
         <Text style={s.helpSubtitle}>
           Your destination is in {destinationBuilding?.name || "a different building"}.
-          We'll guide you there first.
+          We’ll guide you there first.
         </Text>
 
         <View style={s.helpInfoCard}>
@@ -1243,7 +1495,7 @@ export default function NavigationPage({ route, navigation }) {
   function renderUnknownHelp() {
     return (
       <>
-        <Text style={s.helpTitle}>We couldn't confirm your building</Text>
+        <Text style={s.helpTitle}>We couldn’t confirm your building</Text>
         <Text style={s.helpSubtitle}>
           Choose your building, then enter a nearby room number so we can continue navigation.
         </Text>
@@ -1315,151 +1567,7 @@ export default function NavigationPage({ route, navigation }) {
     }
   }
 
-  // ─── Outdoor bottom card: context-sensitive CTA ────────────────────────────
-  function renderOutdoorBottomCard() {
-    if (pendingTransitionType === "entrance") {
-      // Case A: User has reached the destination building entrance
-      return (
-        <View style={[s.outdoorBottomCard, s.transitionCard]}>
-          <Text style={s.transitionCardEyebrow}>ENTRANCE REACHED</Text>
-          <Text style={s.transitionCardTitle}>
-            You're at {outdoorTargetBuilding?.name || "the destination building"}
-          </Text>
-          <Text style={s.transitionCardSub}>
-            Scan the QR code at the entrance to switch to indoor navigation.
-          </Text>
-
-          <Pressable style={s.transitionScanBtn} onPress={openOutdoorScanner}>
-            <Text style={s.transitionScanBtnText}>
-              📷  I'm at the entrance — Scan QR to continue
-            </Text>
-          </Pressable>
-
-          <Pressable style={s.transitionSecondaryBtn} onPress={handleReset}>
-            <Text style={s.transitionSecondaryBtnText}>Reset</Text>
-          </Pressable>
-        </View>
-      );
-    }
-
-    // Normal outdoor guidance card
-    return (
-      <View style={s.outdoorBottomCard}>
-        <Text style={s.outdoorBottomTitle}>
-          {stageMode === "exit_current_building"
-            ? "Leave the current building and head toward the destination building."
-            : stageMode === "outdoor_guidance"
-            ? "Follow the outdoor route to the correct building."
-            : "Use outdoor guidance until you reach the correct entrance."}
-        </Text>
-
-        {orsError ? (
-          <Text style={s.orsErrorText}>⚠ {orsError} — using GPS arrow guidance</Text>
-        ) : null}
-
-        {orsSteps.length > 0 && !orsError ? (
-          <View style={s.orsStepsList}>
-            {orsSteps.slice(0, 3).map((step, index) => (
-              <Text key={index} style={s.orsStepText} numberOfLines={2}>
-                {index === 0 ? "➡ " : "  "}{step.instruction}
-              </Text>
-            ))}
-            {orsSteps.length > 3 ? (
-              <Text style={s.orsStepsMore}>+{orsSteps.length - 3} more steps</Text>
-            ) : null}
-          </View>
-        ) : (
-          <Text style={s.outdoorBottomText}>
-            Use Scan QR when you reach an entrance or indoor anchor so the app can switch into indoor navigation.
-          </Text>
-        )}
-
-        <View style={s.outdoorBottomButtons}>
-          <Pressable style={s.outdoorSecondaryBtn} onPress={handleReset}>
-            <Text style={s.outdoorSecondaryBtnText}>Reset</Text>
-          </Pressable>
-
-          <Pressable style={s.outdoorScanBtn} onPress={openOutdoorScanner}>
-            <Text style={s.outdoorScanBtnText}>Scan QR</Text>
-          </Pressable>
-
-          <Pressable
-            style={s.outdoorPrimaryBtn}
-            onPress={() => setDetailsVisible(true)}
-          >
-            <Text style={s.outdoorPrimaryBtnText}>Details</Text>
-          </Pressable>
-        </View>
-      </View>
-    );
-  }
-
-  useEffect(() => {
-    pushDebug("mounted", {
-      hasDestination: Boolean(destinationRoom),
-      destinationBuildingId: destinationBuilding?.id || destinationRoom?.building || "",
-    });
-    return () => pushDebug("unmounted");
-  }, []);
-
-  useEffect(() => {
-    pushDebug("viewMode", viewMode);
-  }, [viewMode, pushDebug]);
-
-  useEffect(() => {
-    pushDebug("stageMode", stageMode || "idle");
-  }, [stageMode, pushDebug]);
-
-  useEffect(() => {
-    pushDebug("waypoint", currentWaypointId || "none");
-  }, [currentWaypointId, pushDebug]);
-
-  useEffect(() => {
-    pushDebug(
-      "gps",
-      userGps ? `${userGps.latitude.toFixed(5)}, ${userGps.longitude.toFixed(5)}` : "none"
-    );
-  }, [userGps, pushDebug]);
-
-  useEffect(() => {
-    pushDebug("ors", {
-      loading: orsLoading,
-      error: orsError || "",
-      points: Array.isArray(orsCoords) ? orsCoords.length : 0,
-      meters: orsMeters,
-    });
-  }, [orsLoading, orsError, orsCoords, orsMeters, pushDebug]);
-
-  function renderDebugPanel() {
-    if (!DEBUG_NAV || !debugVisible) return null;
-
-    return (
-      <View style={s.debugPanel} pointerEvents="box-none">
-        <View style={s.debugCard}>
-          <View style={s.debugHeaderRow}>
-            <Text style={s.debugTitle}>Nav debug</Text>
-            <Pressable onPress={() => setDebugVisible(false)}>
-              <Text style={s.debugHideText}>Hide</Text>
-            </Pressable>
-          </View>
-          <Text style={s.debugSummary}>
-            {`view=${viewMode} • stage=${stageMode || "idle"} • wp=${currentWaypointId || "none"} • ors=${orsLoading ? "loading" : orsError || "ok"}`}
-          </Text>
-          <ScrollView style={s.debugLogScroll} nestedScrollEnabled>
-            {debugEvents.map((line, index) => (
-              <Text key={`${index}-${line}`} style={s.debugLogLine}>
-                {line}
-              </Text>
-            ))}
-          </ScrollView>
-        </View>
-      </View>
-    );
-  }
-
-  // ─── Outdoor view ──────────────────────────────────────────────────────────
   function renderOutdoorView() {
-    // Build initial region for MapView
     const mapRegion = userGps
       ? {
           latitude: userGps.latitude,
@@ -1475,15 +1583,12 @@ export default function NavigationPage({ route, navigation }) {
           longitudeDelta: 0.006,
         }
       : null;
-
+    
     return (
       <SafeAreaView style={s.outdoorSafe} edges={["top"]}>
         <ScrollView
           style={s.outdoorScroll}
-          contentContainerStyle={[
-            s.outdoorScrollContent,
-            { paddingBottom: 24 + insets.bottom },
-          ]}
+          contentContainerStyle={[s.outdoorScrollContent, { paddingBottom: 24 + insets.bottom }]}
           showsVerticalScrollIndicator={false}
           bounces
         >
@@ -1501,15 +1606,28 @@ export default function NavigationPage({ route, navigation }) {
                 {stageMessage || "Follow the outdoor route to the destination building."}
               </Text>
             </View>
+            <View style={s.modeBadgeRow}>
+              {accessibilityMode ? (
+                <View style={s.accessibilityBadgeStatic}>
+                  <Text style={s.accessibilityBadgeText}>ACCESS ON</Text>
+                </View>
+              ) : null}
+
+              {emergencyMode ? (
+                <View style={s.emergencyBadgeStatic}>
+                  <Text style={s.emergencyBadgeText}>EMERGENCY ON</Text>
+                </View>
+              ) : null}
+            </View>
           </View>
 
-          {/* ── Real map with ORS polyline ── */}
           <View style={s.mapCard}>
             {mapRegion ? (
               <MapView
+                ref={mapRef}
                 key={outdoorTargetBuilding?.id || destinationTitle}
                 style={s.mapView}
-                initialRegion={mapRegion}
+                region={mapRegion}
                 showsUserLocation
                 showsMyLocationButton={false}
                 rotateEnabled={false}
@@ -1518,18 +1636,10 @@ export default function NavigationPage({ route, navigation }) {
                 pitchEnabled={false}
               >
                 {orsCoords.length > 1 ? (
-                  <Polyline
+                  <Polyline 
                     coordinates={orsCoords}
-                    strokeColor={PSU.mapAccent}
-                    strokeWidth={4}
-                  />
-                ) : null}
-
-                {orsDestinationGps ? (
-                  <Marker
-                    coordinate={orsDestinationGps}
-                    title={outdoorTargetBuilding?.name || "Destination"}
-                    pinColor={PSU.blue}
+                    strokeColor="#eb2525"
+                    strokeWidth={6}
                   />
                 ) : null}
               </MapView>
@@ -1541,7 +1651,7 @@ export default function NavigationPage({ route, navigation }) {
               </View>
             )}
 
-            {orsLoading ? (
+            {orsLoading && orsCoords.length === 0 ? (
               <View style={s.mapLoadingOverlay}>
                 <ActivityIndicator color={PSU.blue} />
                 <Text style={s.mapLoadingText}>Getting route…</Text>
@@ -1549,71 +1659,146 @@ export default function NavigationPage({ route, navigation }) {
             ) : null}
 
             <View style={s.mapInfoRow}>
-              <View style={s.mapInfoPill}>
-                <Text style={s.mapInfoPillText}>{formattedDistance.feetText}</Text>
-              </View>
-              <View style={s.mapInfoPill}>
-                <Text style={s.mapInfoPillText}>{formattedDistance.metersText}</Text>
-              </View>
+              {Number.isFinite(Number(orsMeters)) ? (
+                <>
+                  <View style={s.mapInfoPill}>
+                    <Text style={s.mapInfoPillText}>
+                      {`${Math.round(Number(orsMeters) * 3.28084)} ft`}
+                    </Text>
+                  </View>
+                  <View style={s.mapInfoPill}>
+                    <Text style={s.mapInfoPillText}>
+                      {`${Number(orsMeters).toFixed(1)} m`}
+                    </Text>
+                  </View>
+                </>
+              ) : (
+                <View style={s.mapInfoPill}>
+                  <Text style={s.mapInfoPillText}>
+                    {`orsMeters=${String(orsMeters)}`}
+                  </Text>
+                </View>
+              )}
               <View style={s.mapInfoPill}>
                 <Text style={s.mapInfoPillText}>
-                  {gpsBuildingGuess.building?.name || "GPS locating"}
+                  {outdoorTargetBuilding?.name ||
+                    gpsBuildingGuess.building?.name ||
+                    "GPS locating"}
                 </Text>
               </View>
             </View>
           </View>
 
-          {renderOutdoorBottomCard()}
+          <View style={[s.outdoorBottomCard, pendingTransitionType === "entrance" && s.transitionCard]}>
+            {pendingTransitionType === "entrance" ? (
+              <>
+                <Text style={s.transitionCardEyebrow}>ENTRANCE REACHED</Text>
+                <Text style={s.transitionCardTitle}>
+                  You're at {outdoorTargetBuilding?.name || "the destination building"}
+                </Text>
+                <Text style={s.transitionCardSub}>
+                  Scan the QR code at the entrance to switch to indoor navigation.
+                </Text>
+              </>
+            ) : (
+              <>
+                <Text style={s.outdoorBottomTitle}>
+                  {stageMode === "exit_current_building"
+                    ? "Leave the current building and head toward the destination building."
+                    : stageMode === "outdoor_guidance"
+                    ? "Follow the outdoor route to the correct building."
+                    : "Use outdoor guidance until you reach the correct entrance."}
+                </Text>
+                {orsError ? (
+                  <Text style={s.orsErrorText}>⚠ {orsError} — using GPS guidance</Text>
+                ) : null}
+                {orsSteps.length > 0 && !orsError ? (
+                  <View style={s.stepListWrap}>
+                    {orsSteps.slice(0, 3).map((step, index) => {
+                      const isActive = index === 0;
+
+                      return (
+                        <View key={index} style={s.stepRow}>
+                          <View style={[s.stepDot, isActive && s.stepDotActive]}>
+                            <Text style={s.stepDotText}>
+                              {index === 0 ? "➡️" : "•"}
+                            </Text>
+                          </View>
+
+                        <View style={[s.stepContent, isActive && s.stepContentActive]}>
+                          {isActive ? (
+                            <Text style={s.stepCurrentBadge}>Current Step</Text>
+                          ) : null}
+
+                        <Text style={[s.stepText, isActive && s.stepTextActive]}>
+                          {step.instruction}
+                        </Text>
+
+                        {typeof step.distance === "number" ? (
+                          <Text style={s.stepSubText}>
+                            {step.distance.toFixed(0)} m
+                          </Text>
+                        ) : null}
+                      </View>
+                    </View>
+                  );
+                })}
+
+                {orsSteps.length > 3 ? (
+                  <Text style={s.orsStepsMore}>+{orsSteps.length - 3} more steps</Text>
+                ) : null}
+              </View>
+                ) : (
+                  <Text style={s.outdoorBottomText}>
+                    Use Scan QR when you reach an entrance or indoor anchor so the app can switch into indoor navigation.
+                  </Text>
+                )}
+              </>
+            )}
+
+            <View style={s.outdoorBottomButtons}>
+              <Pressable style={s.outdoorSecondaryBtn} onPress={handleReset}>
+                <Text style={s.outdoorSecondaryBtnText}>Reset</Text>
+              </Pressable>
+
+              <Pressable
+                style={pendingTransitionType === "entrance" ? s.transitionScanBtn : s.outdoorScanBtn}
+                onPress={openOutdoorScanner}
+              >
+                <Text style={pendingTransitionType === "entrance" ? s.transitionScanBtnText : s.outdoorScanBtnText}>
+                  {pendingTransitionType === "entrance" ? "📷 I'm at the entrance — Scan QR" : "Scan QR"}
+                </Text>
+              </Pressable>
+
+              <Pressable
+                style={s.outdoorPrimaryBtn}
+                onPress={() =>
+                  navigation.navigate("VisualLocateScreen", {
+                    returnScreen: route.name || "NavigationPage",
+                    destination,
+                  })
+                }
+              >
+                <Text style={s.outdoorPrimaryBtnText}>Locate</Text>
+              </Pressable>
+
+              <Pressable
+                style={s.outdoorPrimaryBtn}
+                onPress={() => setDetailsVisible(true)}
+              >
+                <Text style={s.outdoorPrimaryBtnText}>Details</Text>
+              </Pressable>
+            </View>
+          </View>
         </ScrollView>
       </SafeAreaView>
     );
   }
 
-  // ─── Indoor view ───────────────────────────────────────────────────────────
   function renderIndoorView() {
-    if (!indoorBootReady) {
-      return (
-        <View style={s.cameraLayer}>
-          <SafeAreaView style={s.overlaySafe}>
-            <View
-              style={{
-                flex: 1,
-                alignItems: "center",
-                justifyContent: "center",
-                backgroundColor: "#000",
-                paddingHorizontal: 24,
-              }}
-            >
-              <Text
-                style={{
-                  color: "#fff",
-                  fontSize: 22,
-                  fontWeight: "900",
-                  textAlign: "center",
-                }}
-              >
-                Preparing indoor navigation…
-              </Text>
-
-              <Text
-                style={{
-                  color: "#D1D5DB",
-                  fontSize: 14,
-                  marginTop: 10,
-                  textAlign: "center",
-                }}
-              >
-                Releasing scanner camera and loading indoor UI
-              </Text>
-            </View>
-          </SafeAreaView>
-        </View>
-      );
-    }
-
     return (
       <View style={s.cameraLayer}>
-        {cameraEnabled && indoorCameraMounted ? (
+        {cameraEnabled ? (
           <CameraView
             ref={cameraRef}
             style={s.camera}
@@ -1623,9 +1808,7 @@ export default function NavigationPage({ route, navigation }) {
           />
         ) : (
           <View style={[s.camera, s.cameraPaused]}>
-            <Text style={s.cameraPausedText}>
-              {indoorCameraMounted ? "Camera paused" : "Preparing camera..."}
-            </Text>
+            <Text style={s.cameraPausedText}>Camera paused</Text>
           </View>
         )}
 
@@ -1653,6 +1836,24 @@ export default function NavigationPage({ route, navigation }) {
               <Text style={s.helpChipText}>Help</Text>
             </Pressable>
           </View>
+          
+          {accessibilityMode ? (
+            <View style={s.accessibilityBadge}>
+              <Text style={s.accessibilityBadgeText}>ACCESS ON</Text>
+            </View>
+          ) : null}
+
+          {emergencyMode ? (
+            <View style={s.emergencyBadge}>
+              <Text style={s.emergencyBadgeText}>EMERGENCY ON</Text>
+            </View>
+          ) : null}
+
+          {batterySaverMode ? (
+            <View style={s.batteryBadge}>
+              <Text style={s.batteryBadgeText}>BATTERY SAVER ON</Text>
+            </View>
+          ) : null}
 
           <View style={s.arrowCenterWrap}>
             <DirectionArrow
@@ -1664,6 +1865,11 @@ export default function NavigationPage({ route, navigation }) {
             />
           </View>
 
+          {!visionReady ? (
+            <View style={s.visionLoadingBadge}>
+              <Text style={s.visionLoadingText}>📷 Loading vision…</Text>
+            </View>
+          ) : null}
 
           {scanFlashVisible ? (
             <Animated.View
@@ -1760,28 +1966,39 @@ export default function NavigationPage({ route, navigation }) {
 
               <Pressable
                 style={s.bottomIconBtn}
-                onPress={() =>
-                  navigation.navigate("VisualLocateScreen", {
-                    returnScreen: route.name || "NavigationPage",
-                    destination,
-                  })
-                }
+                onPress={() => setDetailsVisible(true)}
               >
-                <Text style={s.bottomIconBtnText}>Locate</Text>
+                <Text style={s.bottomIconBtnText}>Details</Text>
               </Pressable>
             </View>
 
-            {/* ── Exit QR prompt (wrong building) ── */}
             {pendingTransitionType === "exit" ? (
               <View style={s.exitPromptRow}>
                 <Pressable style={s.exitPromptBtn} onPress={openOutdoorScanner}>
                   <Text style={s.exitPromptBtnText}>
-                    🚪  I exited the building — Scan exit QR to continue outside
+                    🚪 I exited the building — Scan exit QR to continue outside
                   </Text>
                 </Pressable>
               </View>
             ) : (
               <View style={s.bottomActionRow}>
+                <Pressable
+                  style={[
+                    s.secondaryBottomBtn,
+                    batterySaverMode && s.batterySaverBtnActive,
+                  ]}
+                  onPress={() => setBatterySaverMode((prev) => !prev)}
+                >
+                  <Text
+                    style={[
+                      s.secondaryBottomBtnText,
+                      batterySaverMode && s.batterySaverBtnTextActive,
+                    ]}
+                  >
+                    {batterySaverMode ? "Battery Saver ON" : "Battery Saver"}
+                  </Text>
+                </Pressable>
+
                 <Pressable style={s.secondaryBottomBtn} onPress={handleReset}>
                   <Text style={s.secondaryBottomBtnText}>Reset</Text>
                 </Pressable>
@@ -1797,10 +2014,6 @@ export default function NavigationPage({ route, navigation }) {
                 >
                   <Text style={s.primaryBottomBtnText}>Locate Me Visually</Text>
                 </Pressable>
-
-                <Pressable style={s.secondaryBottomBtn} onPress={() => setDetailsVisible(true)}>
-                  <Text style={s.secondaryBottomBtnText}>Details</Text>
-                </Pressable>
               </View>
             )}
           </View>
@@ -1809,7 +2022,6 @@ export default function NavigationPage({ route, navigation }) {
     );
   }
 
-  // ─── Permission gates ──────────────────────────────────────────────────────
   if (!permission) {
     return (
       <SafeAreaView style={s.permissionSafe}>
@@ -1841,7 +2053,6 @@ export default function NavigationPage({ route, navigation }) {
     );
   }
 
-  // ─── Main render ───────────────────────────────────────────────────────────
   return (
     <View style={s.screen}>
       {viewMode === VIEW_MODE.INDOOR ? renderIndoorView() : renderOutdoorView()}
@@ -1856,7 +2067,6 @@ export default function NavigationPage({ route, navigation }) {
         </View>
       </Modal>
 
-      {/* Outdoor QR scanner — used for both entrance (Case A) and exit (Case C) */}
       <Modal visible={outdoorScannerVisible} animationType="slide">
         <View style={s.scannerScreen}>
           <SafeAreaView style={s.scannerSafe} edges={["top"]}>
@@ -1869,21 +2079,15 @@ export default function NavigationPage({ route, navigation }) {
               </Pressable>
 
               <Text style={s.scannerTitle}>
-                {pendingTransitionType === "entrance"
-                  ? "Scan Entrance QR"
-                  : pendingTransitionType === "exit"
-                  ? "Scan Exit QR"
-                  : "Scan Entrance QR"}
+                {pendingTransitionType === "exit" ? "Scan Exit QR" : "Scan Entrance QR"}
               </Text>
 
               <View style={{ width: 56 }} />
             </View>
 
             <Text style={s.scannerSubtitle}>
-              {pendingTransitionType === "entrance"
-                ? "Scan the QR code at the building entrance to switch into indoor navigation."
-                : pendingTransitionType === "exit"
-                ? "Scan the QR code at the exit to continue to outdoor routing toward your destination."
+              {pendingTransitionType === "exit"
+                ? "Scan the QR code at the exit to continue outside toward the correct building."
                 : "Scan a building entrance or indoor QR code to switch into indoor navigation."}
             </Text>
 
@@ -1966,19 +2170,6 @@ export default function NavigationPage({ route, navigation }) {
                 </View>
               </View>
 
-              {orsSteps.length > 0 ? (
-                <View style={s.detailSection}>
-                  <SectionTitle icon="🗺" text="Outdoor Route Steps" />
-                  <View style={s.detailInfoCard}>
-                    {orsSteps.map((step, index) => (
-                      <Text key={index} style={[s.detailBody, index > 0 && { marginTop: 6 }]}>
-                        {index + 1}. {step.instruction}
-                      </Text>
-                    ))}
-                  </View>
-                </View>
-              ) : null}
-
               <View style={s.detailSection}>
                 <SectionTitle icon="🔎" text="Last QR Scan" />
                 <View style={s.detailInfoCard}>
@@ -2006,9 +2197,7 @@ export default function NavigationPage({ route, navigation }) {
                 <SectionTitle icon="📏" text="Route Distance" />
                 <View style={s.detailInfoCard}>
                   <Text style={s.detailBody}>
-                    {orsMeters !== null
-                      ? `${orsMeters.toFixed(0)} m (ORS walking route)`
-                      : Number.isFinite(routeDistance)
+                    {Number.isFinite(routeDistance)
                       ? `${routeDistance.toFixed(1)} m`
                       : "No route distance yet."}
                   </Text>
@@ -2019,11 +2208,9 @@ export default function NavigationPage({ route, navigation }) {
                 <SectionTitle icon="🧠" text="Vision Status" />
                 <View style={s.detailInfoCard}>
                   <Text style={s.detailBody}>
-                    {visionSource === "vision"
-                      ? "Last location update came from visual locate."
-                      : visionSource === "qr"
-                      ? "Last location update came from QR."
-                      : "Use Locate Me Visually for a separate camera-based check."}
+                    {visionReady
+                      ? `Ready — ${visionSource === "qr" ? "paused after QR lock" : "scanning every 3 seconds"}`
+                      : "Loading reference fingerprints…"}
                   </Text>
                 </View>
               </View>
@@ -2074,25 +2261,10 @@ export default function NavigationPage({ route, navigation }) {
                   <Text style={s.detailBody}>{stageMode || "idle"}</Text>
                 </View>
               </View>
-
-              <View style={s.detailSection}>
-                <SectionTitle icon="🚦" text="Transition State" />
-                <View style={s.detailInfoCard}>
-                  <Text style={s.detailBody}>
-                    {pendingTransitionType === "entrance"
-                      ? "At destination entrance — awaiting QR scan"
-                      : pendingTransitionType === "exit"
-                      ? "At wrong building exit — awaiting QR scan"
-                      : "None"}
-                  </Text>
-                </View>
-              </View>
             </ScrollView>
           </View>
         </View>
       </Modal>
-
-      {renderDebugPanel()}
     </View>
   );
 }
@@ -2132,12 +2304,12 @@ const s = StyleSheet.create({
   overlaySafe: { flex: 1 },
 
   topHeader: {
-    flexDirection: "row",
-    alignItems: "center",
-    gap: 10,
-    paddingHorizontal: 14,
-    paddingTop: 2,
-    marginTop: -25,
+  flexDirection: "row",
+  alignItems: "center",
+  gap: 10,
+  paddingHorizontal: 14,
+  paddingTop: 2,
+  marginTop: -25,
   },
   backChip: {
     paddingHorizontal: 14,
@@ -2178,6 +2350,93 @@ const s = StyleSheet.create({
     borderColor: "rgba(255,255,255,0.18)",
   },
   helpChipText: { color: "#fff", fontWeight: "900" },
+
+  accessibilityBadge: {
+    position: "absolute",
+    top: 104,
+    left: 16,
+    backgroundColor: "rgba(234,241,255,0.96)",
+    borderWidth: 1,
+    borderColor: "#C9D9FF",
+    borderRadius: 999,
+    paddingHorizontal: 12,
+    paddingVertical: 7,
+  },
+
+  accessibilityBadgeText: {
+    color: "#0B3D91",
+    fontSize: 12,
+    fontWeight: "800",
+  },
+
+  emergencyBadge: {
+    position: "absolute",
+    top: 104,
+    right: 16,
+    backgroundColor: "rgba(255,241,241,0.96)",
+    borderWidth: 1,
+    borderColor: "#F3C7C7",
+    borderRadius: 999,
+    paddingHorizontal: 12,
+    paddingVertical: 7,
+  },
+
+  emergencyBadgeText: {
+    color: "#B42318",
+    fontSize: 12,
+    fontWeight: "800",
+  },
+
+  modeBadgeRow: {
+    flexDirection: "row",
+    gap: 8,
+    marginTop: 10,
+  },
+
+  accessibilityBadgeStatic: {
+    backgroundColor: "rgba(234,241,255,0.96)",
+    borderWidth: 1,
+    borderColor: "#C9D9FF",
+    borderRadius: 999,
+    paddingHorizontal: 12,
+    paddingVertical: 7,
+  },
+
+  emergencyBadgeStatic: {
+    backgroundColor: "rgba(255,241,241,0.96)",
+    borderWidth: 1,
+    borderColor: "#F3C7C7",
+    borderRadius: 999,
+    paddingHorizontal: 12,
+    paddingVertical: 7,
+  },
+
+  batterySaverBtnActive: {
+    backgroundColor: "#FFF8E8",
+    borderColor: "#E7C66A",
+  },
+
+  batterySaverBtnTextActive: {
+    color: "#8A6700",
+  },
+
+  batteryBadge: {
+    position: "absolute",
+    top: 144,
+    left: 16,
+    backgroundColor: "rgba(255,248,232,0.96)",
+    borderWidth: 1,
+    borderColor: "#E7C66A",
+    borderRadius: 999,
+    paddingHorizontal: 12,
+    paddingVertical: 7,
+  },
+
+  batteryBadgeText: {
+    color: "#8A6700",
+    fontSize: 12,
+    fontWeight: "800",
+  },
 
   arrowCenterWrap: {
     position: "absolute",
@@ -2340,6 +2599,20 @@ const s = StyleSheet.create({
     fontWeight: "800",
     fontSize: 13,
   },
+  bottomActionRowSingle: {
+    flexDirection: "row",
+    gap: 10,
+  },
+
+  secondaryBottomBtnFull: {
+    flex: 1,
+    backgroundColor: PSU.cardBg,
+    borderRadius: 16,
+    borderWidth: 1,
+    borderColor: PSU.border,
+    paddingVertical: 14,
+    alignItems: "center",
+  },
   bottomActionRow: { flexDirection: "row", gap: 10 },
   secondaryBottomBtn: {
     flex: 1,
@@ -2360,28 +2633,6 @@ const s = StyleSheet.create({
   },
   primaryBottomBtnText: { color: PSU.white, fontWeight: "900" },
 
-  // ── Exit prompt (wrong building, near exit) ────────────────────────────────
-  exitPromptRow: { marginTop: 0 },
-  exitPromptBtn: {
-    backgroundColor: PSU.blue,
-    borderRadius: 16,
-    paddingVertical: 14,
-    paddingHorizontal: 16,
-    alignItems: "center",
-  },
-  exitPromptBtnText: {
-    color: PSU.white,
-    fontWeight: "900",
-    fontSize: 14,
-    textAlign: "center",
-  },
-
-  outdoorScroll: {
-    flex: 1,
-  },
-  outdoorScrollContent: {
-    flexGrow: 1,
-  },
   outdoorSafe: {
     flex: 1,
     backgroundColor: PSU.light,
@@ -2432,9 +2683,7 @@ const s = StyleSheet.create({
     fontSize: 14,
     lineHeight: 20,
   },
-
-  // ── Map ────────────────────────────────────────────────────────────────────
-  mapCard: {
+    mapCard: {
     backgroundColor: PSU.white,
     borderRadius: 24,
     borderWidth: 1,
@@ -2442,21 +2691,25 @@ const s = StyleSheet.create({
     overflow: "hidden",
     marginBottom: 12,
   },
+
   mapView: {
     height: 260,
     borderRadius: 20,
   },
+
   mapPlaceholder: {
     height: 260,
     backgroundColor: PSU.mapBg,
     alignItems: "center",
     justifyContent: "center",
   },
+
   mapPlaceholderText: {
     color: PSU.muted,
     fontSize: 14,
     fontWeight: "700",
   },
+
   mapLoadingOverlay: {
     position: "absolute",
     top: 12,
@@ -2471,17 +2724,20 @@ const s = StyleSheet.create({
     borderWidth: 1,
     borderColor: PSU.border,
   },
+
   mapLoadingText: {
     color: PSU.text,
     fontSize: 12,
     fontWeight: "700",
   },
+
   mapInfoRow: {
     flexDirection: "row",
     flexWrap: "wrap",
     gap: 8,
     padding: 12,
   },
+
   mapInfoPill: {
     backgroundColor: PSU.light,
     borderRadius: 999,
@@ -2490,13 +2746,12 @@ const s = StyleSheet.create({
     paddingHorizontal: 10,
     paddingVertical: 6,
   },
+
   mapInfoPillText: {
     color: PSU.text,
     fontSize: 12,
     fontWeight: "800",
   },
-
-  // ── Outdoor bottom card ────────────────────────────────────────────────────
   outdoorBottomCard: {
     backgroundColor: PSU.white,
     borderRadius: 22,
@@ -2516,26 +2771,6 @@ const s = StyleSheet.create({
     fontSize: 14,
     lineHeight: 20,
     marginBottom: 14,
-  },
-  orsErrorText: {
-    color: PSU.errorText,
-    fontSize: 13,
-    fontWeight: "700",
-    marginBottom: 10,
-  },
-  orsStepsList: {
-    marginBottom: 14,
-    gap: 4,
-  },
-  orsStepText: {
-    color: PSU.text,
-    fontSize: 14,
-    lineHeight: 20,
-    fontWeight: "700",
-  },
-  orsStepsMore: {
-    color: PSU.muted,
-    fontSize: 13,
   },
   outdoorBottomButtons: {
     flexDirection: "row",
@@ -2579,59 +2814,6 @@ const s = StyleSheet.create({
     fontWeight: "900",
   },
 
-  // ── Transition card (entrance reached) ────────────────────────────────────
-  transitionCard: {
-    borderColor: PSU.helpBlueBorder,
-    backgroundColor: PSU.helpBlue,
-  },
-  transitionCardEyebrow: {
-    color: PSU.blue2,
-    fontSize: 11,
-    fontWeight: "900",
-    letterSpacing: 0.6,
-    marginBottom: 6,
-  },
-  transitionCardTitle: {
-    color: PSU.blue,
-    fontSize: 18,
-    fontWeight: "900",
-    marginBottom: 6,
-    lineHeight: 24,
-  },
-  transitionCardSub: {
-    color: PSU.muted,
-    fontSize: 14,
-    lineHeight: 20,
-    marginBottom: 14,
-  },
-  transitionScanBtn: {
-    backgroundColor: PSU.blue,
-    borderRadius: 16,
-    paddingVertical: 14,
-    paddingHorizontal: 16,
-    alignItems: "center",
-    marginBottom: 10,
-  },
-  transitionScanBtnText: {
-    color: PSU.white,
-    fontWeight: "900",
-    fontSize: 15,
-    textAlign: "center",
-  },
-  transitionSecondaryBtn: {
-    backgroundColor: PSU.white,
-    borderRadius: 16,
-    borderWidth: 1,
-    borderColor: PSU.border,
-    paddingVertical: 12,
-    alignItems: "center",
-  },
-  transitionSecondaryBtnText: {
-    color: PSU.text,
-    fontWeight: "800",
-  },
-
-  // ── Permission screens ─────────────────────────────────────────────────────
   permissionSafe: { flex: 1, backgroundColor: PSU.light },
   permissionCenter: {
     flex: 1,
@@ -2675,7 +2857,6 @@ const s = StyleSheet.create({
   },
   permissionBackText: { color: PSU.text, fontWeight: "800" },
 
-  // ── Help modal ─────────────────────────────────────────────────────────────
   helpBackdrop: {
     flex: 1,
     backgroundColor: PSU.modalBackdrop,
@@ -2806,7 +2987,6 @@ const s = StyleSheet.create({
   },
   helpPrimaryBtnText: { color: PSU.white, fontWeight: "900" },
 
-  // ── Outdoor QR scanner modal ───────────────────────────────────────────────
   scannerScreen: {
     flex: 1,
     backgroundColor: "#000",
@@ -2856,7 +3036,6 @@ const s = StyleSheet.create({
     flex: 1,
   },
 
-  // ── Details modal ──────────────────────────────────────────────────────────
   detailsBackdrop: {
     flex: 1,
     backgroundColor: PSU.modalBackdrop,
@@ -2892,37 +3071,45 @@ const s = StyleSheet.create({
     fontSize: 14,
     lineHeight: 20,
   },
-  stepListWrap: { gap: 10 },
+  stepListWrap: { 
+    gap: 10,
+    marginBottom: 14,},
+
   stepRow: {
     flexDirection: "row",
     alignItems: "flex-start",
-    gap: 12,
+    gap: 10,
   },
   stepDot: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    backgroundColor: PSU.light,
+    width: 34,
+    height: 34,
+    borderRadius: 17,
+    backgroundColor: PSU.white,
     borderWidth: 1,
     borderColor: PSU.border,
     alignItems: "center",
     justifyContent: "center",
+    marginTop: 2,
   },
   stepDotActive: {
-    backgroundColor: PSU.helpBlue,
-    borderColor: PSU.helpBlueBorder,
+    backgroundColor: PSU.blue,
+    borderColor: PSU.blue,
   },
-  stepDotText: { fontSize: 16 },
+  stepDotText: {
+    color: PSU.text,
+    fontSize: 14,
+    fontWeight: "900",
+  },
   stepContent: {
     flex: 1,
-    backgroundColor: PSU.light,
+    backgroundColor: PSU.white,
     borderWidth: 1,
     borderColor: PSU.border,
     borderRadius: 16,
     padding: 12,
   },
   stepContentActive: {
-    backgroundColor: "#F8FBFF",
+     backgroundColor: "#F8FBFF",
     borderColor: PSU.helpBlueBorder,
   },
   stepContentArrived: {
@@ -2941,59 +3128,39 @@ const s = StyleSheet.create({
     marginBottom: 8,
     overflow: "hidden",
   },
+
+  stepCurrentBadge: {
+    alignSelf: "flex-start",
+    backgroundColor: PSU.blue,
+    color: PSU.white,
+    fontSize: 11,
+    fontWeight: "900",
+    paddingHorizontal: 8,
+    paddingVertical: 4,
+    borderRadius: 999,
+    marginBottom: 8,
+    overflow: "hidden",
+  },
   stepCurrentBadgeArrived: {
     backgroundColor: PSU.green,
   },
+
+  stepSubText: {
+    marginTop: 6,
+    color: PSU.muted,
+    fontSize: 12,
+    fontWeight: "700",
+  },
+
   stepText: {
     color: PSU.text,
     fontSize: 14,
     lineHeight: 20,
   },
+  orsStepsMore: {
+    color: PSU.muted,
+    fontSize: 13,
+  },
   stepTextActive: { fontWeight: "800" },
   stepTextArrived: { color: PSU.green },
-
-  debugPanel: {
-    position: "absolute",
-    left: 12,
-    right: 12,
-    bottom: 12,
-  },
-  debugCard: {
-    maxHeight: 180,
-    borderRadius: 16,
-    padding: 12,
-    backgroundColor: "rgba(11,18,32,0.92)",
-    borderWidth: 1,
-    borderColor: "rgba(255,255,255,0.14)",
-  },
-  debugHeaderRow: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-    marginBottom: 6,
-  },
-  debugTitle: {
-    color: PSU.white,
-    fontSize: 13,
-    fontWeight: "900",
-  },
-  debugHideText: {
-    color: "#B9D2FF",
-    fontSize: 12,
-    fontWeight: "800",
-  },
-  debugSummary: {
-    color: "#D8E5FF",
-    fontSize: 11,
-    marginBottom: 8,
-  },
-  debugLogScroll: {
-    maxHeight: 120,
-  },
-  debugLogLine: {
-    color: "#F5F7FA",
-    fontSize: 11,
-    lineHeight: 15,
-    marginBottom: 4,
-  },
 });
