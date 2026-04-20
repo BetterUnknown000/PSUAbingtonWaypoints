@@ -84,9 +84,7 @@ export default function FloorMapScreen({ route, navigation }) {
               <View style={styles.planCard}>
                 <Text style={styles.planTitle}>{selectedFloor?.label}</Text>
                 <View style={styles.planCanvas}>
-                  {SelectedPlan ? (
-                    <SelectedPlan width="100%" height="100%" />
-                  ) : null}
+                  {SelectedPlan ? <SelectedPlan width="100%" height="100%" /> : null}
                 </View>
               </View>
             </>
@@ -112,9 +110,6 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingHorizontal: 20,
     backgroundColor: PSU.light,
-  },
-  content: {
-    paddingTop: 8,
   },
   title: {
     fontSize: 26,
