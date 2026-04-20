@@ -14,8 +14,7 @@
 //   result.totalSeconds — number
 
 const ORS_API_KEY = "eyJvcmciOiI1YjNjZTM1OTc4NTExMTAwMDFjZjYyNDgiLCJpZCI6IjRiZWNmNzRjNmU3ZDQ3MTM5NmM0NDc0NzljOTI4YWEzIiwiaCI6Im11cm11cjY0In0="; // <-- replace with your key
-const ORS_ENDPOINT = "https://api.openrouteservice.org/v2/directions/foot-walking";
-
+const ORS_ENDPOINT = "https://api.openrouteservice.org/v2/directions/foot-walking/geojson";
 // Fallback step text when ORS instruction is missing
 function describeStep(instruction = "", distanceMeters = 0) {
   const dist =
@@ -52,8 +51,7 @@ export async function fetchOrsRoute(originGps, destinationGps) {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
-      Accept:
-        "application/json, application/geo+json, application/gpx+xml, img/png; charset=utf-8",
+      Accept: "application/geo+json, application/json",
       Authorization: ORS_API_KEY,
     },
     body: JSON.stringify(body),
@@ -67,23 +65,41 @@ export async function fetchOrsRoute(originGps, destinationGps) {
   }
 
   const json = await response.json();
+  
+  /* Support BOTH ORS response formats:
+     1. { routes:[...] }
+     2. GeoJSON { features:[...] }
+  */
 
-  const route = json?.routes?.[0];
-  if (!route) {
+  let geometryCoords = [];
+  let segments = [];
+  let summary = {};
+
+  if (json?.routes?.[0]) {
+    const route = json.routes[0];
+
+    geometryCoords = route.geometry?.coordinates || [];
+    segments = route.segments || [];
+    summary = route.summary || {};
+  } else if (json?.features?.[0]) {
+    const feature = json.features[0];
+
+    geometryCoords = feature.geometry?.coordinates || [];
+    segments = feature.properties?.segments || [];
+    summary = feature.properties?.summary || {};
+  } else {
     throw new Error("ORS returned no routes");
   }
 
-  // Decode geometry — ORS returns encoded polyline by default.
-  // We request JSON so geometry comes as GeoJSON LineString.
-  const geometryCoords = route.geometry?.coordinates || [];
+  /* Convert [lng, lat] => { latitude, longitude } */
   const coordinates = geometryCoords.map(([lng, lat]) => ({
-    latitude: lat,
-    longitude: lng,
+    latitude: Number(lat),
+    longitude: Number(lng),
   }));
 
-  // Build step list
-  const segments = route.segments || [];
+  /* Build step list */
   const steps = [];
+
   for (const segment of segments) {
     for (const step of segment.steps || []) {
       steps.push({
@@ -95,12 +111,20 @@ export async function fetchOrsRoute(originGps, destinationGps) {
       });
     }
   }
+  const totalMeters =
+    Number(summary.distance) ||
+    segments.reduce((sum, segment) => sum + Number(segment.distance || 0), 0) ||
+    null;
 
-  const summary = route.summary || {};
+  const totalSeconds =
+    Number(summary.duration) ||
+    segments.reduce((sum, segment) => sum + Number(segment.duration || 0), 0) ||
+    0;
+
   return {
-    coordinates,
-    steps,
-    totalMeters: summary.distance ?? 0,
-    totalSeconds: summary.duration ?? 0,
+  coordinates,
+  steps,
+  totalMeters,
+  totalSeconds,
   };
 }
