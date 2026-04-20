@@ -13,6 +13,7 @@ import UserHelp from "./src/pages/UserHelp";
 import VisualLocateScreen from "./src/pages/VisualLocateScreen";
 
 const Stack = createNativeStackNavigator();
+
 const linking = {
   prefixes: ["psuabingtonwaypoints://"],
   config: {
@@ -25,6 +26,7 @@ const linking = {
       FloorMap: "floor-map",
       MySchedule: "my-schedule",
       UserHelp: "user-help",
+      VisualLocateScreen: "visual-locate",
     },
   },
 };
@@ -66,12 +68,6 @@ export default function App() {
         />
 
         <Stack.Screen
-          name="VisualLocateScreen"
-          component={VisualLocateScreen}
-          options={{ title: "Locate Visually" }}
-        />
-
-        <Stack.Screen
           name="MapView"
           component={MapView}
           options={{ title: "Campus Map" }}
@@ -88,11 +84,17 @@ export default function App() {
           component={MySchedule}
           options={{ title: "My Schedule" }}
         />
-          
+
         <Stack.Screen
           name="UserHelp"
           component={UserHelp}
           options={{ title: "User Help" }}
+        />
+
+        <Stack.Screen
+          name="VisualLocateScreen"
+          component={VisualLocateScreen}
+          options={{ headerShown: false }}
         />
       </Stack.Navigator>
     </NavigationContainer>
