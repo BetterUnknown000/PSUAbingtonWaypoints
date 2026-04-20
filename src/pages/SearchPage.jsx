@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import {
   View,
   Text,
@@ -8,13 +8,19 @@ import {
   Modal,
   ScrollView,
 } from "react-native";
+
+import {
+  saveAccessibilityMode,
+  loadAccessibilityMode,
+} from "../utils/preferencesStorage";
+
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useBottomMenuSpacing } from "../utils/useBottomMenuSpacing";
 import { Picker } from "@react-native-picker/picker";
 
 import { findRoom, getAllBuildings } from "../utils/findRoom";
 import { findCourse } from "../utils/findCourse";
-import BottomMenu, { BOTTOM_MENU_HEIGHT } from "../components/BottomMenu";
+import BottomMenu from "../components/BottomMenu";
 
 const PSU = {
   blue: "#001E44",
@@ -50,6 +56,29 @@ export default function SearchPage({ navigation }) {
   const buildings = useMemo(() => getAllBuildings(), []);
 
   const [searchMode, setSearchMode] = useState("room");
+  const [accessibilityMode, setAccessibilityMode] = useState(false);
+  useEffect(() => {
+    let mounted = true;
+
+    async function loadSavedPreference() {
+      const saved = await loadAccessibilityMode();
+      if (mounted) {
+        setAccessibilityMode(saved);
+      }
+    }
+
+    loadSavedPreference();
+
+    return () => {
+      mounted = false;
+    };
+  }, []);
+
+  const toggleAccessibilityMode = async () => {
+    const nextValue = !accessibilityMode;
+    setAccessibilityMode(nextValue);
+    await saveAccessibilityMode(nextValue);
+  };
 
   const [selectedBuildingId, setSelectedBuildingId] = useState(
     buildings[0]?.id || ""
@@ -66,6 +95,14 @@ export default function SearchPage({ navigation }) {
   );
 
   const { bottomMenuSpace } = useBottomMenuSpacing(32);
+
+
+  const launchEmergencyMode = () => {
+    navigation.navigate("Navigation", {
+      emergencyMode: true,
+      destination: null,
+    });
+  };
 
   const selectedBuilding = useMemo(
     () => buildings.find((b) => b.id === selectedBuildingId) || null,
@@ -211,6 +248,35 @@ export default function SearchPage({ navigation }) {
               </Pressable>
             </View>
 
+            <Text style={s.featureLabel}>Route Options</Text>
+            
+            <View style={s.featureRow}>
+              <View style={s.featureSquareWrap}>
+                <Pressable
+                  style={[
+                    s.featureBtn,
+                    accessibilityMode && s.featureBtnActive,
+                  ]}
+                  onPress={toggleAccessibilityMode}
+                >
+                  <Text
+                    style={[
+                      s.featureBtnText,
+                      accessibilityMode && s.featureBtnTextActive,
+                    ]}
+                  >
+                    ♿Accessibility
+                  </Text>
+                </Pressable>
+              </View>
+
+              <View style={s.featureSquareWrap}>  
+                <Pressable style={s.sosBtn} onPress={launchEmergencyMode}>
+                  <Text style={s.sosBtnText}>SOS</Text>
+                </Pressable>
+              </View>
+            </View>
+               
             {searchMode === "room" ? (
               <>
                 <Text style={s.label}>Building</Text>
@@ -311,7 +377,11 @@ export default function SearchPage({ navigation }) {
             ) : null}
 
             {result ? (
-              <ResultCard result={result} navigation={navigation} />
+              <ResultCard
+                result={result}
+                navigation={navigation}
+                accessibilityMode={accessibilityMode}
+              />
             ) : null}
           </View>
         </ScrollView>
@@ -322,7 +392,7 @@ export default function SearchPage({ navigation }) {
   );
 }
 
-function ResultCard({ result, navigation }) {
+function ResultCard({ result, navigation, accessibilityMode }) {
   const { room, building, waypoint, course } = result;
 
   return (
@@ -348,6 +418,10 @@ function ResultCard({ result, navigation }) {
           {waypoint?.label ? (
             <Text style={s.resultMeta2}>Waypoint: {waypoint.label}</Text>
           ) : null}
+
+          {accessibilityMode ? (
+            <Text style={s.resultModeNote}>Accessibility route enabled</Text>
+          ) : null}
         </View>
 
         <Pressable
@@ -355,6 +429,8 @@ function ResultCard({ result, navigation }) {
           onPress={() =>
             navigation.navigate("Navigation", {
               destination: result,
+              accessibilityMode,
+              emergencyMode: false,
             })
           }
         >
@@ -417,7 +493,7 @@ const s = StyleSheet.create({
     backgroundColor: "#F3F6FA",
     borderRadius: 16,
     padding: 4,
-    marginBottom: 10,
+    marginBottom: 14,
   },
   modeBtn: {
     flex: 1,
@@ -436,6 +512,61 @@ const s = StyleSheet.create({
   },
   modeBtnTextActive: {
     color: PSU.white,
+  },
+
+  featureLabel: {
+    marginBottom: 8,
+    fontSize: 14,
+    fontWeight: "800",
+    color: PSU.text,
+  },
+  featureRow: {
+    flexDirection: "row",
+    gap: 10,
+    marginBottom: 4,
+  },
+  featureBtn: {
+    paddingHorizontal: 14,
+    paddingVertical: 10,
+    borderRadius: 12,
+    borderWidth: 1,
+    borderColor: "#C9D9FF",
+    backgroundColor: "#FFFFFF",
+  },
+  featureBtnActive: {
+    backgroundColor: "#EAF1FF",
+    borderColor: PSU.blue2,
+  },
+  featureBtnText: {
+    color: PSU.text,
+    fontWeight: "700",
+    fontSize: 14,
+  },
+  featureBtnTextActive: {
+    color: PSU.blue2,
+    fontWeight: "900",
+  },
+
+  sosBtn: {
+    paddingHorizontal: 14,
+    paddingVertical: 10,
+    borderRadius: 12,
+    backgroundColor: "#B42318",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+
+  sosBtnText: {
+    color: "#FFFFFF",
+    fontSize: 16,
+    fontWeight: "900",
+  },
+
+  sosLabel: {
+    marginTop: 6,
+    fontSize: 11,
+    fontWeight: "800",
+    color: "#B42318",
   },
 
   label: {
@@ -557,6 +688,12 @@ const s = StyleSheet.create({
     color: "#456252",
     fontSize: 12,
     fontWeight: "600",
+  },
+  resultModeNote: {
+    marginTop: 8,
+    color: PSU.blue2,
+    fontSize: 12,
+    fontWeight: "800",
   },
   goBtn: {
     minWidth: 74,
