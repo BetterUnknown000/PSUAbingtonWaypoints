@@ -5,8 +5,9 @@ import {
   StyleSheet,
   Text,
   View,
+  ScrollView,
 } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
+import { SafeAreaView, useSafeAreaInsets } from "react-native-safe-area-context";
 import { CameraView, useCameraPermissions } from "expo-camera";
 
 import {
@@ -24,11 +25,10 @@ const PSU = {
   text: "#0B1220",
   muted: "#5B6776",
   white: "#FFFFFF",
-  success: "#18794E",
-  danger: "#B42318",
 };
 
 export default function VisualLocateScreen({ route, navigation }) {
+  const insets = useSafeAreaInsets();
   const cameraRef = useRef(null);
   const [permission, requestPermission] = useCameraPermissions();
   const [visionReady, setVisionReady] = useState(false);
@@ -46,7 +46,9 @@ export default function VisualLocateScreen({ route, navigation }) {
         await loadReferenceImageDatabase();
         if (!cancelled) {
           setVisionReady(true);
-          setStatus("Ready. Point the camera at a known hallway or landmark, then tap Scan Current View.");
+          setStatus(
+            "Ready. Point the camera at a known hallway or landmark, then tap Scan Current View."
+          );
         }
       } catch (error) {
         if (!cancelled) {
@@ -110,7 +112,7 @@ export default function VisualLocateScreen({ route, navigation }) {
       setStatus(`Matched ${payload.label}. Returning to navigation…`);
 
       navigation.navigate({
-        name: route.params?.returnScreen || "NavigationPage",
+        name: route.params?.returnScreen || "Navigation",
         params: { visualLocateResult: payload },
         merge: true,
       });
@@ -123,7 +125,7 @@ export default function VisualLocateScreen({ route, navigation }) {
 
   if (!permission) {
     return (
-      <SafeAreaView style={s.safe}>
+      <SafeAreaView style={s.safe} edges={["top", "bottom"]}>
         <View style={s.center}>
           <Text style={s.title}>Loading camera permission…</Text>
         </View>
@@ -133,8 +135,8 @@ export default function VisualLocateScreen({ route, navigation }) {
 
   if (!permission.granted) {
     return (
-      <SafeAreaView style={s.safe}>
-        <View style={s.center}>
+      <SafeAreaView style={s.safe} edges={["top", "bottom"]}>
+        <View style={s.centerLight}>
           <Text style={s.title}>Camera permission is required</Text>
           <Text style={s.subtitle}>
             Visual locating uses a separate camera session so indoor QR scanning stays stable.
@@ -151,49 +153,70 @@ export default function VisualLocateScreen({ route, navigation }) {
   }
 
   return (
-    <SafeAreaView style={s.safe} edges={["top"]}>
-      <View style={s.header}>
-        <Pressable style={s.headerBtn} onPress={() => navigation.goBack()}>
-          <Text style={s.headerBtnText}>← Back</Text>
-        </Pressable>
-        <Text style={s.headerTitle}>Locate Me Visually</Text>
-        <View style={{ width: 64 }} />
+    <SafeAreaView style={s.safe} edges={["top", "bottom"]}>
+      <View style={[s.header, { paddingTop: Math.max(insets.top, 8) }]}> 
+        <View style={s.headerSide}>
+          <Pressable style={s.headerBtn} onPress={() => navigation.goBack()}>
+            <Text style={s.headerBtnText}>← Back</Text>
+          </Pressable>
+        </View>
+
+        <View style={s.headerCenter}>
+          <Text style={s.headerTitle} numberOfLines={1}>Locate Me Visually</Text>
+        </View>
+
+        <View style={s.headerSide} />
       </View>
 
-      <View style={s.cameraCard}>
-        <CameraView ref={cameraRef} style={s.camera} facing="back" />
-      </View>
+      <ScrollView
+        style={s.scroll}
+        contentContainerStyle={{
+          flexGrow: 1,
+          paddingBottom: 20 + insets.bottom,
+        }}
+        showsVerticalScrollIndicator={false}
+      >
+        <View style={s.cameraCard}>
+          <CameraView ref={cameraRef} style={s.camera} facing="back" />
+        </View>
 
-      <View style={s.panel}>
-        <Text style={s.panelTitle}>Separate visual check</Text>
-        <Text style={s.panelBody}>{status}</Text>
+        <View style={s.panel}>
+          <Text style={s.panelTitle}>Separate visual check</Text>
+          <Text style={s.panelBody}>{status}</Text>
 
-        {lastResult ? (
-          <View style={s.resultCard}>
-            <Text style={s.resultTitle}>Last match</Text>
-            <Text style={s.resultBody}>{lastResult.label}</Text>
-            <Text style={s.resultBodySmall}>
-              {lastResult.building || "Unknown building"}
-              {lastResult.floor ? ` • Floor ${lastResult.floor}` : ""}
-              {typeof lastResult.confidence === "number"
-                ? ` • ${(lastResult.confidence * 100).toFixed(1)}%`
-                : ""}
-            </Text>
+          {lastResult ? (
+            <View style={s.resultCard}>
+              <Text style={s.resultTitle}>Last match</Text>
+              <Text style={s.resultBody}>{lastResult.label}</Text>
+              <Text style={s.resultBodySmall}>
+                {lastResult.building || "Unknown building"}
+                {lastResult.floor ? ` • Floor ${lastResult.floor}` : ""}
+                {typeof lastResult.confidence === "number"
+                  ? ` • ${(lastResult.confidence * 100).toFixed(1)}%`
+                  : ""}
+              </Text>
+            </View>
+          ) : null}
+
+          <View style={s.buttonStack}>
+            <Pressable
+              style={[s.primaryBtn, (!visionReady || busy) && s.primaryBtnDisabled]}
+              onPress={handleLocate}
+              disabled={!visionReady || busy}
+            >
+              {busy ? (
+                <ActivityIndicator color="#fff" />
+              ) : (
+                <Text style={s.primaryBtnText}>Scan Current View</Text>
+              )}
+            </Pressable>
+
+            <Pressable style={s.secondaryBtn} onPress={() => navigation.goBack()}>
+              <Text style={s.secondaryBtnText}>Cancel</Text>
+            </Pressable>
           </View>
-        ) : null}
-
-        <Pressable
-          style={[s.primaryBtn, (!visionReady || busy) && s.primaryBtnDisabled]}
-          onPress={handleLocate}
-          disabled={!visionReady || busy}
-        >
-          {busy ? <ActivityIndicator color="#fff" /> : <Text style={s.primaryBtnText}>Scan Current View</Text>}
-        </Pressable>
-
-        <Pressable style={s.secondaryBtn} onPress={() => navigation.goBack()}>
-          <Text style={s.secondaryBtnText}>Cancel</Text>
-        </Pressable>
-      </View>
+        </View>
+      </ScrollView>
     </SafeAreaView>
   );
 }
@@ -208,7 +231,17 @@ const s = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     paddingHorizontal: 24,
+    backgroundColor: "#000",
+  },
+  centerLight: {
+    flex: 1,
+    alignItems: "center",
+    justifyContent: "center",
+    paddingHorizontal: 24,
     backgroundColor: PSU.light,
+  },
+  scroll: {
+    flex: 1,
   },
   title: {
     fontSize: 22,
@@ -226,14 +259,24 @@ const s = StyleSheet.create({
   header: {
     flexDirection: "row",
     alignItems: "center",
-    justifyContent: "space-between",
     paddingHorizontal: 14,
     paddingBottom: 10,
     backgroundColor: "#000",
   },
+  headerSide: {
+    width: 88,
+    justifyContent: "center",
+  },
+  headerCenter: {
+    flex: 1,
+    alignItems: "center",
+    justifyContent: "center",
+    paddingHorizontal: 8,
+  },
   headerBtn: {
-    minWidth: 64,
-    paddingVertical: 10,
+    minHeight: 40,
+    justifyContent: "center",
+    alignSelf: "flex-start",
   },
   headerBtnText: {
     color: "#fff",
@@ -244,6 +287,7 @@ const s = StyleSheet.create({
     color: "#fff",
     fontSize: 18,
     fontWeight: "900",
+    textAlign: "center",
   },
   cameraCard: {
     marginHorizontal: 14,
@@ -258,12 +302,14 @@ const s = StyleSheet.create({
     aspectRatio: 3 / 4,
   },
   panel: {
-    flex: 1,
     marginTop: 14,
     backgroundColor: PSU.light,
     borderTopLeftRadius: 24,
     borderTopRightRadius: 24,
-    padding: 18,
+    paddingHorizontal: 18,
+    paddingTop: 18,
+    paddingBottom: 8,
+    minHeight: 300,
   },
   panelTitle: {
     fontSize: 20,
@@ -300,13 +346,17 @@ const s = StyleSheet.create({
     fontSize: 13,
     color: PSU.muted,
   },
-  primaryBtn: {
+  buttonStack: {
     marginTop: 18,
+    gap: 12,
+  },
+  primaryBtn: {
     minHeight: 52,
     borderRadius: 16,
     alignItems: "center",
     justifyContent: "center",
     backgroundColor: PSU.blue,
+    paddingHorizontal: 16,
   },
   primaryBtnDisabled: {
     opacity: 0.6,
@@ -315,9 +365,9 @@ const s = StyleSheet.create({
     color: "#fff",
     fontSize: 15,
     fontWeight: "900",
+    textAlign: "center",
   },
   secondaryBtn: {
-    marginTop: 12,
     minHeight: 50,
     borderRadius: 16,
     alignItems: "center",
@@ -325,10 +375,12 @@ const s = StyleSheet.create({
     backgroundColor: PSU.white,
     borderWidth: 1,
     borderColor: PSU.border,
+    paddingHorizontal: 16,
   },
   secondaryBtnText: {
     color: PSU.text,
     fontSize: 15,
     fontWeight: "800",
+    textAlign: "center",
   },
 });
