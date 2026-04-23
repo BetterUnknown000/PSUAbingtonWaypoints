@@ -129,7 +129,6 @@
     { "id": "wp_suth_308", "building": "sutherland", "floor": "3", "label": "Room 308", "type": "classroom", "latitude": 40.115463, "longitude": -75.108936, "x": 0, "y": 0, "qr_code": "QR_SUTH_F3_308" },
     { "id": "wp_suth_309", "building": "sutherland", "floor": "3", "label": "Room 309", "type": "classroom", "latitude": 40.115456, "longitude": -75.108908, "x": 0, "y": 0, "qr_code": "QR_SUTH_F3_309" },
     { "id": "wp_suth_311", "building": "sutherland", "floor": "3", "label": "Room 311", "type": "classroom", "latitude": 40.115659, "longitude": -75.108927, "x": 0, "y": 0, "qr_code": "QR_SUTH_F3_311" },
-    { "id": "wp_suth_315", "building": "sutherland", "floor": "3", "label": "Room 315 - Chaiken Center", "type": "office", "latitude": 40.115939, "longitude": -75.108633, "x": 0, "y": 0, "qr_code": "QR_SUTH_F3_315" },
     { "id": "wp_suth_320", "building": "sutherland", "floor": "3", "label": "Room 320", "type": "classroom", "latitude": 40.115952, "longitude": -75.108469, "x": 0, "y": 0, "qr_code": "QR_SUTH_F3_320" },
     { "id": "wp_suth_331", "building": "sutherland", "floor": "3", "label": "Room 331 - Math Lecture Room", "type": "classroom", "latitude": 40.115991, "longitude": -75.108546, "x": 0, "y": 0, "qr_code": "QR_SUTH_F3_331" },
     { "id": "wp_suth_elevator_f1", "building": "sutherland", "floor": "1", "label": "Sutherland Elevator (Floor 1)", "type": "elevator", "latitude": 40.115858, "longitude": -75.108815, "x": 0, "y": 0, "qr_code": "QR_SUTH_F1_ELEVATOR" },
@@ -413,7 +412,9 @@
     { "id": "wp_suth_101a", "building": "sutherland", "floor": "1", "label": "Room 101A", "type": "office", "latitude": 40.1158835833, "longitude": -75.1087516389, "x": 0, "y": 0, "qr_code": "QR_SUTH_F1_101A" },
     { "id": "wp_suth_101", "building": "sutherland", "floor": "1", "label": "Room 101", "type": "office", "latitude": 40.1158156944, "longitude": -75.1089881944, "x": 0, "y": 0, "qr_code": "QR_SUTH_F1_101" },
     { "id": "wp_suth_102", "building": "sutherland", "floor": "1", "label": "Room 102", "type": "office", "latitude": 40.1158202500, "longitude": -75.1088163333, "x": 0, "y": 0, "qr_code": "QR_SUTH_F1_102" },
-    { "id": "wp_suth_106", "building": "sutherland", "floor": "1", "label": "Room 106", "type": "office", "latitude": 40.1157542500, "longitude": -75.1088220278, "x": 0, "y": 0, "qr_code": "QR_SUTH_F1_106" }
+    { "id": "wp_suth_106", "building": "sutherland", "floor": "1", "label": "Room 106", "type": "office", "latitude": 40.1157542500, "longitude": -75.1088220278, "x": 0, "y": 0, "qr_code": "QR_SUTH_F1_106" },
+    { "id": "wp_ath_f1_stairs", "building": "athletic", "floor": "1", "label": "Athletic Stairs (Floor 1)", "type": "stairs", "latitude": 40.1147985278, "longitude": -75.1116287222, "x": 0, "y": 0, "qr_code": "QR_ATH_F1_STAIRS" },
+    { "id": "wp_ath_f2_landing", "building": "athletic", "floor": "2", "label": "Athletic 2nd Floor Landing", "type": "hall", "latitude": 40.1148415833, "longitude": -75.1115499444, "x": 0, "y": 0, "qr_code": "QR_ATH_F2_LANDING" }
   ],
   "edges": [
     { "from": "wp_suth_main_entrance", "to": "wp_suth_106", "distance": 18, "accessible": true },
@@ -798,7 +799,13 @@
     { "from": "wp_suth_101", "to": "wp_suth_102", "distance": 2, "accessible": true },
     { "from": "wp_suth_102", "to": "wp_suth_101", "distance": 2, "accessible": true },
     { "from": "wp_suth_102", "to": "wp_suth_106", "distance": 2, "accessible": true },
-    { "from": "wp_suth_106", "to": "wp_suth_102", "distance": 2, "accessible": true }
+    { "from": "wp_suth_106", "to": "wp_suth_102", "distance": 2, "accessible": true },
+    { "from": "wp_ath_main_entrance", "to": "wp_ath_f1_stairs", "distance": 5, "accessible": false },
+    { "from": "wp_ath_f1_stairs", "to": "wp_ath_main_entrance", "distance": 5, "accessible": false },
+    { "from": "wp_ath_f1_stairs", "to": "wp_ath_f2_classroom", "distance": 5, "accessible": false },
+    { "from": "wp_ath_f2_classroom", "to": "wp_ath_f1_stairs", "distance": 5, "accessible": false },
+    { "from": "wp_ath_f1_stairs", "to": "wp_ath_f2_landing", "distance": 5, "accessible": false },
+    { "from": "wp_ath_f2_landing", "to": "wp_ath_f1_stairs", "distance": 5, "accessible": false }
   ],
   "rooms": [
     { "building": "sutherland", "room_number": "106", "floor": "1", "waypoint_id": "wp_suth_106", "room_name": "Financial Aid Office", "type": "office" },
@@ -998,7 +1005,9 @@
     { "building": "sutherland", "room_number": "101A", "floor": "1", "waypoint_id": "wp_suth_101a", "room_name": "Room 101A", "type": "office" },
     { "building": "sutherland", "room_number": "101", "floor": "1", "waypoint_id": "wp_suth_101", "room_name": "Room 101", "type": "office" },
     { "building": "sutherland", "room_number": "102", "floor": "1", "waypoint_id": "wp_suth_102", "room_name": "Student Disability Resource", "type": "office" },
-    { "building": "sutherland", "room_number": "106", "floor": "1", "waypoint_id": "wp_suth_106", "room_name": "Student Affairs", "type": "office" }
+    { "building": "sutherland", "room_number": "106", "floor": "1", "waypoint_id": "wp_suth_106", "room_name": "Student Affairs", "type": "office" },
+    { "building": "athletic", "room_number": "STAIRS", "floor": "1", "waypoint_id": "wp_ath_f1_stairs", "room_name": "Athletic Stairs", "type": "stairs" },
+    { "building": "athletic", "room_number": "LANDING", "floor": "2", "waypoint_id": "wp_ath_f2_landing", "room_name": "Athletic 2nd Floor Landing", "type": "hall" }
   ],
   "qrAnchors": [
     { "qr_id": "QR_SUTH_F1_MAIN_ENTRANCE", "waypoint_id": "wp_suth_main_entrance", "building": "sutherland", "floor": "1" },
@@ -1279,6 +1288,8 @@
     { "qr_id": "QR_SUTH_F1_101A", "waypoint_id": "wp_suth_101a", "building": "sutherland", "floor": "1" },
     { "qr_id": "QR_SUTH_F1_101", "waypoint_id": "wp_suth_101", "building": "sutherland", "floor": "1" },    
     { "qr_id": "QR_SUTH_F1_102", "waypoint_id": "wp_suth_102", "building": "sutherland", "floor": "1" },
-    { "qr_id": "QR_SUTH_F1_106", "waypoint_id": "wp_suth_106", "building": "sutherland", "floor": "1" }
+    { "qr_id": "QR_SUTH_F1_106", "waypoint_id": "wp_suth_106", "building": "sutherland", "floor": "1" },
+    { "qr_id": "QR_ATH_F1_STAIRS", "waypoint_id": "wp_ath_f1_stairs", "building": "athletic", "floor": "1" },
+    { "qr_id": "QR_ATH_F2_LANDING", "waypoint_id": "wp_ath_f2_landing", "building": "athletic", "floor": "2" }
   ]
 }
