@@ -14,7 +14,9 @@ import {
 import { SafeAreaView, useSafeAreaInsets } from "react-native-safe-area-context";
 import { CameraView, useCameraPermissions } from "expo-camera";
 import * as Location from "expo-location";
-import MapView, { Polyline, Marker } from "react-native-maps";
+import { Pedometer } from "expo-sensors";
+import MapView, { Polyline } from "react-native-maps";
+
 import { loadAccessibilityMode } from "../utils/preferencesStorage";
 import DirectionArrow from "../components/DirectionArrow";
 import {
@@ -24,10 +26,18 @@ import {
 } from "../utils/imageRecognition";
 import campusData from "../data/campusData.json";
 import { findRoom } from "../utils/findRoom";
-import { findWaypointByQrData, getWaypointById, getBuildingEntrances } from "../utils/qrWaypointLookup";
-import { buildStageNavigation, findNearestExitRoute  } from "../utils/pathfinding";
+import {
+  findWaypointByQrData,
+  getWaypointById,
+  getBuildingEntrances,
+} from "../utils/qrWaypointLookup";
+import { buildStageNavigation, findNearestExitRoute } from "../utils/pathfinding";
 import { calculateBearingDegrees } from "../utils/location";
-import { advanceRouteIfNeeded, getNextWaypointId } from "../utils/routeSteps";
+import {
+  advanceRouteIfNeeded,
+  getNextWaypointId,
+  advanceRouteIfNeededIndoor,
+} from "../utils/routeSteps";
 import { fetchOrsRoute } from "../utils/orsRouting";
 
 const PSU = {
@@ -72,6 +82,8 @@ const VIEW_MODE = {
 };
 
 const ENTRANCE_REACHED_THRESHOLD_METERS = 20;
+const INDOOR_STEP_PIXELS = 18;
+const INDOOR_HEADING_OFFSET_DEGREES = 0;
 
 function normalize(value) {
   return String(value || "").trim().toLowerCase();
@@ -188,19 +200,37 @@ function getOutdoorTargetBuilding({
   return destinationBuilding || null;
 }
 
+function withTimeout(promise, ms = 8000) {
+  return new Promise((resolve, reject) => {
+    const timer = setTimeout(() => {
+      reject(new Error("Route request timed out"));
+    }, ms);
+
+    promise
+      .then((value) => {
+        clearTimeout(timer);
+        resolve(value);
+      })
+      .catch((error) => {
+        clearTimeout(timer);
+        reject(error);
+      });
+  });
+}
+
 export default function NavigationPage({ route, navigation }) {
   const insets = useSafeAreaInsets();
   const { destination } = route.params || {};
   const destinationRoom = destination?.room || null;
   const destinationBuilding = destination?.building || null;
 
-  
   const routeAccessibilityMode = route.params?.accessibilityMode;
   const routeEmergencyMode = route.params?.emergencyMode;
   const emergencyMode = routeEmergencyMode === true && !destinationRoom;
 
   const [savedAccessibilityMode, setSavedAccessibilityMode] = useState(false);
   const [preferencesReady, setPreferencesReady] = useState(false);
+
   useEffect(() => {
     let mounted = true;
 
@@ -219,8 +249,7 @@ export default function NavigationPage({ route, navigation }) {
       mounted = false;
     };
   }, []);
-  
-  
+
   const linkedStartWaypoint = useMemo(() => {
     const params = route.params || {};
     const startWaypointId =
@@ -276,6 +305,14 @@ export default function NavigationPage({ route, navigation }) {
 
   const [visionReady, setVisionReady] = useState(false);
   const [visionSource, setVisionSource] = useState(null); // "qr" | "vision" | null
+  const [visualLocateActive, setVisualLocateActive] = useState(false);
+
+  const [currentIndoorPosition, setCurrentIndoorPosition] = useState(null);
+  const [previousIndoorDistance, setPreviousIndoorDistance] = useState(null);
+
+  const [pedometerAvailable, setPedometerAvailable] = useState(false);
+  const [stepCount, setStepCount] = useState(0);
+  const [lastStepAnchorCount, setLastStepAnchorCount] = useState(0);
 
   const [orsCoords, setOrsCoords] = useState([]);
   const [orsSteps, setOrsSteps] = useState([]);
@@ -287,8 +324,10 @@ export default function NavigationPage({ route, navigation }) {
 
   const cameraRef = useRef(null);
   const visionBusyRef = useRef(false);
-  const lastOrsFetchRef = useRef(null);
+  const lastOrsGpsRef = useRef(null);
+  const lastOrsFetchKeyRef = useRef(null);
   const mapRef = useRef(null);
+  const didAutoFitRouteRef = useRef(false);
 
   const nextStepFade = useRef(new Animated.Value(1)).current;
   const nextStepScale = useRef(new Animated.Value(1)).current;
@@ -402,7 +441,6 @@ export default function NavigationPage({ route, navigation }) {
     });
   }, [stageMode, destinationBuilding, gpsBuildingGuess]);
 
-
   const destinationEntranceWaypoints = useMemo(() => {
     const buildingId = destinationBuilding?.id || destinationRoom?.building || "";
     if (!buildingId) return [];
@@ -423,7 +461,6 @@ export default function NavigationPage({ route, navigation }) {
     const destinationBuildingId =
       destinationBuilding?.id || destinationRoom?.building || "";
 
-    // Only care if user is in the wrong building
     if (
       !destinationBuildingId ||
       normalize(currentBuildingId) === normalize(destinationBuildingId)
@@ -457,8 +494,6 @@ export default function NavigationPage({ route, navigation }) {
     currentBuildingEntranceWaypoints,
     pendingTransitionType,
   ]);
-
-
 
   const orsDestinationGps = useMemo(() => {
     if (!userGps || destinationEntranceWaypoints.length === 0) {
@@ -496,24 +531,14 @@ export default function NavigationPage({ route, navigation }) {
       return;
     }
 
-    if (lastOrsFetchRef.current) {
-      const moved = haversineMeters(
-        lastOrsFetchRef.current.latitude,
-        lastOrsFetchRef.current.longitude,
-        userGps.latitude,
-        userGps.longitude
-      );
-      if (moved < 15) return;
-    }
-
-    lastOrsFetchRef.current = userGps;
-
     if (!userGps || !orsDestinationGps) {
       setOrsCoords([]);
       setOrsSteps([]);
       setOrsMeters(null);
       setOrsError(null);
       setOrsLoading(false);
+      lastOrsGpsRef.current = null;
+      lastOrsFetchKeyRef.current = null;
       return;
     }
 
@@ -526,11 +551,11 @@ export default function NavigationPage({ route, navigation }) {
       pendingTransitionType || "",
     ].join("|");
 
-    if (lastOrsFetchRef.current === fetchKey) {
+    if (lastOrsFetchKeyRef.current === fetchKey) {
       return;
     }
 
-    lastOrsFetchRef.current = fetchKey;
+    lastOrsGpsRef.current = userGps;
 
     let cancelled = false;
 
@@ -539,51 +564,52 @@ export default function NavigationPage({ route, navigation }) {
         setOrsLoading(true);
         setOrsError(null);
 
-        const route = await fetchOrsRoute(
-          {
-            latitude: Number(userGps.latitude),
-            longitude: Number(userGps.longitude),
-          },
-          {
-            latitude: Number(orsDestinationGps.latitude),
-            longitude: Number(orsDestinationGps.longitude),
-          }
+        const route = await withTimeout(
+          fetchOrsRoute(
+            {
+              latitude: Number(userGps.latitude),
+              longitude: Number(userGps.longitude),
+            },
+            {
+              latitude: Number(orsDestinationGps.latitude),
+              longitude: Number(orsDestinationGps.longitude),
+            }
+          ),
+          8000
         );
 
         if (cancelled) return;
 
         const coordinates = Array.isArray(route?.coordinates)
           ? route.coordinates
-            .map((point) => {
-              // case 1: already { latitude, longitude }
-              if (
-                point &&
-                typeof point === "object" &&
-                point.latitude != null &&
-                point.longitude != null
-              ) {
-                return {
-                  latitude: Number(point.latitude),
-                  longitude: Number(point.longitude),
-                };
-              }
+              .map((point) => {
+                if (
+                  point &&
+                  typeof point === "object" &&
+                  point.latitude != null &&
+                  point.longitude != null
+                ) {
+                  return {
+                    latitude: Number(point.latitude),
+                    longitude: Number(point.longitude),
+                  };
+                }
 
-              // case 2: ORS style [longitude, latitude]
-              if (Array.isArray(point) && point.length >= 2) {
-                return {
-                  latitude: Number(point[1]),
-                  longitude: Number(point[0]),
-                };
-              }
+                if (Array.isArray(point) && point.length >= 2) {
+                  return {
+                    latitude: Number(point[1]),
+                    longitude: Number(point[0]),
+                  };
+                }
 
-              return null;
-            })
-            .filter(Boolean)
-        : [];
+                return null;
+              })
+              .filter(Boolean)
+          : [];
 
         const steps = Array.isArray(route?.steps) ? route.steps : [];
         const distance =
-          typeof route?.totalMeters  === "number" && route.totalMeters > 0
+          typeof route?.totalMeters === "number" && route.totalMeters > 0
             ? route.totalMeters
             : typeof route?.distance === "number" && route.distance > 0
             ? route.distance
@@ -606,12 +632,10 @@ export default function NavigationPage({ route, navigation }) {
             : null;
 
         setOrsCoords(coordinates);
-        console.log("ORS coordinates count:", coordinates.length);
-        console.log("First ORS point:", coordinates[0]);
         setOrsSteps(steps);
         setOrsMeters(distance);
-        console.log("setOrsMeters distance:", distance, typeof distance);
         setOrsError(null);
+        lastOrsFetchKeyRef.current = fetchKey;
 
         if (
           pendingTransitionType !== "entrance" &&
@@ -646,11 +670,15 @@ export default function NavigationPage({ route, navigation }) {
         }
       } catch (error) {
         if (cancelled) return;
-
         setOrsCoords([]);
         setOrsSteps([]);
         setOrsMeters(null);
-        setOrsError("Failed to load outdoor route.");
+        lastOrsFetchKeyRef.current = null;
+        setOrsError(
+          error?.message === "Route request timed out"
+            ? "Outdoor route request timed out."
+            : "Failed to load outdoor route."
+        );
       } finally {
         if (!cancelled) {
           setOrsLoading(false);
@@ -675,6 +703,7 @@ export default function NavigationPage({ route, navigation }) {
   useEffect(() => {
     if (!mapRef.current) return;
     if (!Array.isArray(orsCoords) || orsCoords.length < 2) return;
+    if (didAutoFitRouteRef.current) return;
 
     mapRef.current.fitToCoordinates(orsCoords, {
       edgePadding: {
@@ -682,9 +711,11 @@ export default function NavigationPage({ route, navigation }) {
         right: 40,
         bottom: 80,
         left: 40,
-    },
-    animated: true,
+      },
+      animated: true,
     });
+
+    didAutoFitRouteRef.current = true;
   }, [orsCoords]);
 
   useEffect(() => {
@@ -707,7 +738,14 @@ export default function NavigationPage({ route, navigation }) {
   }, []);
 
   useEffect(() => {
-    if (viewMode !== VIEW_MODE.INDOOR || !visionReady || !cameraEnabled) return;
+    if (
+      viewMode !== VIEW_MODE.INDOOR ||
+      !visionReady ||
+      !cameraEnabled ||
+      !visualLocateActive
+    ) {
+      return;
+    }
 
     let cancelled = false;
 
@@ -717,7 +755,6 @@ export default function NavigationPage({ route, navigation }) {
           setTimeout(resolve, batterySaverMode ? 7000 : 3000)
         );
         if (cancelled) break;
-        if (visionSource === "qr") continue;
         if (visionBusyRef.current || !cameraRef.current) continue;
 
         visionBusyRef.current = true;
@@ -739,6 +776,7 @@ export default function NavigationPage({ route, navigation }) {
           );
 
           if (matchedWaypoint) {
+            if (!visualLocateActive) continue;
             applyScannedWaypoint(matchedWaypoint, "vision");
           }
         } catch (error) {
@@ -754,7 +792,36 @@ export default function NavigationPage({ route, navigation }) {
     return () => {
       cancelled = true;
     };
-  }, [viewMode, visionReady, cameraEnabled, visionSource, batterySaverMode]);
+  }, [viewMode, visionReady, cameraEnabled, visualLocateActive, batterySaverMode]);
+
+  useEffect(() => {
+    let mounted = true;
+    let subscription = null;
+
+    async function setupPedometer() {
+      try {
+        const available = await Pedometer.isAvailableAsync();
+        if (!mounted) return;
+
+        setPedometerAvailable(Boolean(available));
+        if (!available) return;
+
+        subscription = Pedometer.watchStepCount((result) => {
+          if (!mounted) return;
+          setStepCount(result?.steps ?? 0);
+        });
+      } catch (error) {
+        console.log("Pedometer setup failed:", error);
+      }
+    }
+
+    setupPedometer();
+
+    return () => {
+      mounted = false;
+      if (subscription?.remove) subscription.remove();
+    };
+  }, []);
 
   useEffect(() => {
     if (!linkedStartWaypoint) return;
@@ -764,8 +831,18 @@ export default function NavigationPage({ route, navigation }) {
     setCurrentWaypointId(linkedStartWaypoint.id || "");
     setLastScannedText(linkedStartWaypoint.qr_code || linkedStartWaypoint.id);
     setVisionSource("qr");
-  }, [linkedStartWaypoint]);
+    setVisualLocateActive(false);
 
+    setCurrentIndoorPosition({
+      building: linkedStartWaypoint.building || "",
+      floor: linkedStartWaypoint.floor || "",
+      x: linkedStartWaypoint.x,
+      y: linkedStartWaypoint.y,
+    });
+
+    setPreviousIndoorDistance(null);
+    setLastStepAnchorCount(stepCount);
+  }, [linkedStartWaypoint, stepCount]);
 
   useEffect(() => {
     const result = route.params?.visualLocateResult;
@@ -782,12 +859,23 @@ export default function NavigationPage({ route, navigation }) {
     setCurrentWaypointId(matchedWaypoint.id || "");
     setForceIndoorAfterScan(true);
     setVisionSource("vision");
+    setVisualLocateActive(true);
+
+    setCurrentIndoorPosition({
+      building: matchedWaypoint.building || "",
+      floor: matchedWaypoint.floor || "",
+      x: matchedWaypoint.x,
+      y: matchedWaypoint.y,
+    });
+
+    setPreviousIndoorDistance(null);
+    setLastStepAnchorCount(stepCount);
     showScanBadge(matchedWaypoint.label || matchedWaypoint.id);
 
     if (navigation?.setParams) {
       navigation.setParams({ visualLocateResult: undefined });
     }
-  }, [route.params?.visualLocateResult, navigation]);
+  }, [route.params?.visualLocateResult, navigation, stepCount]);
 
   useEffect(() => {
     if (currentBuildingId) return;
@@ -796,29 +884,29 @@ export default function NavigationPage({ route, navigation }) {
     }
   }, [gpsBuildingGuess, currentBuildingId]);
 
-    useEffect(() => {
-      if (viewMode !== VIEW_MODE.INDOOR) return;
+  useEffect(() => {
+    if (viewMode !== VIEW_MODE.INDOOR) return;
 
-      nextStepFade.setValue(0.55);
-      nextStepScale.setValue(0.97);
+    nextStepFade.setValue(0.55);
+    nextStepScale.setValue(0.97);
 
-      Animated.parallel([
-        Animated.timing(nextStepFade, {
-          toValue: 1,
-          duration: 240,
-          easing: Easing.out(Easing.cubic),
-          useNativeDriver: true,
-        }),
-        Animated.timing(nextStepScale, {
-          toValue: 1,
-          duration: 240,
-          easing: Easing.out(Easing.cubic),
-          useNativeDriver: true,
-        }),
-      ]).start();
-    }, [activeStepIndex, arrived, nextStepFade, nextStepScale, viewMode]);
+    Animated.parallel([
+      Animated.timing(nextStepFade, {
+        toValue: 1,
+        duration: 240,
+        easing: Easing.out(Easing.cubic),
+        useNativeDriver: true,
+      }),
+      Animated.timing(nextStepScale, {
+        toValue: 1,
+        duration: 240,
+        easing: Easing.out(Easing.cubic),
+        useNativeDriver: true,
+      }),
+    ]).start();
+  }, [activeStepIndex, arrived, nextStepFade, nextStepScale, viewMode]);
 
-    useEffect(() => {
+  useEffect(() => {
     if (!arrived || batterySaverMode) {
       arrivalPulse.stopAnimation();
       arrivalPulse.setValue(1);
@@ -908,18 +996,79 @@ export default function NavigationPage({ route, navigation }) {
     };
   }, [batterySaverMode]);
 
+  useEffect(() => {
+    if (viewMode !== VIEW_MODE.INDOOR) return;
+    if (!currentIndoorPosition) return;
+    if (!pedometerAvailable) return;
+    if (!Number.isFinite(stepCount) || !Number.isFinite(lastStepAnchorCount)) return;
+
+    const deltaSteps = stepCount - lastStepAnchorCount;
+    if (deltaSteps <= 0) return;
+
+    const heading = Number(deviceHeading ?? 0) + INDOOR_HEADING_OFFSET_DEGREES;
+    const headingRad = (heading * Math.PI) / 180;
+
+    const dx = Math.cos(headingRad) * deltaSteps * INDOOR_STEP_PIXELS;
+    const dy = Math.sin(headingRad) * deltaSteps * INDOOR_STEP_PIXELS;
+
+    setCurrentIndoorPosition((prev) => {
+      if (!prev) return prev;
+
+      return {
+        ...prev,
+        x: Number(prev.x || 0) + dx,
+        y: Number(prev.y || 0) + dy,
+      };
+    });
+
+    setLastStepAnchorCount(stepCount);
+  }, [
+    viewMode,
+    currentIndoorPosition,
+    stepCount,
+    lastStepAnchorCount,
+    deviceHeading,
+    pedometerAvailable,
+  ]);
+
   const accessibilityMode =
     typeof routeAccessibilityMode === "boolean"
       ? routeAccessibilityMode
       : savedAccessibilityMode;
-      
+
   useEffect(() => {
     if (!preferencesReady) return;
 
     let nav;
 
     if (emergencyMode) {
-      if (!currentWaypointId || !currentBuildingId) {
+      
+      const CAMPUS_THRESHOLD = 180;
+      const outsideCampus =
+        !gpsBuildingGuess.building ||
+        gpsBuildingGuess.distance > CAMPUS_THRESHOLD;
+
+      if (outsideCampus) {
+        nav = {
+          mode: "emergency_outside",
+          path: [],
+          steps: [
+            {
+              id: "step-0",
+              text: "You are already outside.",
+            },
+            {
+              id: "step-1",
+              text: "Emergency Mode is only for getting out of a building. No exit route is needed.",
+            },
+          ],
+          nextWaypoint: null,
+          distance: 0,
+          arrived: true,
+          transportMode: "arrow",
+          message: "You are already outside. Emergency exit routing is not needed.",
+        };
+      } else if (!currentWaypointId || !currentBuildingId) {
         nav = {
           mode: "emergency_wait_for_scan",
           path: [],
@@ -1004,12 +1153,17 @@ export default function NavigationPage({ route, navigation }) {
     setArrived(Boolean(nav.arrived));
 
     if (Array.isArray(nav.steps) && nav.steps.length > 0) {
-      const idx = nav.steps.findIndex(
+      const nextIdx = nav.steps.findIndex(
         (step) => step.waypointId === nav.nextWaypoint?.id
       );
-      setActiveStepIndex(
-        idx >= 0 ? idx : nav.arrived ? nav.steps.length - 1 : 0
-      );
+
+      if (nextIdx >= 0) {
+        setActiveStepIndex(nextIdx);
+      } else if (!nav.arrived && nav.steps.length > 1) {
+        setActiveStepIndex(1);
+      } else {
+        setActiveStepIndex(nav.arrived ? nav.steps.length - 1 : 0);
+      }
     } else {
       setActiveStepIndex(0);
     }
@@ -1025,6 +1179,7 @@ export default function NavigationPage({ route, navigation }) {
   ]);
 
   useEffect(() => {
+    if (viewMode !== VIEW_MODE.OUTDOOR) return;
     if (!userGps || !currentWaypointId || pathIds.length === 0 || arrived) return;
 
     const advanced = advanceRouteIfNeeded({
@@ -1040,7 +1195,61 @@ export default function NavigationPage({ route, navigation }) {
       if (next?.building) setCurrentBuildingId(next.building);
       if (next?.label) setCurrentWaypointLabel(next.label);
     }
-  }, [userGps, currentWaypointId, pathIds, arrived]);
+  }, [viewMode, userGps, currentWaypointId, pathIds, arrived]);
+
+  useEffect(() => {
+    if (viewMode !== VIEW_MODE.INDOOR) return;
+    if (!currentIndoorPosition || !currentWaypointId || pathIds.length === 0 || arrived) return;
+    if (!nextWaypoint) return;
+
+    const advanced = advanceRouteIfNeededIndoor({
+      currentWaypointId,
+      currentIndoorPosition,
+      pathIds,
+      deviceHeading,
+      currentFloor: currentWaypointObj?.floor ?? null,
+      currentBuildingId,
+      previousDistanceToNext: previousIndoorDistance,
+      closeThreshold: 20,
+      nearThreshold: 35,
+      headingToleranceDegrees: 60,
+    });
+
+    if (Number.isFinite(advanced.distanceToNext)) {
+      setPreviousIndoorDistance(advanced.distanceToNext);
+    }
+
+    if (advanced.advanced && advanced.currentWaypointId !== currentWaypointId) {
+      const next = getWaypointById(advanced.currentWaypointId);
+
+      setCurrentWaypointId(advanced.currentWaypointId);
+
+      if (next?.building) setCurrentBuildingId(next.building);
+      if (next?.label) setCurrentWaypointLabel(next.label);
+
+      setCurrentIndoorPosition({
+        building: next?.building || currentBuildingId || "",
+        floor: next?.floor || "",
+        x: next?.x,
+        y: next?.y,
+      });
+
+      setPreviousIndoorDistance(null);
+      setLastStepAnchorCount(stepCount);
+    }
+  }, [
+    viewMode,
+    currentIndoorPosition,
+    currentWaypointId,
+    pathIds,
+    arrived,
+    nextWaypoint,
+    deviceHeading,
+    currentWaypointObj,
+    currentBuildingId,
+    previousIndoorDistance,
+    stepCount,
+  ]);
 
   function showScanBadge(label) {
     setScanFlashVisible(true);
@@ -1064,6 +1273,7 @@ export default function NavigationPage({ route, navigation }) {
 
     if (label) setLastScannedText(label);
   }
+
   function applyScannedWaypoint(scannedWaypoint, source = "qr") {
     if (!scannedWaypoint) return;
 
@@ -1076,9 +1286,20 @@ export default function NavigationPage({ route, navigation }) {
     setForceIndoorAfterScan(true);
     setVisionSource(source);
 
-    // If the user scanned a waypoint off the planned path,
-    // the route effect will rebuild from this new location automatically.
-    // Clearing the active step index makes the UI feel like a reroute instead of a stale continuation.
+    setCurrentIndoorPosition({
+      building: scannedWaypoint.building || "",
+      floor: scannedWaypoint.floor || "",
+      x: scannedWaypoint.x,
+      y: scannedWaypoint.y,
+    });
+
+    setPreviousIndoorDistance(null);
+    setLastStepAnchorCount(stepCount);
+
+    if (source === "qr") {
+      setVisualLocateActive(false);
+    }
+
     if (!isOnCurrentPath) {
       setActiveStepIndex(0);
     }
@@ -1124,21 +1345,24 @@ export default function NavigationPage({ route, navigation }) {
       scannedBuildingId &&
       normalize(scannedBuildingId) !== normalize(destinationBuildingId);
 
-    // If user scans an entrance/exit QR from the WRONG building,
-    // switch back to outdoor navigation immediately.
     if (isWrongBuildingExitScan || pendingTransitionType === "exit") {
       setCurrentWaypointLabel(scannedWaypoint.label || scannedWaypoint.id);
       setCurrentBuildingId("");
       setCurrentWaypointId("");
       setForceIndoorAfterScan(false);
       setVisionSource("qr");
+      setVisualLocateActive(false);
+      setCurrentIndoorPosition(null);
+      setPreviousIndoorDistance(null);
+      setLastStepAnchorCount(stepCount);
       setPendingTransitionType(null);
 
       setOrsCoords([]);
       setOrsSteps([]);
       setOrsMeters(null);
       setOrsError(null);
-      lastOrsFetchRef.current = null;
+      lastOrsGpsRef.current = null;
+      lastOrsFetchKeyRef.current = null;
 
       setStageMode("outdoor_guidance");
       setStageMessage(
@@ -1149,7 +1373,6 @@ export default function NavigationPage({ route, navigation }) {
       return;
     }
 
-    // Normal indoor scan
     applyScannedWaypoint(scannedWaypoint, "qr");
   }
 
@@ -1190,24 +1413,35 @@ export default function NavigationPage({ route, navigation }) {
       scannedBuildingId &&
       normalize(scannedBuildingId) !== normalize(destinationBuildingId);
 
-    // destination entrance -> switch INTO indoor mode
     if (pendingTransitionType === "entrance" && !isWrongBuildingExitScan) {
       setCurrentWaypointLabel(scannedWaypoint.label || scannedWaypoint.id);
       setCurrentBuildingId(scannedWaypoint.building || "");
       setCurrentWaypointId(scannedWaypoint.id || "");
       setForceIndoorAfterScan(true);
       setVisionSource("qr");
+      setVisualLocateActive(false);
+
+      setCurrentIndoorPosition({
+        building: scannedWaypoint.building || "",
+        floor: scannedWaypoint.floor || "",
+        x: scannedWaypoint.x,
+        y: scannedWaypoint.y,
+      });
+
+      setPreviousIndoorDistance(null);
+      setLastStepAnchorCount(stepCount);
       setPendingTransitionType(null);
       showScanBadge(scannedWaypoint.label || scannedWaypoint.id);
-    }
-
-    // wrong building exit -> switch BACK to outdoor mode
-    else if (pendingTransitionType === "exit" || isWrongBuildingExitScan) {
+    } else if (pendingTransitionType === "exit" || isWrongBuildingExitScan) {
       setCurrentWaypointLabel(scannedWaypoint.label || scannedWaypoint.id);
       setCurrentBuildingId("");
       setCurrentWaypointId("");
       setForceIndoorAfterScan(false);
       setVisionSource("qr");
+      setVisualLocateActive(false);
+      setCurrentIndoorPosition(null);
+      setPreviousIndoorDistance(null);
+      setLastStepAnchorCount(stepCount);
       setPendingTransitionType(null);
       setStageMode("outdoor_guidance");
       setStageMessage(
@@ -1218,13 +1452,11 @@ export default function NavigationPage({ route, navigation }) {
       setOrsSteps([]);
       setOrsMeters(null);
       setOrsError(null);
-      lastOrsFetchRef.current = null;
+      lastOrsGpsRef.current = null;
+      lastOrsFetchKeyRef.current = null;
 
       showScanBadge(`Exited ${scannedWaypoint.building || "building"}`);
-    }
-
-    // fallback manual scan
-    else {
+    } else {
       applyScannedWaypoint(scannedWaypoint, "qr");
     }
 
@@ -1247,13 +1479,19 @@ export default function NavigationPage({ route, navigation }) {
     setOrsError(null);
     setOrsLoading(false);
 
-    lastOrsFetchRef.current = null;
+    didAutoFitRouteRef.current = false;
+    lastOrsGpsRef.current = null;
+    lastOrsFetchKeyRef.current = null;
 
     setCurrentWaypointLabel("Waiting for scan");
     setCurrentWaypointId("");
     setCurrentBuildingId("");
     setLastScannedText("");
     setVisionSource(null);
+    setVisualLocateActive(false);
+    setCurrentIndoorPosition(null);
+    setPreviousIndoorDistance(null);
+    setLastStepAnchorCount(stepCount);
 
     setSteps([]);
     setPathIds([]);
@@ -1315,11 +1553,21 @@ export default function NavigationPage({ route, navigation }) {
   }
 
   function handleUseRoomLocation() {
-    const buildingId = String(helpBuildingId || "").trim();
+    const gpsWeak = gpsBuildingGuess.confidence !== "high";
+
+    const fallbackBuildingId =
+      helpBuildingId ||
+      (gpsWeak ? "" : (currentBuildingId || gpsBuildingGuess.building?.id || destinationBuilding?.id || ""));
+
+    const buildingId = String(fallbackBuildingId || "").trim();
     const roomNumber = String(helpRoomNumber || "").trim().toUpperCase();
 
     if (!buildingId) {
-      setHelpError("Choose a building first.");
+      setHelpError(
+        gpsWeak
+          ? "GPS is weak. Choose a building first."
+          : "Choose a building first."
+      );
       return;
     }
 
@@ -1341,6 +1589,16 @@ export default function NavigationPage({ route, navigation }) {
     setCurrentWaypointId(result.waypoint.id);
     setCurrentWaypointLabel(result.waypoint.label || `Room ${roomNumber}`);
     setForceIndoorAfterScan(true);
+
+    setCurrentIndoorPosition({
+      building: result.waypoint.building || "",
+      floor: result.waypoint.floor || "",
+      x: result.waypoint.x,
+      y: result.waypoint.y,
+    });
+
+    setPreviousIndoorDistance(null);
+    setLastStepAnchorCount(stepCount);
     setHelpError("");
     showScanBadge(`Estimated from room ${roomNumber}`);
     setHelpVisible(false);
@@ -1353,6 +1611,9 @@ export default function NavigationPage({ route, navigation }) {
     setCurrentWaypointId("");
     setCurrentWaypointLabel("Heading to destination building");
     setCurrentBuildingId(gpsBuildingGuess.building?.id || currentBuildingId || "");
+    setCurrentIndoorPosition(null);
+    setPreviousIndoorDistance(null);
+    setLastStepAnchorCount(stepCount);
     showScanBadge(`Route set to ${destinationBuilding?.name || "destination building"}`);
   }
 
@@ -1365,10 +1626,6 @@ export default function NavigationPage({ route, navigation }) {
       </View>
     );
   }
-
-  useEffect(() => {
-    console.log("orsMeters state changed:", orsMeters, typeof orsMeters);
-  }, [orsMeters]);
 
   function renderOutsideHelp() {
     return (
@@ -1402,21 +1659,47 @@ export default function NavigationPage({ route, navigation }) {
   }
 
   function renderCorrectHelp() {
+    const gpsWeak = gpsBuildingGuess.confidence !== "high";
+
     return (
       <>
         <Text style={s.helpTitle}>
           You’re near {destinationBuilding?.name || "the correct building"}
         </Text>
         <Text style={s.helpSubtitle}>
-          Enter a room number you can see nearby. The app will use that room’s waypoint
-          as your indoor location.
+          If you see a QR code nearby, scan it first for the most accurate indoor location.
+          If there is no QR code nearby, {gpsWeak ? "choose your building and " : ""}enter a room number you can see next to you.
         </Text>
 
-        <View style={s.helpInfoCard}>
-          <Text style={s.helpInfoTitle}>Detected building</Text>
-          <Text style={s.helpInfoBody}>
-            {destinationBuilding?.name || helpBuildingId || "Unknown building"}
-          </Text>
+        {gpsBuildingGuess.confidence !== "high" && (
+          <View style={s.helpWarningBox}>
+            <Text style={s.helpWarningTitle}>GPS signal is weak</Text>
+            <Text style={s.helpWarningText}>
+              Building could not be confirmed accurately. Please choose your building manually.
+            </Text>
+          </View>
+        )}
+
+        <SectionTitle icon="🏢" text={gpsWeak ? "Choose building" : "Building (optional)"} />
+        <View style={s.buildingList}>
+          {buildingOptions.map((building) => {
+            const selected = helpBuildingId === building.id;
+            return (
+              <Pressable
+                key={building.id}
+                style={[s.buildingCard, selected && s.buildingCardSelected]}
+                onPress={() => {
+                  setHelpBuildingId(building.id);
+                  if (helpError) setHelpError("");
+                }}
+              >
+                <Text style={[s.buildingCardTitle, selected && s.buildingCardTitleSelected]}>
+                  {building.name}
+                </Text>
+                <Text style={s.buildingCardSub}>{building.id}</Text>
+              </Pressable>
+            );
+          })}
         </View>
 
         <SectionTitle icon="🚪" text="Nearby room number" />
@@ -1437,13 +1720,16 @@ export default function NavigationPage({ route, navigation }) {
         <View style={s.helpBottomRow}>
           <Pressable
             style={s.helpSecondaryBtn}
-            onPress={() => setHelpVisible(false)}
+            onPress={() => {
+              setHelpVisible(false);
+              setCameraEnabled(true);
+            }}
           >
-            <Text style={s.helpSecondaryBtnText}>Close</Text>
+            <Text style={s.helpSecondaryBtnText}>Scan Nearby QR</Text>
           </Pressable>
 
           <Pressable style={s.helpPrimaryBtn} onPress={handleUseRoomLocation}>
-            <Text style={s.helpPrimaryBtnText}>Use This Room</Text>
+            <Text style={s.helpPrimaryBtnText}>Use Room Number</Text>
           </Pressable>
         </View>
       </>
@@ -1497,7 +1783,8 @@ export default function NavigationPage({ route, navigation }) {
       <>
         <Text style={s.helpTitle}>We couldn’t confirm your building</Text>
         <Text style={s.helpSubtitle}>
-          Choose your building, then enter a nearby room number so we can continue navigation.
+          If you see a QR code nearby, scan it first. If not, choose your building and enter
+          a nearby room number so we can estimate your indoor location.
         </Text>
 
         <SectionTitle icon="🏢" text="Choose building" />
@@ -1545,6 +1832,16 @@ export default function NavigationPage({ route, navigation }) {
             <Text style={s.helpSecondaryBtnText}>Close</Text>
           </Pressable>
 
+          <Pressable
+            style={s.helpSecondaryBtn}
+            onPress={() => {
+              setHelpVisible(false);
+              setCameraEnabled(true);
+            }}
+          >
+            <Text style={s.helpSecondaryBtnText}>Scan Nearby QR</Text>
+          </Pressable>
+
           <Pressable style={s.helpPrimaryBtn} onPress={handleUseRoomLocation}>
             <Text style={s.helpPrimaryBtnText}>Use This Location</Text>
           </Pressable>
@@ -1583,7 +1880,7 @@ export default function NavigationPage({ route, navigation }) {
           longitudeDelta: 0.006,
         }
       : null;
-    
+
     return (
       <SafeAreaView style={s.outdoorSafe} edges={["top"]}>
         <ScrollView
@@ -1606,6 +1903,7 @@ export default function NavigationPage({ route, navigation }) {
                 {stageMessage || "Follow the outdoor route to the destination building."}
               </Text>
             </View>
+
             <View style={s.modeBadgeRow}>
               {accessibilityMode ? (
                 <View style={s.accessibilityBadgeStatic}>
@@ -1631,12 +1929,12 @@ export default function NavigationPage({ route, navigation }) {
                 showsUserLocation
                 showsMyLocationButton={false}
                 rotateEnabled={false}
-                scrollEnabled={false}
-                zoomEnabled={false}
+                scrollEnabled={true}
+                zoomEnabled={true}
                 pitchEnabled={false}
               >
                 {orsCoords.length > 1 ? (
-                  <Polyline 
+                  <Polyline
                     coordinates={orsCoords}
                     strokeColor="#eb2525"
                     strokeWidth={6}
@@ -1659,7 +1957,7 @@ export default function NavigationPage({ route, navigation }) {
             ) : null}
 
             <View style={s.mapInfoRow}>
-              {Number.isFinite(Number(orsMeters)) ? (
+              {typeof orsMeters === "number" && Number.isFinite(orsMeters) ? (
                 <>
                   <View style={s.mapInfoPill}>
                     <Text style={s.mapInfoPillText}>
@@ -1709,9 +2007,11 @@ export default function NavigationPage({ route, navigation }) {
                     ? "Follow the outdoor route to the correct building."
                     : "Use outdoor guidance until you reach the correct entrance."}
                 </Text>
+
                 {orsError ? (
                   <Text style={s.orsErrorText}>⚠ {orsError} — using GPS guidance</Text>
                 ) : null}
+
                 {orsSteps.length > 0 && !orsError ? (
                   <View style={s.stepListWrap}>
                     {orsSteps.slice(0, 3).map((step, index) => {
@@ -1725,29 +2025,29 @@ export default function NavigationPage({ route, navigation }) {
                             </Text>
                           </View>
 
-                        <View style={[s.stepContent, isActive && s.stepContentActive]}>
-                          {isActive ? (
-                            <Text style={s.stepCurrentBadge}>Current Step</Text>
-                          ) : null}
+                          <View style={[s.stepContent, isActive && s.stepContentActive]}>
+                            {isActive ? (
+                              <Text style={s.stepCurrentBadge}>Current Step</Text>
+                            ) : null}
 
-                        <Text style={[s.stepText, isActive && s.stepTextActive]}>
-                          {step.instruction}
-                        </Text>
+                            <Text style={[s.stepText, isActive && s.stepTextActive]}>
+                              {step.instruction}
+                            </Text>
 
-                        {typeof step.distance === "number" ? (
-                          <Text style={s.stepSubText}>
-                            {step.distance.toFixed(0)} m
-                          </Text>
-                        ) : null}
-                      </View>
-                    </View>
-                  );
-                })}
+                            {typeof step.distance === "number" ? (
+                              <Text style={s.stepSubText}>
+                                {step.distance.toFixed(0)} m
+                              </Text>
+                            ) : null}
+                          </View>
+                        </View>
+                      );
+                    })}
 
-                {orsSteps.length > 3 ? (
-                  <Text style={s.orsStepsMore}>+{orsSteps.length - 3} more steps</Text>
-                ) : null}
-              </View>
+                    {orsSteps.length > 3 ? (
+                      <Text style={s.orsStepsMore}>+{orsSteps.length - 3} more steps</Text>
+                    ) : null}
+                  </View>
                 ) : (
                   <Text style={s.outdoorBottomText}>
                     Use Scan QR when you reach an entrance or indoor anchor so the app can switch into indoor navigation.
@@ -1836,7 +2136,7 @@ export default function NavigationPage({ route, navigation }) {
               <Text style={s.helpChipText}>Help</Text>
             </Pressable>
           </View>
-          
+
           {accessibilityMode ? (
             <View style={s.accessibilityBadge}>
               <Text style={s.accessibilityBadgeText}>ACCESS ON</Text>
@@ -1888,7 +2188,9 @@ export default function NavigationPage({ route, navigation }) {
                 },
               ]}
             >
-              <Text style={s.scanFeedbackTitle}>{visionSource === "vision" ? "📷 Location Recognized" : "✅ Location Updated"}</Text>
+              <Text style={s.scanFeedbackTitle}>
+                {visionSource === "vision" ? "📷 Location Recognized" : "✅ Location Updated"}
+              </Text>
               <Text style={s.scanFeedbackText} numberOfLines={1}>
                 {lastScannedText}
               </Text>
@@ -1914,9 +2216,7 @@ export default function NavigationPage({ route, navigation }) {
               </Text>
 
               <Text style={[s.nextStepTitle, arrived && s.arrivalTitle]}>
-                {currentStep?.text ||
-                  stageMessage ||
-                  "No QR nearby? Tap User Help."}
+                {stageMessage || currentStep?.text || "No QR nearby? Tap User Help."}
               </Text>
 
               <View style={s.metaRow}>
@@ -2209,8 +2509,21 @@ export default function NavigationPage({ route, navigation }) {
                 <View style={s.detailInfoCard}>
                   <Text style={s.detailBody}>
                     {visionReady
-                      ? `Ready — ${visionSource === "qr" ? "paused after QR lock" : "scanning every 3 seconds"}`
+                      ? visualLocateActive
+                        ? "Ready — visual locate is active"
+                        : "Ready — visual locate is idle until user starts it"
                       : "Loading reference fingerprints…"}
+                  </Text>
+                </View>
+              </View>
+
+              <View style={s.detailSection}>
+                <SectionTitle icon="👣" text="Pedometer" />
+                <View style={s.detailInfoCard}>
+                  <Text style={s.detailBody}>
+                    {pedometerAvailable
+                      ? `Steps: ${stepCount} (anchor: ${lastStepAnchorCount})`
+                      : "Pedometer unavailable on this device."}
                   </Text>
                 </View>
               </View>
@@ -2233,6 +2546,17 @@ export default function NavigationPage({ route, navigation }) {
                         ? `Lat: ${userGps.latitude.toFixed(6)}, Lng: ${userGps.longitude.toFixed(6)}`
                         : "Waiting for GPS coordinates..."
                       : "GPS permission not granted."}
+                  </Text>
+                </View>
+              </View>
+
+              <View style={s.detailSection}>
+                <SectionTitle icon="🗺️" text="Indoor Position" />
+                <View style={s.detailInfoCard}>
+                  <Text style={s.detailBody}>
+                    {currentIndoorPosition
+                      ? `x: ${Number(currentIndoorPosition.x).toFixed(1)}, y: ${Number(currentIndoorPosition.y).toFixed(1)}, floor: ${currentIndoorPosition.floor || "?"}`
+                      : "No indoor anchor yet."}
                   </Text>
                 </View>
               </View>
@@ -2304,12 +2628,12 @@ const s = StyleSheet.create({
   overlaySafe: { flex: 1 },
 
   topHeader: {
-  flexDirection: "row",
-  alignItems: "center",
-  gap: 10,
-  paddingHorizontal: 14,
-  paddingTop: 2,
-  marginTop: -25,
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 10,
+    paddingHorizontal: 14,
+    paddingTop: 2,
+    marginTop: -25,
   },
   backChip: {
     paddingHorizontal: 14,
@@ -2320,6 +2644,7 @@ const s = StyleSheet.create({
     borderColor: "rgba(255,255,255,0.18)",
   },
   backChipText: { color: "#fff", fontWeight: "900", fontSize: 14 },
+
   destinationPill: {
     flex: 1,
     backgroundColor: "rgba(255,255,255,0.16)",
@@ -2327,20 +2652,27 @@ const s = StyleSheet.create({
     paddingHorizontal: 14,
     paddingVertical: 10,
     borderWidth: 1,
-    borderColor: "rgba(255,255,255,0.16)",
+    borderColor: "rgba(255,255,255,0.18)",
   },
   destinationPillEyebrow: {
-    color: "#E7EEFB",
-    fontSize: 11,
-    fontWeight: "800",
-    marginBottom: 2,
+    color: "rgba(255,255,255,0.88)",
+    fontSize: 10,
+    fontWeight: "900",
+    letterSpacing: 1,
+    textTransform: "uppercase",
+    marginBottom: 3,
   },
   destinationPillTitle: {
     color: "#fff",
     fontSize: 16,
     fontWeight: "900",
   },
-  destinationPillSub: { color: "#E7EEFB", fontSize: 12, marginTop: 2 },
+  destinationPillSub: {
+    color: "rgba(255,255,255,0.88)",
+    fontSize: 12,
+    marginTop: 2,
+  },
+
   helpChip: {
     paddingHorizontal: 14,
     paddingVertical: 10,
@@ -2349,233 +2681,209 @@ const s = StyleSheet.create({
     borderWidth: 1,
     borderColor: "rgba(255,255,255,0.18)",
   },
-  helpChipText: { color: "#fff", fontWeight: "900" },
+  helpChipText: { color: "#fff", fontWeight: "900", fontSize: 14 },
 
   accessibilityBadge: {
-    position: "absolute",
-    top: 104,
-    left: 16,
+    alignSelf: "center",
+    marginTop: 6,
     backgroundColor: "rgba(234,241,255,0.96)",
-    borderWidth: 1,
     borderColor: "#C9D9FF",
+    borderWidth: 1,
     borderRadius: 999,
-    paddingHorizontal: 12,
-    paddingVertical: 7,
+    paddingHorizontal: 10,
+    paddingVertical: 6,
   },
-
+  accessibilityBadgeStatic: {
+    backgroundColor: "rgba(234,241,255,0.96)",
+    borderColor: "#C9D9FF",
+    borderWidth: 1,
+    borderRadius: 999,
+    paddingHorizontal: 10,
+    paddingVertical: 6,
+  },
   accessibilityBadgeText: {
-    color: "#0B3D91",
-    fontSize: 12,
-    fontWeight: "800",
+    color: PSU.blue,
+    fontWeight: "900",
+    fontSize: 11,
   },
 
   emergencyBadge: {
-    position: "absolute",
-    top: 104,
-    right: 16,
-    backgroundColor: "rgba(255,241,241,0.96)",
-    borderWidth: 1,
+    alignSelf: "center",
+    marginTop: 6,
+    backgroundColor: "rgba(255,238,238,0.96)",
     borderColor: "#F3C7C7",
+    borderWidth: 1,
     borderRadius: 999,
-    paddingHorizontal: 12,
-    paddingVertical: 7,
+    paddingHorizontal: 10,
+    paddingVertical: 6,
   },
-
+  emergencyBadgeStatic: {
+    backgroundColor: "rgba(255,238,238,0.96)",
+    borderColor: "#F3C7C7",
+    borderWidth: 1,
+    borderRadius: 999,
+    paddingHorizontal: 10,
+    paddingVertical: 6,
+  },
   emergencyBadgeText: {
     color: "#B42318",
-    fontSize: 12,
-    fontWeight: "800",
-  },
-
-  modeBadgeRow: {
-    flexDirection: "row",
-    gap: 8,
-    marginTop: 10,
-  },
-
-  accessibilityBadgeStatic: {
-    backgroundColor: "rgba(234,241,255,0.96)",
-    borderWidth: 1,
-    borderColor: "#C9D9FF",
-    borderRadius: 999,
-    paddingHorizontal: 12,
-    paddingVertical: 7,
-  },
-
-  emergencyBadgeStatic: {
-    backgroundColor: "rgba(255,241,241,0.96)",
-    borderWidth: 1,
-    borderColor: "#F3C7C7",
-    borderRadius: 999,
-    paddingHorizontal: 12,
-    paddingVertical: 7,
-  },
-
-  batterySaverBtnActive: {
-    backgroundColor: "#FFF8E8",
-    borderColor: "#E7C66A",
-  },
-
-  batterySaverBtnTextActive: {
-    color: "#8A6700",
+    fontWeight: "900",
+    fontSize: 11,
   },
 
   batteryBadge: {
-    position: "absolute",
-    top: 144,
-    left: 16,
-    backgroundColor: "rgba(255,248,232,0.96)",
+    alignSelf: "center",
+    marginTop: 6,
+    backgroundColor: "rgba(255,255,245,0.96)",
+    borderColor: "#E8D89A",
     borderWidth: 1,
-    borderColor: "#E7C66A",
     borderRadius: 999,
-    paddingHorizontal: 12,
-    paddingVertical: 7,
+    paddingHorizontal: 10,
+    paddingVertical: 6,
   },
-
   batteryBadgeText: {
-    color: "#8A6700",
-    fontSize: 12,
-    fontWeight: "800",
+    color: "#7A5D00",
+    fontWeight: "900",
+    fontSize: 11,
   },
 
   arrowCenterWrap: {
-    position: "absolute",
-    left: 0,
-    right: 0,
-    top: 310,
+    flex: 1,
     alignItems: "center",
     justifyContent: "center",
+    marginTop: -10,
   },
 
   visionLoadingBadge: {
     position: "absolute",
-    top: 102,
-    right: 18,
-    backgroundColor: "rgba(255,255,255,0.96)",
-    borderWidth: 1,
-    borderColor: PSU.scanBadgeBorder,
+    top: 128,
+    alignSelf: "center",
+    backgroundColor: "rgba(0,0,0,0.52)",
     borderRadius: 999,
     paddingHorizontal: 12,
-    paddingVertical: 7,
+    paddingVertical: 8,
   },
-  visionLoadingText: { color: PSU.muted, fontSize: 11, fontWeight: "700" },
+  visionLoadingText: {
+    color: "#fff",
+    fontWeight: "800",
+    fontSize: 12,
+  },
 
   scanFeedback: {
     position: "absolute",
+    top: 165,
     alignSelf: "center",
-    top: 110,
     backgroundColor: PSU.scanBadgeBg,
-    borderColor: PSU.scanBadgeBorder,
+    borderRadius: 16,
     borderWidth: 1,
+    borderColor: PSU.scanBadgeBorder,
     paddingHorizontal: 16,
     paddingVertical: 10,
-    borderRadius: 16,
     minWidth: 220,
-    maxWidth: "88%",
+    alignItems: "center",
   },
   scanFeedbackTitle: {
     color: PSU.blue,
-    fontSize: 13,
     fontWeight: "900",
+    fontSize: 12,
     marginBottom: 2,
   },
   scanFeedbackText: {
     color: PSU.text,
-    fontSize: 13,
+    fontSize: 12,
     fontWeight: "700",
   },
 
   middleInstructionWrap: {
-    position: "absolute",
-    left: 14,
-    right: 14,
-    bottom: 160,
+    alignItems: "center",
+    marginBottom: 92,
   },
   nextStepCard: {
+    width: "88%",
     backgroundColor: PSU.nextBg,
     borderColor: PSU.nextBorder,
     borderWidth: 1,
     borderRadius: 22,
-    padding: 16,
+    paddingHorizontal: 18,
+    paddingVertical: 16,
   },
   arrivalCard: {
     backgroundColor: PSU.arrivalBg,
     borderColor: PSU.arrivalBorder,
   },
   nextStepEyebrow: {
-    color: PSU.blue2,
-    fontSize: 12,
+    color: PSU.blue,
+    fontSize: 11,
     fontWeight: "900",
-    letterSpacing: 0.4,
+    letterSpacing: 1,
+    textTransform: "uppercase",
     marginBottom: 6,
   },
-  arrivalEyebrow: { color: PSU.green },
+  arrivalEyebrow: {
+    color: PSU.green,
+  },
   nextStepTitle: {
     color: PSU.text,
-    fontSize: 18,
+    fontSize: 17,
     fontWeight: "900",
-    lineHeight: 24,
+    lineHeight: 23,
   },
-  arrivalTitle: { color: PSU.green },
+  arrivalTitle: {
+    color: PSU.green,
+  },
   metaRow: {
     flexDirection: "row",
     flexWrap: "wrap",
     gap: 8,
-    marginTop: 10,
+    marginTop: 12,
   },
   metaPill: {
-    backgroundColor: PSU.white,
-    borderWidth: 1,
-    borderColor: PSU.border,
+    backgroundColor: "#EEF3FA",
     borderRadius: 999,
     paddingHorizontal: 10,
     paddingVertical: 6,
   },
   metaPillText: {
-    color: PSU.text,
+    color: PSU.blue,
     fontSize: 12,
     fontWeight: "800",
   },
   stageText: {
-    color: PSU.muted,
     marginTop: 10,
-    fontSize: 13,
+    color: PSU.muted,
+    fontSize: 12,
     lineHeight: 18,
   },
 
   bottomPanel: {
-    position: "absolute",
-    left: 0,
-    right: 0,
-    bottom: 0,
     paddingHorizontal: 14,
-    paddingBottom: 10,
+    paddingBottom: 18,
   },
   bottomPanelTopRow: {
     flexDirection: "row",
-    alignItems: "stretch",
+    alignItems: "center",
     gap: 10,
-    marginBottom: 10,
   },
   currentLocationPill: {
     flex: 1,
-    backgroundColor: PSU.cardBg,
+    backgroundColor: "rgba(255,255,255,0.96)",
     borderRadius: 18,
-    paddingHorizontal: 14,
-    paddingVertical: 10,
     borderWidth: 1,
-    borderColor: PSU.border,
-    minHeight: 88,
+    borderColor: "#DDE7F2",
+    paddingHorizontal: 14,
+    paddingVertical: 12,
   },
   currentLocationEyebrow: {
-    color: PSU.blue2,
-    fontSize: 11,
-    fontWeight: "800",
+    color: PSU.blue,
+    fontSize: 10,
+    fontWeight: "900",
+    letterSpacing: 1,
+    textTransform: "uppercase",
     marginBottom: 2,
   },
   currentLocationText: {
     color: PSU.text,
-    fontSize: 15,
+    fontSize: 14,
     fontWeight: "900",
   },
   currentLocationSub: {
@@ -2583,238 +2891,84 @@ const s = StyleSheet.create({
     fontSize: 12,
     marginTop: 2,
   },
+
   bottomIconBtn: {
-    backgroundColor: PSU.cardBg,
-    borderRadius: 14,
+    backgroundColor: "rgba(255,255,255,0.96)",
+    borderColor: "#DDE7F2",
     borderWidth: 1,
-    borderColor: PSU.border,
+    borderRadius: 16,
     paddingHorizontal: 14,
-    minWidth: 92,
-    minHeight: 88,
-    alignItems: "center",
-    justifyContent: "center",
+    paddingVertical: 12,
   },
   bottomIconBtnText: {
-    color: PSU.text,
-    fontWeight: "800",
+    color: PSU.blue,
+    fontWeight: "900",
     fontSize: 13,
   },
-  bottomActionRowSingle: {
-    flexDirection: "row",
-    gap: 10,
+
+  exitPromptRow: {
+    marginTop: 12,
+  },
+  exitPromptBtn: {
+    backgroundColor: "rgba(255,255,255,0.96)",
+    borderColor: "#DDE7F2",
+    borderWidth: 1,
+    borderRadius: 18,
+    paddingHorizontal: 16,
+    paddingVertical: 14,
+  },
+  exitPromptBtnText: {
+    color: PSU.blue,
+    fontWeight: "900",
+    fontSize: 13,
+    textAlign: "center",
   },
 
-  secondaryBottomBtnFull: {
-    flex: 1,
-    backgroundColor: PSU.cardBg,
-    borderRadius: 16,
-    borderWidth: 1,
-    borderColor: PSU.border,
-    paddingVertical: 14,
-    alignItems: "center",
+  bottomActionRow: {
+    flexDirection: "row",
+    gap: 10,
+    marginTop: 12,
   },
-  bottomActionRow: { flexDirection: "row", gap: 10 },
   secondaryBottomBtn: {
     flex: 1,
-    backgroundColor: PSU.cardBg,
-    borderRadius: 16,
+    backgroundColor: "rgba(255,255,255,0.96)",
+    borderColor: "#DDE7F2",
     borderWidth: 1,
-    borderColor: PSU.border,
+    borderRadius: 18,
+    paddingHorizontal: 14,
     paddingVertical: 14,
     alignItems: "center",
   },
-  secondaryBottomBtnText: { color: PSU.text, fontWeight: "900" },
+  secondaryBottomBtnText: {
+    color: PSU.blue,
+    fontWeight: "900",
+    fontSize: 13,
+  },
+  batterySaverBtnActive: {
+    backgroundColor: "#FFF8D6",
+    borderColor: "#E8D89A",
+  },
+  batterySaverBtnTextActive: {
+    color: "#7A5D00",
+  },
   primaryBottomBtn: {
-    flex: 1.4,
+    flex: 1.25,
     backgroundColor: PSU.blue,
-    borderRadius: 16,
+    borderRadius: 18,
+    paddingHorizontal: 14,
     paddingVertical: 14,
     alignItems: "center",
   },
-  primaryBottomBtnText: { color: PSU.white, fontWeight: "900" },
+  primaryBottomBtnText: {
+    color: "#fff",
+    fontWeight: "900",
+    fontSize: 13,
+  },
 
-  outdoorSafe: {
+  permissionSafe: {
     flex: 1,
     backgroundColor: PSU.light,
-    paddingHorizontal: 14,
-    paddingBottom: 14,
   },
-  outdoorHeader: {
-    paddingTop: 6,
-    marginBottom: 12,
-  },
-  outdoorBackBtn: {
-    alignSelf: "flex-start",
-    backgroundColor: PSU.white,
-    borderWidth: 1,
-    borderColor: PSU.border,
-    borderRadius: 999,
-    paddingHorizontal: 14,
-    paddingVertical: 10,
-    marginBottom: 10,
-  },
-  outdoorBackText: {
-    color: PSU.text,
-    fontWeight: "900",
-    fontSize: 14,
-  },
-  outdoorHeaderCard: {
-    backgroundColor: PSU.white,
-    borderRadius: 22,
-    borderWidth: 1,
-    borderColor: PSU.border,
-    padding: 16,
-  },
-  outdoorEyebrow: {
-    color: PSU.blue2,
-    fontSize: 11,
-    fontWeight: "800",
-    marginBottom: 4,
-    letterSpacing: 0.5,
-  },
-  outdoorTitle: {
-    color: PSU.text,
-    fontSize: 22,
-    fontWeight: "900",
-    marginBottom: 6,
-  },
-  outdoorSub: {
-    color: PSU.muted,
-    fontSize: 14,
-    lineHeight: 20,
-  },
-    mapCard: {
-    backgroundColor: PSU.white,
-    borderRadius: 24,
-    borderWidth: 1,
-    borderColor: PSU.border,
-    overflow: "hidden",
-    marginBottom: 12,
-  },
-
-  mapView: {
-    height: 260,
-    borderRadius: 20,
-  },
-
-  mapPlaceholder: {
-    height: 260,
-    backgroundColor: PSU.mapBg,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-
-  mapPlaceholderText: {
-    color: PSU.muted,
-    fontSize: 14,
-    fontWeight: "700",
-  },
-
-  mapLoadingOverlay: {
-    position: "absolute",
-    top: 12,
-    right: 12,
-    flexDirection: "row",
-    alignItems: "center",
-    gap: 6,
-    backgroundColor: "rgba(255,255,255,0.92)",
-    borderRadius: 999,
-    paddingHorizontal: 10,
-    paddingVertical: 6,
-    borderWidth: 1,
-    borderColor: PSU.border,
-  },
-
-  mapLoadingText: {
-    color: PSU.text,
-    fontSize: 12,
-    fontWeight: "700",
-  },
-
-  mapInfoRow: {
-    flexDirection: "row",
-    flexWrap: "wrap",
-    gap: 8,
-    padding: 12,
-  },
-
-  mapInfoPill: {
-    backgroundColor: PSU.light,
-    borderRadius: 999,
-    borderWidth: 1,
-    borderColor: PSU.border,
-    paddingHorizontal: 10,
-    paddingVertical: 6,
-  },
-
-  mapInfoPillText: {
-    color: PSU.text,
-    fontSize: 12,
-    fontWeight: "800",
-  },
-  outdoorBottomCard: {
-    backgroundColor: PSU.white,
-    borderRadius: 22,
-    borderWidth: 1,
-    borderColor: PSU.border,
-    padding: 16,
-  },
-  outdoorBottomTitle: {
-    color: PSU.text,
-    fontSize: 18,
-    fontWeight: "900",
-    lineHeight: 24,
-    marginBottom: 8,
-  },
-  outdoorBottomText: {
-    color: PSU.muted,
-    fontSize: 14,
-    lineHeight: 20,
-    marginBottom: 14,
-  },
-  outdoorBottomButtons: {
-    flexDirection: "row",
-    gap: 10,
-  },
-  outdoorSecondaryBtn: {
-    flex: 1,
-    backgroundColor: PSU.white,
-    borderRadius: 16,
-    borderWidth: 1,
-    borderColor: PSU.border,
-    paddingVertical: 14,
-    alignItems: "center",
-  },
-  outdoorSecondaryBtnText: {
-    color: PSU.text,
-    fontWeight: "900",
-  },
-  outdoorScanBtn: {
-    flex: 1.1,
-    backgroundColor: PSU.white,
-    borderRadius: 16,
-    borderWidth: 1,
-    borderColor: PSU.blue2,
-    paddingVertical: 14,
-    alignItems: "center",
-  },
-  outdoorScanBtnText: {
-    color: PSU.blue2,
-    fontWeight: "900",
-  },
-  outdoorPrimaryBtn: {
-    flex: 1.2,
-    backgroundColor: PSU.blue,
-    borderRadius: 16,
-    paddingVertical: 14,
-    alignItems: "center",
-  },
-  outdoorPrimaryBtnText: {
-    color: PSU.white,
-    fontWeight: "900",
-  },
-
-  permissionSafe: { flex: 1, backgroundColor: PSU.light },
   permissionCenter: {
     flex: 1,
     alignItems: "center",
@@ -2823,169 +2977,288 @@ const s = StyleSheet.create({
   },
   permissionTitle: {
     color: PSU.text,
-    fontSize: 24,
+    fontSize: 22,
     fontWeight: "900",
     textAlign: "center",
-    marginBottom: 10,
   },
   permissionText: {
     color: PSU.muted,
-    fontSize: 15,
-    lineHeight: 22,
+    fontSize: 14,
     textAlign: "center",
-    marginBottom: 18,
+    lineHeight: 21,
+    marginTop: 10,
   },
   permissionBtn: {
+    marginTop: 20,
     backgroundColor: PSU.blue,
-    borderRadius: 14,
+    borderRadius: 16,
     paddingHorizontal: 18,
     paddingVertical: 14,
-    minWidth: 220,
-    alignItems: "center",
+  },
+  permissionBtnText: {
+    color: "#fff",
+    fontWeight: "900",
+    fontSize: 14,
+  },
+  permissionBackBtn: {
+    marginTop: 10,
+    backgroundColor: "#fff",
+    borderRadius: 16,
+    borderWidth: 1,
+    borderColor: PSU.border,
+    paddingHorizontal: 18,
+    paddingVertical: 14,
+  },
+  permissionBackText: {
+    color: PSU.blue,
+    fontWeight: "900",
+    fontSize: 14,
+  },
+
+  outdoorSafe: {
+    flex: 1,
+    backgroundColor: PSU.light,
+  },
+  outdoorScroll: {
+    flex: 1,
+  },
+  outdoorScrollContent: {
+    paddingHorizontal: 16,
+    paddingTop: 12,
+  },
+  outdoorHeader: {
+    marginBottom: 14,
+  },
+  outdoorBackBtn: {
+    alignSelf: "flex-start",
+    backgroundColor: "#fff",
+    borderRadius: 14,
+    borderWidth: 1,
+    borderColor: PSU.border,
+    paddingHorizontal: 12,
+    paddingVertical: 10,
     marginBottom: 10,
   },
-  permissionBtnText: { color: PSU.white, fontWeight: "900" },
-  permissionBackBtn: {
-    backgroundColor: PSU.white,
-    borderRadius: 14,
-    borderWidth: 1,
-    borderColor: PSU.border,
-    paddingHorizontal: 18,
-    paddingVertical: 14,
-    minWidth: 220,
-    alignItems: "center",
-  },
-  permissionBackText: { color: PSU.text, fontWeight: "800" },
-
-  helpBackdrop: {
-    flex: 1,
-    backgroundColor: PSU.modalBackdrop,
-    justifyContent: "flex-end",
-  },
-  helpSheet: {
-    backgroundColor: PSU.white,
-    borderTopLeftRadius: 28,
-    borderTopRightRadius: 28,
-    paddingHorizontal: 18,
-    paddingTop: 18,
-    paddingBottom: 26,
-    maxHeight: "88%",
-  },
-  helpTitle: {
-    color: PSU.text,
-    fontSize: 24,
+  outdoorBackText: {
+    color: PSU.blue,
     fontWeight: "900",
-    marginBottom: 8,
-  },
-  helpSubtitle: {
-    color: PSU.muted,
     fontSize: 14,
-    lineHeight: 20,
-    marginBottom: 14,
   },
-  helpInfoCard: {
-    backgroundColor: PSU.light,
+  outdoorHeaderCard: {
+    backgroundColor: "#fff",
+    borderRadius: 22,
     borderWidth: 1,
     borderColor: PSU.border,
-    borderRadius: 18,
-    padding: 14,
-    marginBottom: 14,
+    paddingHorizontal: 18,
+    paddingVertical: 16,
   },
-  helpInfoTitle: {
-    color: PSU.text,
+  outdoorEyebrow: {
+    color: PSU.blue,
+    fontSize: 11,
     fontWeight: "900",
-    marginBottom: 4,
+    letterSpacing: 1,
+    textTransform: "uppercase",
+    marginBottom: 6,
   },
-  helpInfoBody: {
+  outdoorTitle: {
+    color: PSU.text,
+    fontSize: 19,
+    fontWeight: "900",
+  },
+  outdoorSub: {
     color: PSU.muted,
     fontSize: 13,
-    lineHeight: 18,
+    lineHeight: 20,
+    marginTop: 5,
   },
-  sectionTitleRow: {
+  modeBadgeRow: {
+    flexDirection: "row",
+    gap: 8,
+    marginTop: 10,
+  },
+
+  mapCard: {
+    backgroundColor: "#fff",
+    borderRadius: 22,
+    borderWidth: 1,
+    borderColor: PSU.border,
+    padding: 10,
+    marginBottom: 14,
+  },
+  mapView: {
+    width: "100%",
+    height: 280,
+    borderRadius: 16,
+  },
+  mapPlaceholder: {
+    height: 280,
+    borderRadius: 16,
+    backgroundColor: PSU.mapBg,
+    borderWidth: 1,
+    borderColor: PSU.mapBorder,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  mapPlaceholderText: {
+    color: PSU.blue,
+    fontWeight: "800",
+    fontSize: 14,
+  },
+  mapLoadingOverlay: {
+    position: "absolute",
+    top: 24,
+    alignSelf: "center",
     flexDirection: "row",
     alignItems: "center",
     gap: 8,
-    marginTop: 6,
-    marginBottom: 10,
+    backgroundColor: "rgba(255,255,255,0.96)",
+    borderRadius: 999,
+    paddingHorizontal: 12,
+    paddingVertical: 8,
   },
-  sectionIcon: { fontSize: 16 },
-  sectionTitleText: { color: PSU.text, fontSize: 17, fontWeight: "900" },
-
-  buildingList: {
-    gap: 10,
-    marginBottom: 8,
-  },
-  buildingCard: {
-    backgroundColor: PSU.white,
-    borderWidth: 1,
-    borderColor: PSU.border,
-    borderRadius: 18,
-    padding: 14,
-  },
-  buildingCardSelected: {
-    backgroundColor: PSU.helpBlue,
-    borderColor: PSU.helpBlueBorder,
-  },
-  buildingCardTitle: {
-    color: PSU.text,
-    fontWeight: "900",
-    marginBottom: 2,
-  },
-  buildingCardTitleSelected: {
+  mapLoadingText: {
     color: PSU.blue,
+    fontWeight: "800",
+    fontSize: 12,
   },
-  buildingCardSub: {
-    color: PSU.muted,
+  mapInfoRow: {
+    flexDirection: "row",
+    flexWrap: "wrap",
+    gap: 8,
+    marginTop: 10,
+  },
+  mapInfoPill: {
+    backgroundColor: "#EEF3FA",
+    borderRadius: 999,
+    paddingHorizontal: 10,
+    paddingVertical: 6,
+  },
+  mapInfoPillText: {
+    color: PSU.blue,
+    fontWeight: "800",
     fontSize: 12,
   },
 
-  helpInput: {
-    backgroundColor: PSU.helpFieldBg,
+  outdoorBottomCard: {
+    backgroundColor: "#fff",
+    borderRadius: 22,
     borderWidth: 1,
     borderColor: PSU.border,
+    paddingHorizontal: 18,
+    paddingVertical: 16,
+  },
+  transitionCard: {
+    borderColor: "#C9D9FF",
+    backgroundColor: "#F7FAFF",
+  },
+  transitionCardEyebrow: {
+    color: PSU.blue2,
+    fontSize: 11,
+    fontWeight: "900",
+    letterSpacing: 1,
+    textTransform: "uppercase",
+    marginBottom: 6,
+  },
+  transitionCardTitle: {
+    color: PSU.text,
+    fontSize: 18,
+    fontWeight: "900",
+  },
+  transitionCardSub: {
+    color: PSU.muted,
+    fontSize: 13,
+    lineHeight: 20,
+    marginTop: 5,
+  },
+
+  outdoorBottomTitle: {
+    color: PSU.text,
+    fontSize: 15,
+    fontWeight: "900",
+    lineHeight: 22,
+  },
+  outdoorBottomText: {
+    color: PSU.muted,
+    fontSize: 13,
+    lineHeight: 20,
+    marginTop: 8,
+  },
+  orsErrorText: {
+    color: PSU.errorText,
+    fontSize: 13,
+    fontWeight: "800",
+    marginTop: 8,
+  },
+  orsStepsMore: {
+    color: PSU.muted,
+    fontSize: 12,
+    fontWeight: "700",
+    marginTop: 6,
+    marginLeft: 38,
+  },
+
+  outdoorBottomButtons: {
+    flexDirection: "row",
+    gap: 10,
+    marginTop: 14,
+    flexWrap: "wrap",
+  },
+  outdoorSecondaryBtn: {
+    flexGrow: 1,
+    backgroundColor: "#fff",
+    borderRadius: 16,
+    borderWidth: 1,
+    borderColor: PSU.border,
+    paddingHorizontal: 14,
+    paddingVertical: 14,
+    alignItems: "center",
+  },
+  outdoorSecondaryBtnText: {
+    color: PSU.blue,
+    fontWeight: "900",
+    fontSize: 13,
+  },
+  outdoorScanBtn: {
+    flexGrow: 1,
+    backgroundColor: "#EEF4FF",
+    borderRadius: 16,
+    borderWidth: 1,
+    borderColor: "#C9D9FF",
+    paddingHorizontal: 14,
+    paddingVertical: 14,
+    alignItems: "center",
+  },
+  outdoorScanBtnText: {
+    color: PSU.blue,
+    fontWeight: "900",
+    fontSize: 13,
+  },
+  transitionScanBtn: {
+    flexGrow: 1,
+    backgroundColor: PSU.blue,
     borderRadius: 16,
     paddingHorizontal: 14,
     paddingVertical: 14,
-    color: PSU.text,
-    fontSize: 16,
-    fontWeight: "700",
-  },
-
-  errorCard: {
-    backgroundColor: PSU.errorBg,
-    borderWidth: 1,
-    borderColor: PSU.errorBorder,
-    borderRadius: 14,
-    paddingHorizontal: 12,
-    paddingVertical: 10,
-    marginTop: 12,
-  },
-  errorText: {
-    color: PSU.errorText,
-    fontSize: 13,
-    lineHeight: 18,
-    fontWeight: "700",
-  },
-
-  helpBottomRow: { flexDirection: "row", gap: 10, marginTop: 16 },
-  helpSecondaryBtn: {
-    flex: 1,
-    backgroundColor: PSU.white,
-    borderWidth: 1,
-    borderColor: PSU.border,
-    borderRadius: 16,
-    paddingVertical: 14,
     alignItems: "center",
   },
-  helpSecondaryBtnText: { color: PSU.text, fontWeight: "800" },
-  helpPrimaryBtn: {
-    flex: 1.4,
+  transitionScanBtnText: {
+    color: "#fff",
+    fontWeight: "900",
+    fontSize: 13,
+  },
+  outdoorPrimaryBtn: {
+    flexGrow: 1,
     backgroundColor: PSU.blue,
     borderRadius: 16,
+    paddingHorizontal: 14,
     paddingVertical: 14,
     alignItems: "center",
   },
-  helpPrimaryBtnText: { color: PSU.white, fontWeight: "900" },
+  outdoorPrimaryBtnText: {
+    color: "#fff",
+    fontWeight: "900",
+    fontSize: 13,
+  },
 
   scannerScreen: {
     flex: 1,
@@ -2993,47 +3266,209 @@ const s = StyleSheet.create({
   },
   scannerSafe: {
     flex: 1,
+    paddingHorizontal: 16,
   },
   scannerHeader: {
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
-    paddingHorizontal: 16,
-    paddingTop: 6,
-    paddingBottom: 10,
+    marginTop: 10,
   },
   scannerCloseBtn: {
-    backgroundColor: "rgba(255,255,255,0.18)",
-    borderWidth: 1,
-    borderColor: "rgba(255,255,255,0.2)",
-    borderRadius: 999,
-    paddingHorizontal: 14,
+    backgroundColor: "rgba(255,255,255,0.16)",
+    borderRadius: 14,
+    paddingHorizontal: 12,
     paddingVertical: 10,
   },
   scannerCloseText: {
     color: "#fff",
     fontWeight: "900",
+    fontSize: 14,
   },
   scannerTitle: {
     color: "#fff",
-    fontSize: 18,
     fontWeight: "900",
+    fontSize: 16,
   },
   scannerSubtitle: {
-    color: "#E7EEFB",
-    fontSize: 14,
+    color: "rgba(255,255,255,0.88)",
+    fontSize: 13,
     lineHeight: 20,
-    paddingHorizontal: 16,
-    marginBottom: 12,
+    marginTop: 14,
   },
   scannerCameraWrap: {
     flex: 1,
+    marginTop: 18,
+    marginBottom: 20,
+    borderRadius: 22,
     overflow: "hidden",
-    borderTopLeftRadius: 24,
-    borderTopRightRadius: 24,
+    borderWidth: 1,
+    borderColor: "rgba(255,255,255,0.14)",
   },
   scannerCamera: {
     flex: 1,
+  },
+
+  helpBackdrop: {
+    flex: 1,
+    backgroundColor: PSU.modalBackdrop,
+    justifyContent: "flex-end",
+  },
+  helpSheet: {
+    backgroundColor: "#fff",
+    borderTopLeftRadius: 26,
+    borderTopRightRadius: 26,
+    paddingHorizontal: 18,
+    paddingTop: 18,
+    paddingBottom: 20,
+    maxHeight: "82%",
+  },
+  helpTitle: {
+    color: PSU.text,
+    fontSize: 22,
+    fontWeight: "900",
+  },
+  helpSubtitle: {
+    color: PSU.muted,
+    fontSize: 14,
+    lineHeight: 22,
+    marginTop: 8,
+    marginBottom: 14,
+  },
+  helpInfoCard: {
+    backgroundColor: "#F8FAFD",
+    borderColor: PSU.border,
+    borderWidth: 1,
+    borderRadius: 18,
+    paddingHorizontal: 14,
+    paddingVertical: 14,
+    marginBottom: 14,
+  },
+  helpInfoTitle: {
+    color: PSU.blue,
+    fontSize: 12,
+    fontWeight: "900",
+    textTransform: "uppercase",
+    marginBottom: 4,
+  },
+  helpInfoBody: {
+    color: PSU.text,
+    fontSize: 14,
+    lineHeight: 21,
+    fontWeight: "700",
+  },
+
+  helpWarningBox: {
+    marginTop: 10,
+    marginBottom: 8,
+    backgroundColor: "#FFF4E5",
+    borderWidth: 1,
+    borderColor: "#F5B971",
+    borderRadius: 14,
+    paddingVertical: 10,
+    paddingHorizontal: 12,
+  },
+
+  helpWarningTitle: {
+    fontSize: 14,
+    fontWeight: "800",
+    color: "#A15C00",
+    marginBottom: 4,
+  },
+
+  helpWarningText: {
+    fontSize: 13,
+    lineHeight: 18,
+    color: "#7A4B00",
+  },
+  helpInput: {
+    backgroundColor: PSU.helpFieldBg,
+    borderColor: PSU.border,
+    borderWidth: 1,
+    borderRadius: 16,
+    paddingHorizontal: 14,
+    paddingVertical: 14,
+    color: PSU.text,
+    fontSize: 15,
+    fontWeight: "700",
+    marginBottom: 14,
+  },
+  helpBottomRow: {
+    flexDirection: "row",
+    gap: 10,
+    marginTop: 6,
+  },
+  helpSecondaryBtn: {
+    flex: 1,
+    backgroundColor: "#fff",
+    borderColor: PSU.border,
+    borderWidth: 1,
+    borderRadius: 16,
+    paddingVertical: 14,
+    alignItems: "center",
+  },
+  helpSecondaryBtnText: {
+    color: PSU.blue,
+    fontWeight: "900",
+    fontSize: 14,
+  },
+  helpPrimaryBtn: {
+    flex: 1.15,
+    backgroundColor: PSU.blue,
+    borderRadius: 16,
+    paddingVertical: 14,
+    alignItems: "center",
+  },
+  helpPrimaryBtnText: {
+    color: "#fff",
+    fontWeight: "900",
+    fontSize: 14,
+  },
+
+  errorCard: {
+    backgroundColor: PSU.errorBg,
+    borderColor: PSU.errorBorder,
+    borderWidth: 1,
+    borderRadius: 16,
+    paddingHorizontal: 14,
+    paddingVertical: 12,
+    marginBottom: 12,
+  },
+  errorText: {
+    color: PSU.errorText,
+    fontSize: 13,
+    fontWeight: "800",
+    lineHeight: 20,
+  },
+
+  buildingList: {
+    gap: 10,
+    marginBottom: 14,
+  },
+  buildingCard: {
+    backgroundColor: "#fff",
+    borderColor: PSU.border,
+    borderWidth: 1,
+    borderRadius: 16,
+    paddingHorizontal: 14,
+    paddingVertical: 13,
+  },
+  buildingCardSelected: {
+    backgroundColor: PSU.helpBlue,
+    borderColor: PSU.helpBlueBorder,
+  },
+  buildingCardTitle: {
+    color: PSU.text,
+    fontSize: 14,
+    fontWeight: "900",
+  },
+  buildingCardTitleSelected: {
+    color: PSU.blue,
+  },
+  buildingCardSub: {
+    color: PSU.muted,
+    fontSize: 12,
+    marginTop: 2,
   },
 
   detailsBackdrop: {
@@ -3042,125 +3477,132 @@ const s = StyleSheet.create({
     justifyContent: "flex-end",
   },
   detailsSheet: {
-    backgroundColor: PSU.white,
+    backgroundColor: "#fff",
     borderTopLeftRadius: 26,
     borderTopRightRadius: 26,
     paddingHorizontal: 18,
     paddingTop: 18,
-    paddingBottom: 26,
-    maxHeight: "90%",
+    paddingBottom: 22,
+    maxHeight: "84%",
   },
   detailsHeader: {
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
-    marginBottom: 8,
+    marginBottom: 12,
   },
-  detailsTitle: { color: PSU.text, fontSize: 24, fontWeight: "900" },
-  detailsClose: { color: PSU.blue, fontWeight: "900" },
-  detailSection: { marginTop: 14 },
+  detailsTitle: {
+    color: PSU.text,
+    fontSize: 22,
+    fontWeight: "900",
+  },
+  detailsClose: {
+    color: PSU.blue,
+    fontSize: 14,
+    fontWeight: "900",
+  },
+  detailSection: {
+    marginBottom: 16,
+  },
   detailInfoCard: {
-    backgroundColor: PSU.light,
+    backgroundColor: "#F8FAFD",
     borderWidth: 1,
     borderColor: PSU.border,
     borderRadius: 16,
-    padding: 14,
+    paddingHorizontal: 14,
+    paddingVertical: 13,
   },
   detailBody: {
     color: PSU.text,
     fontSize: 14,
-    lineHeight: 20,
+    lineHeight: 21,
+    fontWeight: "700",
   },
-  stepListWrap: { 
-    gap: 10,
-    marginBottom: 14,},
 
+  sectionTitleRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 8,
+    marginBottom: 8,
+  },
+  sectionIcon: {
+    fontSize: 16,
+  },
+  sectionTitleText: {
+    color: PSU.blue,
+    fontSize: 13,
+    fontWeight: "900",
+    letterSpacing: 0.3,
+    textTransform: "uppercase",
+  },
+
+  stepListWrap: {
+    gap: 10,
+    marginTop: 4,
+  },
   stepRow: {
     flexDirection: "row",
     alignItems: "flex-start",
     gap: 10,
   },
   stepDot: {
-    width: 34,
-    height: 34,
-    borderRadius: 17,
-    backgroundColor: PSU.white,
-    borderWidth: 1,
-    borderColor: PSU.border,
+    width: 28,
+    height: 28,
+    borderRadius: 14,
+    backgroundColor: "#EEF3FA",
     alignItems: "center",
     justifyContent: "center",
     marginTop: 2,
   },
   stepDotActive: {
-    backgroundColor: PSU.blue,
-    borderColor: PSU.blue,
+    backgroundColor: "#DBEAFE",
   },
   stepDotText: {
-    color: PSU.text,
-    fontSize: 14,
-    fontWeight: "900",
+    fontSize: 12,
   },
   stepContent: {
     flex: 1,
-    backgroundColor: PSU.white,
-    borderWidth: 1,
+    backgroundColor: "#F8FAFD",
     borderColor: PSU.border,
+    borderWidth: 1,
     borderRadius: 16,
-    padding: 12,
+    paddingHorizontal: 12,
+    paddingVertical: 10,
   },
   stepContentActive: {
-     backgroundColor: "#F8FBFF",
-    borderColor: PSU.helpBlueBorder,
+    backgroundColor: "#F4F8FF",
+    borderColor: "#C9D9FF",
   },
   stepContentArrived: {
-    backgroundColor: PSU.arrivalBg,
-    borderColor: PSU.arrivalBorder,
+    backgroundColor: "#EFFAF2",
+    borderColor: "#B7DEC1",
   },
   stepCurrentBadge: {
-    alignSelf: "flex-start",
-    backgroundColor: PSU.blue,
-    color: PSU.white,
+    color: PSU.blue,
     fontSize: 11,
     fontWeight: "900",
-    paddingHorizontal: 8,
-    paddingVertical: 4,
-    borderRadius: 999,
-    marginBottom: 8,
-    overflow: "hidden",
-  },
-
-  stepCurrentBadge: {
-    alignSelf: "flex-start",
-    backgroundColor: PSU.blue,
-    color: PSU.white,
-    fontSize: 11,
-    fontWeight: "900",
-    paddingHorizontal: 8,
-    paddingVertical: 4,
-    borderRadius: 999,
-    marginBottom: 8,
-    overflow: "hidden",
+    textTransform: "uppercase",
+    marginBottom: 4,
   },
   stepCurrentBadgeArrived: {
-    backgroundColor: PSU.green,
+    color: PSU.green,
   },
-
-  stepSubText: {
-    marginTop: 6,
-    color: PSU.muted,
-    fontSize: 12,
-    fontWeight: "700",
-  },
-
   stepText: {
     color: PSU.text,
     fontSize: 14,
-    lineHeight: 20,
+    lineHeight: 21,
+    fontWeight: "700",
   },
-  orsStepsMore: {
+  stepTextActive: {
+    color: PSU.text,
+  },
+  stepTextArrived: {
+    color: PSU.green,
+  },
+  stepSubText: {
     color: PSU.muted,
-    fontSize: 13,
+    fontSize: 12,
+    fontWeight: "700",
+    marginTop: 4,
   },
-  stepTextActive: { fontWeight: "800" },
-  stepTextArrived: { color: PSU.green },
 });
