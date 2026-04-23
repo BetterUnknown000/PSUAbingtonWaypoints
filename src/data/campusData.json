@@ -207,8 +207,6 @@
     { "id": "wp_suth_f4_hall_03", "building": "sutherland", "floor": "4", "label": "Sutherland Fourth Floor Hall 3", "type": "hallway", "latitude": 40.115798, "longitude": -75.108812, "x": 0, "y": 0, "qr_code": "QR_SUTH_F4_HALL_03" },
     { "id": "wp_suth_f4_hall_04", "building": "sutherland", "floor": "4", "label": "Sutherland Fourth Floor Hall 4", "type": "hallway", "latitude": 40.115642, "longitude": -75.10885, "x": 0, "y": 0, "qr_code": "QR_SUTH_F4_HALL_04" },
     { "id": "wp_suth_f4_hall_05", "building": "sutherland", "floor": "4", "label": "Sutherland Fourth Floor Hall 5", "type": "hallway", "latitude": 40.11557, "longitude": -75.108861, "x": 0, "y": 0, "qr_code": "QR_SUTH_F4_HALL_05" },
-<<<<<<< HEAD
-=======
     { "id": "wp_wood_f1_hall_01", "building": "woodland", "floor": "1", "label": "F1 Hall - Elevator Area", "type": "hallway", "latitude": 40.117091, "longitude": -75.110669, "x": 0, "y": 0, "qr_code": "QR_WOOD_F1_HALL_01" },
     { "id": "wp_wood_f1_hall_02", "building": "woodland", "floor": "1", "label": "F1 Hall - Near Elevator", "type": "hallway", "latitude": 40.117045, "longitude": -75.110636, "x": 0, "y": 0, "qr_code": "QR_WOOD_F1_HALL_02" },
     { "id": "wp_wood_f1_staircase", "building": "woodland", "floor": "1", "label": "F1 Large Staircase", "type": "stairs", "latitude": 40.11705, "longitude": -75.11081, "x": 0, "y": 0, "qr_code": "QR_WOOD_F1_STAIRCASE", "photo": "../assets/WoodlandImages/Level1_Entry_1.jpg" },
@@ -257,7 +255,6 @@
     { "id": "wp_wood_f3_hall_12", "building": "woodland", "floor": "3", "label": "F3 Hall - South B", "type": "hallway", "latitude": 40.116483, "longitude": -75.111137, "x": 0, "y": 0, "qr_code": "QR_WOOD_F3_HALL_12", "photo": "../assets/WoodlandImages/Level3_3_1.jpg" },
     { "id": "wp_wood_f3_stairs_a", "building": "woodland", "floor": "3", "label": "F3 Stairs - West End", "type": "stairs", "latitude": 40.116387, "longitude": -75.111156, "x": 0, "y": 0, "qr_code": "QR_WOOD_F3_STAIRS_A" },
     { "id": "wp_wood_f3_stairs_b", "building": "woodland", "floor": "3", "label": "F3 Stairs - Middle", "type": "stairs", "latitude": 40.116823, "longitude": -75.110967, "x": 0, "y": 0, "qr_code": "QR_WOOD_F3_STAIRS_B" },
->>>>>>> 2ce1d0b5 (New Update to campusdata)
     { "id": "wp_rydal_f1_hall_01", "building": "rydal", "floor": "1", "label": "Rydal First Floor Hall", "type": "hallway", "latitude": 40.115893, "longitude": -75.112185, "x": 0, "y": 0, "qr_code": "QR_RYDAL_F1_HALL_01" },
     { "id": "wp_rydal_f1_hall_top_stairs", "building": "rydal", "floor": "1", "label": "Rydal First Floor Hall - Top of Stairs", "type": "hallway", "latitude": 40.115921, "longitude": -75.112174, "x": 0, "y": 0, "qr_code": "QR_RYDAL_F1_HALL_TOP_STAIRS" },
     { "id": "wp_rydal_gnd_stairs", "building": "rydal", "floor": "ground", "label": "Rydal Ground Floor Stairs", "type": "stairs", "latitude": 40.115913, "longitude": -75.112167, "x": 0, "y": 0, "qr_code": "QR_RYDAL_GND_STAIRS" },
