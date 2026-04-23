@@ -1,157 +1,206 @@
-// EJ Hibbs
-//
-// A* shortest path algorithm
-// This uses the same graph format as dijkstra.js
-// This should add some optimization to help make the app faster.
-// Dijkstra will still be in the src file, but A* is going to be better and probably be utilized.
+import { getWaypointById } from "./qrWaypointLookup";
 
-import campusData from "../data/campusData.json";
-
-// Make a quick lookup so we can find waypoint info by id
-function buildWaypointMap() {
-  const waypointMap = {};
-
-  for (const waypoint of campusData.waypoints || []) {
-    waypointMap[waypoint.id] = waypoint;
-  }
-
-  return waypointMap;
+function normalize(value) {
+  return String(value || "").trim().toLowerCase();
 }
 
-// This guesses how close one node is to the end node
-// If coordinates are missing, just return 0
-function getHeuristic(currentId, endId, waypointMap) {
-  const current = waypointMap[currentId];
-  const end = waypointMap[endId];
-
-  if (!current || !end) {
-    return 0;
-  }
-
+function distanceXY(a, b) {
   if (
-    typeof current.latitude !== "number" ||
-    typeof current.longitude !== "number" ||
-    typeof end.latitude !== "number" ||
-    typeof end.longitude !== "number"
+    !a ||
+    !b ||
+    a.x == null ||
+    a.y == null ||
+    b.x == null ||
+    b.y == null
   ) {
-    return 0;
+    return null;
   }
 
-  const latDiff = current.latitude - end.latitude;
-  const lonDiff = current.longitude - end.longitude;
-
-  // Straight-line distance formula
-  return Math.sqrt((latDiff * latDiff) + (lonDiff * lonDiff));
+  const dx = Number(b.x) - Number(a.x);
+  const dy = Number(b.y) - Number(a.y);
+  return Math.sqrt(dx * dx + dy * dy);
 }
 
-export function aStar(graph, start, end) {
-  // ERROR Cases. Graph empty
-  if (!graph || typeof graph !== "object" || Object.keys(graph).length === 0) {
-    console.warn("A* error: graph is empty or invalid.");
-    return { path: [], distance: Infinity };
-  }
-  // ERROR Case. Start or end is missing
-  if (!start || !end) {
-    console.warn("A* error: start or end is missing.");
-    return { path: [], distance: Infinity };
-  }
-  // ERROR Case. Values still exist but aren't on the graph.
-  if (!graph[start] || !graph[end]) {
-    console.warn("A* error: start or end node is not in the graph.");
-    return { path: [], distance: Infinity };
+function haversineMeters(a, b) {
+  if (
+    !a ||
+    !b ||
+    a.latitude == null ||
+    a.longitude == null ||
+    b.latitude == null ||
+    b.longitude == null
+  ) {
+    return null;
   }
 
-  // If start and end are the same, no pathfinding is needed
-  if (start === end) {
-    return { path: [start], distance: 0 };
+  const toRad = (v) => (v * Math.PI) / 180;
+  const R = 6371000;
+
+  const dLat = toRad(Number(b.latitude) - Number(a.latitude));
+  const dLon = toRad(Number(b.longitude) - Number(a.longitude));
+
+  const lat1 = toRad(Number(a.latitude));
+  const lat2 = toRad(Number(b.latitude));
+
+  const x =
+    Math.sin(dLat / 2) ** 2 +
+    Math.cos(lat1) * Math.cos(lat2) * Math.sin(dLon / 2) ** 2;
+
+  return 2 * R * Math.asin(Math.sqrt(x));
+}
+
+function sameFloor(a, b) {
+  if (!a || !b) return false;
+  return (
+    normalize(a.building) === normalize(b.building) &&
+    String(a.floor || "") === String(b.floor || "")
+  );
+}
+
+function sameBuilding(a, b) {
+  if (!a || !b) return false;
+  return normalize(a.building) === normalize(b.building);
+}
+
+function isVerticalWaypoint(waypoint) {
+  const type = normalize(waypoint?.type);
+  return type === "stairs" || type === "elevator";
+}
+
+function heuristic(nodeId, goalId) {
+  const node = getWaypointById(nodeId);
+  const goal = getWaypointById(goalId);
+
+  if (!node || !goal) return 0;
+
+  // Best indoor heuristic: same floor and same building -> x/y distance
+  if (sameFloor(node, goal)) {
+    const xy = distanceXY(node, goal);
+    if (xy != null && Number.isFinite(xy)) return xy;
   }
 
-  const waypointMap = buildWaypointMap();
+  // Same building but different floor:
+  // use a gentle heuristic so A* still benefits without overestimating.
+  if (sameBuilding(node, goal)) {
+    const xy = distanceXY(node, goal);
+    const floorPenalty =
+      Math.abs(Number(node.floor || 0) - Number(goal.floor || 0)) * 40;
 
-  // Open set = nodes we still want to check
-  const openSet = new Set();
-  openSet.add(start);
-
-  // Keeps track of the best previous node
-  const cameFrom = {};
-
-  // gScore = real distance from start to that node
-  const gScore = {};
-
-  // fScore = gScore + estimated distance to end
-  const fScore = {};
-
-  // Set default values
-  for (const nodeId of Object.keys(graph)) {
-    cameFrom[nodeId] = null;
-    gScore[nodeId] = Infinity;
-    fScore[nodeId] = Infinity;
-  }
-
-  gScore[start] = 0;
-  fScore[start] = getHeuristic(start, end, waypointMap);
-
-  while (openSet.size > 0) {
-    let currentNode = null;
-
-    // Find the node in openSet with the lowest fScore
-    for (const nodeId of openSet) {
-      if (currentNode === null || fScore[nodeId] < fScore[currentNode]) {
-        currentNode = nodeId;
-      }
+    if (xy != null && Number.isFinite(xy)) {
+      return xy + floorPenalty;
     }
 
-    if (currentNode === null) {
+    return floorPenalty;
+  }
+
+  // Outdoor / fallback heuristic
+  const geo = haversineMeters(node, goal);
+  if (geo != null && Number.isFinite(geo)) return geo;
+
+  return 0;
+}
+
+function reconstructPath(cameFrom, current) {
+  const path = [current];
+
+  while (cameFrom.has(current)) {
+    current = cameFrom.get(current);
+    path.unshift(current);
+  }
+
+  return path;
+}
+
+function popLowestFScore(openSet, fScore) {
+  let bestId = null;
+  let bestScore = Infinity;
+
+  for (const id of openSet) {
+    const score = fScore.get(id) ?? Infinity;
+    if (score < bestScore) {
+      bestScore = score;
+      bestId = id;
+    }
+  }
+
+  return bestId;
+}
+
+export function aStar(graph, startId, goalId) {
+  if (!graph || !startId || !goalId) {
+    return {
+      path: [],
+      distance: Infinity,
+      visited: [],
+    };
+  }
+
+  if (startId === goalId) {
+    return {
+      path: [startId],
+      distance: 0,
+      visited: [startId],
+    };
+  }
+
+  const openSet = new Set([startId]);
+  const cameFrom = new Map();
+
+  const gScore = new Map();
+  gScore.set(startId, 0);
+
+  const fScore = new Map();
+  fScore.set(startId, heuristic(startId, goalId));
+
+  const visitedOrder = [];
+  const closedSet = new Set();
+
+  while (openSet.size > 0) {
+    const current = popLowestFScore(openSet, fScore);
+
+    if (!current) {
       break;
     }
 
-    // If we reached the end, build the path
-    if (currentNode === end) {
-      const path = [];
-      let temp = end;
+    if (!closedSet.has(current)) {
+      visitedOrder.push(current);
+      closedSet.add(current);
+    }
 
-      while (temp !== null) {
-        path.unshift(temp);
-        temp = cameFrom[temp];
-      }
-
+    if (current === goalId) {
+      const path = reconstructPath(cameFrom, current);
       return {
-        path: path,
-        distance: gScore[end]
+        path,
+        distance: gScore.get(goalId) ?? 0,
+        visited: visitedOrder,
       };
     }
 
-    openSet.delete(currentNode);
+    openSet.delete(current);
 
-    const neighbors = Array.isArray(graph[currentNode]) ? graph[currentNode] : [];
+    const neighbors = Array.isArray(graph[current]) ? graph[current] : [];
 
     for (const neighbor of neighbors) {
-      if (!neighbor || !neighbor.id) {
-        continue;
-      }
+      const neighborId = neighbor?.id;
+      if (!neighborId) continue;
 
-      if (!(neighbor.id in gScore)) {
-        continue;
-      }
+      const weight = Number(neighbor.weight);
+      const stepCost = Number.isFinite(weight) ? weight : 1;
 
-      if (typeof neighbor.weight !== "number" || neighbor.weight < 0) {
-        continue;
-      }
+      const tentativeG = (gScore.get(current) ?? Infinity) + stepCost;
 
-      const newDistance = gScore[currentNode] + neighbor.weight;
-
-      // If this path is better, update it
-      if (newDistance < gScore[neighbor.id]) {
-        cameFrom[neighbor.id] = currentNode;
-        gScore[neighbor.id] = newDistance;
-        fScore[neighbor.id] =
-          newDistance + getHeuristic(neighbor.id, end, waypointMap);
-
-        openSet.add(neighbor.id);
+      if (tentativeG < (gScore.get(neighborId) ?? Infinity)) {
+        cameFrom.set(neighborId, current);
+        gScore.set(neighborId, tentativeG);
+        fScore.set(neighborId, tentativeG + heuristic(neighborId, goalId));
+        openSet.add(neighborId);
       }
     }
   }
 
-  console.warn("A* error: no path found.");
-  return { path: [], distance: Infinity };
+  return {
+    path: [],
+    distance: Infinity,
+    visited: visitedOrder,
+  };
 }
