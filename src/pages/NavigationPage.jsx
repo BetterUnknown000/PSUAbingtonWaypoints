@@ -513,36 +513,70 @@ export default function NavigationPage({ route, navigation }) {
     currentBuildingEntranceWaypoints,
     pendingTransitionType,
   ]);
-
-  const orsDestinationGps = useMemo(() => {
-    if (!userGps || destinationEntranceWaypoints.length === 0) {
-      if (outdoorTargetBuilding?.latitude && outdoorTargetBuilding?.longitude) {
-        return {
-          latitude: Number(outdoorTargetBuilding.latitude),
-          longitude: Number(outdoorTargetBuilding.longitude),
-        };
-      }
+  
+  const selectedDestinationEntrance = useMemo(() => {
+    const entrancesWithGps = destinationEntranceWaypoints.filter((wp) => {
+      return wp.latitude != null && wp.longitude != null;
+    });
+  
+    if (entrancesWithGps.length === 0) {
       return null;
     }
-
+  
+    // If accessibility is on, prefer entrances marked accessible.
+    // If none are marked accessible, fall back to all entrances so routing still works.
+    const accessibleEntrances = entrancesWithGps.filter(
+      (wp) => wp.accessible === true
+    );
+  
+    const usableEntrances =
+      accessibilityMode && accessibleEntrances.length > 0
+        ? accessibleEntrances
+        : entrancesWithGps;
+  
+    // If GPS is not ready yet, just use the first usable entrance.
+    if (!userGps) {
+      return usableEntrances[0];
+    }
+  
     let nearest = null;
     let nearestDist = Infinity;
-    for (const wp of destinationEntranceWaypoints) {
-      if (wp.latitude == null || wp.longitude == null) continue;
+  
+    for (const wp of usableEntrances) {
       const d = haversineMeters(
-        userGps.latitude,
-        userGps.longitude,
+        Number(userGps.latitude),
+        Number(userGps.longitude),
         Number(wp.latitude),
         Number(wp.longitude)
       );
+  
       if (d < nearestDist) {
         nearestDist = d;
         nearest = wp;
       }
     }
-    if (!nearest) return null;
-    return { latitude: Number(nearest.latitude), longitude: Number(nearest.longitude) };
-  }, [userGps, destinationEntranceWaypoints, outdoorTargetBuilding]);
+  
+    return nearest;
+  }, [userGps, destinationEntranceWaypoints, accessibilityMode]);
+  
+  const orsDestinationGps = useMemo(() => {
+    if (selectedDestinationEntrance) {
+      return {
+        latitude: Number(selectedDestinationEntrance.latitude),
+        longitude: Number(selectedDestinationEntrance.longitude),
+      };
+    }
+  
+    // Fallback only if no entrance data exists.
+    if (outdoorTargetBuilding?.latitude && outdoorTargetBuilding?.longitude) {
+      return {
+        latitude: Number(outdoorTargetBuilding.latitude),
+        longitude: Number(outdoorTargetBuilding.longitude),
+      };
+    }
+  
+    return null;
+  }, [selectedDestinationEntrance, outdoorTargetBuilding]);
 
   useEffect(() => {
     if (viewMode !== VIEW_MODE.OUTDOOR) {
