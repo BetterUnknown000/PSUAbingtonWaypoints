@@ -354,6 +354,25 @@ export default function NavigationPage({ route, navigation }) {
   }, [currentStep, stageMessage]);
 
   const targetBearing = useMemo(() => {
+    if (viewMode === VIEW_MODE.INDOOR) {
+      if (
+        !currentIndoorPosition ||
+        !nextWaypoint ||
+        nextWaypoint.x == null ||
+        nextWaypoint.y == null
+      ) {
+        return null;
+      }
+  
+      const dx = Number(nextWaypoint.x) - Number(currentIndoorPosition.x);
+      const dy = Number(nextWaypoint.y) - Number(currentIndoorPosition.y);
+  
+      let indoorBearing = Math.atan2(dx, -dy) * (180 / Math.PI);
+      indoorBearing = (indoorBearing + 360) % 360;
+  
+      return indoorBearing;
+    }
+  
     if (
       !userGps ||
       !nextWaypoint ||
@@ -362,14 +381,14 @@ export default function NavigationPage({ route, navigation }) {
     ) {
       return null;
     }
-
+  
     return calculateBearingDegrees(
       Number(userGps.latitude),
       Number(userGps.longitude),
       Number(nextWaypoint.latitude),
       Number(nextWaypoint.longitude)
     );
-  }, [userGps, nextWaypoint]);
+  }, [viewMode, currentIndoorPosition, userGps, nextWaypoint]);
 
   const formattedDistance = useMemo(() => {
     if (orsMeters !== null && viewMode === VIEW_MODE.OUTDOOR) {
@@ -963,8 +982,8 @@ export default function NavigationPage({ route, navigation }) {
         locationSubscription = await Location.watchPositionAsync(
           {
             accuracy: Location.Accuracy.Balanced,
-            timeInterval: 3000,
-            distanceInterval: 3,
+            timeInterval: 1000,
+            distanceInterval: 1,
           },
           (loc) => {
             setUserGps({
