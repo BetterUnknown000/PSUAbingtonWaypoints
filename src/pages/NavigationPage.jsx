@@ -878,7 +878,7 @@ export default function NavigationPage({ route, navigation }) {
     setCurrentWaypointId(matchedWaypoint.id || "");
     setForceIndoorAfterScan(true);
     setVisionSource("vision");
-    setVisualLocateActive(true);
+    setVisualLocateActive(false);
 
     setCurrentIndoorPosition({
       building: matchedWaypoint.building || "",
@@ -1315,9 +1315,7 @@ export default function NavigationPage({ route, navigation }) {
     setPreviousIndoorDistance(null);
     setLastStepAnchorCount(stepCount);
 
-    if (source === "qr") {
-      setVisualLocateActive(false);
-    }
+    setVisualLocateActive(false);
 
     if (!isOnCurrentPath) {
       setActiveStepIndex(0);
