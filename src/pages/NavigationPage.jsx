@@ -2059,6 +2059,17 @@ export default function NavigationPage({ route, navigation }) {
                     : "Use outdoor guidance until you reach the correct entrance."}
                 </Text>
 
+                {selectedDestinationEntrance ? (
+                  <Text style={s.outdoorBottomText}>
+                    Routing to entrance:{" "}
+                    {selectedDestinationEntrance.label || selectedDestinationEntrance.id}
+                  </Text>
+                ) : outdoorTargetBuilding ? (
+                  <Text style={s.outdoorBottomText}>
+                    Routing to building fallback: {outdoorTargetBuilding.name}
+                  </Text>
+                ) : null}
+
                 {orsError ? (
                   <Text style={s.orsErrorText}>⚠ {orsError} — using GPS guidance</Text>
                 ) : null}
