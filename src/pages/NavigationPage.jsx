@@ -415,6 +415,13 @@ export default function NavigationPage({ route, navigation }) {
     if (targetBearing !== null) return "straight";
     return getArrowDirectionFromText(currentStep?.text || stageMessage || "");
   }, [targetBearing, currentStep, stageMessage]);
+
+  const nearNextWaypoint = useMemo(() => {
+    if (viewMode !== VIEW_MODE.INDOOR) return false;
+    if (!nextWaypoint) return false;
+    const type = String(nextWaypoint.type || "").toLowerCase();
+    return type === "stairs" || type === "elevator" || type === "entrance";
+  }, [viewMode, nextWaypoint]);
   
   const formattedDistance = useMemo(() => {
     if (orsMeters !== null && viewMode === VIEW_MODE.OUTDOOR) {
@@ -2314,6 +2321,8 @@ export default function NavigationPage({ route, navigation }) {
               <Text style={[s.nextStepTitle, arrived && s.arrivalTitle]}>
                 {stageMode === "indoor_find_anchor" && !currentWaypointId
                   ? "Point your camera at a nearby QR code to begin indoor navigation."
+                  : nearNextWaypoint
+                  ? `📷 You're approaching ${nextWaypoint?.label || "the next point"}. Scan its QR code to continue.`
                   : stageMessage || currentStep?.text || "No QR nearby? Tap User Help."}
               </Text>
 
