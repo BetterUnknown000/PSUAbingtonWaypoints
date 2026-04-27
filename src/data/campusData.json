@@ -1698,6 +1698,8 @@
       "floor": "1",
       "label": "Woodland Side Entrance 1",
       "type": "entrance",
+      "latitude": 40.11686,
+      "longitude": -75.11095,
       "x": 498.48,
       "y": 442.09,
       "qr_code": "QR_WOOD_F1_ENTRANCE_SIDE_1"
@@ -1708,6 +1710,8 @@
       "floor": "1",
       "label": "Woodland Side Entrance 2",
       "type": "entrance",
+      "latitude": 40.11683,
+      "longitude": -75.11090,
       "x": 431.17,
       "y": 532.71,
       "qr_code": "QR_WOOD_F1_ENTRANCE_SIDE_2"
@@ -1718,6 +1722,8 @@
       "floor": "1",
       "label": "Woodland Side Entrance 3",
       "type": "entrance",
+      "latitude": 40.11642,
+      "longitude": -75.11112,
       "x": 269.78,
       "y": 791.62,
       "qr_code": "QR_WOOD_F1_ENTRANCE_SIDE_3"
