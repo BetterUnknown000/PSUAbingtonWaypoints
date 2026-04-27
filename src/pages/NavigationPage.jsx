@@ -966,7 +966,7 @@ export default function NavigationPage({ route, navigation }) {
 
   useEffect(() => {
     if (viewMode !== VIEW_MODE.INDOOR) return;
-
+  
     nextStepFade.setValue(0.55);
     nextStepScale.setValue(0.97);
 
@@ -1081,26 +1081,10 @@ export default function NavigationPage({ route, navigation }) {
     if (!currentIndoorPosition) return;
     if (!pedometerAvailable) return;
     if (!Number.isFinite(stepCount) || !Number.isFinite(lastStepAnchorCount)) return;
-
-    const deltaSteps = stepCount - lastStepAnchorCount;
-    if (deltaSteps <= 0) return;
-
-    const heading = Number(deviceHeading ?? 0) + INDOOR_HEADING_OFFSET_DEGREES;
-    const headingRad = (heading * Math.PI) / 180;
-
-    const dx = Math.cos(headingRad) * deltaSteps * INDOOR_STEP_PIXELS;
-    const dy = Math.sin(headingRad) * deltaSteps * INDOOR_STEP_PIXELS;
-
-    setCurrentIndoorPosition((prev) => {
-      if (!prev) return prev;
-
-      return {
-        ...prev,
-        x: Number(prev.x || 0) + dx,
-        y: Number(prev.y || 0) + dy,
-      };
-    });
-
+  
+    // Pedometer position update disabled — compass drift indoors causes
+    // currentIndoorPosition to shift incorrectly, making the arrow rotate off.
+    // Arrow direction is computed from the fixed QR scan position instead.
     setLastStepAnchorCount(stepCount);
   }, [
     viewMode,
