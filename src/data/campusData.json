@@ -6761,6 +6761,1758 @@
       "to": "wp_ath_f1_stairs",
       "distance": 5,
       "accessible": false
+    },
+    {
+      "from": "wp_lares_ground_hall_01",
+      "to": "wp_lares_g04",
+      "distance": 2.9,
+      "accessible": true
+    },
+    {
+      "from": "wp_lares_g04",
+      "to": "wp_lares_ground_hall_01",
+      "distance": 2.9,
+      "accessible": true
+    },
+    {
+      "from": "wp_lares_ground_hall_02",
+      "to": "wp_lares_elevator_ground",
+      "distance": 1,
+      "accessible": true
+    },
+    {
+      "from": "wp_lares_elevator_ground",
+      "to": "wp_lares_ground_hall_02",
+      "distance": 1,
+      "accessible": true
+    },
+    {
+      "from": "wp_lares_stairs_ground",
+      "to": "wp_lares_ground_hall_02",
+      "distance": 1,
+      "accessible": true
+    },
+    {
+      "from": "wp_lares_ground_hall_02",
+      "to": "wp_lares_stairs_ground",
+      "distance": 1,
+      "accessible": true
+    },
+    {
+      "from": "wp_lares_stairs_f1",
+      "to": "wp_lares_elevator_f1",
+      "distance": 1.5,
+      "accessible": true
+    },
+    {
+      "from": "wp_lares_elevator_f1",
+      "to": "wp_lares_stairs_f1",
+      "distance": 1.5,
+      "accessible": true
+    },
+    {
+      "from": "wp_lares_f1_hall_01",
+      "to": "wp_lares_stairs_f1",
+      "distance": 1.2,
+      "accessible": true
+    },
+    {
+      "from": "wp_lares_stairs_f1",
+      "to": "wp_lares_f1_hall_01",
+      "distance": 1.2,
+      "accessible": true
+    },
+    {
+      "from": "wp_lares_f1_hall_02",
+      "to": "wp_lares_stairs_f1",
+      "distance": 5.0,
+      "accessible": true
+    },
+    {
+      "from": "wp_lares_stairs_f1",
+      "to": "wp_lares_f1_hall_02",
+      "distance": 5.0,
+      "accessible": true
+    },
+    {
+      "from": "wp_lares_side_entrance",
+      "to": "wp_lares_f1_hall_02",
+      "distance": 7.0,
+      "accessible": true
+    },
+    {
+      "from": "wp_lares_f1_hall_02",
+      "to": "wp_lares_side_entrance",
+      "distance": 7.0,
+      "accessible": true
+    },
+    {
+      "from": "wp_lares_f1_hall_03",
+      "to": "wp_lares_112",
+      "distance": 3.1,
+      "accessible": true
+    },
+    {
+      "from": "wp_lares_112",
+      "to": "wp_lares_f1_hall_03",
+      "distance": 3.1,
+      "accessible": true
+    },
+    {
+      "from": "wp_suth_room_008_second_entrance",
+      "to": "wp_suth_403a",
+      "distance": 1,
+      "accessible": true
+    },
+    {
+      "from": "wp_suth_403a",
+      "to": "wp_suth_room_008_second_entrance",
+      "distance": 1,
+      "accessible": true
+    },
+    {
+      "from": "wp_suth_ground_stairs",
+      "to": "wp_suth_room_008_second_entrance",
+      "distance": 4.6,
+      "accessible": true
+    },
+    {
+      "from": "wp_suth_room_008_second_entrance",
+      "to": "wp_suth_ground_stairs",
+      "distance": 4.6,
+      "accessible": true
+    },
+    {
+      "from": "wp_suth_ground_hall_01",
+      "to": "wp_suth_ground_stairs",
+      "distance": 1.6,
+      "accessible": true
+    },
+    {
+      "from": "wp_suth_ground_stairs",
+      "to": "wp_suth_ground_hall_01",
+      "distance": 1.6,
+      "accessible": true
+    },
+    {
+      "from": "wp_suth_ground_hall_02",
+      "to": "wp_suth_ground_hall_01",
+      "distance": 4.1,
+      "accessible": true
+    },
+    {
+      "from": "wp_suth_ground_hall_01",
+      "to": "wp_suth_ground_hall_02",
+      "distance": 4.1,
+      "accessible": true
+    },
+    {
+      "from": "wp_suth_ground_hall_03",
+      "to": "wp_suth_ground_hall_02",
+      "distance": 6.3,
+      "accessible": true
+    },
+    {
+      "from": "wp_suth_ground_hall_02",
+      "to": "wp_suth_ground_hall_03",
+      "distance": 6.3,
+      "accessible": true
+    },
+    {
+      "from": "wp_suth_ground_entrance",
+      "to": "wp_suth_ground_hall_03",
+      "distance": 1.1,
+      "accessible": true
+    },
+    {
+      "from": "wp_suth_ground_hall_03",
+      "to": "wp_suth_ground_entrance",
+      "distance": 1.1,
+      "accessible": true
+    },
+    {
+      "from": "wp_suth_elevator_ground",
+      "to": "wp_suth_ground_stairs",
+      "distance": 22.5,
+      "accessible": true
+    },
+    {
+      "from": "wp_suth_ground_stairs",
+      "to": "wp_suth_elevator_ground",
+      "distance": 22.5,
+      "accessible": true
+    },
+    {
+      "from": "wp_suth_f1_hall_01",
+      "to": "wp_suth_101a",
+      "distance": 2.7,
+      "accessible": true
+    },
+    {
+      "from": "wp_suth_101a",
+      "to": "wp_suth_f1_hall_01",
+      "distance": 2.7,
+      "accessible": true
+    },
+    {
+      "from": "wp_suth_f1_hall_02",
+      "to": "wp_suth_106",
+      "distance": 2.8,
+      "accessible": true
+    },
+    {
+      "from": "wp_suth_106",
+      "to": "wp_suth_f1_hall_02",
+      "distance": 2.8,
+      "accessible": true
+    },
+    {
+      "from": "wp_suth_f1_hall_03",
+      "to": "wp_suth_117a",
+      "distance": 1.4,
+      "accessible": true
+    },
+    {
+      "from": "wp_suth_117a",
+      "to": "wp_suth_f1_hall_03",
+      "distance": 1.4,
+      "accessible": true
+    },
+    {
+      "from": "wp_suth_f1_hall_04",
+      "to": "wp_suth_f1_hall_03",
+      "distance": 7.0,
+      "accessible": true
+    },
+    {
+      "from": "wp_suth_f1_hall_03",
+      "to": "wp_suth_f1_hall_04",
+      "distance": 7.0,
+      "accessible": true
+    },
+    {
+      "from": "wp_suth_f1_hall_05",
+      "to": "wp_suth_f1_hall_04",
+      "distance": 1,
+      "accessible": true
+    },
+    {
+      "from": "wp_suth_f1_hall_04",
+      "to": "wp_suth_f1_hall_05",
+      "distance": 1,
+      "accessible": true
+    },
+    {
+      "from": "wp_suth_f1_hall_06",
+      "to": "wp_suth_f1_hall_05",
+      "distance": 1.3,
+      "accessible": true
+    },
+    {
+      "from": "wp_suth_f1_hall_05",
+      "to": "wp_suth_f1_hall_06",
+      "distance": 1.3,
+      "accessible": true
+    },
+    {
+      "from": "wp_suth_f1_back_entrance",
+      "to": "wp_suth_121",
+      "distance": 5.0,
+      "accessible": true
+    },
+    {
+      "from": "wp_suth_121",
+      "to": "wp_suth_f1_back_entrance",
+      "distance": 5.0,
+      "accessible": true
+    },
+    {
+      "from": "wp_suth_f1_hall_07",
+      "to": "wp_suth_boni_fernandes_wozolek",
+      "distance": 6.2,
+      "accessible": true
+    },
+    {
+      "from": "wp_suth_boni_fernandes_wozolek",
+      "to": "wp_suth_f1_hall_07",
+      "distance": 6.2,
+      "accessible": true
+    },
+    {
+      "from": "wp_suth_f1_stairs",
+      "to": "wp_suth_123",
+      "distance": 2.4,
+      "accessible": true
+    },
+    {
+      "from": "wp_suth_123",
+      "to": "wp_suth_f1_stairs",
+      "distance": 2.4,
+      "accessible": true
+    },
+    {
+      "from": "wp_suth_f2_hall_01",
+      "to": "wp_suth_226",
+      "distance": 5.2,
+      "accessible": true
+    },
+    {
+      "from": "wp_suth_226",
+      "to": "wp_suth_f2_hall_01",
+      "distance": 5.2,
+      "accessible": true
+    },
+    {
+      "from": "wp_suth_f2_hall_02",
+      "to": "wp_suth_226",
+      "distance": 3.1,
+      "accessible": true
+    },
+    {
+      "from": "wp_suth_226",
+      "to": "wp_suth_f2_hall_02",
+      "distance": 3.1,
+      "accessible": true
+    },
+    {
+      "from": "wp_suth_f2_hall_03",
+      "to": "wp_suth_224b",
+      "distance": 11.1,
+      "accessible": true
+    },
+    {
+      "from": "wp_suth_224b",
+      "to": "wp_suth_f2_hall_03",
+      "distance": 11.1,
+      "accessible": true
+    },
+    {
+      "from": "wp_suth_testing_center",
+      "to": "wp_suth_f2_hall_03",
+      "distance": 1,
+      "accessible": true
+    },
+    {
+      "from": "wp_suth_f2_hall_03",
+      "to": "wp_suth_testing_center",
+      "distance": 1,
+      "accessible": true
+    },
+    {
+      "from": "wp_suth_f2_hall_04",
+      "to": "wp_suth_221",
+      "distance": 4.2,
+      "accessible": true
+    },
+    {
+      "from": "wp_suth_221",
+      "to": "wp_suth_f2_hall_04",
+      "distance": 4.2,
+      "accessible": true
+    },
+    {
+      "from": "wp_suth_f2_hall_05",
+      "to": "wp_suth_204",
+      "distance": 5.5,
+      "accessible": true
+    },
+    {
+      "from": "wp_suth_204",
+      "to": "wp_suth_f2_hall_05",
+      "distance": 5.5,
+      "accessible": true
+    },
+    {
+      "from": "wp_suth_f2_hall_06",
+      "to": "wp_suth_204",
+      "distance": 1.9,
+      "accessible": true
+    },
+    {
+      "from": "wp_suth_204",
+      "to": "wp_suth_f2_hall_06",
+      "distance": 1.9,
+      "accessible": true
+    },
+    {
+      "from": "wp_suth_f2_hall_07",
+      "to": "wp_suth_214",
+      "distance": 6.4,
+      "accessible": true
+    },
+    {
+      "from": "wp_suth_214",
+      "to": "wp_suth_f2_hall_07",
+      "distance": 6.4,
+      "accessible": true
+    },
+    {
+      "from": "wp_suth_f2_hall_08",
+      "to": "wp_suth_213",
+      "distance": 2.7,
+      "accessible": true
+    },
+    {
+      "from": "wp_suth_213",
+      "to": "wp_suth_f2_hall_08",
+      "distance": 2.7,
+      "accessible": true
+    },
+    {
+      "from": "wp_suth_f2_hall_09",
+      "to": "wp_suth_207",
+      "distance": 3.5,
+      "accessible": true
+    },
+    {
+      "from": "wp_suth_207",
+      "to": "wp_suth_f2_hall_09",
+      "distance": 3.5,
+      "accessible": true
+    },
+    {
+      "from": "wp_suth_f2_hall_10",
+      "to": "wp_suth_212",
+      "distance": 1,
+      "accessible": true
+    },
+    {
+      "from": "wp_suth_212",
+      "to": "wp_suth_f2_hall_10",
+      "distance": 1,
+      "accessible": true
+    },
+    {
+      "from": "wp_suth_f2_hall_11",
+      "to": "wp_suth_208",
+      "distance": 2.7,
+      "accessible": true
+    },
+    {
+      "from": "wp_suth_208",
+      "to": "wp_suth_f2_hall_11",
+      "distance": 2.7,
+      "accessible": true
+    },
+    {
+      "from": "wp_suth_f2_stairs",
+      "to": "wp_suth_226",
+      "distance": 2.3,
+      "accessible": true
+    },
+    {
+      "from": "wp_suth_226",
+      "to": "wp_suth_f2_stairs",
+      "distance": 2.3,
+      "accessible": true
+    },
+    {
+      "from": "wp_suth_f2_main_stairs",
+      "to": "wp_suth_f2_hall_04",
+      "distance": 3.2,
+      "accessible": true
+    },
+    {
+      "from": "wp_suth_f2_hall_04",
+      "to": "wp_suth_f2_main_stairs",
+      "distance": 3.2,
+      "accessible": true
+    },
+    {
+      "from": "wp_suth_f3_hall_01",
+      "to": "wp_suth_316",
+      "distance": 3.2,
+      "accessible": true
+    },
+    {
+      "from": "wp_suth_316",
+      "to": "wp_suth_f3_hall_01",
+      "distance": 3.2,
+      "accessible": true
+    },
+    {
+      "from": "wp_suth_f3_hall_02",
+      "to": "wp_suth_f3_hall_01",
+      "distance": 7.9,
+      "accessible": true
+    },
+    {
+      "from": "wp_suth_f3_hall_01",
+      "to": "wp_suth_f3_hall_02",
+      "distance": 7.9,
+      "accessible": true
+    },
+    {
+      "from": "wp_suth_f3_hall_03",
+      "to": "wp_suth_329",
+      "distance": 2.5,
+      "accessible": true
+    },
+    {
+      "from": "wp_suth_329",
+      "to": "wp_suth_f3_hall_03",
+      "distance": 2.5,
+      "accessible": true
+    },
+    {
+      "from": "wp_suth_f3_hall_04",
+      "to": "wp_suth_312",
+      "distance": 1.8,
+      "accessible": true
+    },
+    {
+      "from": "wp_suth_312",
+      "to": "wp_suth_f3_hall_04",
+      "distance": 1.8,
+      "accessible": true
+    },
+    {
+      "from": "wp_suth_f3_hall_05",
+      "to": "wp_suth_311",
+      "distance": 3.6,
+      "accessible": true
+    },
+    {
+      "from": "wp_suth_311",
+      "to": "wp_suth_f3_hall_05",
+      "distance": 3.6,
+      "accessible": true
+    },
+    {
+      "from": "wp_suth_f3_hall_06",
+      "to": "wp_suth_f3_hall_04",
+      "distance": 1,
+      "accessible": true
+    },
+    {
+      "from": "wp_suth_f3_hall_04",
+      "to": "wp_suth_f3_hall_06",
+      "distance": 1,
+      "accessible": true
+    },
+    {
+      "from": "wp_suth_f3_hall_07",
+      "to": "wp_suth_310b",
+      "distance": 4.8,
+      "accessible": true
+    },
+    {
+      "from": "wp_suth_310b",
+      "to": "wp_suth_f3_hall_07",
+      "distance": 4.8,
+      "accessible": true
+    },
+    {
+      "from": "wp_suth_f3_hall_08",
+      "to": "wp_suth_307_entrance",
+      "distance": 1,
+      "accessible": true
+    },
+    {
+      "from": "wp_suth_307_entrance",
+      "to": "wp_suth_f3_hall_08",
+      "distance": 1,
+      "accessible": true
+    },
+    {
+      "from": "wp_suth_f3_hall_09",
+      "to": "wp_suth_308",
+      "distance": 2.0,
+      "accessible": true
+    },
+    {
+      "from": "wp_suth_308",
+      "to": "wp_suth_f3_hall_09",
+      "distance": 2.0,
+      "accessible": true
+    },
+    {
+      "from": "wp_suth_f3_hall_10",
+      "to": "wp_suth_f3_hall_08",
+      "distance": 3.8,
+      "accessible": true
+    },
+    {
+      "from": "wp_suth_f3_hall_08",
+      "to": "wp_suth_f3_hall_10",
+      "distance": 3.8,
+      "accessible": true
+    },
+    {
+      "from": "wp_suth_f3_main_stairs",
+      "to": "wp_suth_elevator_f3",
+      "distance": 1.9,
+      "accessible": true
+    },
+    {
+      "from": "wp_suth_elevator_f3",
+      "to": "wp_suth_f3_main_stairs",
+      "distance": 1.9,
+      "accessible": true
+    },
+    {
+      "from": "wp_suth_f4_hall_01",
+      "to": "wp_suth_418",
+      "distance": 18.2,
+      "accessible": true
+    },
+    {
+      "from": "wp_suth_418",
+      "to": "wp_suth_f4_hall_01",
+      "distance": 18.2,
+      "accessible": true
+    },
+    {
+      "from": "wp_suth_f4_hall_02",
+      "to": "wp_suth_418",
+      "distance": 7.8,
+      "accessible": true
+    },
+    {
+      "from": "wp_suth_418",
+      "to": "wp_suth_f4_hall_02",
+      "distance": 7.8,
+      "accessible": true
+    },
+    {
+      "from": "wp_suth_f4_chair",
+      "to": "wp_suth_f4_hall_02",
+      "distance": 2.4,
+      "accessible": true
+    },
+    {
+      "from": "wp_suth_f4_hall_02",
+      "to": "wp_suth_f4_chair",
+      "distance": 2.4,
+      "accessible": true
+    },
+    {
+      "from": "wp_lares_102a",
+      "to": "wp_lares_side_entrance",
+      "distance": 5.5,
+      "accessible": true
+    },
+    {
+      "from": "wp_lares_side_entrance",
+      "to": "wp_lares_102a",
+      "distance": 5.5,
+      "accessible": true
+    },
+    {
+      "from": "wp_lares_102b",
+      "to": "wp_lares_102a",
+      "distance": 2.0,
+      "accessible": true
+    },
+    {
+      "from": "wp_lares_102a",
+      "to": "wp_lares_102b",
+      "distance": 2.0,
+      "accessible": true
+    },
+    {
+      "from": "wp_lares_103",
+      "to": "wp_lares_102a",
+      "distance": 1,
+      "accessible": true
+    },
+    {
+      "from": "wp_lares_102a",
+      "to": "wp_lares_103",
+      "distance": 1,
+      "accessible": true
+    },
+    {
+      "from": "wp_lares_203",
+      "to": "wp_lares_f1_hall_02",
+      "distance": 1.9,
+      "accessible": true
+    },
+    {
+      "from": "wp_lares_f1_hall_02",
+      "to": "wp_lares_203",
+      "distance": 1.9,
+      "accessible": true
+    },
+    {
+      "from": "wp_lares_204",
+      "to": "wp_lares_203",
+      "distance": 3.8,
+      "accessible": true
+    },
+    {
+      "from": "wp_lares_203",
+      "to": "wp_lares_204",
+      "distance": 3.8,
+      "accessible": true
+    },
+    {
+      "from": "wp_lares_206",
+      "to": "wp_lares_204",
+      "distance": 8.1,
+      "accessible": true
+    },
+    {
+      "from": "wp_lares_204",
+      "to": "wp_lares_206",
+      "distance": 8.1,
+      "accessible": true
+    },
+    {
+      "from": "wp_lares_208",
+      "to": "wp_lares_204",
+      "distance": 1,
+      "accessible": true
+    },
+    {
+      "from": "wp_lares_204",
+      "to": "wp_lares_208",
+      "distance": 1,
+      "accessible": true
+    },
+    {
+      "from": "wp_lares_209",
+      "to": "wp_lares_208",
+      "distance": 8.5,
+      "accessible": true
+    },
+    {
+      "from": "wp_lares_208",
+      "to": "wp_lares_209",
+      "distance": 8.5,
+      "accessible": true
+    },
+    {
+      "from": "wp_lares_210",
+      "to": "wp_lares_209",
+      "distance": 2.0,
+      "accessible": true
+    },
+    {
+      "from": "wp_lares_209",
+      "to": "wp_lares_210",
+      "distance": 2.0,
+      "accessible": true
+    },
+    {
+      "from": "wp_lares_211",
+      "to": "wp_lares_208",
+      "distance": 3.8,
+      "accessible": true
+    },
+    {
+      "from": "wp_lares_208",
+      "to": "wp_lares_211",
+      "distance": 3.8,
+      "accessible": true
+    },
+    {
+      "from": "wp_wood_102",
+      "to": "wp_wood_f1_hall_01",
+      "distance": 14.7,
+      "accessible": true
+    },
+    {
+      "from": "wp_wood_f1_hall_01",
+      "to": "wp_wood_102",
+      "distance": 14.7,
+      "accessible": true
+    },
+    {
+      "from": "wp_wood_103",
+      "to": "wp_wood_102",
+      "distance": 2.8,
+      "accessible": true
+    },
+    {
+      "from": "wp_wood_102",
+      "to": "wp_wood_103",
+      "distance": 2.8,
+      "accessible": true
+    },
+    {
+      "from": "wp_wood_118",
+      "to": "wp_wood_124",
+      "distance": 3.0,
+      "accessible": true
+    },
+    {
+      "from": "wp_wood_124",
+      "to": "wp_wood_118",
+      "distance": 3.0,
+      "accessible": true
+    },
+    {
+      "from": "wp_wood_203",
+      "to": "wp_wood_elevator_f2",
+      "distance": 24.2,
+      "accessible": true
+    },
+    {
+      "from": "wp_wood_elevator_f2",
+      "to": "wp_wood_203",
+      "distance": 24.2,
+      "accessible": true
+    },
+    {
+      "from": "wp_wood_213",
+      "to": "wp_wood_f2_hall_12",
+      "distance": 2.1,
+      "accessible": true
+    },
+    {
+      "from": "wp_wood_f2_hall_12",
+      "to": "wp_wood_213",
+      "distance": 2.1,
+      "accessible": true
+    },
+    {
+      "from": "wp_wood_214",
+      "to": "wp_wood_f2_hall_12",
+      "distance": 2.0,
+      "accessible": true
+    },
+    {
+      "from": "wp_wood_f2_hall_12",
+      "to": "wp_wood_214",
+      "distance": 2.0,
+      "accessible": true
+    },
+    {
+      "from": "wp_wood_217",
+      "to": "wp_wood_f2_hall_09",
+      "distance": 5.6,
+      "accessible": true
+    },
+    {
+      "from": "wp_wood_f2_hall_09",
+      "to": "wp_wood_217",
+      "distance": 5.6,
+      "accessible": true
+    },
+    {
+      "from": "wp_wood_218",
+      "to": "wp_wood_f2_hall_09",
+      "distance": 2.7,
+      "accessible": true
+    },
+    {
+      "from": "wp_wood_f2_hall_09",
+      "to": "wp_wood_218",
+      "distance": 2.7,
+      "accessible": true
+    },
+    {
+      "from": "wp_wood_219",
+      "to": "wp_wood_220",
+      "distance": 1.4,
+      "accessible": true
+    },
+    {
+      "from": "wp_wood_220",
+      "to": "wp_wood_219",
+      "distance": 1.4,
+      "accessible": true
+    },
+    {
+      "from": "wp_wood_226",
+      "to": "wp_wood_217",
+      "distance": 4.0,
+      "accessible": true
+    },
+    {
+      "from": "wp_wood_217",
+      "to": "wp_wood_226",
+      "distance": 4.0,
+      "accessible": true
+    },
+    {
+      "from": "wp_wood_227",
+      "to": "wp_wood_226",
+      "distance": 3.1,
+      "accessible": true
+    },
+    {
+      "from": "wp_wood_226",
+      "to": "wp_wood_227",
+      "distance": 3.1,
+      "accessible": true
+    },
+    {
+      "from": "wp_wood_228",
+      "to": "wp_wood_f2_hall_07",
+      "distance": 5.8,
+      "accessible": true
+    },
+    {
+      "from": "wp_wood_f2_hall_07",
+      "to": "wp_wood_228",
+      "distance": 5.8,
+      "accessible": true
+    },
+    {
+      "from": "wp_wood_229",
+      "to": "wp_wood_224",
+      "distance": 1,
+      "accessible": true
+    },
+    {
+      "from": "wp_wood_224",
+      "to": "wp_wood_229",
+      "distance": 1,
+      "accessible": true
+    },
+    {
+      "from": "wp_wood_230",
+      "to": "wp_wood_f2_hall_05",
+      "distance": 6.9,
+      "accessible": true
+    },
+    {
+      "from": "wp_wood_f2_hall_05",
+      "to": "wp_wood_230",
+      "distance": 6.9,
+      "accessible": true
+    },
+    {
+      "from": "wp_wood_235",
+      "to": "wp_wood_236",
+      "distance": 3.3,
+      "accessible": true
+    },
+    {
+      "from": "wp_wood_236",
+      "to": "wp_wood_235",
+      "distance": 3.3,
+      "accessible": true
+    },
+    {
+      "from": "wp_wood_314",
+      "to": "wp_wood_f3_hall_05",
+      "distance": 2.3,
+      "accessible": true
+    },
+    {
+      "from": "wp_wood_f3_hall_05",
+      "to": "wp_wood_314",
+      "distance": 2.3,
+      "accessible": true
+    },
+    {
+      "from": "wp_wood_315",
+      "to": "wp_wood_f3_hall_05",
+      "distance": 1.5,
+      "accessible": true
+    },
+    {
+      "from": "wp_wood_f3_hall_05",
+      "to": "wp_wood_315",
+      "distance": 1.5,
+      "accessible": true
+    },
+    {
+      "from": "wp_wood_316",
+      "to": "wp_wood_315",
+      "distance": 1,
+      "accessible": true
+    },
+    {
+      "from": "wp_wood_315",
+      "to": "wp_wood_316",
+      "distance": 1,
+      "accessible": true
+    },
+    {
+      "from": "wp_wood_317",
+      "to": "wp_wood_314",
+      "distance": 1.1,
+      "accessible": true
+    },
+    {
+      "from": "wp_wood_314",
+      "to": "wp_wood_317",
+      "distance": 1.1,
+      "accessible": true
+    },
+    {
+      "from": "wp_wood_324",
+      "to": "wp_wood_321b",
+      "distance": 4.9,
+      "accessible": true
+    },
+    {
+      "from": "wp_wood_321b",
+      "to": "wp_wood_324",
+      "distance": 4.9,
+      "accessible": true
+    },
+    {
+      "from": "wp_wood_326",
+      "to": "wp_wood_337",
+      "distance": 3.7,
+      "accessible": true
+    },
+    {
+      "from": "wp_wood_337",
+      "to": "wp_wood_326",
+      "distance": 3.7,
+      "accessible": true
+    },
+    {
+      "from": "wp_wood_327a",
+      "to": "wp_wood_326",
+      "distance": 4.1,
+      "accessible": true
+    },
+    {
+      "from": "wp_wood_326",
+      "to": "wp_wood_327a",
+      "distance": 4.1,
+      "accessible": true
+    },
+    {
+      "from": "wp_wood_327b",
+      "to": "wp_wood_326",
+      "distance": 1.2,
+      "accessible": true
+    },
+    {
+      "from": "wp_wood_326",
+      "to": "wp_wood_327b",
+      "distance": 1.2,
+      "accessible": true
+    },
+    {
+      "from": "wp_wood_329",
+      "to": "wp_wood_327a",
+      "distance": 1.4,
+      "accessible": true
+    },
+    {
+      "from": "wp_wood_327a",
+      "to": "wp_wood_329",
+      "distance": 1.4,
+      "accessible": true
+    },
+    {
+      "from": "wp_wood_330",
+      "to": "wp_wood_327a",
+      "distance": 5.8,
+      "accessible": true
+    },
+    {
+      "from": "wp_wood_327a",
+      "to": "wp_wood_330",
+      "distance": 5.8,
+      "accessible": true
+    },
+    {
+      "from": "wp_wood_335",
+      "to": "wp_wood_f3_hall_07",
+      "distance": 2.2,
+      "accessible": true
+    },
+    {
+      "from": "wp_wood_f3_hall_07",
+      "to": "wp_wood_335",
+      "distance": 2.2,
+      "accessible": true
+    },
+    {
+      "from": "wp_wood_library_f1",
+      "to": "wp_wood_main_entrance",
+      "distance": 6.6,
+      "accessible": true
+    },
+    {
+      "from": "wp_wood_main_entrance",
+      "to": "wp_wood_library_f1",
+      "distance": 6.6,
+      "accessible": true
+    },
+    {
+      "from": "wp_wood_f1_entrance_side_1",
+      "to": "wp_wood_f1_stairs_a",
+      "distance": 1.4,
+      "accessible": true
+    },
+    {
+      "from": "wp_wood_f1_stairs_a",
+      "to": "wp_wood_f1_entrance_side_1",
+      "distance": 1.4,
+      "accessible": true
+    },
+    {
+      "from": "wp_wood_f1_entrance_side_2",
+      "to": "wp_wood_f1_stairs_a",
+      "distance": 4.1,
+      "accessible": true
+    },
+    {
+      "from": "wp_wood_f1_stairs_a",
+      "to": "wp_wood_f1_entrance_side_2",
+      "distance": 4.1,
+      "accessible": true
+    },
+    {
+      "from": "wp_wood_f1_entrance_side_3",
+      "to": "wp_wood_133b",
+      "distance": 6.2,
+      "accessible": true
+    },
+    {
+      "from": "wp_wood_133b",
+      "to": "wp_wood_f1_entrance_side_3",
+      "distance": 6.2,
+      "accessible": true
+    },
+    {
+      "from": "wp_wood_101",
+      "to": "wp_wood_102",
+      "distance": 4.8,
+      "accessible": true
+    },
+    {
+      "from": "wp_wood_102",
+      "to": "wp_wood_101",
+      "distance": 4.8,
+      "accessible": true
+    },
+    {
+      "from": "wp_wood_104",
+      "to": "wp_wood_102",
+      "distance": 3.0,
+      "accessible": true
+    },
+    {
+      "from": "wp_wood_102",
+      "to": "wp_wood_104",
+      "distance": 3.0,
+      "accessible": true
+    },
+    {
+      "from": "wp_wood_105",
+      "to": "wp_wood_104",
+      "distance": 1.7,
+      "accessible": true
+    },
+    {
+      "from": "wp_wood_104",
+      "to": "wp_wood_105",
+      "distance": 1.7,
+      "accessible": true
+    },
+    {
+      "from": "wp_wood_107",
+      "to": "wp_wood_105",
+      "distance": 4.4,
+      "accessible": true
+    },
+    {
+      "from": "wp_wood_105",
+      "to": "wp_wood_107",
+      "distance": 4.4,
+      "accessible": true
+    },
+    {
+      "from": "wp_wood_108",
+      "to": "wp_wood_107",
+      "distance": 1.9,
+      "accessible": true
+    },
+    {
+      "from": "wp_wood_107",
+      "to": "wp_wood_108",
+      "distance": 1.9,
+      "accessible": true
+    },
+    {
+      "from": "wp_wood_111",
+      "to": "wp_wood_f1_hall_01",
+      "distance": 5.6,
+      "accessible": true
+    },
+    {
+      "from": "wp_wood_f1_hall_01",
+      "to": "wp_wood_111",
+      "distance": 5.6,
+      "accessible": true
+    },
+    {
+      "from": "wp_wood_113",
+      "to": "wp_wood_elevator_f1",
+      "distance": 2.6,
+      "accessible": true
+    },
+    {
+      "from": "wp_wood_elevator_f1",
+      "to": "wp_wood_113",
+      "distance": 2.6,
+      "accessible": true
+    },
+    {
+      "from": "wp_wood_115",
+      "to": "wp_wood_f1_staircase",
+      "distance": 7.8,
+      "accessible": true
+    },
+    {
+      "from": "wp_wood_f1_staircase",
+      "to": "wp_wood_115",
+      "distance": 7.8,
+      "accessible": true
+    },
+    {
+      "from": "wp_wood_117",
+      "to": "wp_wood_118",
+      "distance": 5.1,
+      "accessible": true
+    },
+    {
+      "from": "wp_wood_118",
+      "to": "wp_wood_117",
+      "distance": 5.1,
+      "accessible": true
+    },
+    {
+      "from": "wp_wood_120",
+      "to": "wp_wood_f1_hall_04",
+      "distance": 3.6,
+      "accessible": true
+    },
+    {
+      "from": "wp_wood_f1_hall_04",
+      "to": "wp_wood_120",
+      "distance": 3.6,
+      "accessible": true
+    },
+    {
+      "from": "wp_wood_122",
+      "to": "wp_wood_121",
+      "distance": 1.8,
+      "accessible": true
+    },
+    {
+      "from": "wp_wood_121",
+      "to": "wp_wood_122",
+      "distance": 1.8,
+      "accessible": true
+    },
+    {
+      "from": "wp_wood_127",
+      "to": "wp_wood_f1_hall_10",
+      "distance": 5.0,
+      "accessible": true
+    },
+    {
+      "from": "wp_wood_f1_hall_10",
+      "to": "wp_wood_127",
+      "distance": 5.0,
+      "accessible": true
+    },
+    {
+      "from": "wp_wood_128",
+      "to": "wp_wood_127",
+      "distance": 4.6,
+      "accessible": true
+    },
+    {
+      "from": "wp_wood_127",
+      "to": "wp_wood_128",
+      "distance": 4.6,
+      "accessible": true
+    },
+    {
+      "from": "wp_wood_129",
+      "to": "wp_wood_f1_hall_11",
+      "distance": 2.3,
+      "accessible": true
+    },
+    {
+      "from": "wp_wood_f1_hall_11",
+      "to": "wp_wood_129",
+      "distance": 2.3,
+      "accessible": true
+    },
+    {
+      "from": "wp_wood_130",
+      "to": "wp_wood_123a",
+      "distance": 3.3,
+      "accessible": true
+    },
+    {
+      "from": "wp_wood_123a",
+      "to": "wp_wood_130",
+      "distance": 3.3,
+      "accessible": true
+    },
+    {
+      "from": "wp_wood_131",
+      "to": "wp_wood_132b",
+      "distance": 1,
+      "accessible": true
+    },
+    {
+      "from": "wp_wood_132b",
+      "to": "wp_wood_131",
+      "distance": 1,
+      "accessible": true
+    },
+    {
+      "from": "wp_wood_132a",
+      "to": "wp_wood_135",
+      "distance": 1.3,
+      "accessible": true
+    },
+    {
+      "from": "wp_wood_135",
+      "to": "wp_wood_132a",
+      "distance": 1.3,
+      "accessible": true
+    },
+    {
+      "from": "wp_wood_201",
+      "to": "wp_wood_203",
+      "distance": 24.8,
+      "accessible": true
+    },
+    {
+      "from": "wp_wood_203",
+      "to": "wp_wood_201",
+      "distance": 24.8,
+      "accessible": true
+    },
+    {
+      "from": "wp_wood_202",
+      "to": "wp_wood_201",
+      "distance": 30.7,
+      "accessible": true
+    },
+    {
+      "from": "wp_wood_201",
+      "to": "wp_wood_202",
+      "distance": 30.7,
+      "accessible": true
+    },
+    {
+      "from": "wp_wood_204",
+      "to": "wp_wood_203",
+      "distance": 10.2,
+      "accessible": true
+    },
+    {
+      "from": "wp_wood_203",
+      "to": "wp_wood_204",
+      "distance": 10.2,
+      "accessible": true
+    },
+    {
+      "from": "wp_wood_206",
+      "to": "wp_wood_204",
+      "distance": 7.3,
+      "accessible": true
+    },
+    {
+      "from": "wp_wood_204",
+      "to": "wp_wood_206",
+      "distance": 7.3,
+      "accessible": true
+    },
+    {
+      "from": "wp_wood_207",
+      "to": "wp_wood_elevator_f2",
+      "distance": 12.8,
+      "accessible": true
+    },
+    {
+      "from": "wp_wood_elevator_f2",
+      "to": "wp_wood_207",
+      "distance": 12.8,
+      "accessible": true
+    },
+    {
+      "from": "wp_wood_208",
+      "to": "wp_wood_206",
+      "distance": 17.8,
+      "accessible": true
+    },
+    {
+      "from": "wp_wood_206",
+      "to": "wp_wood_208",
+      "distance": 17.8,
+      "accessible": true
+    },
+    {
+      "from": "wp_wood_211",
+      "to": "wp_wood_208",
+      "distance": 9.7,
+      "accessible": true
+    },
+    {
+      "from": "wp_wood_208",
+      "to": "wp_wood_211",
+      "distance": 9.7,
+      "accessible": true
+    },
+    {
+      "from": "wp_wood_215",
+      "to": "wp_wood_214",
+      "distance": 15.3,
+      "accessible": true
+    },
+    {
+      "from": "wp_wood_214",
+      "to": "wp_wood_215",
+      "distance": 15.3,
+      "accessible": true
+    },
+    {
+      "from": "wp_wood_216",
+      "to": "wp_wood_f2_hall_11",
+      "distance": 7.4,
+      "accessible": true
+    },
+    {
+      "from": "wp_wood_f2_hall_11",
+      "to": "wp_wood_216",
+      "distance": 7.4,
+      "accessible": true
+    },
+    {
+      "from": "wp_wood_221",
+      "to": "wp_wood_222",
+      "distance": 7.7,
+      "accessible": true
+    },
+    {
+      "from": "wp_wood_222",
+      "to": "wp_wood_221",
+      "distance": 7.7,
+      "accessible": true
+    },
+    {
+      "from": "wp_wood_223",
+      "to": "wp_wood_f2_hall_08",
+      "distance": 7.7,
+      "accessible": true
+    },
+    {
+      "from": "wp_wood_f2_hall_08",
+      "to": "wp_wood_223",
+      "distance": 7.7,
+      "accessible": true
+    },
+    {
+      "from": "wp_wood_225",
+      "to": "wp_wood_223",
+      "distance": 6.3,
+      "accessible": true
+    },
+    {
+      "from": "wp_wood_223",
+      "to": "wp_wood_225",
+      "distance": 6.3,
+      "accessible": true
+    },
+    {
+      "from": "wp_wood_231",
+      "to": "wp_wood_230",
+      "distance": 6.9,
+      "accessible": true
+    },
+    {
+      "from": "wp_wood_230",
+      "to": "wp_wood_231",
+      "distance": 6.9,
+      "accessible": true
+    },
+    {
+      "from": "wp_wood_232",
+      "to": "wp_wood_f2_hall_05",
+      "distance": 5.7,
+      "accessible": true
+    },
+    {
+      "from": "wp_wood_f2_hall_05",
+      "to": "wp_wood_232",
+      "distance": 5.7,
+      "accessible": true
+    },
+    {
+      "from": "wp_wood_v201",
+      "to": "wp_wood_elevator_f2",
+      "distance": 3.0,
+      "accessible": true
+    },
+    {
+      "from": "wp_wood_elevator_f2",
+      "to": "wp_wood_v201",
+      "distance": 3.0,
+      "accessible": true
+    },
+    {
+      "from": "wp_wood_318a",
+      "to": "wp_wood_f3_hall_03",
+      "distance": 6.6,
+      "accessible": true
+    },
+    {
+      "from": "wp_wood_f3_hall_03",
+      "to": "wp_wood_318a",
+      "distance": 6.6,
+      "accessible": true
+    },
+    {
+      "from": "wp_wood_320",
+      "to": "wp_wood_f3_hall_04",
+      "distance": 4.5,
+      "accessible": true
+    },
+    {
+      "from": "wp_wood_f3_hall_04",
+      "to": "wp_wood_320",
+      "distance": 4.5,
+      "accessible": true
+    },
+    {
+      "from": "wp_wood_320a",
+      "to": "wp_wood_321b",
+      "distance": 7.2,
+      "accessible": true
+    },
+    {
+      "from": "wp_wood_321b",
+      "to": "wp_wood_320a",
+      "distance": 7.2,
+      "accessible": true
+    },
+    {
+      "from": "wp_wood_321c",
+      "to": "wp_wood_f3_hall_06",
+      "distance": 11.2,
+      "accessible": true
+    },
+    {
+      "from": "wp_wood_f3_hall_06",
+      "to": "wp_wood_321c",
+      "distance": 11.2,
+      "accessible": true
+    },
+    {
+      "from": "wp_wood_322",
+      "to": "wp_wood_321b",
+      "distance": 6.6,
+      "accessible": true
+    },
+    {
+      "from": "wp_wood_321b",
+      "to": "wp_wood_322",
+      "distance": 6.6,
+      "accessible": true
+    },
+    {
+      "from": "wp_wood_323",
+      "to": "wp_wood_324",
+      "distance": 6.0,
+      "accessible": true
+    },
+    {
+      "from": "wp_wood_324",
+      "to": "wp_wood_323",
+      "distance": 6.0,
+      "accessible": true
+    },
+    {
+      "from": "wp_wood_325",
+      "to": "wp_wood_324",
+      "distance": 9.3,
+      "accessible": true
+    },
+    {
+      "from": "wp_wood_324",
+      "to": "wp_wood_325",
+      "distance": 9.3,
+      "accessible": true
+    },
+    {
+      "from": "wp_wood_327",
+      "to": "wp_wood_327a",
+      "distance": 7.4,
+      "accessible": true
+    },
+    {
+      "from": "wp_wood_327a",
+      "to": "wp_wood_327",
+      "distance": 7.4,
+      "accessible": true
+    },
+    {
+      "from": "wp_wood_328",
+      "to": "wp_wood_327",
+      "distance": 7.2,
+      "accessible": true
+    },
+    {
+      "from": "wp_wood_327",
+      "to": "wp_wood_328",
+      "distance": 7.2,
+      "accessible": true
+    },
+    {
+      "from": "wp_wood_331",
+      "to": "wp_wood_330",
+      "distance": 6.9,
+      "accessible": true
+    },
+    {
+      "from": "wp_wood_330",
+      "to": "wp_wood_331",
+      "distance": 6.9,
+      "accessible": true
+    },
+    {
+      "from": "wp_wood_331a",
+      "to": "wp_wood_331",
+      "distance": 3.4,
+      "accessible": true
+    },
+    {
+      "from": "wp_wood_331",
+      "to": "wp_wood_331a",
+      "distance": 3.4,
+      "accessible": true
+    },
+    {
+      "from": "wp_wood_332",
+      "to": "wp_wood_f3_hall_08",
+      "distance": 7.6,
+      "accessible": true
+    },
+    {
+      "from": "wp_wood_f3_hall_08",
+      "to": "wp_wood_332",
+      "distance": 7.6,
+      "accessible": true
+    },
+    {
+      "from": "wp_wood_336",
+      "to": "wp_wood_f3_hall_09",
+      "distance": 5.2,
+      "accessible": true
+    },
+    {
+      "from": "wp_wood_f3_hall_09",
+      "to": "wp_wood_336",
+      "distance": 5.2,
+      "accessible": true
+    },
+    {
+      "from": "wp_wood_339",
+      "to": "wp_wood_340",
+      "distance": 4.8,
+      "accessible": true
+    },
+    {
+      "from": "wp_wood_340",
+      "to": "wp_wood_339",
+      "distance": 4.8,
+      "accessible": true
+    },
+    {
+      "from": "wp_wood_340a",
+      "to": "wp_wood_339",
+      "distance": 8.3,
+      "accessible": true
+    },
+    {
+      "from": "wp_wood_339",
+      "to": "wp_wood_340a",
+      "distance": 8.3,
+      "accessible": true
+    },
+    {
+      "from": "wp_wood_344",
+      "to": "wp_wood_345",
+      "distance": 6.3,
+      "accessible": true
+    },
+    {
+      "from": "wp_wood_345",
+      "to": "wp_wood_344",
+      "distance": 6.3,
+      "accessible": true
+    },
+    {
+      "from": "wp_wood_346a",
+      "to": "wp_wood_346",
+      "distance": 6.2,
+      "accessible": true
+    },
+    {
+      "from": "wp_wood_346",
+      "to": "wp_wood_346a",
+      "distance": 6.2,
+      "accessible": true
+    },
+    {
+      "from": "wp_wood_347",
+      "to": "wp_wood_346a",
+      "distance": 9.4,
+      "accessible": true
+    },
+    {
+      "from": "wp_wood_346a",
+      "to": "wp_wood_347",
+      "distance": 9.4,
+      "accessible": true
+    },
+    {
+      "from": "wp_wood_347a",
+      "to": "wp_wood_347",
+      "distance": 11.4,
+      "accessible": true
+    },
+    {
+      "from": "wp_wood_347",
+      "to": "wp_wood_347a",
+      "distance": 11.4,
+      "accessible": true
+    },
+    {
+      "from": "wp_wood_347b",
+      "to": "wp_wood_347",
+      "distance": 15.1,
+      "accessible": true
+    },
+    {
+      "from": "wp_wood_347",
+      "to": "wp_wood_347b",
+      "distance": 15.1,
+      "accessible": true
+    },
+    {
+      "from": "wp_wood_m315",
+      "to": "wp_wood_elevator_f3",
+      "distance": 24.6,
+      "accessible": true
+    },
+    {
+      "from": "wp_wood_elevator_f3",
+      "to": "wp_wood_m315",
+      "distance": 24.6,
+      "accessible": true
+    },
+    {
+      "from": "wp_wood_v301",
+      "to": "wp_wood_elevator_f3",
+      "distance": 3.6,
+      "accessible": true
+    },
+    {
+      "from": "wp_wood_elevator_f3",
+      "to": "wp_wood_v301",
+      "distance": 3.6,
+      "accessible": true
     }
   ],
   "rooms": [
