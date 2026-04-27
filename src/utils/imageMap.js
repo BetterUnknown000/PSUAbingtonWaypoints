@@ -5,6 +5,7 @@ export const imageMap = {
   "../assets/WoodlandImages/Level1_2_1.jpg": require("../assets/WoodlandImages/Level1_2_1.jpg"),
   "../assets/WoodlandImages/Level1_3_1.jpg": require("../assets/WoodlandImages/Level1_3_1.jpg"),
   "../assets/WoodlandImages/Level1_3_2.jpg": require("../assets/WoodlandImages/Level1_3_2.jpg"),
+  "../assets/WoodlandImages/Level1_4_1.jpg": require("../assets/WoodlandImages/Level1_4_1.jpg"),
   "../assets/WoodlandImages/Level1_4_2.jpg": require("../assets/WoodlandImages/Level1_4_2.jpg"),
   "../assets/WoodlandImages/Level1_Entry.jpg": require("../assets/WoodlandImages/Level1_Entry.jpg"),
   "../assets/WoodlandImages/Level1_Entry_1.jpg": require("../assets/WoodlandImages/Level1_Entry_1.jpg"),
