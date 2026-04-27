@@ -31,7 +31,6 @@
       ],
       "entrances": [
         "wp_wood_main_entrance",
-        "wp_wood_f3_outside",
         "wp_wood_f1_entrance_side_1",
         "wp_wood_f1_entrance_side_2",
         "wp_wood_f1_entrance_side_3"
