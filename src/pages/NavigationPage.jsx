@@ -2252,7 +2252,25 @@ export default function NavigationPage({ route, navigation }) {
           ) : null}
 
           <View style={s.arrowCenterWrap}>
-            {currentWaypointId ? (
+            {!currentWaypointId ? (
+              <View style={s.scanPromptWrap}>
+                <Text style={s.scanPromptIcon}>📷</Text>
+                <Text style={s.scanPromptText}>Point your camera at a nearby QR code to begin</Text>
+              </View>
+            ) : nearNextWaypoint ? (
+              <View style={s.scanPromptWrap}>
+                <Text style={s.scanPromptIcon}>
+                  {nextWaypoint?.type === "stairs" ? "🪜" : nextWaypoint?.type === "elevator" ? "🛗" : "📷"}
+                </Text>
+                <Text style={s.scanPromptText}>
+                  {nextWaypoint?.type === "stairs"
+                    ? "Head to the staircase and scan its QR code."
+                    : nextWaypoint?.type === "elevator"
+                    ? "Head to the elevator and scan its QR code."
+                    : "Scan the QR code at the entrance to continue."}
+                </Text>
+              </View>
+            ) : (
               <DirectionArrow
                 direction={fallbackArrowDirection}
                 arrived={arrived}
@@ -2260,11 +2278,6 @@ export default function NavigationPage({ route, navigation }) {
                 targetBearing={targetBearing}
                 mode={transportMode}
               />
-            ) : (
-              <View style={s.scanPromptWrap}>
-                <Text style={s.scanPromptIcon}>📷</Text>
-                <Text style={s.scanPromptText}>Point your camera at a nearby QR code to begin</Text>
-              </View>
             )}
           </View>
 
