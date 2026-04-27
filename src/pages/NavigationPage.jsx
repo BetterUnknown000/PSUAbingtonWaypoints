@@ -1271,6 +1271,13 @@ export default function NavigationPage({ route, navigation }) {
     if (!currentIndoorPosition || !currentWaypointId || pathIds.length === 0 || arrived) return;
     if (!nextWaypoint) return;
 
+    const currentIndex = pathIds.indexOf(currentWaypointId);
+    const nextPathWaypointId = currentIndex >= 0 ? pathIds[currentIndex + 1] : null;
+    const nextPathWaypoint = nextPathWaypointId ? getWaypointById(nextPathWaypointId) : null;
+    if (nextPathWaypoint?.type === "stairs" || nextPathWaypoint?.type === "elevator") {
+      return;
+    }
+
     const advanced = advanceRouteIfNeededIndoor({
       currentWaypointId,
       currentIndoorPosition,
