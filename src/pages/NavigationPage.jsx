@@ -2247,7 +2247,7 @@ export default function NavigationPage({ route, navigation }) {
           ) : null}
 
           <View style={s.arrowCenterWrap}>
-            {stageMode !== "indoor_find_anchor" || currentWaypointId ? (
+            {currentWaypointId ? (
               <DirectionArrow
                 direction={fallbackArrowDirection}
                 arrived={arrived}
@@ -2255,7 +2255,12 @@ export default function NavigationPage({ route, navigation }) {
                 targetBearing={targetBearing}
                 mode={transportMode}
               />
-            ) : null}
+            ) : (
+              <View style={s.scanPromptWrap}>
+                <Text style={s.scanPromptIcon}>📷</Text>
+                <Text style={s.scanPromptText}>Point your camera at a nearby QR code to begin</Text>
+              </View>
+            )}
           </View>
 
           {!visionReady ? (
