@@ -36,7 +36,6 @@ export default function DirectionArrow({
   heading = 0,
   targetBearing = null,
   mode = "arrow",
-  absoluteBearing = false,
 }) {
   const pulseAnim = useRef(new Animated.Value(1)).current;
   const appearAnim = useRef(new Animated.Value(1)).current;
@@ -48,9 +47,7 @@ export default function DirectionArrow({
 
   const relativeArrowDegrees =
     targetBearing != null
-      ? absoluteBearing
-        ? normalizeDegrees(targetBearing)
-        : shortestSignedAngle(normalizedHeading, targetBearing)
+      ? shortestSignedAngle(normalizedHeading, targetBearing)
       : getInstructionRotation(direction);
 
   useEffect(() => {
