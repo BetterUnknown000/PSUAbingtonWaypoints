@@ -1506,8 +1506,8 @@
       "type": "hallway",
       "latitude": 40.116812,
       "longitude": -75.11103,
-      "x": 0,
-      "y": 0,
+      "x": 516.0,
+      "y": 412.0,
       "qr_code": "QR_WOOD_F1_HALL_08",
       "photo": "../assets/WoodlandImages/Level1_Outside_2.jpg"
     },
