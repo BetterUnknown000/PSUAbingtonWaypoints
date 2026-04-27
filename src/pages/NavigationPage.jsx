@@ -306,7 +306,7 @@ export default function NavigationPage({ route, navigation }) {
 
   const [batterySaverMode, setBatterySaverMode] = useState(false);
   const [outdoorScannerVisible, setOutdoorScannerVisible] = useState(false);
-  const [ setForceIndoorAfterScan] = useState(false);
+  const [forceIndoorAfterScan, setForceIndoorAfterScan] = useState(false);
 
   const [visionReady, setVisionReady] = useState(false);
   const [visionSource, setVisionSource] = useState(null); // "qr" | "vision" | null
