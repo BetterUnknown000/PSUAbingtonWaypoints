@@ -525,6 +525,9 @@ const s = StyleSheet.create({
     gap: 10,
     marginBottom: 4,
   },
+  featureSquareWrap: {
+    flex: 1,
+  },
   featureBtn: {
     paddingHorizontal: 14,
     paddingVertical: 10,
