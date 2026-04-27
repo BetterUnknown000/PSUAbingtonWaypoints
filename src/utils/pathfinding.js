@@ -541,14 +541,24 @@ export function rerouteFromWaypoint(startWaypointId, destinationWaypointId, opti
       stairsOnly,
     });
   } else if (sameBuilding(startWaypoint, destinationWaypoint)) {
-    const verticalChoice = chooseBestVerticalRoute({
-      currentWaypoint: startWaypoint,
-      destinationWaypoint,
-      accessibleOnly,
-      stairsOnly,
-    });
+    // If we're already AT a vertical waypoint (stairs/elevator),
+    // skip leg 1 and go straight to cross-floor path
+    if (isVerticalWaypoint(startWaypoint)) {
+      path = calculateShortestPath(startWaypointId, destinationWaypointId, {
+        buildingId,
+        accessibleOnly,
+        stairsOnly,
+      });
+    } else {
+      const verticalChoice = chooseBestVerticalRoute({
+        currentWaypoint: startWaypoint,
+        destinationWaypoint,
+        accessibleOnly,
+        stairsOnly,
+      });
 
-    path = verticalChoice?.path || [];
+      path = verticalChoice?.path || [];
+    }
   } else {
     path = calculateShortestPath(startWaypointId, destinationWaypointId, {
       buildingId,
