@@ -2241,13 +2241,15 @@ export default function NavigationPage({ route, navigation }) {
           ) : null}
 
           <View style={s.arrowCenterWrap}>
-            <DirectionArrow
-              direction={fallbackArrowDirection}
-              arrived={arrived}
-              heading={deviceHeading}
-              targetBearing={targetBearing}
-              mode={transportMode}
-            />
+            {stageMode !== "indoor_find_anchor" || currentWaypointId ? (
+              <DirectionArrow
+                direction={fallbackArrowDirection}
+                arrived={arrived}
+                heading={deviceHeading}
+                targetBearing={targetBearing}
+                mode={transportMode}
+              />
+            ) : null}
           </View>
 
           {!visionReady ? (
@@ -2301,7 +2303,9 @@ export default function NavigationPage({ route, navigation }) {
               </Text>
 
               <Text style={[s.nextStepTitle, arrived && s.arrivalTitle]}>
-                {stageMessage || currentStep?.text || "No QR nearby? Tap User Help."}
+                {stageMode === "indoor_find_anchor" && !currentWaypointId
+                  ? "Point your camera at a nearby QR code to begin indoor navigation."
+                  : stageMessage || currentStep?.text || "No QR nearby? Tap User Help."}
               </Text>
 
               <View style={s.metaRow}>
@@ -2320,9 +2324,9 @@ export default function NavigationPage({ route, navigation }) {
                 </View>
               </View>
 
-              {stageMode === "indoor_find_anchor" && !currentStep?.text ? (
+              {stageMode === "indoor_find_anchor" && !currentWaypointId ? (
                 <Text style={s.stageText}>
-                  If there is no QR code nearby, tap Help and follow the recovery steps.
+                  The camera is scanning automatically. If there is no QR code nearby, tap Help.
                 </Text>
               ) : null}
             </Animated.View>
