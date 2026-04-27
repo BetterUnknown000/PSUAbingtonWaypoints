@@ -7478,22 +7478,6 @@
     },
     {
       "building": "woodland",
-      "room_number": "002",
-      "floor": "ground",
-      "waypoint_id": "wp_wood_gnd_002",
-      "room_name": "Christina Riehman-Murphy, Open Education Librarian",
-      "type": "office"
-    },
-    {
-      "building": "woodland",
-      "room_number": "003",
-      "floor": "ground",
-      "waypoint_id": "wp_wood_gnd_003",
-      "room_name": "Melissa Corre, Research and Instruction Librarian",
-      "type": "office"
-    },
-    {
-      "building": "woodland",
       "room_number": "203",
       "floor": "2",
       "waypoint_id": "wp_wood_203",
