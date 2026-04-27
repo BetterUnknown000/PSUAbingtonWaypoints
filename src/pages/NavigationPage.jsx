@@ -360,7 +360,13 @@ export default function NavigationPage({ route, navigation }) {
         !currentIndoorPosition ||
         !nextWaypoint ||
         nextWaypoint.x == null ||
-        nextWaypoint.y == null
+        nextWaypoint.y == null ||
+        Number(nextWaypoint.x) === 0 ||
+        Number(nextWaypoint.y) === 0 ||
+        currentIndoorPosition.x == null ||
+        currentIndoorPosition.y == null ||
+        Number(currentIndoorPosition.x) === 0 ||
+        Number(currentIndoorPosition.y) === 0
       ) {
         return null;
       }
