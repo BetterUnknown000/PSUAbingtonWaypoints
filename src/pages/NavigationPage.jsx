@@ -2254,7 +2254,6 @@ export default function NavigationPage({ route, navigation }) {
                 heading={deviceHeading}
                 targetBearing={targetBearing}
                 mode={transportMode}
-                absoluteBearing={true}
               />
             ) : null}
           </View>
