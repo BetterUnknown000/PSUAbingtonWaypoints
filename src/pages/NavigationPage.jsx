@@ -353,11 +353,6 @@ export default function NavigationPage({ route, navigation }) {
     if (!Array.isArray(steps) || steps.length === 0) return null;
     return steps[Math.min(activeStepIndex, steps.length - 1)] || null;
   }, [steps, activeStepIndex]);
-  
-  const fallbackArrowDirection = useMemo(() => {
-    if (targetBearing !== null) return "straight";
-    return getArrowDirectionFromText(currentStep?.text || stageMessage || "");
-  }, [targetBearing, currentStep, stageMessage]);
 
   const targetBearing = useMemo(() => {
     if (viewMode === VIEW_MODE.INDOOR) {
@@ -396,6 +391,11 @@ export default function NavigationPage({ route, navigation }) {
     );
   }, [viewMode, currentIndoorPosition, userGps, nextWaypoint]);
 
+  const fallbackArrowDirection = useMemo(() => {
+    if (targetBearing !== null) return "straight";
+    return getArrowDirectionFromText(currentStep?.text || stageMessage || "");
+  }, [targetBearing, currentStep, stageMessage]);
+  
   const formattedDistance = useMemo(() => {
     if (orsMeters !== null && viewMode === VIEW_MODE.OUTDOOR) {
       return formatDistance(orsMeters);
