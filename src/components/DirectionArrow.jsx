@@ -41,6 +41,7 @@ export default function DirectionArrow({
   const appearAnim = useRef(new Animated.Value(1)).current;
   const compassAnim = useRef(new Animated.Value(0)).current;
   const arrowAnim = useRef(new Animated.Value(0)).current;
+  const lastArrowDeg = useRef(0);
 
   const normalizedHeading = normalizeDegrees(heading);
 
@@ -95,10 +96,20 @@ export default function DirectionArrow({
       useNativeDriver: true,
     }).start();
   }, [normalizedHeading, compassAnim]);
-
+  
   useEffect(() => {
+    const current = lastArrowDeg.current;
+    let target = relativeArrowDegrees;
+  
+    let diff = target - current;
+    if (diff > 180) diff -= 360;
+    if (diff < -180) diff += 360;
+    target = current + diff;
+  
+    lastArrowDeg.current = target;
+  
     Animated.timing(arrowAnim, {
-      toValue: relativeArrowDegrees,
+      toValue: target,
       duration: 120,
       easing: Easing.out(Easing.cubic),
       useNativeDriver: true,
@@ -109,10 +120,10 @@ export default function DirectionArrow({
     inputRange: [0, 360],
     outputRange: ["0deg", "360deg"],
   });
-
+  
   const arrowRotate = arrowAnim.interpolate({
-    inputRange: [-180, 180],
-    outputRange: ["-180deg", "180deg"],
+    inputRange: [-720, 720],
+    outputRange: ["-720deg", "720deg"],
   });
 
   if (arrived) {
