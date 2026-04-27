@@ -583,7 +583,7 @@ export function getNextWaypointId(pathIds = [], currentWaypointId) {
   }
 
   const index = pathIds.indexOf(currentWaypointId);
-  if (index === -1) return pathIds[0] || null;
+  if (index === -1) return null;
   if (index >= pathIds.length - 1) return null;
 
   return pathIds[index + 1];
