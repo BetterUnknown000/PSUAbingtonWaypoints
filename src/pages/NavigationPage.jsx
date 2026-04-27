@@ -353,10 +353,11 @@ export default function NavigationPage({ route, navigation }) {
     if (!Array.isArray(steps) || steps.length === 0) return null;
     return steps[Math.min(activeStepIndex, steps.length - 1)] || null;
   }, [steps, activeStepIndex]);
-
+  
   const fallbackArrowDirection = useMemo(() => {
+    if (targetBearing !== null) return "straight";
     return getArrowDirectionFromText(currentStep?.text || stageMessage || "");
-  }, [currentStep, stageMessage]);
+  }, [targetBearing, currentStep, stageMessage]);
 
   const targetBearing = useMemo(() => {
     if (viewMode === VIEW_MODE.INDOOR) {
