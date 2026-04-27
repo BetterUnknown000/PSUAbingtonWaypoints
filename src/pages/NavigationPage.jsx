@@ -3705,4 +3705,20 @@ const s = StyleSheet.create({
     fontWeight: "700",
     marginTop: 4,
   },
+  scanPromptWrap: {
+    alignItems: "center",
+    justifyContent: "center",
+    paddingHorizontal: 30,
+  },
+  scanPromptIcon: {
+    fontSize: 52,
+    marginBottom: 14,
+  },
+  scanPromptText: {
+    color: "#fff",
+    fontSize: 18,
+    fontWeight: "900",
+    textAlign: "center",
+    lineHeight: 26,
+  },
 });
