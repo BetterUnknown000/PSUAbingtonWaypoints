@@ -419,9 +419,21 @@ export default function NavigationPage({ route, navigation }) {
   const nearNextWaypoint = useMemo(() => {
     if (viewMode !== VIEW_MODE.INDOOR) return false;
     if (!nextWaypoint) return false;
+    if (!userGps) return false;
+    if (nextWaypoint.latitude == null || nextWaypoint.longitude == null) return false;
+  
     const type = String(nextWaypoint.type || "").toLowerCase();
-    return type === "stairs" || type === "elevator" || type === "entrance";
-  }, [viewMode, nextWaypoint]);
+    if (type !== "stairs" && type !== "elevator" && type !== "entrance") return false;
+  
+    const dist = haversineMeters(
+      Number(userGps.latitude),
+      Number(userGps.longitude),
+      Number(nextWaypoint.latitude),
+      Number(nextWaypoint.longitude)
+    );
+  
+    return dist <= 8;
+  }, [viewMode, nextWaypoint, userGps]);
   
   const formattedDistance = useMemo(() => {
     if (orsMeters !== null && viewMode === VIEW_MODE.OUTDOOR) {
