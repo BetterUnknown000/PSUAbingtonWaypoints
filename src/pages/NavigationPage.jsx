@@ -69,6 +69,16 @@ const PSU = {
   mapAccent: "#2E6BDB",
 };
 
+const BUILDING_MAP_ROTATION_OFFSET = {
+  woodland: -45,
+  sutherland: 0,
+  lares: 0,
+  rydal: 0,
+  springhouse: 0,
+  athletic: 0,
+  cloverly: 0,
+};
+
 const HELP_MODE = {
   OUTSIDE: "outside",
   CORRECT: "correct",
@@ -376,6 +386,10 @@ export default function NavigationPage({ route, navigation }) {
   
       let indoorBearing = Math.atan2(dx, -dy) * (180 / Math.PI);
       indoorBearing = (indoorBearing + 360) % 360;
+
+      const buildingId = currentIndoorPosition?.building || "";
+      const rotationOffset = BUILDING_MAP_ROTATION_OFFSET[buildingId] ?? 0;
+      indoorBearing = (indoorBearing + rotationOffset + 360) % 360;
   
       return indoorBearing;
     }
