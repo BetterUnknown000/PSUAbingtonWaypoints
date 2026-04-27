@@ -70,7 +70,7 @@ const PSU = {
 };
 
 const BUILDING_MAP_ROTATION_OFFSET = {
-  woodland: -45,
+  woodland: -10,
   sutherland: 0,
   lares: 0,
   rydal: 0,
