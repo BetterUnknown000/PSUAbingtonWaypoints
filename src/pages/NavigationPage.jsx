@@ -416,9 +416,18 @@ export default function NavigationPage({ route, navigation }) {
   const viewMode = useMemo(() => {
     if (forceIndoorAfterScan) return VIEW_MODE.INDOOR;
 
-    const currentWp = currentWaypointId ? getWaypointById(currentWaypointId) : null;
     const destinationBuildingId =
       destinationBuilding?.id || destinationRoom?.building || "";
+
+    if (
+      currentBuildingId &&
+      destinationBuildingId &&
+      normalize(currentBuildingId) === normalize(destinationBuildingId)
+    ) {
+      return VIEW_MODE.INDOOR;
+    }
+
+    const currentWp = currentWaypointId ? getWaypointById(currentWaypointId) : null;
 
     const indoorModes = [
       "indoor_destination",
