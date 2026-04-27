@@ -582,10 +582,15 @@ export default function NavigationPage({ route, navigation }) {
   
     return null;
   }, [selectedDestinationEntrance, outdoorTargetBuilding]);
-
+  
   useEffect(() => {
     if (viewMode !== VIEW_MODE.OUTDOOR) {
       setOrsLoading(false);
+      setOrsCoords([]);
+      setOrsSteps([]);
+      setOrsMeters(null);
+      setOrsError(null);
+      lastOrsFetchKeyRef.current = null;
       return;
     }
 
