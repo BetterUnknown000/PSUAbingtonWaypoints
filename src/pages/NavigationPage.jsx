@@ -2029,7 +2029,7 @@ export default function NavigationPage({ route, navigation }) {
               ) : (
                 <View style={s.mapInfoPill}>
                   <Text style={s.mapInfoPillText}>
-                    {`orsMeters=${String(orsMeters)}`}
+                    Calculating distance…
                   </Text>
                 </View>
               )}
