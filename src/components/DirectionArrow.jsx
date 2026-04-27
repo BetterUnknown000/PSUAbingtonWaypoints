@@ -35,7 +35,8 @@ export default function DirectionArrow({
   arrived = false,
   heading = 0,
   targetBearing = null,
-  mode = "arrow", // arrow | elevator | stairs
+  mode = "arrow",
+  absoluteBearing = false,
 }) {
   const pulseAnim = useRef(new Animated.Value(1)).current;
   const appearAnim = useRef(new Animated.Value(1)).current;
@@ -47,7 +48,9 @@ export default function DirectionArrow({
 
   const relativeArrowDegrees =
     targetBearing != null
-      ? shortestSignedAngle(normalizedHeading, targetBearing)
+      ? absoluteBearing
+        ? normalizeDegrees(targetBearing)
+        : shortestSignedAngle(normalizedHeading, targetBearing)
       : getInstructionRotation(direction);
 
   useEffect(() => {
