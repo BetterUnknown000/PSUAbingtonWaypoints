@@ -250,6 +250,11 @@ export default function NavigationPage({ route, navigation }) {
     };
   }, []);
 
+  const accessibilityMode =
+  typeof routeAccessibilityMode === "boolean"
+    ? routeAccessibilityMode
+    : savedAccessibilityMode;
+
   const linkedStartWaypoint = useMemo(() => {
     const params = route.params || {};
     const startWaypointId =
@@ -1083,11 +1088,6 @@ export default function NavigationPage({ route, navigation }) {
     deviceHeading,
     pedometerAvailable,
   ]);
-
-  const accessibilityMode =
-    typeof routeAccessibilityMode === "boolean"
-      ? routeAccessibilityMode
-      : savedAccessibilityMode;
 
   useEffect(() => {
     if (!preferencesReady) return;
