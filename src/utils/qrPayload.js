@@ -73,10 +73,16 @@ export function buildQrPayloadObject(waypoint) {
     y: waypoint.y ?? null,
     latitude: waypoint.latitude ?? null,
     longitude: waypoint.longitude ?? null,
+    bearing_hint_deg: waypoint.bearing_hint_deg ?? null,
     label: waypoint.label,
     type: waypoint.type,
     role,
     graph_rev: GRAPH_REV,
+    qr_deployed: waypoint.qr_deployed ?? true,
+    requires_scan: waypoint.requires_scan ?? false,
+    stop_radius_m: waypoint.stop_radius_m ?? 3,
+    approach_latitude: waypoint.approach_latitude ?? null,
+    approach_longitude: waypoint.approach_longitude ?? null,
     app_url: buildWaypointDeepLink(waypoint),
   };
 }
@@ -164,7 +170,24 @@ export function parseQrPayload(qrData) {
     }
   }
  
-  return payload;
+  const toBool = (v) => v === true || v === "true" || v === 1 || v === "1";
+  const toNum = (v) => {
+    const n = Number(v);
+    return Number.isFinite(n) ? n : null;
+  };
+
+  return {
+    ...payload,
+    version: Number(payload.version ?? QR_PAYLOAD_VERSION),
+    x: toNum(payload.x),
+    y: toNum(payload.y),
+    bearing_hint_deg: toNum(payload.bearing_hint_deg),
+    stop_radius_m: toNum(payload.stop_radius_m),
+    qr_deployed: payload.qr_deployed == null ? true : toBool(payload.qr_deployed),
+    requires_scan: payload.requires_scan == null ? false : toBool(payload.requires_scan),
+    approach_latitude: toNum(payload.approach_latitude),
+    approach_longitude: toNum(payload.approach_longitude),
+  };
 }
  
 /**
