@@ -262,6 +262,7 @@ export function navReducer(state, event) {
         mode: NavMode.AWAIT_SCAN_ANCHOR,
         nextRequiredAnchorId: event.anchorWaypointId,
         expectedQrRole: event.anchorType || null,
+        pendingFloorTarget: event.targetFloor || null,
       };
     }
  
@@ -386,10 +387,14 @@ export function getScanPromptMessage(navState) {
       if (type === "elevator") return "🛗 You're at the elevator. Scan its QR code to continue.";
       return "📷 Scan the QR code here to continue.";
     }
-    case NavMode.VERTICAL_TRANSFER:
-      return `🪜 Take the stairs to floor ${navState.pendingFloorTarget || "your destination"}, then scan the QR code at the top.`;
+    case NavMode.VERTICAL_TRANSFER: {
+      const target = navState.pendingFloorTarget;
+      if (target) {
+        return `🪜 Climb to floor ${target} — scan the QR code at each staircase landing on the way up.`;
+      }
+      return `🪜 Climb the stairs and scan the QR code at each landing to continue.`;
+    }
     default:
       return null;
   }
 }
- 
