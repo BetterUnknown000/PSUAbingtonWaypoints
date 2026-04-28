@@ -850,14 +850,3 @@ export function advanceRouteIfNeededIndoor({
     passedReason: result.reason,
   };
 }
-
-export function getIndoorDistanceToNextWaypoint(currentIndoorPosition, pathIds = [], currentWaypointId) {
-  const nextWaypointId = getNextWaypointId(pathIds, currentWaypointId);
-  if (!nextWaypointId) return null;
-
-  const nextWaypoint = getWaypointById(nextWaypointId);
-  if (!nextWaypoint) return null;
-
-  const d = distanceXY(currentIndoorPosition, nextWaypoint);
-  return Number.isFinite(d) ? d : null;
-}
