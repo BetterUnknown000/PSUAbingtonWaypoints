@@ -111,9 +111,16 @@ export default function VisualLocateScreen({ route, navigation }) {
       setLastResult(payload);
       setStatus(`Matched ${payload.label}. Returning to navigation…`);
 
+      const returnKey = route.params?.returnRouteKey;
+      const returnParams = route.params?.returnParams || {};
+
       navigation.navigate({
+        key: returnKey,
         name: route.params?.returnScreen || "Navigation",
-        params: { visualLocateResult: payload },
+        params: {
+          ...returnParams,
+          visualLocateResult: payload,
+        },
         merge: true,
       });
     } catch (error) {
