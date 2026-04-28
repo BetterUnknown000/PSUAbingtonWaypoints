@@ -38,6 +38,7 @@ const MAG_FUSION_WEIGHT = 0.02;
  
 // Gyroscope update interval (ms)
 const GYRO_INTERVAL_MS = 100;
+const HEADING_PUBLISH_INTERVAL_MS = 100; // ~10Hz arrow updates
  
 // Accelerometer update interval (ms)
 const ACCEL_INTERVAL_MS = 100;
@@ -54,6 +55,7 @@ export function useIndoorPose({ anchorPose, isActive }) {
   const poseRef = useRef(anchorPose || null);
   const headingDegRef = useRef(anchorPose?.headingDeg ?? 0);
   const lastStepTimeRef = useRef(0);
+  const lastHeadingPublishTsRef = useRef(0);
   const prevAccelRef = useRef({ x: 0, y: 0, z: 0 });
   const gyroSubscriptionRef = useRef(null);
   const accelSubscriptionRef = useRef(null);
@@ -67,6 +69,24 @@ export function useIndoorPose({ anchorPose, isActive }) {
     setPose({ ...anchorPose });
   }, [anchorPose]);
  
+  // ── Heading-only pose publisher — called by gyro and magnetometer ──
+  const publishHeadingOnlyPose = useCallback((source = "imu") => {
+    const now = Date.now();
+    if (!poseRef.current) return;
+    if (now - lastHeadingPublishTsRef.current < HEADING_PUBLISH_INTERVAL_MS) return;
+
+    const nextPose = {
+      ...poseRef.current,
+      headingDeg: headingDegRef.current,
+      timestamp: now,
+      source: poseRef.current.source || source,
+    };
+
+    poseRef.current = nextPose;
+    lastHeadingPublishTsRef.current = now;
+    setPose(nextPose);
+  }, []);
+
   // ── Gyroscope — heading update ──
   useEffect(() => {
     if (!isActive) return;
@@ -77,6 +97,7 @@ export function useIndoorPose({ anchorPose, isActive }) {
       // z-axis rotation in rad/s, integrate over interval to get delta degrees
       const deltaDeg = (z * GYRO_INTERVAL_MS) / 1000 * (180 / Math.PI);
       headingDegRef.current = normalizeDeg(headingDegRef.current + deltaDeg);
+      publishHeadingOnlyPose("gyro");
     });
  
     return () => {
@@ -103,6 +124,7 @@ export function useIndoorPose({ anchorPose, isActive }) {
         headingDegRef.current * (1 - MAG_FUSION_WEIGHT) +
         magHeading * MAG_FUSION_WEIGHT
       );
+      publishHeadingOnlyPose("magnetometer");
     });
  
     return () => {
@@ -154,7 +176,8 @@ export function useIndoorPose({ anchorPose, isActive }) {
         };
  
         poseRef.current = newPose;
- 
+        lastHeadingPublishTsRef.current = Date.now();
+
         // Throttle React state updates to every 3 steps to avoid over-rendering
         setPose({ ...newPose });
       }
@@ -245,4 +268,3 @@ export function computeMapDistance(fromPose, toWaypoint) {
   const dy = Number(toWaypoint.y) - Number(fromPose.y);
   return Math.sqrt(dx * dx + dy * dy);
 }
- 
