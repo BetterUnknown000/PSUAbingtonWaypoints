@@ -52,6 +52,8 @@ import {
 } from "../navigation/navReducer";
 import { useIndoorPose, computeMapBearing, computeMapDistance } from "../navigation/useIndoorPose";
 import { isNearAnyEntrance, rankEntrances } from "../navigation/rankEntrances";
+import { validateQrAnchor, getValidationMessage } from "../utils/qrPayloadValidation";
+import { parseQrPayload } from "../utils/qrPayload";
 
 const PSU = {
   blue: "#001E44",
@@ -386,10 +388,25 @@ export default function NavigationPage({ route, navigation }) {
     return steps[Math.min(activeStepIndex, steps.length - 1)] || null;
   }, [steps, activeStepIndex]);
 
+  // ─── Single source of truth for indoor position ───────────────────────────
+  // livePose = last QR anchor + IMU/PDR deltas on top.
+  // Everything reads from this: arrow bearing, proximity checks, route advancement.
+  const livePose = useMemo(() => {
+    if (!navState.anchorPose) return null;
+    if (!isIndoorMode(navState)) return navState.anchorPose;
+    return {
+      ...indoorPose,
+      headingDeg: Number.isFinite(indoorPose?.headingDeg)
+        ? indoorPose.headingDeg
+        : Number.isFinite(deviceHeading)
+        ? deviceHeading
+        : navState.anchorPose?.headingDeg ?? 0,
+    };
+  }, [navState, indoorPose, deviceHeading]);
+
   const targetBearing = useMemo(() => {
     if (viewMode === VIEW_MODE.INDOOR) {
-      // Use IMU/PDR pose for indoor bearing — much more reliable than GPS
-      return computeMapBearing(indoorPose, nextWaypoint);
+      return computeMapBearing(livePose, nextWaypoint);
     }
 
     if (
@@ -407,7 +424,7 @@ export default function NavigationPage({ route, navigation }) {
       Number(nextWaypoint.latitude),
       Number(nextWaypoint.longitude)
     );
-  }, [viewMode, indoorPose, userGps, nextWaypoint]);
+  }, [viewMode, livePose, userGps, nextWaypoint]);
 
   const fallbackArrowDirection = useMemo(() => {
     if (targetBearing !== null) return "straight";
@@ -419,15 +436,16 @@ export default function NavigationPage({ route, navigation }) {
     if (!nextWaypoint) return false;
 
     const type = String(nextWaypoint.type || "").toLowerCase();
-    if (type !== "stairs" && type !== "elevator" && type !== "entrance") return false;
+    const validTypes = ["stairs", "elevator", "entrance", "hallway"];
+    if (!validTypes.includes(type)) return false;
 
-    // Prefer map pixel distance from IMU pose — not GPS
-    if (indoorPose?.x != null && indoorPose?.y != null) {
-      const dist = computeMapDistance(indoorPose, nextWaypoint);
+    // Use livePose — the single unified pose source
+    if (livePose?.x != null && livePose?.y != null) {
+      const dist = computeMapDistance(livePose, nextWaypoint);
       return dist <= 50; // ~14 meters at 3.5px/m
     }
 
-    // GPS fallback
+    // GPS fallback only if no indoor pose available
     if (userGps && nextWaypoint.latitude != null && nextWaypoint.longitude != null) {
       const dist = haversineMeters(
         Number(userGps.latitude),
@@ -439,7 +457,7 @@ export default function NavigationPage({ route, navigation }) {
     }
 
     return false;
-  }, [viewMode, nextWaypoint, indoorPose, userGps]);
+  }, [viewMode, nextWaypoint, livePose, userGps]);
   
   const formattedDistance = useMemo(() => {
     if (orsMeters !== null && viewMode === VIEW_MODE.OUTDOOR) {
@@ -530,50 +548,49 @@ export default function NavigationPage({ route, navigation }) {
     pendingTransitionType,
   ]);
   
-  const selectedDestinationEntrance = useMemo(() => {
-    const entrancesWithGps = destinationEntranceWaypoints.filter((wp) => {
-      return wp.latitude != null && wp.longitude != null;
+  // ─── Ranked entrance selection using real walking distance ───────────────
+  const [rankedEntrances, setRankedEntrances] = useState([]);
+
+  useEffect(() => {
+    if (!userGps || destinationEntranceWaypoints.length === 0) return;
+    let cancelled = false;
+
+    rankEntrances({
+      userGps,
+      entrances: destinationEntranceWaypoints,
+      accessibilityMode,
+    }).then((ranked) => {
+      if (!cancelled) setRankedEntrances(ranked);
+    }).catch(() => {
+      // Fallback — sort by haversine if ORS fails
+      if (!cancelled) setRankedEntrances([...destinationEntranceWaypoints]);
     });
-  
-    if (entrancesWithGps.length === 0) {
-      return null;
-    }
-  
-    // If accessibility is on, prefer entrances marked accessible.
-    // If none are marked accessible, fall back to all entrances so routing still works.
-    const accessibleEntrances = entrancesWithGps.filter(
-      (wp) => wp.accessible === true
+
+    return () => { cancelled = true; };
+  }, [userGps?.latitude, userGps?.longitude, destinationEntranceWaypoints, accessibilityMode]);
+
+  const selectedDestinationEntrance = useMemo(() => {
+    // Use ORS-ranked entrance if available, else fall back to haversine nearest
+    if (rankedEntrances.length > 0) return rankedEntrances[0];
+
+    const entrancesWithGps = destinationEntranceWaypoints.filter(
+      (wp) => wp.latitude != null && wp.longitude != null
     );
-  
-    const usableEntrances =
-      accessibilityMode && accessibleEntrances.length > 0
-        ? accessibleEntrances
-        : entrancesWithGps;
-  
-    // If GPS is not ready yet, just use the first usable entrance.
-    if (!userGps) {
-      return usableEntrances[0];
-    }
-  
-    let nearest = null;
-    let nearestDist = Infinity;
-  
-    for (const wp of usableEntrances) {
+    if (entrancesWithGps.length === 0) return null;
+    if (!userGps) return entrancesWithGps[0];
+
+    return entrancesWithGps.reduce((best, wp) => {
       const d = haversineMeters(
-        Number(userGps.latitude),
-        Number(userGps.longitude),
-        Number(wp.latitude),
-        Number(wp.longitude)
+        Number(userGps.latitude), Number(userGps.longitude),
+        Number(wp.latitude), Number(wp.longitude)
       );
-  
-      if (d < nearestDist) {
-        nearestDist = d;
-        nearest = wp;
-      }
-    }
-  
-    return nearest;
-  }, [userGps, destinationEntranceWaypoints, accessibilityMode]);
+      const dBest = haversineMeters(
+        Number(userGps.latitude), Number(userGps.longitude),
+        Number(best.latitude), Number(best.longitude)
+      );
+      return d < dBest ? wp : best;
+    });
+  }, [rankedEntrances, userGps, destinationEntranceWaypoints]);
   
   const orsDestinationGps = useMemo(() => {
     if (selectedDestinationEntrance) {
@@ -1475,6 +1492,14 @@ export default function NavigationPage({ route, navigation }) {
       return;
     }
 
+    // Validate the QR anchor before applying — reject zero x/y and stale revisions
+    const qrPayload = parseQrPayload(qrText);
+    const validation = validateQrAnchor(qrPayload);
+    if (!validation.ok) {
+      showScanBadge(getValidationMessage(validation.reason));
+      return;
+    }
+
     applyScannedWaypoint(scannedWaypoint, "qr");
   }
 
@@ -2219,6 +2244,7 @@ export default function NavigationPage({ route, navigation }) {
             ref={cameraRef}
             style={s.camera}
             facing="back"
+            active={!outdoorScannerVisible}
             barcodeScannerSettings={{ barcodeTypes: ["qr"] }}
             onBarcodeScanned={handleScan}
           />
@@ -2295,7 +2321,9 @@ export default function NavigationPage({ route, navigation }) {
               <DirectionArrow
                 direction={fallbackArrowDirection}
                 arrived={arrived}
-                heading={deviceHeading}
+                heading={viewMode === VIEW_MODE.INDOOR
+                  ? (livePose?.headingDeg ?? deviceHeading)
+                  : deviceHeading}
                 targetBearing={targetBearing}
                 mode={transportMode}
               />
