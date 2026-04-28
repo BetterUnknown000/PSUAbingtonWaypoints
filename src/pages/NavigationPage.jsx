@@ -517,6 +517,7 @@ export default function NavigationPage({ route, navigation }) {
         type: NavEvent.NEAR_REQUIRED_ANCHOR,
         anchorWaypointId: nextWaypoint.id,
         anchorType: nextWaypoint.type,
+        targetFloor: destinationRoom?.floor ?? destinationBuilding?.floor ?? null,
       });
     }
   }, [nearNextWaypoint, arrived, nextWaypoint, navState.mode]);
