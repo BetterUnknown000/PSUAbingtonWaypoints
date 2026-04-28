@@ -1,28 +1,15 @@
 /**
  * rankEntrances.js
  *
- * Ranks all valid building entrances by real walking distance/duration
- * using ORS directions API (one call per entrance, parallelized).
- *
- * Replaces the old selectedDestinationEntrance which just picked the
- * nearest entrance by straight-line GPS distance — which is wrong when
- * buildings have entrances on opposite sides or accessible-only entrances
- * that aren't the closest.
- *
- * Usage:
- *   const ranked = await rankEntrances({
- *     userGps,
- *     entrances,         // array of waypoint objects with lat/lon
- *     accessibilityMode, // boolean
- *     orsApiKey,         // string
- *   });
- *   // returns array sorted by walking duration, closest first
+ * Ranks all valid building entrances by real walking duration
+ * using the ORS Matrix endpoint — one request for all entrances.
+ * Falls back to haversine if ORS is unavailable or unauthenticated.
  */
- 
-const ORS_BASE = "https://api.openrouteservice.org/v2/directions/foot-walking";
- 
+
+const ORS_MATRIX = "https://api.openrouteservice.org/v2/matrix/foot-walking";
+
 // ─── Main export ─────────────────────────────────────────────────────────────
- 
+
 export async function rankEntrances({
   userGps,
   entrances = [],
@@ -31,8 +18,8 @@ export async function rankEntrances({
   timeoutMs = 8000,
 }) {
   if (!userGps || entrances.length === 0) return [];
- 
-  // Filter to entrances that have GPS coordinates
+
+  // Filter to entrances with GPS coordinates
   const valid = entrances.filter(
     (e) =>
       e.latitude != null &&
@@ -40,104 +27,121 @@ export async function rankEntrances({
       Number.isFinite(Number(e.latitude)) &&
       Number.isFinite(Number(e.longitude))
   );
- 
+
   if (valid.length === 0) return [];
- 
-  // If accessibility mode, prefer accessible entrances.
-  // If none are marked accessible, fall back to all.
+
+  // Accessibility filter — fall back to all if none marked accessible
   let candidates = valid;
   if (accessibilityMode) {
     const accessible = valid.filter((e) => e.accessible === true);
     if (accessible.length > 0) candidates = accessible;
   }
- 
-  // If only one candidate, skip the ORS calls
+
+  // Single candidate — skip ORS entirely
   if (candidates.length === 1) {
     return [{ ...candidates[0], walkingDistanceM: null, walkingDurationS: null }];
   }
- 
-  // Fire parallel ORS requests for each entrance
-  const results = await Promise.allSettled(
-    candidates.map((entrance) =>
-      fetchWalkingRoute({
-        userGps,
-        destinationGps: {
-          latitude: Number(entrance.latitude),
-          longitude: Number(entrance.longitude),
-        },
-        orsApiKey,
-        timeoutMs,
-      }).then((route) => ({
-        ...entrance,
-        walkingDistanceM: route?.distanceM ?? null,
-        walkingDurationS: route?.durationS ?? null,
-      }))
-    )
+
+  // Use approach coordinates if available, else fall back to doorway GPS
+  const candidatesWithCoords = candidates.map((e) => ({
+    ...e,
+    _routeLat: Number(e.approach_latitude ?? e.latitude),
+    _routeLng: Number(e.approach_longitude ?? e.longitude),
+  }));
+
+  try {
+    const ranked = await fetchOrsMatrix({
+      userGps,
+      candidates: candidatesWithCoords,
+      orsApiKey,
+      timeoutMs,
+    });
+    if (ranked) {
+      // Debug log so bad rankings are visible during QA
+      console.log(
+        "[rankEntrances] ORS ranked:",
+        ranked.map((e) => ({
+          id: e.id,
+          label: e.label,
+          durationS: e.walkingDurationS,
+          distanceM: e.walkingDistanceM,
+        }))
+      );
+      return ranked;
+    }
+  } catch {
+    // Fall through to haversine
+  }
+
+  // Haversine fallback
+  return [...candidatesWithCoords].sort((a, b) =>
+    haversineMeters(userGps.latitude, userGps.longitude, a._routeLat, a._routeLng) -
+    haversineMeters(userGps.latitude, userGps.longitude, b._routeLat, b._routeLng)
   );
- 
-  // Collect successful results
-  const ranked = results
-    .filter((r) => r.status === "fulfilled")
-    .map((r) => r.value);
- 
-  // Sort by walking duration (shortest first), fall back to haversine
-  ranked.sort((a, b) => {
-    const aDur = a.walkingDurationS ?? haversineMeters(
-      userGps.latitude, userGps.longitude,
-      Number(a.latitude), Number(a.longitude)
-    );
-    const bDur = b.walkingDurationS ?? haversineMeters(
-      userGps.latitude, userGps.longitude,
-      Number(b.latitude), Number(b.longitude)
-    );
-    return aDur - bDur;
-  });
- 
-  return ranked;
 }
- 
-// ─── ORS single route fetch ───────────────────────────────────────────────────
- 
-async function fetchWalkingRoute({ userGps, destinationGps, orsApiKey, timeoutMs }) {
+
+// ─── ORS Matrix fetch ─────────────────────────────────────────────────────────
+
+async function fetchOrsMatrix({ userGps, candidates, orsApiKey, timeoutMs }) {
+  if (!orsApiKey) return null;
+
   const controller = new AbortController();
   const timer = setTimeout(() => controller.abort(), timeoutMs);
- 
+
   try {
+    // Matrix: user is source (index 0), entrances are destinations (indices 1..N)
+    const locations = [
+      [Number(userGps.longitude), Number(userGps.latitude)],
+      ...candidates.map((e) => [e._routeLng, e._routeLat]),
+    ];
+
     const body = {
-      coordinates: [
-        [Number(userGps.longitude), Number(userGps.latitude)],
-        [Number(destinationGps.longitude), Number(destinationGps.latitude)],
-      ],
+      locations,
+      sources: [0],
+      destinations: candidates.map((_, i) => i + 1),
+      metrics: ["duration", "distance"],
     };
- 
-    const headers = { "Content-Type": "application/json" };
-    if (orsApiKey) headers["Authorization"] = orsApiKey;
- 
-    const response = await fetch(`${ORS_BASE}/geojson`, {
+
+    const response = await fetch(ORS_MATRIX, {
       method: "POST",
-      headers,
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: orsApiKey,
+      },
       body: JSON.stringify(body),
       signal: controller.signal,
     });
- 
+
     if (!response.ok) return null;
- 
+
     const data = await response.json();
-    const summary = data?.features?.[0]?.properties?.summary;
- 
-    return {
-      distanceM: summary?.distance ?? null,
-      durationS: summary?.duration ?? null,
-    };
+    const durations = data?.durations?.[0];
+    const distances = data?.distances?.[0];
+
+    if (!durations) return null;
+
+    const ranked = candidates.map((entrance, idx) => ({
+      ...entrance,
+      walkingDurationS: durations[idx] ?? null,
+      walkingDistanceM: distances?.[idx] ?? null,
+    }));
+
+    ranked.sort((a, b) => {
+      const aDur = a.walkingDurationS ?? Infinity;
+      const bDur = b.walkingDurationS ?? Infinity;
+      return aDur - bDur;
+    });
+
+    return ranked;
   } catch {
     return null;
   } finally {
     clearTimeout(timer);
   }
 }
- 
+
 // ─── Haversine fallback ───────────────────────────────────────────────────────
- 
+
 function haversineMeters(lat1, lon1, lat2, lon2) {
   const toRad = (v) => (v * Math.PI) / 180;
   const R = 6371000;
@@ -148,51 +152,31 @@ function haversineMeters(lat1, lon1, lat2, lon2) {
     Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) * Math.sin(dLon / 2) ** 2;
   return 2 * R * Math.asin(Math.sqrt(a));
 }
- 
-// ─── Proximity check ─────────────────────────────────────────────────────────
- 
-/**
- * Returns true if the user is within thresholdMeters of any entrance in the list.
- * Used to trigger NEAR_ENTRANCE_CANDIDATE in the nav reducer.
- */
+
+// ─── Proximity helpers ────────────────────────────────────────────────────────
+
 export function isNearAnyEntrance(userGps, entrances, thresholdMeters = 20) {
   if (!userGps || !Array.isArray(entrances)) return false;
- 
   return entrances.some((e) => {
     if (e.latitude == null || e.longitude == null) return false;
-    const dist = haversineMeters(
-      Number(userGps.latitude),
-      Number(userGps.longitude),
-      Number(e.latitude),
-      Number(e.longitude)
-    );
-    return dist <= thresholdMeters;
+    return haversineMeters(
+      Number(userGps.latitude), Number(userGps.longitude),
+      Number(e.latitude), Number(e.longitude)
+    ) <= thresholdMeters;
   });
 }
- 
-/**
- * Returns the nearest entrance waypoint to userGps, or null.
- */
+
 export function getNearestEntrance(userGps, entrances) {
   if (!userGps || !Array.isArray(entrances) || entrances.length === 0) return null;
- 
   let nearest = null;
   let nearestDist = Infinity;
- 
   for (const e of entrances) {
     if (e.latitude == null || e.longitude == null) continue;
     const dist = haversineMeters(
-      Number(userGps.latitude),
-      Number(userGps.longitude),
-      Number(e.latitude),
-      Number(e.longitude)
+      Number(userGps.latitude), Number(userGps.longitude),
+      Number(e.latitude), Number(e.longitude)
     );
-    if (dist < nearestDist) {
-      nearestDist = dist;
-      nearest = e;
-    }
+    if (dist < nearestDist) { nearestDist = dist; nearest = e; }
   }
- 
   return nearest;
 }
- 
