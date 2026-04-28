@@ -359,7 +359,6 @@ export default function NavigationPage({ route, navigation }) {
 
   const cameraRef = useRef(null);
   const visionBusyRef = useRef(false);
-  const lastOrsGpsRef = useRef(null);
   const lastOrsFetchKeyRef = useRef(null);
   const mapRef = useRef(null);
   const didAutoFitRouteRef = useRef(false);
@@ -399,6 +398,20 @@ export default function NavigationPage({ route, navigation }) {
         : navState.anchorPose?.headingDeg ?? 0,
     };
   }, [navState, indoorPose, deviceHeading]);
+
+  // Debug pose — visible in Expo console during QA
+  useEffect(() => {
+    if (!isIndoorMode(navState)) return;
+    console.log("[POSE]", {
+      mode: navState.mode,
+      waypointId: currentWaypointId,
+      x: livePose?.x,
+      y: livePose?.y,
+      headingDeg: livePose?.headingDeg,
+      source: livePose?.source,
+      targetBearing,
+    });
+  }, [livePose, targetBearing, navState.mode, currentWaypointId]);
 
   const targetBearing = useMemo(() => {
     if (viewMode === VIEW_MODE.INDOOR) {
@@ -630,7 +643,15 @@ export default function NavigationPage({ route, navigation }) {
       accessibilityMode,
       orsApiKey: process.env.EXPO_PUBLIC_ORS_API_KEY || "",
     }).then((ranked) => {
-      if (!cancelled) setRankedEntrances(ranked);
+      if (!cancelled) {
+        setRankedEntrances(ranked);
+        console.log("[ENTRANCE_RANK]", ranked.map((e) => ({
+          id: e.id,
+          label: e.label,
+          durationS: e.walkingDurationS,
+          distanceM: e.walkingDistanceM,
+        })));
+      }
     }).catch(() => {
       // Fallback — sort by haversine if ORS fails
       if (!cancelled) setRankedEntrances([...destinationEntranceWaypoints]);
@@ -698,7 +719,6 @@ export default function NavigationPage({ route, navigation }) {
       setOrsMeters(null);
       setOrsError(null);
       setOrsLoading(false);
-      lastOrsGpsRef.current = null;
       lastOrsFetchKeyRef.current = null;
       return;
     }
@@ -716,7 +736,6 @@ export default function NavigationPage({ route, navigation }) {
       return;
     }
 
-    lastOrsGpsRef.current = userGps;
 
     let cancelled = false;
 
@@ -934,25 +953,26 @@ export default function NavigationPage({ route, navigation }) {
     };
   }, []);
 
+  // Consume the linked start waypoint only once — never re-apply on stepCount changes
+  const linkedStartAppliedRef = useRef(false);
   useEffect(() => {
     if (!linkedStartWaypoint) return;
+    if (linkedStartAppliedRef.current) return;
+    linkedStartAppliedRef.current = true;
 
-    setCurrentWaypointLabel(linkedStartWaypoint.label || linkedStartWaypoint.id);
-    setCurrentBuildingId(linkedStartWaypoint.building || "");
-    setCurrentWaypointId(linkedStartWaypoint.id || "");
-    setLastScannedText(linkedStartWaypoint.qr_code || linkedStartWaypoint.id);
-    setVisionSource("qr");
+    applyScannedWaypoint(linkedStartWaypoint, "qr");
 
-    setCurrentIndoorPosition({
-      building: linkedStartWaypoint.building || "",
-      floor: linkedStartWaypoint.floor || "",
-      x: linkedStartWaypoint.x,
-      y: linkedStartWaypoint.y,
+    // Clear one-shot params so they cannot re-fire later
+    navigation.setParams?.({
+      startWaypointId: undefined,
+      startWaypointIdRaw: undefined,
+      waypoint_id: undefined,
+      waypointId: undefined,
+      startQrId: undefined,
+      qr_id: undefined,
+      qrCode: undefined,
     });
-
-    setPreviousIndoorDistance(null);
-    setLastStepAnchorCount(stepCount);
-  }, [linkedStartWaypoint, stepCount]);
+  }, [linkedStartWaypoint]);
 
   useEffect(() => {
     const result = route.params?.visualLocateResult;
@@ -1467,7 +1487,6 @@ export default function NavigationPage({ route, navigation }) {
       setOrsSteps([]);
       setOrsMeters(null);
       setOrsError(null);
-      lastOrsGpsRef.current = null;
       lastOrsFetchKeyRef.current = null;
 
       setStageMode("outdoor_guidance");
@@ -1559,7 +1578,6 @@ export default function NavigationPage({ route, navigation }) {
       setOrsSteps([]);
       setOrsMeters(null);
       setOrsError(null);
-      lastOrsGpsRef.current = null;
       lastOrsFetchKeyRef.current = null;
       showScanBadge(`Exited ${scannedWaypoint.building || "building"}`);
     } else {
@@ -1588,7 +1606,6 @@ export default function NavigationPage({ route, navigation }) {
     setOrsLoading(false);
 
     didAutoFitRouteRef.current = false;
-    lastOrsGpsRef.current = null;
     lastOrsFetchKeyRef.current = null;
 
     setCurrentWaypointLabel("Waiting for scan");
