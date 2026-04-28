@@ -122,6 +122,7 @@ export default function VisualLocateScreen({ route, navigation }) {
           visualLocateResult: payload,
         },
         merge: true,
+        pop: true,
       });
     } catch (error) {
       setStatus(`Visual locate failed: ${error?.message || "unknown error"}`);
