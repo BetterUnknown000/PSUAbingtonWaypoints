@@ -13,8 +13,7 @@
 //   result.totalMeters  — number
 //   result.totalSeconds — number
 
-const ORS_API_KEY = "eyJvcmciOiI1YjNjZTM1OTc4NTExMTAwMDFjZjYyNDgiLCJpZCI6IjRiZWNmNzRjNmU3ZDQ3MTM5NmM0NDc0NzljOTI4YWEzIiwiaCI6Im11cm11cjY0In0="; // <-- replace with your key
-const ORS_ENDPOINT = "https://api.openrouteservice.org/v2/directions/foot-walking/geojson";
+const API_BASE_URL = String(process.env.EXPO_PUBLIC_API_BASE_URL || "").replace(/\/$/, "");
 // Fallback step text when ORS instruction is missing
 function describeStep(instruction = "", distanceMeters = 0) {
   const dist =
@@ -37,6 +36,10 @@ export async function fetchOrsRoute(originGps, destinationGps) {
     throw new Error("fetchOrsRoute: origin and destination GPS are required");
   }
 
+  if (!API_BASE_URL) {
+    throw new Error("Missing EXPO_PUBLIC_API_BASE_URL");
+  }
+
   const body = {
     coordinates: [
       [Number(originGps.longitude), Number(originGps.latitude)],
@@ -47,12 +50,11 @@ export async function fetchOrsRoute(originGps, destinationGps) {
     units: "m",
   };
 
-  const response = await fetch(ORS_ENDPOINT, {
+  const response = await fetch(`${API_BASE_URL}/ors/directions`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
       Accept: "application/geo+json, application/json",
-      Authorization: ORS_API_KEY,
     },
     body: JSON.stringify(body),
   });
