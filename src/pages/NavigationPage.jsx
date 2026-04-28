@@ -46,7 +46,6 @@ import {
   NavMode,
   isIndoorMode,
   isOutdoorMode,
-  shouldShowArrow,
   shouldShowScanPrompt,
   getScanPromptMessage,
 } from "../navigation/navReducer";
@@ -107,7 +106,6 @@ const VIEW_MODE = {
 };
 
 const ENTRANCE_REACHED_THRESHOLD_METERS = 20;
-const INDOOR_STEP_PIXELS = 18;
 const INDOOR_HEADING_OFFSET_DEGREES = 0;
 
 function normalize(value) {
@@ -334,11 +332,9 @@ export default function NavigationPage({ route, navigation }) {
 
   const [batterySaverMode, setBatterySaverMode] = useState(false);
   const [outdoorScannerVisible, setOutdoorScannerVisible] = useState(false);
-  const [forceIndoorAfterScan, setForceIndoorAfterScan] = useState(false);
 
   const [visionReady, setVisionReady] = useState(false);
   const [visionSource, setVisionSource] = useState(null); // "qr" | "vision" | null
-  const [visualLocateActive, setVisualLocateActive] = useState(false);
 
   const [currentIndoorPosition, setCurrentIndoorPosition] = useState(null);
   const [previousIndoorDistance, setPreviousIndoorDistance] = useState(null);
@@ -836,63 +832,6 @@ export default function NavigationPage({ route, navigation }) {
   }, []);
 
   useEffect(() => {
-    if (
-      viewMode !== VIEW_MODE.INDOOR ||
-      !visionReady ||
-      !cameraEnabled ||
-      !visualLocateActive
-    ) {
-      return;
-    }
-
-    let cancelled = false;
-
-    async function runLoop() {
-      while (!cancelled) {
-        await new Promise((resolve) =>
-          setTimeout(resolve, batterySaverMode ? 7000 : 3000)
-        );
-        if (cancelled) break;
-        if (visionBusyRef.current || !cameraRef.current) continue;
-
-        visionBusyRef.current = true;
-        try {
-          const photo = await cameraRef.current.takePictureAsync({
-            quality: 0.15,
-            base64: false,
-            skipProcessing: true,
-          });
-
-          if (cancelled || !photo?.uri) continue;
-
-          const result = await identifyLocationFromFrame(photo.uri);
-          const waypointId = result?.location?.waypoint_id;
-          if (!waypointId) continue;
-
-          const matchedWaypoint = (campusData.waypoints || []).find(
-            (waypoint) => waypoint.id === waypointId
-          );
-
-          if (matchedWaypoint) {
-            if (!visualLocateActive) continue;
-            applyScannedWaypoint(matchedWaypoint, "vision");
-          }
-        } catch (error) {
-          if (!cancelled) console.log("Vision scan failed:", error);
-        } finally {
-          visionBusyRef.current = false;
-        }
-      }
-    }
-
-    runLoop();
-
-    return () => {
-      cancelled = true;
-    };
-  }, [viewMode, visionReady, cameraEnabled, visualLocateActive, batterySaverMode]);
-
-  useEffect(() => {
     let mounted = true;
     let subscription = null;
 
@@ -929,7 +868,6 @@ export default function NavigationPage({ route, navigation }) {
     setCurrentWaypointId(linkedStartWaypoint.id || "");
     setLastScannedText(linkedStartWaypoint.qr_code || linkedStartWaypoint.id);
     setVisionSource("qr");
-    setVisualLocateActive(false);
 
     setCurrentIndoorPosition({
       building: linkedStartWaypoint.building || "",
@@ -955,9 +893,7 @@ export default function NavigationPage({ route, navigation }) {
     setCurrentWaypointLabel(matchedWaypoint.label || matchedWaypoint.id);
     setCurrentBuildingId(matchedWaypoint.building || "");
     setCurrentWaypointId(matchedWaypoint.id || "");
-    setForceIndoorAfterScan(true);
     setVisionSource("vision");
-    setVisualLocateActive(false);
 
     setCurrentIndoorPosition({
       building: matchedWaypoint.building || "",
@@ -1378,7 +1314,6 @@ export default function NavigationPage({ route, navigation }) {
     setCurrentWaypointLabel(scannedWaypoint.label || scannedWaypoint.id);
     setCurrentBuildingId(scannedWaypoint.building || "");
     setCurrentWaypointId(scannedId);
-    setForceIndoorAfterScan(true);
     setVisionSource(source);
 
     setCurrentIndoorPosition({
@@ -1390,7 +1325,6 @@ export default function NavigationPage({ route, navigation }) {
 
     setPreviousIndoorDistance(null);
     setLastStepAnchorCount(stepCount);
-    setVisualLocateActive(false);
 
     if (!isOnCurrentPath) {
       setActiveStepIndex(0);
@@ -1468,9 +1402,7 @@ export default function NavigationPage({ route, navigation }) {
       setCurrentWaypointLabel(scannedWaypoint.label || scannedWaypoint.id);
       setCurrentBuildingId("");
       setCurrentWaypointId("");
-      setForceIndoorAfterScan(false);
       setVisionSource("qr");
-      setVisualLocateActive(false);
       setCurrentIndoorPosition(null);
       setPreviousIndoorDistance(null);
       setLastStepAnchorCount(stepCount);
@@ -1522,6 +1454,15 @@ export default function NavigationPage({ route, navigation }) {
       return;
     }
 
+    // Validate before doing anything with this QR
+    const qrPayload = parseQrPayload(qrText);
+    const validation = validateQrAnchor(qrPayload);
+    if (!validation.ok) {
+      showScanBadge(getValidationMessage(validation.reason));
+      setOutdoorScannerVisible(false);
+      return;
+    }
+
     const destinationBuildingId =
       destinationBuilding?.id || destinationRoom?.building || "";
 
@@ -1541,47 +1482,30 @@ export default function NavigationPage({ route, navigation }) {
       normalize(scannedBuildingId) !== normalize(destinationBuildingId);
 
     if (pendingTransitionType === "entrance" && !isWrongBuildingExitScan) {
-      setCurrentWaypointLabel(scannedWaypoint.label || scannedWaypoint.id);
-      setCurrentBuildingId(scannedWaypoint.building || "");
-      setCurrentWaypointId(scannedWaypoint.id || "");
-      setForceIndoorAfterScan(true);
-      setVisionSource("qr");
-      setVisualLocateActive(false);
-
-      setCurrentIndoorPosition({
-        building: scannedWaypoint.building || "",
-        floor: scannedWaypoint.floor || "",
-        x: scannedWaypoint.x,
-        y: scannedWaypoint.y,
-      });
-
-      setPreviousIndoorDistance(null);
-      setLastStepAnchorCount(stepCount);
+      // Route through applyScannedWaypoint so reducer + IMU both get updated
+      applyScannedWaypoint(scannedWaypoint, "qr");
       setPendingTransitionType(null);
-      showScanBadge(scannedWaypoint.label || scannedWaypoint.id);
     } else if (pendingTransitionType === "exit" || isWrongBuildingExitScan) {
       setCurrentWaypointLabel(scannedWaypoint.label || scannedWaypoint.id);
       setCurrentBuildingId("");
       setCurrentWaypointId("");
-      setForceIndoorAfterScan(false);
       setVisionSource("qr");
-      setVisualLocateActive(false);
       setCurrentIndoorPosition(null);
       setPreviousIndoorDistance(null);
       setLastStepAnchorCount(stepCount);
       setPendingTransitionType(null);
+      navDispatch({ type: NavEvent.FORCE_OUTDOOR });
+      resetIndoorPose(null);
       setStageMode("outdoor_guidance");
       setStageMessage(
         "Exit confirmed. Continuing outdoor navigation to the destination building."
       );
-
       setOrsCoords([]);
       setOrsSteps([]);
       setOrsMeters(null);
       setOrsError(null);
       lastOrsGpsRef.current = null;
       lastOrsFetchKeyRef.current = null;
-
       showScanBadge(`Exited ${scannedWaypoint.building || "building"}`);
     } else {
       applyScannedWaypoint(scannedWaypoint, "qr");
@@ -1600,7 +1524,6 @@ export default function NavigationPage({ route, navigation }) {
     navDispatch({ type: NavEvent.RESET });
     resetIndoorPose(null);
 
-    setForceIndoorAfterScan(false);
     setPendingTransitionType(null);
 
     setOrsCoords([]);
@@ -1618,7 +1541,6 @@ export default function NavigationPage({ route, navigation }) {
     setCurrentBuildingId("");
     setLastScannedText("");
     setVisionSource(null);
-    setVisualLocateActive(false);
     setCurrentIndoorPosition(null);
     setPreviousIndoorDistance(null);
     setLastStepAnchorCount(stepCount);
@@ -1718,7 +1640,6 @@ export default function NavigationPage({ route, navigation }) {
     setCurrentBuildingId(buildingId);
     setCurrentWaypointId(result.waypoint.id);
     setCurrentWaypointLabel(result.waypoint.label || `Room ${roomNumber}`);
-    setForceIndoorAfterScan(true);
 
     setCurrentIndoorPosition({
       building: result.waypoint.building || "",
@@ -1737,7 +1658,6 @@ export default function NavigationPage({ route, navigation }) {
   function handleGoToCorrectBuilding() {
     setHelpVisible(false);
     setHelpError("");
-    setForceIndoorAfterScan(false);
     setCurrentWaypointId("");
     setCurrentWaypointLabel("Heading to destination building");
     setCurrentBuildingId(gpsBuildingGuess.building?.id || currentBuildingId || "");
@@ -2678,9 +2598,7 @@ export default function NavigationPage({ route, navigation }) {
                 <View style={s.detailInfoCard}>
                   <Text style={s.detailBody}>
                     {visionReady
-                      ? visualLocateActive
-                        ? "Ready — visual locate is active"
-                        : "Ready — visual locate is idle until user starts it"
+                      ? "Ready — visual recognition loaded"
                       : "Loading reference fingerprints…"}
                   </Text>
                 </View>
