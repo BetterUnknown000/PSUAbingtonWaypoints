@@ -454,6 +454,28 @@ export default function NavigationPage({ route, navigation }) {
 
     return false;
   }, [viewMode, nextWaypoint, livePose, userGps]);
+
+  // Dispatch reducer events when proximity or arrival state changes
+  useEffect(() => {
+    if (!isIndoorMode(navState)) return;
+
+    if (arrived && navState.mode !== NavMode.ARRIVED) {
+      navDispatch({ type: NavEvent.DESTINATION_REACHED });
+      return;
+    }
+
+    if (
+      nearNextWaypoint &&
+      nextWaypoint &&
+      navState.mode === NavMode.INDOOR_ANCHORED
+    ) {
+      navDispatch({
+        type: NavEvent.NEAR_REQUIRED_ANCHOR,
+        anchorWaypointId: nextWaypoint.id,
+        anchorType: nextWaypoint.type,
+      });
+    }
+  }, [nearNextWaypoint, arrived, nextWaypoint, navState.mode]);
   
   // ─── Live indoor guidance — derived from livePose, updates as user walks ──
   const METERS_PER_PX = 1 / 3.5; // tunable per building/floor
@@ -2431,8 +2453,15 @@ export default function NavigationPage({ route, navigation }) {
                 </Pressable>
 
                 <Pressable
-                  style={s.primaryBottomBtn}
-                  onPress={() =>
+                  style={[
+                    s.primaryBottomBtn,
+                    currentBuildingId !== "woodland" && { opacity: 0.45 },
+                  ]}
+                  onPress={() => {
+                    if (currentBuildingId !== "woodland") {
+                      showScanBadge("Visual locate is available in Woodland Building only.");
+                      return;
+                    }
                     navigation.navigate("VisualLocateScreen", {
                       returnScreen: route.name || "NavigationPage",
                       returnRouteKey: route.key,
@@ -2441,10 +2470,12 @@ export default function NavigationPage({ route, navigation }) {
                         accessibilityMode: route.params?.accessibilityMode,
                         emergencyMode: route.params?.emergencyMode,
                       },
-                    })
-                  }
+                    });
+                  }}
                 >
-                  <Text style={s.primaryBottomBtnText}>Locate Me Visually</Text>
+                  <Text style={s.primaryBottomBtnText}>
+                    Locate Me Visually{currentBuildingId !== "woodland" ? " (Woodland only)" : ""}
+                  </Text>
                 </Pressable>
               </View>
             )}
