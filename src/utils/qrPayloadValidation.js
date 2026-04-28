@@ -29,7 +29,15 @@ const INDOOR_ANCHOR_ROLES = new Set([
  */
 export function validateQrAnchor(payload, activeGraphRev = GRAPH_REV) {
   if (!payload) return { ok: false, reason: "empty_qr" };
- 
+
+  if (Number(payload.version) !== 3) {
+    return { ok: false, reason: "unsupported_qr" };
+  }
+
+  if (payload.qr_deployed === false) {
+    return { ok: false, reason: "inactive_qr" };
+  }
+
   // Stale graph revision — data may have changed since this QR was printed
   if (
     payload.graph_rev &&
@@ -38,41 +46,16 @@ export function validateQrAnchor(payload, activeGraphRev = GRAPH_REV) {
   ) {
     return { ok: false, reason: "stale_qr" };
   }
- 
+
   const role = String(payload.role || payload.type || "").toLowerCase();
- 
-  // Entrance QRs only need GPS — they don't need indoor x/y to be useful
-  // They anchor the outdoor→indoor transition, not the indoor pose itself
-  if (role === "entrance") {
-    if (!payload.building) {
-      return { ok: false, reason: "missing_building" };
-    }
-    return { ok: true };
-  }
- 
-  // All other indoor anchor roles require valid non-zero x/y
-  if (INDOOR_ANCHOR_ROLES.has(role)) {
-    const x = Number(payload.x);
-    const y = Number(payload.y);
- 
-    const hasValidXY =
-      Number.isFinite(x) &&
-      Number.isFinite(y) &&
-      !(x === 0 && y === 0);
- 
-    if (!payload.building) {
-      return { ok: false, reason: "missing_building" };
-    }
- 
-    if (!payload.floor) {
-      return { ok: false, reason: "missing_floor" };
-    }
- 
-    if (!hasValidXY) {
-      return { ok: false, reason: "invalid_indoor_anchor" };
+  const needsIndoorXY = ["entrance", "hallway_anchor", "stairs", "elevator", "exit"].includes(role);
+
+  if (needsIndoorXY) {
+    if (!Number.isFinite(Number(payload.x)) || !Number.isFinite(Number(payload.y))) {
+      return { ok: false, reason: "missing_xy" };
     }
   }
- 
+
   return { ok: true };
 }
  
@@ -83,8 +66,13 @@ export function getValidationMessage(reason) {
   switch (reason) {
     case "empty_qr":
       return "QR code could not be read. Try scanning again.";
+    case "unsupported_qr":
+      return "This QR code format is not supported. Please use a current poster.";
+    case "inactive_qr":
+      return "This QR code is not active. Please use a deployed poster.";
     case "stale_qr":
       return "This QR code is outdated. Please update the QR poster.";
+    case "missing_xy":
     case "invalid_indoor_anchor":
       return "This location is not yet mapped for indoor navigation.";
     case "missing_building":
@@ -94,4 +82,3 @@ export function getValidationMessage(reason) {
       return "QR code could not be used for navigation.";
   }
 }
- 
