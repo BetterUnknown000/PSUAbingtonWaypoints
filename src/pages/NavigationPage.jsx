@@ -455,12 +455,63 @@ export default function NavigationPage({ route, navigation }) {
     return false;
   }, [viewMode, nextWaypoint, livePose, userGps]);
   
+  // ─── Live indoor guidance — derived from livePose, updates as user walks ──
+  const METERS_PER_PX = 1 / 3.5; // tunable per building/floor
+
+  const liveIndoorGuidance = useMemo(() => {
+    if (viewMode !== VIEW_MODE.INDOOR) return null;
+    if (!livePose || !currentWaypointId || pathIds.length === 0) return null;
+
+    const nextWaypointId = getNextWaypointId(pathIds, currentWaypointId);
+    const nextWp = nextWaypointId ? getWaypointById(nextWaypointId) : null;
+    if (!nextWp) return null;
+
+    const distPx = computeMapDistance(livePose, nextWp);
+    const distM = Number.isFinite(distPx) ? distPx * METERS_PER_PX : null;
+
+    // Estimate remaining path distance after the next waypoint
+    const afterIdx = pathIds.indexOf(nextWaypointId);
+    let remainingAfterM = 0;
+    if (afterIdx >= 0) {
+      for (let i = afterIdx; i < pathIds.length - 1; i++) {
+        const a = getWaypointById(pathIds[i]);
+        const b = getWaypointById(pathIds[i + 1]);
+        if (a?.x && a?.y && b?.x && b?.y) {
+          remainingAfterM += computeMapDistance(a, b) * METERS_PER_PX;
+        }
+      }
+    }
+
+    const remainingM = distM != null ? distM + remainingAfterM : null;
+
+    // Dynamic instruction based on distance to next waypoint
+    let instruction = currentStep?.text || stageMessage || "";
+    if (distM != null) {
+      const type = String(nextWp.type || "").toLowerCase();
+      if (type === "stairs" && distM <= 4) {
+        instruction = `Scan the QR code at ${nextWp.label || "the staircase"} to continue.`;
+      } else if (type === "elevator" && distM <= 4) {
+        instruction = `Scan the QR code at ${nextWp.label || "the elevator"} to continue.`;
+      } else if (type === "entrance" && distM <= 4) {
+        instruction = `Scan the QR code at ${nextWp.label || "the entrance"} to continue.`;
+      } else if (distM <= 8) {
+        instruction = `Continue toward ${nextWp.label || "the next point"} (${distM.toFixed(0)} m).`;
+      }
+    }
+
+    return { nextWaypointId, nextWaypoint: nextWp, distanceToNextM: distM, remainingDistanceM: remainingM, instruction };
+  }, [viewMode, livePose, currentWaypointId, pathIds, currentStep, stageMessage]);
+
   const formattedDistance = useMemo(() => {
+    // Indoors — use live pose-derived distance if available
+    if (viewMode === VIEW_MODE.INDOOR && liveIndoorGuidance?.remainingDistanceM != null) {
+      return formatDistance(liveIndoorGuidance.remainingDistanceM);
+    }
     if (orsMeters !== null && viewMode === VIEW_MODE.OUTDOOR) {
       return formatDistance(orsMeters);
     }
     return formatDistance(routeDistance);
-  }, [routeDistance, orsMeters, viewMode]);
+  }, [viewMode, liveIndoorGuidance, routeDistance, orsMeters]);
 
   const gpsBuildingGuess = useMemo(() => {
     return guessBuildingFromGps(userGps);
@@ -555,6 +606,7 @@ export default function NavigationPage({ route, navigation }) {
       userGps,
       entrances: destinationEntranceWaypoints,
       accessibilityMode,
+      orsApiKey: process.env.EXPO_PUBLIC_ORS_API_KEY || "",
     }).then((ranked) => {
       if (!cancelled) setRankedEntrances(ranked);
     }).catch(() => {
@@ -890,26 +942,14 @@ export default function NavigationPage({ route, navigation }) {
 
     if (!matchedWaypoint) return;
 
-    setCurrentWaypointLabel(matchedWaypoint.label || matchedWaypoint.id);
-    setCurrentBuildingId(matchedWaypoint.building || "");
-    setCurrentWaypointId(matchedWaypoint.id || "");
-    setVisionSource("vision");
-
-    setCurrentIndoorPosition({
-      building: matchedWaypoint.building || "",
-      floor: matchedWaypoint.floor || "",
-      x: matchedWaypoint.x,
-      y: matchedWaypoint.y,
-    });
-
-    setPreviousIndoorDistance(null);
-    setLastStepAnchorCount(stepCount);
-    showScanBadge(matchedWaypoint.label || matchedWaypoint.id);
+    // Route through the same authoritative pipeline as QR scans —
+    // this updates reducer, IMU pose, and all state in one place
+    applyScannedWaypoint(matchedWaypoint, "vision");
 
     if (navigation?.setParams) {
       navigation.setParams({ visualLocateResult: undefined });
     }
-  }, [route.params?.visualLocateResult, navigation, stepCount]);
+  }, [route.params?.visualLocateResult, navigation]);
 
   useEffect(() => {
     if (currentBuildingId) return;
@@ -1235,14 +1275,14 @@ export default function NavigationPage({ route, navigation }) {
 
     const advanced = advanceRouteIfNeededIndoor({
       currentWaypointId,
-      currentIndoorPosition,
+      currentIndoorPosition: livePose, // use livePose — single source of truth
       pathIds,
-      deviceHeading,
-      currentFloor: currentWaypointObj?.floor ?? null,
+      deviceHeading: livePose?.headingDeg ?? deviceHeading,
+      currentFloor: livePose?.floor ?? currentWaypointObj?.floor ?? null,
       currentBuildingId,
       previousDistanceToNext: previousIndoorDistance,
-      closeThreshold: 20,
-      nearThreshold: 35,
+      closeThreshold: 12,
+      nearThreshold: 20,
       headingToleranceDegrees: 60,
     });
 
@@ -1257,13 +1297,6 @@ export default function NavigationPage({ route, navigation }) {
 
       if (next?.building) setCurrentBuildingId(next.building);
       if (next?.label) setCurrentWaypointLabel(next.label);
-
-      setCurrentIndoorPosition({
-        building: next?.building || currentBuildingId || "",
-        floor: next?.floor || "",
-        x: next?.x,
-        y: next?.y,
-      });
 
       setPreviousIndoorDistance(null);
       setLastStepAnchorCount(stepCount);
@@ -2136,7 +2169,12 @@ export default function NavigationPage({ route, navigation }) {
                 onPress={() =>
                   navigation.navigate("VisualLocateScreen", {
                     returnScreen: route.name || "NavigationPage",
-                    destination,
+                    returnRouteKey: route.key,
+                    returnParams: {
+                      destination,
+                      accessibilityMode: route.params?.accessibilityMode,
+                      emergencyMode: route.params?.emergencyMode,
+                    },
                   })
                 }
               >
@@ -2305,7 +2343,7 @@ export default function NavigationPage({ route, navigation }) {
                   ? "Point your camera at a nearby QR code to begin indoor navigation."
                   : nearNextWaypoint
                   ? `📷 You're approaching ${nextWaypoint?.label || "the next point"}. Scan its QR code to continue.`
-                  : stageMessage || currentStep?.text || "No QR nearby? Tap User Help."}
+                  : liveIndoorGuidance?.instruction || stageMessage || currentStep?.text || "No QR nearby? Tap User Help."}
               </Text>
 
               <View style={s.metaRow}>
@@ -2397,7 +2435,12 @@ export default function NavigationPage({ route, navigation }) {
                   onPress={() =>
                     navigation.navigate("VisualLocateScreen", {
                       returnScreen: route.name || "NavigationPage",
-                      destination,
+                      returnRouteKey: route.key,
+                      returnParams: {
+                        destination,
+                        accessibilityMode: route.params?.accessibilityMode,
+                        emergencyMode: route.params?.emergencyMode,
+                      },
                     })
                   }
                 >
