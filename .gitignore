@@ -5,6 +5,7 @@ node_modules/
 
 # Environment variables — never commit the real .env
 .env
+server/.env
 
 # Keep the example tracked so others know what vars are needed
 !.env.example
