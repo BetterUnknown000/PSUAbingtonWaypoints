@@ -523,7 +523,6 @@ export default function NavigationPage({ route, navigation }) {
   }, [nearNextWaypoint, arrived, nextWaypoint, navState.mode]);
   
   // ─── Live indoor guidance — derived from livePose, updates as user walks ──
-  const METERS_PER_PX = 1 / 3.5; // tunable per building/floor
 
   const liveIndoorGuidance = useMemo(() => {
     if (viewMode !== VIEW_MODE.INDOOR) return null;
@@ -534,7 +533,8 @@ export default function NavigationPage({ route, navigation }) {
     if (!nextWp) return null;
 
     const distPx = computeMapDistance(livePose, nextWp);
-    const distM = Number.isFinite(distPx) ? distPx * METERS_PER_PX : null;
+    const metersPerPx = getMetersPerPx(nextWp.building, nextWp.floor, nextWp);
+    const distM = Number.isFinite(distPx) ? distPx * metersPerPx : null;
 
     // Estimate remaining path distance after the next waypoint
     const afterIdx = pathIds.indexOf(nextWaypointId);
@@ -543,8 +543,9 @@ export default function NavigationPage({ route, navigation }) {
       for (let i = afterIdx; i < pathIds.length - 1; i++) {
         const a = getWaypointById(pathIds[i]);
         const b = getWaypointById(pathIds[i + 1]);
-        if (a?.x && a?.y && b?.x && b?.y) {
-          remainingAfterM += computeMapDistance(a, b) * METERS_PER_PX;
+        if (a?.x != null && a?.y != null && b?.x != null && b?.y != null) {
+          const legMetersPerPx = getMetersPerPx(a.building, a.floor, a);
+          remainingAfterM += computeMapDistance(a, b) * legMetersPerPx;
         }
       }
     }
@@ -554,20 +555,16 @@ export default function NavigationPage({ route, navigation }) {
     // Dynamic instruction based on distance to next waypoint
     let instruction = currentStep?.text || stageMessage || "";
     if (distM != null) {
-      const type = String(nextWp.type || "").toLowerCase();
-      if (type === "stairs" && distM <= 4) {
-        instruction = `Scan the QR code at ${nextWp.label || "the staircase"} to continue.`;
-      } else if (type === "elevator" && distM <= 4) {
-        instruction = `Scan the QR code at ${nextWp.label || "the elevator"} to continue.`;
-      } else if (type === "entrance" && distM <= 4) {
-        instruction = `Scan the QR code at ${nextWp.label || "the entrance"} to continue.`;
-      } else if (distM <= 8) {
+      const stopRadiusM = Number(nextWp.stop_radius_m ?? 3);
+      if (nextWp.requires_scan === true && distM <= stopRadiusM) {
+        instruction = `Scan the QR code at ${nextWp.label || "the next anchor"} to continue.`;
+      } else if (distM <= Math.max(8, stopRadiusM * 2)) {
         instruction = `Continue toward ${nextWp.label || "the next point"} (${distM.toFixed(0)} m).`;
       }
     }
 
     return { nextWaypointId, nextWaypoint: nextWp, distanceToNextM: distM, remainingDistanceM: remainingM, instruction };
-  }, [viewMode, livePose, currentWaypointId, pathIds, currentStep, stageMessage]);
+  }, [viewMode, livePose, currentWaypointId, pathIds, currentStep, stageMessage, getMetersPerPx]);
 
   const formattedDistance = useMemo(() => {
     // Indoors — use live pose-derived distance if available
@@ -1037,7 +1034,12 @@ export default function NavigationPage({ route, navigation }) {
     if (linkedStartAppliedRef.current) return;
     linkedStartAppliedRef.current = true;
 
-    applyScannedWaypoint(linkedStartWaypoint, "qr");
+    const linkedStartPayload = synthesizeQrPayloadFromWaypoint(linkedStartWaypoint);
+    applyScannedWaypoint(
+      { ...linkedStartWaypoint, ...linkedStartPayload },
+      "qr",
+      linkedStartPayload || {}
+    );
 
     // Clear one-shot params so they cannot re-fire later
     navigation.setParams?.({
@@ -1151,8 +1153,12 @@ export default function NavigationPage({ route, navigation }) {
 
         setGpsPermissionGranted(true);
 
+        const requestedAccuracy = batterySaverMode
+          ? Location.Accuracy.Balanced
+          : Location.Accuracy.High;
+
         const current = await Location.getCurrentPositionAsync({
-          accuracy: Location.Accuracy.Balanced,
+          accuracy: requestedAccuracy,
         });
 
         setUserGps({
@@ -1162,7 +1168,7 @@ export default function NavigationPage({ route, navigation }) {
 
         locationSubscription = await Location.watchPositionAsync(
           {
-            accuracy: Location.Accuracy.Balanced,
+            accuracy: requestedAccuracy,
             timeInterval: 1000,
             distanceInterval: 1,
           },
@@ -1613,6 +1619,7 @@ export default function NavigationPage({ route, navigation }) {
       setPreviousIndoorDistance(null);
       setLastStepAnchorCount(stepCount);
       setPendingTransitionType(null);
+      navDispatch({ type: NavEvent.FORCE_OUTDOOR });
 
       setOrsCoords([]);
       setOrsSteps([]);
@@ -1714,7 +1721,11 @@ export default function NavigationPage({ route, navigation }) {
       lastOrsFetchKeyRef.current = null;
       showScanBadge(`Exited ${scannedWaypoint.building || "building"}`);
     } else {
-      applyScannedWaypoint(scannedWaypoint, "qr");
+      applyScannedWaypoint(
+        { ...scannedWaypoint, ...normalizedPayload },
+        "qr",
+        normalizedPayload
+      );
     }
 
     setOutdoorScannerVisible(false);
