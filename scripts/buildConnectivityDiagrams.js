@@ -239,7 +239,7 @@ function buildFloorSVG(key, nodes) {
       return String(n.type || "?").slice(0, 2).toUpperCase();
     })();
 
-    svg += `<g class="wp-node" data-id="${n.id}" data-label="${safeLabel}" data-type="${n.type||'?'}" data-nb="${nbData}" data-dc="${dc}" style="cursor:pointer">`;
+    svg += `<g class="wp-node" data-id="${n.id}" data-label="${safeLabel}" data-type="${n.type||'?'}" data-nb="${nbData}" data-dc="${dc}" data-x="${n.x||0}" data-y="${n.y||0}" style="cursor:pointer">`;
     svg += `<circle cx="${p.x.toFixed(1)}" cy="${p.y.toFixed(1)}" r="${r}" fill="${fill}" stroke="${stroke}" stroke-width="${sw}" opacity="0.92"/>`;
     svg += `<text x="${p.x.toFixed(1)}" y="${(p.y+3.5).toFixed(1)}" text-anchor="middle" font-size="7" font-weight="500" font-family="system-ui,sans-serif" fill="${dc?'#E24B4A':'#fff'}" pointer-events="none">${shortLabel}</text>`;
     svg += `</g>`;
@@ -402,6 +402,8 @@ function bindHover(svgEl){
     g.addEventListener('mouseenter',function(e){
       e.stopPropagation();
       var id=g.dataset.id, label=g.dataset.label, type=g.dataset.type, dc=g.dataset.dc==='true';
+      var wx=g.dataset.x, wy=g.dataset.y;
+      var hasXY = wx && wy && Number(wx) !== 0;
       var nbs=[];
       try{ nbs=JSON.parse(g.dataset.nb.replace(/&quot;/g,'"')); }catch(x){}
 
@@ -431,9 +433,14 @@ function bindHover(svgEl){
           }).join('')
         : '<div style="font-size:12px;color:#888780">none on this floor</div>';
 
+      var xyRow = hasXY
+        ? '<div style="font-size:11px;color:#5f5e5a;margin-bottom:8px;font-family:monospace">x: '+Number(wx).toFixed(1)+' &nbsp; y: '+Number(wy).toFixed(1)+'</div>'
+        : '<div style="font-size:11px;color:#A32D2D;margin-bottom:8px">x/y not set — add to campusData.json</div>';
+
       info.innerHTML=
         '<div style="font-weight:500;font-size:13px;margin-bottom:2px">'+label+'</div>'+
-        '<div style="font-size:10px;color:#888780;font-family:monospace;margin-bottom:8px;word-break:break-all">'+id+'</div>'+
+        '<div style="font-size:10px;color:#888780;font-family:monospace;margin-bottom:4px;word-break:break-all">'+id+'</div>'+
+        xyRow+
         '<div style="margin-bottom:8px">'+dcBadge+' '+typeBadge+'</div>'+
         '<div style="font-size:12px;font-weight:500;margin-bottom:4px">Connections ('+nbs.length+')</div>'+
         nbRows;
