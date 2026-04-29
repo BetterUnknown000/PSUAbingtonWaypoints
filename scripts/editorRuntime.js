@@ -320,30 +320,117 @@ function showInfo(id, adj, nodeSet) {
   var w = wpById[id], p = positions[id];
   if (!w) return;
   var nbs = (adj[id] || []).filter(function(nb) { return nodeSet[nb]; });
+
   var xyRow = (p && p.x)
     ? '<div class="val" data-xy style="font-family:monospace;font-size:11px">x: ' + p.x.toFixed(1) + '  y: ' + p.y.toFixed(1) + '</div>'
-    : '<div class="val" style="color:#A32D2D">x/y not set</div>';
+    : '<div class="val" style="color:#A32D2D">x/y not set — drag in Move mode</div>';
+
+  var typeOptions = Object.keys(TYPE_COLOR).map(function(t) {
+    return '<option value="' + t + '"' + (w.type === t ? ' selected' : '') + '>' + t + '</option>';
+  }).join('');
 
   var rows = nbs.map(function(nb) {
     var nw = wpById[nb];
     return '<div class="conn-row">' +
-      '<span><span style="color:#888780;font-size:10px">' + (nw ? nw.type : '?') + '</span> ' + (nw ? nw.label || nb : nb) + '</span>' +
+      '<span><span style="color:#888780;font-size:10px">' + (nw ? nw.type : '?') + '</span> ' +
+      (nw ? nw.label || nb : nb) + '</span>' +
       '<button class="xb" onclick="delEdge(\'' + id + '\',\'' + nb + '\')">x</button>' +
       '</div>';
   }).join('');
 
   document.getElementById('node-info').innerHTML =
     '<h3>Node info</h3>' +
-    '<div class="lbl">Label</div><div class="val">' + (w.label || '') + '</div>' +
-    '<div class="lbl">ID</div><div class="val" style="font-family:monospace;font-size:10px">' + id + '</div>' +
+
+    '<div class="lbl">Label</div>' +
+    '<input id="edit-label" style="width:100%;padding:4px 6px;border:.5px solid #d3d1c7;border-radius:4px;font-size:12px;font-family:inherit;margin-bottom:6px"' +
+    ' value="' + (w.label || '').replace(/"/g, '&quot;') + '"/>' +
+
+    '<div class="lbl">Type</div>' +
+    '<select id="edit-type" style="width:100%;padding:4px 6px;border:.5px solid #d3d1c7;border-radius:4px;font-size:12px;font-family:inherit;margin-bottom:6px">' +
+    typeOptions + '</select>' +
+
+    '<button onclick="applyWaypointEdit(\'' + id + '\')" ' +
+    'style="width:100%;padding:5px;background:#185FA5;color:#fff;border:none;border-radius:5px;font-size:12px;cursor:pointer;margin-bottom:8px">' +
+    'Apply changes</button>' +
+
+    '<div class="lbl">ID</div>' +
+    '<div class="val" style="font-family:monospace;font-size:10px">' + id + '</div>' +
+
     '<div class="lbl">Position</div>' + xyRow +
-    '<div style="margin-bottom:6px">' +
-    '<span class="badge ' + (nbs.length ? 'bg' : 'br') + '">' + nbs.length + ' connections</span>' +
-    '<span class="badge bb">' + (w.type || '?') + '</span>' +
+
+    '<div style="margin-bottom:6px;margin-top:4px">' +
+    '<span class="badge ' + (nbs.length ? 'bg' : 'br') + '">' + nbs.length + ' connections</span> ' +
     '<button class="badge br" style="cursor:pointer;border:none;font-size:10px" onclick="deleteWaypoint(\'' + id + '\')">delete</button>' +
     '</div>' +
+
     '<div class="lbl">Connections</div>' +
     '<div>' + (rows || '<div style="color:#888780;font-size:11px">none on this floor</div>') + '</div>';
+
+  // Focus label field for quick editing
+  var labelEl = document.getElementById('edit-label');
+  if (labelEl) labelEl.focus();
+}
+
+// ── Apply label / type edit ───────────────────────────────────────────────────
+function applyWaypointEdit(id) {
+  var w = wpById[id];
+  if (!w) return;
+
+  var newLabel = (document.getElementById('edit-label').value || '').trim();
+  var newType  = document.getElementById('edit-type').value;
+
+  var oldType  = w.type;
+  var oldLabel = w.label;
+
+  if (!newLabel) { alert('Label cannot be empty.'); return; }
+
+  w.label = newLabel;
+  w.type  = newType;
+
+  // Sync buildings[].entrances arrays when entrance type changes
+  if (oldType !== newType) {
+    syncEntranceArrays(id, w.building, oldType, newType);
+  }
+
+  markDirty();
+
+  // Refresh panel and redraw node
+  var adj = buildAdj();
+  var ns  = {}; floorNodeIds().forEach(function(i) { ns[i] = true; });
+  showInfo(id, adj, ns);
+  render();
+}
+
+// ── Sync buildings[].entrances when entrance type changes ─────────────────────
+function syncEntranceArrays(id, building, oldType, newType) {
+  var buildings = FULL_CAMPUS.buildings;
+  if (!Array.isArray(buildings)) return;
+
+  var buildingObj = buildings.find(function(b) {
+    return b.id === building || b.name === building;
+  });
+  if (!buildingObj) return;
+
+  var entrances = buildingObj.entrances;
+  if (!Array.isArray(entrances)) return;
+
+  var wasEntrance = oldType === 'entrance';
+  var isEntrance  = newType === 'entrance';
+
+  if (!wasEntrance && isEntrance) {
+    // Promote to entrance — add to array if not already there
+    if (entrances.indexOf(id) === -1) {
+      entrances.push(id);
+      console.log('Added ' + id + ' to ' + building + ' entrances');
+    }
+  } else if (wasEntrance && !isEntrance) {
+    // Demote from entrance — remove from array
+    var idx = entrances.indexOf(id);
+    if (idx !== -1) {
+      entrances.splice(idx, 1);
+      console.log('Removed ' + id + ' from ' + building + ' entrances');
+    }
+  }
 }
 
 function delEdge(from, to) {
