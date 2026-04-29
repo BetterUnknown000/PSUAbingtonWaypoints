@@ -74,18 +74,15 @@ for (const w of allWps) {
 
 // ─── Force-directed layout (for floors without x/y) ──────────────────────────
 
-function forceLayout(nodes, edgePairs, width, height, iterations = 300) {
-  const k     = Math.sqrt((width * height) / Math.max(nodes.length, 1));
+function forceLayout(nodes, edgePairs, width, height, iterations = 600) {
+  const k     = Math.sqrt((width * height) / Math.max(nodes.length, 1)) * 1.8;
   const pos   = {};
-  const idxOf = {};
 
   nodes.forEach((n, i) => {
-    idxOf[n.id] = i;
-    // Start in a circle so disconnected nodes don't pile up at center
     const angle = (2 * Math.PI * i) / nodes.length;
     pos[n.id] = {
-      x: width  / 2 + (width  * 0.35) * Math.cos(angle),
-      y: height / 2 + (height * 0.35) * Math.sin(angle),
+      x: width  / 2 + (width  * 0.38) * Math.cos(angle),
+      y: height / 2 + (height * 0.38) * Math.sin(angle),
       vx: 0,
       vy: 0,
     };
@@ -118,7 +115,7 @@ function forceLayout(nodes, edgePairs, width, height, iterations = 300) {
       const dx = b.x - a.x;
       const dy = b.y - a.y;
       const dist = Math.sqrt(dx * dx + dy * dy) || 0.01;
-      const force = (dist * dist) / k;
+      const force = (dist * dist) / (k * 2.2);
       a.vx += (dx / dist) * force;
       a.vy += (dy / dist) * force;
       b.vx -= (dx / dist) * force;
@@ -128,10 +125,10 @@ function forceLayout(nodes, edgePairs, width, height, iterations = 300) {
     // Apply velocity with cooling, clamp to canvas
     for (const n of nodes) {
       const p = pos[n.id];
-      p.x = Math.max(30, Math.min(width  - 30, p.x + p.vx * cooling));
-      p.y = Math.max(30, Math.min(height - 30, p.y + p.vy * cooling));
-      p.vx *= 0.85;
-      p.vy *= 0.85;
+      p.x = Math.max(60, Math.min(width  - 60, p.x + p.vx * cooling));
+      p.y = Math.max(60, Math.min(height - 60, p.y + p.vy * cooling));
+      p.vx *= 0.82;
+      p.vy *= 0.82;
     }
   }
 
@@ -161,7 +158,7 @@ function typeColor(type) {
 
 function buildFloorSVG(key, nodes) {
   const [building, floor] = key.split("__");
-  const W = 900, H = 620;
+  const W = 1800, H = 1200;
 
   // Determine if we have real x/y
   const hasRealXY = nodes.some(n => n.x && n.y && Number(n.x) !== 0);
@@ -200,8 +197,8 @@ function buildFloorSVG(key, nodes) {
     posMap = forceLayout(nodes, edgePairs, W, H);
   }
 
-  // Draw SVG
-  let svg = `<svg viewBox="0 0 ${W} ${H}" width="${W}" height="${H}" xmlns="http://www.w3.org/2000/svg" style="background:#f8f7f4;border-radius:8px;display:block">`;
+  // Draw SVG — nodes carry data-* attrs for the JS hover panel
+  let svg = `<svg id="svg-${key}" viewBox="0 0 ${W} ${H}" width="${W}" height="${H}" xmlns="http://www.w3.org/2000/svg" style="background:#f8f7f4;border-radius:8px;display:block;max-width:100%">`;
 
   // Title
   svg += `<text x="16" y="22" font-size="13" font-family="system-ui,sans-serif" font-weight="500" fill="#2c2c2a">${building} · floor ${floor}</text>`;
@@ -212,14 +209,14 @@ function buildFloorSVG(key, nodes) {
   const statusText  = dcCount === 0 ? `fully connected (${nodes.length} waypoints, ${floorEdges.length} edges)` : `${dcCount} disconnected of ${nodes.length} waypoints`;
   svg += `<text x="16" y="40" font-size="11" font-family="system-ui,sans-serif" fill="${statusColor}">${statusText}</text>`;
 
-  // Edges
+  // Edges — carry data attrs so JS can highlight on hover
   for (const [aid, bid] of edgePairs) {
     const a = posMap[aid], b = posMap[bid];
     if (!a || !b) continue;
-    svg += `<line x1="${a.x.toFixed(1)}" y1="${a.y.toFixed(1)}" x2="${b.x.toFixed(1)}" y2="${b.y.toFixed(1)}" stroke="#b4b2a9" stroke-width="1.5"/>`;
+    svg += `<line class="edge" data-a="${aid}" data-b="${bid}" x1="${a.x.toFixed(1)}" y1="${a.y.toFixed(1)}" x2="${b.x.toFixed(1)}" y2="${b.y.toFixed(1)}" stroke="#ccc" stroke-width="1.5"/>`;
   }
 
-  // Nodes
+  // Nodes — data-* attrs carry all info for the hover panel
   for (const n of nodes) {
     const p  = posMap[n.id];
     if (!p) continue;
@@ -227,10 +224,26 @@ function buildFloorSVG(key, nodes) {
     const fill   = dc ? "#ffffff" : typeColor(n.type);
     const stroke = dc ? "#E24B4A" : typeColor(n.type);
     const sw     = dc ? 2.5 : 1;
-    const r      = 7;
-    const label  = String(n.label || n.id).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
-    const title  = `${n.id} | ${n.type || '?'} | ${label}`;
-    svg += `<circle cx="${p.x.toFixed(1)}" cy="${p.y.toFixed(1)}" r="${r}" fill="${fill}" stroke="${stroke}" stroke-width="${sw}"><title>${title}</title></circle>`;
+    const r      = 9;
+
+    const nbIds  = (adj[n.id] || []).filter(nb => nodeSet.has(nb));
+    const nbData = JSON.stringify(nbIds.map(nb => ({
+      id: nb, label: wpById[nb]?.label || nb, type: wpById[nb]?.type || "?"
+    }))).replace(/"/g, "&quot;");
+
+    const safeLabel = String(n.label || n.id).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
+
+    const shortLabel = (() => {
+      const m = String(n.label || "").match(/\d{3,}/);
+      if (m) return m[0];
+      return String(n.type || "?").slice(0,2).toUpperCase();
+    })();
+
+    const textFill = dc ? "#E24B4A" : "#fff";
+    svg += `<g class="wp-node" data-id="${n.id}" data-label="${safeLabel}" data-type="${n.type||'?'}" data-nb="${nbData}" data-dc="${dc}" style="cursor:pointer">`;
+    svg += `<circle cx="${p.x.toFixed(1)}" cy="${p.y.toFixed(1)}" r="${r}" fill="${fill}" stroke="${stroke}" stroke-width="${sw}"/>`;
+    svg += `<text x="${p.x.toFixed(1)}" y="${(p.y + 4).toFixed(1)}" text-anchor="middle" font-size="8" font-family="system-ui,sans-serif" fill="${textFill}" pointer-events="none">${shortLabel}</text>`;
+    svg += `</g>`;
   }
 
   svg += `</svg>`;
@@ -315,8 +328,10 @@ const html = `<!DOCTYPE html>
 
 <div class="floors">${floorButtons}</div>
 
+<div style="display:flex;gap:12px;align-items:flex-start">
+<div style="flex:1;min-width:0">
 <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">
-  <span style="font-size:12px;color:#5f5e5a">Scroll to zoom · drag to pan</span>
+  <span style="font-size:12px;color:#5f5e5a">Scroll to zoom · drag to pan · hover node for details</span>
   <button onclick="resetZoom()" style="font-size:11px;padding:3px 10px;border:.5px solid #d3d1c7;border-radius:5px;background:#fff;cursor:pointer;color:#2c2c2a">Reset view</button>
   <span id="zoom-level" style="font-size:11px;color:#888780;margin-left:4px">100%</span>
 </div>
@@ -327,9 +342,13 @@ const html = `<!DOCTYPE html>
     ${floorPanels}
   </div>
 </div>
+</div>
+
+<div id="info-panel" style="display:none;width:220px;flex-shrink:0;background:#fff;border:.5px solid #d3d1c7;border-radius:8px;padding:14px;font-family:system-ui,sans-serif;position:sticky;top:12px;max-height:500px;overflow-y:auto"></div>
+</div>
 
 <p style="font-size:12px;color:#5f5e5a;margin-top:14px">
-  Hover any node to see its waypoint ID, type, and label.<br>
+  Hover a node to highlight its connections and see details in the panel.<br>
   Red-bordered nodes are unreachable by BFS from the largest connected component.<br>
   Woodland uses real floor-plan pixel coordinates. All other buildings use force-directed layout.
 </p>
@@ -341,6 +360,7 @@ let dragging = false, startX = 0, startY = 0, startTx = 0, startTy = 0;
 const root = document.getElementById('zoom-root');
 const wrap = document.getElementById('graph-wrap');
 const zoomLabel = document.getElementById('zoom-level');
+const infoPanel = document.getElementById('info-panel');
 
 function applyTransform() {
   root.style.transform = 'translate(' + tx + 'px,' + ty + 'px) scale(' + scale + ')';
@@ -349,10 +369,10 @@ function applyTransform() {
 
 wrap.addEventListener('wheel', function(e) {
   e.preventDefault();
-  const rect   = wrap.getBoundingClientRect();
+  const rect = wrap.getBoundingClientRect();
   const mouseX = e.clientX - rect.left;
   const mouseY = e.clientY - rect.top;
-  const delta  = e.deltaY > 0 ? 0.85 : 1.18;
+  const delta = e.deltaY > 0 ? 0.85 : 1.18;
   const newScale = Math.min(8, Math.max(0.15, scale * delta));
   tx = mouseX - (mouseX - tx) * (newScale / scale);
   ty = mouseY - (mouseY - ty) * (newScale / scale);
@@ -385,14 +405,103 @@ function resetZoom() {
   applyTransform();
 }
 
+// ── Hover: highlight node + its edges, show info panel ──────────────────────
+
+let lastSvg = null;
+
+function bindHover(svgEl) {
+  svgEl.querySelectorAll('.wp-node').forEach(g => {
+    g.addEventListener('mouseenter', function(e) {
+      e.stopPropagation();
+      const id    = g.dataset.id;
+      const label = g.dataset.label;
+      const type  = g.dataset.type;
+      const dc    = g.dataset.dc === 'true';
+      let   nbs   = [];
+      try { nbs = JSON.parse(g.dataset.nb.replace(/&quot;/g, '"')); } catch(_) {}
+
+      // Dim everything, then highlight this node + its edges + neighbours
+      svgEl.querySelectorAll('.wp-node circle').forEach(c => {
+        c.style.opacity = '0.18';
+      });
+      svgEl.querySelectorAll('.edge').forEach(l => {
+        l.style.opacity = '0.08';
+        l.style.strokeWidth = '1';
+      });
+
+      // Highlight this node
+      g.querySelector('circle').style.opacity = '1';
+      g.querySelector('circle').style.strokeWidth = '3';
+
+      // Highlight connected edges + neighbour nodes
+      const nbSet = new Set(nbs.map(n => n.id));
+      svgEl.querySelectorAll('.edge').forEach(l => {
+        if (l.dataset.a === id || l.dataset.b === id) {
+          l.style.opacity = '1';
+          l.style.stroke = '#378ADD';
+          l.style.strokeWidth = '2.5';
+        }
+      });
+      svgEl.querySelectorAll('.wp-node').forEach(og => {
+        if (nbSet.has(og.dataset.id)) {
+          og.querySelector('circle').style.opacity = '1';
+          og.querySelector('circle').style.strokeWidth = '2.5';
+        }
+      });
+
+      // Info panel
+      const nbHtml = nbs.length
+        ? nbs.map(function(n) {
+            return '<div style="padding:2px 0;font-size:12px"><span style="color:#888780;font-size:11px">' + n.type + '</span> &nbsp;' + n.label + '</div>';
+          }).join('')
+        : '<div style="font-size:12px;color:#888780">none on this floor</div>';
+
+      const dcBadge  = dc
+        ? '<span style="padding:2px 7px;border-radius:4px;background:#FCEBEB;color:#791F1F">disconnected</span>'
+        : '<span style="padding:2px 7px;border-radius:4px;background:#EAF3DE;color:#27500A">connected</span>';
+      const typeBadge = '<span style="padding:2px 7px;border-radius:4px;background:#f1efe8;color:#2c2c2a">' + type + '</span>';
+
+      infoPanel.innerHTML =
+        '<div style="font-weight:500;font-size:13px;margin-bottom:2px">' + label + '</div>' +
+        '<div style="font-size:11px;color:#888780;margin-bottom:8px;font-family:monospace">' + id + '</div>' +
+        '<div style="font-size:11px;margin-bottom:8px">' + dcBadge + ' &nbsp;' + typeBadge + '</div>' +
+        '<div style="font-size:12px;font-weight:500;margin-bottom:4px">Connections (' + nbs.length + ')</div>' +
+        nbHtml;
+      infoPanel.style.display = 'block';
+    });
+
+    g.addEventListener('mouseleave', function() {
+      // Restore all
+      svgEl.querySelectorAll('.wp-node circle').forEach(c => {
+        c.style.opacity = '';
+        c.style.strokeWidth = '';
+      });
+      svgEl.querySelectorAll('.edge').forEach(l => {
+        l.style.opacity = '';
+        l.style.stroke = '';
+        l.style.strokeWidth = '';
+      });
+      infoPanel.style.display = 'none';
+    });
+  });
+}
+
 function show(key) {
   scale = 1; tx = 0; ty = 0;
   applyTransform();
   document.getElementById('placeholder').style.display = 'none';
   document.querySelectorAll('[id^="panel-"]').forEach(el => el.style.display = 'none');
-  document.getElementById('panel-' + key).style.display = 'block';
+  const panel = document.getElementById('panel-' + key);
+  panel.style.display = 'block';
   document.querySelectorAll('[id^="btn-"]').forEach(b => b.style.fontWeight = '400');
   document.getElementById('btn-' + key).style.fontWeight = '500';
+
+  // Bind hover to the newly visible SVG
+  const svg = panel.querySelector('svg');
+  if (svg && svg !== lastSvg) {
+    bindHover(svg);
+    lastSvg = svg;
+  }
 }
 </script>
 </body>
