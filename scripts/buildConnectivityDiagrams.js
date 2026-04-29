@@ -315,9 +315,17 @@ const html = `<!DOCTYPE html>
 
 <div class="floors">${floorButtons}</div>
 
-<div class="panel-wrap">
-  <div id="placeholder" style="font-size:13px;color:#888780;padding:20px 0">Select a floor above to view its graph.</div>
-  ${floorPanels}
+<div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">
+  <span style="font-size:12px;color:#5f5e5a">Scroll to zoom · drag to pan</span>
+  <button onclick="resetZoom()" style="font-size:11px;padding:3px 10px;border:.5px solid #d3d1c7;border-radius:5px;background:#fff;cursor:pointer;color:#2c2c2a">Reset view</button>
+  <span id="zoom-level" style="font-size:11px;color:#888780;margin-left:4px">100%</span>
+</div>
+
+<div class="panel-wrap" id="panel-wrap" style="overflow:hidden;cursor:grab;position:relative;user-select:none">
+  <div id="zoom-root" style="transform-origin:0 0;will-change:transform">
+    <div id="placeholder" style="font-size:13px;color:#888780;padding:20px 0">Select a floor above to view its graph.</div>
+    ${floorPanels}
+  </div>
 </div>
 
 <p style="font-size:12px;color:#5f5e5a;margin-top:14px">
@@ -327,7 +335,59 @@ const html = `<!DOCTYPE html>
 </p>
 
 <script>
+let scale = 1, tx = 0, ty = 0;
+let dragging = false, startX = 0, startY = 0, startTx = 0, startTy = 0;
+
+const root = document.getElementById('zoom-root');
+const wrap = document.getElementById('panel-wrap');
+const zoomLabel = document.getElementById('zoom-level');
+
+function applyTransform() {
+  root.style.transform = 'translate(' + tx + 'px,' + ty + 'px) scale(' + scale + ')';
+  zoomLabel.textContent = Math.round(scale * 100) + '%';
+}
+
+wrap.addEventListener('wheel', function(e) {
+  e.preventDefault();
+  const rect   = wrap.getBoundingClientRect();
+  const mouseX = e.clientX - rect.left;
+  const mouseY = e.clientY - rect.top;
+  const delta  = e.deltaY > 0 ? 0.85 : 1.18;
+  const newScale = Math.min(8, Math.max(0.15, scale * delta));
+  tx = mouseX - (mouseX - tx) * (newScale / scale);
+  ty = mouseY - (mouseY - ty) * (newScale / scale);
+  scale = newScale;
+  applyTransform();
+}, { passive: false });
+
+wrap.addEventListener('mousedown', function(e) {
+  if (e.button !== 0) return;
+  dragging = true;
+  startX = e.clientX; startY = e.clientY;
+  startTx = tx; startTy = ty;
+  wrap.style.cursor = 'grabbing';
+});
+
+window.addEventListener('mousemove', function(e) {
+  if (!dragging) return;
+  tx = startTx + (e.clientX - startX);
+  ty = startTy + (e.clientY - startY);
+  applyTransform();
+});
+
+window.addEventListener('mouseup', function() {
+  dragging = false;
+  wrap.style.cursor = 'grab';
+});
+
+function resetZoom() {
+  scale = 1; tx = 0; ty = 0;
+  applyTransform();
+}
+
 function show(key) {
+  scale = 1; tx = 0; ty = 0;
+  applyTransform();
   document.getElementById('placeholder').style.display = 'none';
   document.querySelectorAll('[id^="panel-"]').forEach(el => el.style.display = 'none');
   document.getElementById('panel-' + key).style.display = 'block';
