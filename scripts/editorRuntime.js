@@ -122,6 +122,12 @@ window.addEventListener('mousemove', function(e) {
     var sv = svgCoords(e.clientX, e.clientY);
     positions[draggingNode].x = Math.max(0, Math.min(1000, dnOX + (sv.x - dnSX)));
     positions[draggingNode].y = Math.max(0, Math.min(1000, dnOY + (sv.y - dnSY)));
+    // Update x/y display in real time while dragging
+    var p = positions[draggingNode];
+    var xyEl = document.querySelector('#node-info .val[data-xy]');
+    if (xyEl) {
+      xyEl.textContent = 'x: ' + p.x.toFixed(1) + '  y: ' + p.y.toFixed(1);
+    }
     render();
     return;
   }
@@ -137,7 +143,12 @@ window.addEventListener('mouseup', function() {
     p.y = Math.round(p.y * 10) / 10;
     if (wpById[draggingNode]) { wpById[draggingNode].x = p.x; wpById[draggingNode].y = p.y; }
     markDirty();
+    // Refresh the full info panel after drop so all values are current
+    var id = draggingNode;
     draggingNode = null;
+    var adj = buildAdj();
+    var ns = {}; floorNodeIds().forEach(function(i) { ns[i] = true; });
+    showInfo(id, adj, ns);
     render();
   }
   panning = false;
@@ -310,7 +321,7 @@ function showInfo(id, adj, nodeSet) {
   if (!w) return;
   var nbs = (adj[id] || []).filter(function(nb) { return nodeSet[nb]; });
   var xyRow = (p && p.x)
-    ? '<div class="val" style="font-family:monospace;font-size:11px">x: ' + p.x.toFixed(1) + '  y: ' + p.y.toFixed(1) + '</div>'
+    ? '<div class="val" data-xy style="font-family:monospace;font-size:11px">x: ' + p.x.toFixed(1) + '  y: ' + p.y.toFixed(1) + '</div>'
     : '<div class="val" style="color:#A32D2D">x/y not set</div>';
 
   var rows = nbs.map(function(nb) {
