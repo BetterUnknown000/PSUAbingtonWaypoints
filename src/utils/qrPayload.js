@@ -6,7 +6,7 @@ export const QR_PAYLOAD_VERSION = 3;
  
 // Graph revision — bump this whenever campusData.json edges change significantly
 // so the app can detect stale QR codes in the future.
-export const GRAPH_REV = "2026-04-27";
+export const GRAPH_REV = "2026-04-28";
  
 function normalize(value) {
   return String(value || "").trim().toLowerCase();
@@ -43,10 +43,16 @@ export function buildWaypointDeepLink(waypoint) {
     ["y", waypoint.y ?? ""],
     ["lat", waypoint.latitude ?? ""],
     ["lng", waypoint.longitude ?? ""],
+    ["bearing_hint_deg", waypoint.bearing_hint_deg ?? ""],
     ["label", waypoint.label],
     ["type", waypoint.type],
     ["role", role],
     ["graph_rev", GRAPH_REV],
+    ["qr_deployed", waypoint.qr_deployed ?? true],
+    ["requires_scan", waypoint.requires_scan ?? false],
+    ["stop_radius_m", waypoint.stop_radius_m ?? 3],
+    ["approach_latitude", waypoint.approach_latitude ?? ""],
+    ["approach_longitude", waypoint.approach_longitude ?? ""],
   ]
     .filter(([, value]) => value != null && value !== "")
     .map(([key, value]) => `${encodePart(key)}=${encodePart(value)}`)
@@ -118,10 +124,16 @@ export function parseQrDeepLink(qrData) {
       y: toNumberOrNull(p.get("y")),
       latitude: toNumberOrNull(p.get("lat")) ?? toNumberOrNull(p.get("latitude")),
       longitude: toNumberOrNull(p.get("lng")) ?? toNumberOrNull(p.get("longitude")),
+      bearing_hint_deg: toNumberOrNull(p.get("bearing_hint_deg")),
       label: p.get("label") || "",
       type: p.get("type") || "",
       role: p.get("role") || p.get("type") || "",
       graph_rev: p.get("graph_rev") || null,
+      qr_deployed: p.get("qr_deployed"),
+      requires_scan: p.get("requires_scan"),
+      stop_radius_m: toNumberOrNull(p.get("stop_radius_m")),
+      approach_latitude: toNumberOrNull(p.get("approach_latitude")),
+      approach_longitude: toNumberOrNull(p.get("approach_longitude")),
       app_url: raw,
     };
   } catch {
