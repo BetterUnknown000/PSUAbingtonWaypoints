@@ -2213,8 +2213,8 @@
       "type": "stairs",
       "latitude": 40.116387,
       "longitude": -75.111156,
-      "x": 493.18,
-      "y": 435.09,
+      "x": 299.9,
+      "y": 774.4,
       "qr_code": "QR_WOOD_F3_STAIRS_A",
       "requires_scan": true,
       "stop_radius_m": 3
@@ -2227,8 +2227,8 @@
       "type": "stairs",
       "latitude": 40.116823,
       "longitude": -75.110967,
-      "x": 299.94,
-      "y": 774.36,
+      "x": 493.18,
+      "y": 435.09,
       "qr_code": "QR_WOOD_F3_STAIRS_B",
       "requires_scan": true,
       "stop_radius_m": 3
