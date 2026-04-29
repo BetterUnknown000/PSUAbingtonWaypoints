@@ -12,10 +12,13 @@ import { GRAPH_REV } from "./qrPayload";
  * Roles that require valid non-zero indoor x/y to be useful as anchors.
  */
 const INDOOR_ANCHOR_ROLES = new Set([
+  "entrance",
   "hallway",
+  "hallway_anchor",
   "stairs",
   "elevator",
   "anchor",
+  "exit",
 ]);
  
 /**
@@ -48,10 +51,17 @@ export function validateQrAnchor(payload, activeGraphRev = GRAPH_REV) {
   }
 
   const role = String(payload.role || payload.type || "").toLowerCase();
-  const needsIndoorXY = ["entrance", "hallway_anchor", "stairs", "elevator", "exit"].includes(role);
+  const needsIndoorXY =
+    INDOOR_ANCHOR_ROLES.has(role) || payload.requires_scan === true;
 
   if (needsIndoorXY) {
-    if (!Number.isFinite(Number(payload.x)) || !Number.isFinite(Number(payload.y))) {
+    const x = Number(payload.x);
+    const y = Number(payload.y);
+    if (
+      !Number.isFinite(x) ||
+      !Number.isFinite(y) ||
+      (x === 0 && y === 0)
+    ) {
       return { ok: false, reason: "missing_xy" };
     }
   }
