@@ -3,7 +3,7 @@ const campusData = require("../src/data/campusData.json");
 const APP_SCHEME = "psuabingtonwaypoints";
 const QR_NAVIGATION_ROUTE = "navigation";
 const QR_PAYLOAD_VERSION = 3;
-const GRAPH_REV = "2026-04-27";
+const GRAPH_REV = "2026-04-28";
 
 function normalize(value) {
   return String(value || "").trim().toLowerCase();
@@ -52,10 +52,16 @@ function buildAppUrl(waypoint) {
     ["y", waypoint.y ?? ""],
     ["lat", waypoint.latitude ?? ""],
     ["lng", waypoint.longitude ?? ""],
+    ["bearing_hint_deg", waypoint.bearing_hint_deg ?? ""],
     ["label", waypoint.label],
     ["type", waypoint.type],
     ["role", role],
     ["graph_rev", GRAPH_REV],
+    ["qr_deployed", waypoint.qr_deployed ?? true],
+    ["requires_scan", waypoint.requires_scan ?? false],
+    ["stop_radius_m", waypoint.stop_radius_m ?? 3],
+    ["approach_latitude", waypoint.approach_latitude ?? ""],
+    ["approach_longitude", waypoint.approach_longitude ?? ""],
   ]
     .filter(([, value]) => value != null && value !== "")
     .map(([key, value]) => `${encodeURIComponent(key)}=${encodeURIComponent(String(value))}`)
@@ -75,10 +81,16 @@ function buildPayload(waypoint) {
     y: waypoint.y ?? null,
     latitude: waypoint.latitude ?? null,
     longitude: waypoint.longitude ?? null,
+    bearing_hint_deg: waypoint.bearing_hint_deg ?? null,
     label: waypoint.label,
     type: waypoint.type,
     role: deriveRole(waypoint),
     graph_rev: GRAPH_REV,
+    qr_deployed: waypoint.qr_deployed ?? true,
+    requires_scan: waypoint.requires_scan ?? false,
+    stop_radius_m: waypoint.stop_radius_m ?? 3,
+    approach_latitude: waypoint.approach_latitude ?? null,
+    approach_longitude: waypoint.approach_longitude ?? null,
     app_url: buildAppUrl(waypoint),
   };
 }
