@@ -321,7 +321,7 @@ const html = `<!DOCTYPE html>
   <span id="zoom-level" style="font-size:11px;color:#888780;margin-left:4px">100%</span>
 </div>
 
-<div class="panel-wrap" id="panel-wrap" style="overflow:hidden;cursor:grab;position:relative;user-select:none">
+<div class="panel-wrap" id="graph-wrap" style="overflow:hidden;cursor:grab;position:relative;user-select:none">
   <div id="zoom-root" style="transform-origin:0 0;will-change:transform">
     <div id="placeholder" style="font-size:13px;color:#888780;padding:20px 0">Select a floor above to view its graph.</div>
     ${floorPanels}
@@ -339,7 +339,7 @@ let scale = 1, tx = 0, ty = 0;
 let dragging = false, startX = 0, startY = 0, startTx = 0, startTy = 0;
 
 const root = document.getElementById('zoom-root');
-const wrap = document.getElementById('panel-wrap');
+const wrap = document.getElementById('graph-wrap');
 const zoomLabel = document.getElementById('zoom-level');
 
 function applyTransform() {
