@@ -1,493 +1,483 @@
-/**
- * scripts/buildConnectivityDiagrams.js
- *
- * Generates an interactive HTML connectivity report with floorplan overlays.
- * Open diagrams/index.html in any browser — no server needed.
- *
- * Usage:  node scripts/buildConnectivityDiagrams.js
- *
- * Features:
- *  - Floorplan SVG embedded as background where available
- *  - Woodland waypoints drawn at real pixel coordinates (aligned to floorplan)
- *  - Other buildings use force-directed layout over the floorplan
- *  - Scroll to zoom, drag to pan
- *  - Hover a node: highlights its edges + neighbours, shows connection panel
- *  - Disconnected nodes shown with red border
- */
+// editorRuntime.js — browser-side editor logic
+// Loaded by buildConnectivityDiagrams.js into the generated HTML
 
-const fs   = require("fs");
-const path = require("path");
+var allWps   = FULL_CAMPUS.waypoints.map(function(w) { return Object.assign({}, w); });
+var allEdges = FULL_CAMPUS.edges.map(function(e)     { return Object.assign({}, e); });
 
-const DATA_PATH      = path.join(__dirname, "..", "src", "data", "campusData.json");
-const FLOORPLAN_DIR  = path.join(__dirname, "..", "src", "assets", "floorplans");
-const OUTPUT_DIR     = path.join(__dirname, "..", "diagrams");
-const OUTPUT_FILE    = path.join(OUTPUT_DIR, "index.html");
+var wpById = {};
+allWps.forEach(function(w) { wpById[w.id] = w; });
 
-// ─── Load campus data ─────────────────────────────────────────────────────────
-
-const raw      = JSON.parse(fs.readFileSync(DATA_PATH, "utf8"));
-const allWps   = raw.waypoints || [];
-const allEdges = raw.edges     || [];
-
-const wpById = {};
-for (const w of allWps) wpById[w.id] = w;
-
-const adj = {};
-for (const w of allWps) adj[w.id] = [];
-for (const e of allEdges) {
-  if (wpById[e.from] && wpById[e.to]) {
-    adj[e.from].push(e.to);
-    adj[e.to].push(e.from);
-  }
-}
-
-// ─── Floorplan loader ─────────────────────────────────────────────────────────
-
-function getFloorplanPath(building, floor) {
-  const floorKey = floor === "ground" ? "ground" : `floor${floor}`;
-  const candidates = [
-    `${building}_${floorKey}_with_outline.svg`,
-    `${building}_${floorKey}.svg`,
-  ];
-  for (const c of candidates) {
-    const p = path.join(FLOORPLAN_DIR, c);
-    if (fs.existsSync(p)) return p;
-  }
-  return null;
-}
-
-function loadFloorplanInner(filePath) {
-  if (!filePath) return null;
-  const content = fs.readFileSync(filePath, "utf8");
-  // Strip outer <svg ...> wrapper and </svg>, return only inner elements
-  const inner = content
-    .replace(/<\?xml[^>]*\?>/gi, "")
-    .replace(/<!DOCTYPE[^>]*>/gi, "")
-    .replace(/<svg[^>]*>/i, "")
-    .replace(/<\/svg>\s*$/i, "")
-    .trim();
-  return inner;
-}
-
-// ─── BFS ──────────────────────────────────────────────────────────────────────
-
-function bfsReachable(startId, allowedSet) {
-  const visited = new Set();
-  const queue   = [startId];
-  while (queue.length) {
-    const node = queue.shift();
-    if (visited.has(node)) continue;
-    visited.add(node);
-    for (const nb of (adj[node] || [])) {
-      if (allowedSet.has(nb) && !visited.has(nb)) queue.push(nb);
-    }
-  }
-  return visited;
-}
-
-// ─── Force-directed layout ────────────────────────────────────────────────────
-
-function forceLayout(nodes, edgePairs, width, height, iterations = 600) {
-  const k   = Math.sqrt((width * height) / Math.max(nodes.length, 1)) * 1.8;
-  const pos = {};
-
-  nodes.forEach((n, i) => {
-    const angle = (2 * Math.PI * i) / nodes.length;
-    pos[n.id] = {
-      x:  width  / 2 + width  * 0.38 * Math.cos(angle),
-      y:  height / 2 + height * 0.38 * Math.sin(angle),
-      vx: 0, vy: 0,
-    };
+// Positions — initialised from FLOOR_DATA, updated on drag
+var positions = {};
+Object.values(FLOOR_DATA).forEach(function(fd) {
+  Object.keys(fd.positions).forEach(function(id) {
+    positions[id] = { x: fd.positions[id].x, y: fd.positions[id].y };
   });
+});
 
-  for (let iter = 0; iter < iterations; iter++) {
-    const cool = 1 - iter / iterations;
+var currentKey   = null;
+var mode         = 'view';
+var hoveredNode  = null;
+var edgePendFrom = null;
+var pendingPos   = null;
+var dirty        = false;
 
-    for (let i = 0; i < nodes.length; i++) {
-      for (let j = i + 1; j < nodes.length; j++) {
-        const a  = pos[nodes[i].id];
-        const b  = pos[nodes[j].id];
-        const dx = b.x - a.x || 0.01;
-        const dy = b.y - a.y || 0.01;
-        const d  = Math.sqrt(dx * dx + dy * dy) || 0.01;
-        const f  = (k * k) / d;
-        a.vx -= (dx / d) * f;  a.vy -= (dy / d) * f;
-        b.vx += (dx / d) * f;  b.vy += (dy / d) * f;
-      }
+var scale = 1, tx = 0, ty = 0;
+var panning = false, panSX = 0, panSY = 0, panTX = 0, panTY = 0;
+var draggingNode = null, dnSX = 0, dnSY = 0, dnOX = 0, dnOY = 0;
+
+// ── Legend ────────────────────────────────────────────────────────────────────
+var legEl = document.getElementById('legend');
+Object.keys(TYPE_COLOR).forEach(function(type) {
+  var r = document.createElement('div');
+  r.className = 'leg-row';
+  r.innerHTML = '<div class="leg-dot" style="background:' + TYPE_COLOR[type] + '"></div>' + type;
+  legEl.appendChild(r);
+});
+var dc = document.createElement('div');
+dc.className = 'leg-row';
+dc.innerHTML = '<div class="leg-dot" style="background:#fff;border:2px solid #E24B4A"></div>disconnected';
+legEl.appendChild(dc);
+
+// ── Helpers ───────────────────────────────────────────────────────────────────
+function typeColor(t) { return TYPE_COLOR[String(t || '').toLowerCase()] || '#888780'; }
+
+function buildAdj() {
+  var adj = {};
+  allWps.forEach(function(w) { adj[w.id] = []; });
+  allEdges.forEach(function(e) {
+    if (wpById[e.from] && wpById[e.to]) {
+      adj[e.from].push(e.to);
+      adj[e.to].push(e.from);
     }
-
-    for (const [aid, bid] of edgePairs) {
-      if (!pos[aid] || !pos[bid]) continue;
-      const a  = pos[aid];
-      const b  = pos[bid];
-      const dx = b.x - a.x;
-      const dy = b.y - a.y;
-      const d  = Math.sqrt(dx * dx + dy * dy) || 0.01;
-      const f  = (d * d) / (k * 2.2);
-      a.vx += (dx / d) * f;  a.vy += (dy / d) * f;
-      b.vx -= (dx / d) * f;  b.vy -= (dy / d) * f;
-    }
-
-    for (const n of nodes) {
-      const p = pos[n.id];
-      p.x  = Math.max(50, Math.min(width  - 50, p.x + p.vx * cool));
-      p.y  = Math.max(50, Math.min(height - 50, p.y + p.vy * cool));
-      p.vx *= 0.82;  p.vy *= 0.82;
-    }
-  }
-
-  return pos;
+  });
+  return adj;
 }
 
-// ─── Type colours ─────────────────────────────────────────────────────────────
-
-const TYPE_COLOR = {
-  entrance:   "#185FA5", stairs:     "#854F0B", elevator:   "#3B6D11",
-  hallway:    "#5f5e5a", classroom:  "#533AB7", office:     "#2c2c2a",
-  lab:        "#0F6E56", dining:     "#993C1D", lounge:     "#993556",
-  recreation: "#185FA5", hall:       "#5f5e5a",
-};
-function typeColor(t) { return TYPE_COLOR[String(t||"").toLowerCase()] || "#888780"; }
-
-// ─── SVG builder per floor ────────────────────────────────────────────────────
-
-// All canvases use 1000×1000 to match floorplan coordinate space
-const W = 1000, H = 1000;
-
-function buildFloorSVG(key, nodes) {
-  const [building, floor] = key.split("__");
-
-  const hasRealXY    = nodes.some(n => n.x && n.y && Number(n.x) !== 0);
-  const floorplanPath = getFloorplanPath(building, floor);
-  const floorplanSVG  = loadFloorplanInner(floorplanPath);
-
-  const nodeSet    = new Set(nodes.map(n => n.id));
-  const floorEdges = allEdges.filter(e => nodeSet.has(e.from) && nodeSet.has(e.to));
-  const edgePairs  = floorEdges.map(e => [e.from, e.to]);
-
-  const startNode      = nodes.find(n => (adj[n.id]||[]).some(nb => nodeSet.has(nb))) || nodes[0];
-  const reachable      = startNode ? bfsReachable(startNode.id, nodeSet) : new Set();
-  const disconnectedIds = new Set(nodes.filter(n => !reachable.has(n.id)).map(n => n.id));
-
-  // Positions
-  let posMap = {};
-  if (hasRealXY) {
-    // Coordinates are already in 1000x1000 space — use directly
-    for (const n of nodes) {
-      posMap[n.id] = { x: Number(n.x) || W/2, y: Number(n.y) || H/2 };
-    }
-  } else {
-    posMap = forceLayout(nodes, edgePairs, W, H);
+function bfs(startId, allowed, adj) {
+  var vis = {}, q = [startId];
+  while (q.length) {
+    var cur = q.shift();
+    if (vis[cur]) continue;
+    vis[cur] = true;
+    (adj[cur] || []).forEach(function(nb) { if (allowed[nb] && !vis[nb]) q.push(nb); });
   }
-
-  // Build SVG string
-  let svg = `<svg id="svg-${key}" viewBox="0 0 ${W} ${H}" width="${W}" height="${H}" xmlns="http://www.w3.org/2000/svg" style="display:block;max-width:100%">`;
-
-  // ── Background floorplan ──
-  if (floorplanSVG) {
-    // Clip to canvas bounds
-    svg += `<defs><clipPath id="clip-${key}"><rect width="${W}" height="${H}"/></clipPath></defs>`;
-    svg += `<g clip-path="url(#clip-${key})" opacity="${hasRealXY ? '0.35' : '0.25'}">${floorplanSVG}</g>`;
-  } else {
-    svg += `<rect width="${W}" height="${H}" fill="#f8f7f4"/>`;
-  }
-
-  // ── Status bar background ──
-  svg += `<rect x="0" y="0" width="${W}" height="48" fill="rgba(248,247,244,0.88)"/>`;
-  svg += `<text x="12" y="18" font-size="13" font-family="system-ui,sans-serif" font-weight="500" fill="#2c2c2a">${building} · floor ${floor}</text>`;
-
-  const dcCount     = disconnectedIds.size;
-  const statusColor = dcCount === 0 ? "#3B6D11" : "#A32D2D";
-  const statusText  = dcCount === 0
-    ? `fully connected — ${nodes.length} waypoints, ${floorEdges.length} edges`
-    : `${dcCount} disconnected of ${nodes.length} waypoints`;
-  svg += `<text x="12" y="36" font-size="11" font-family="system-ui,sans-serif" fill="${statusColor}">${statusText}</text>`;
-
-  if (!hasRealXY && floorplanSVG) {
-    svg += `<text x="${W-12}" y="36" text-anchor="end" font-size="10" font-family="system-ui,sans-serif" fill="#854F0B">positions are approximate — add x/y to align</text>`;
-  }
-
-  // ── Edges ──
-  for (const [aid, bid] of edgePairs) {
-    const a = posMap[aid], b = posMap[bid];
-    if (!a || !b) continue;
-    svg += `<line class="edge" data-a="${aid}" data-b="${bid}" x1="${a.x.toFixed(1)}" y1="${a.y.toFixed(1)}" x2="${b.x.toFixed(1)}" y2="${b.y.toFixed(1)}" stroke="rgba(0,0,0,0.35)" stroke-width="1.5"/>`;
-  }
-
-  // ── Nodes ──
-  for (const n of nodes) {
-    const p  = posMap[n.id];
-    if (!p) continue;
-    const dc     = disconnectedIds.has(n.id);
-    const color  = typeColor(n.type);
-    const fill   = dc ? "#fff" : color;
-    const stroke = dc ? "#E24B4A" : color;
-    const sw     = dc ? 2.5 : 1.5;
-    const r      = 8;
-
-    const nbIds  = (adj[n.id] || []).filter(nb => nodeSet.has(nb));
-    const nbData = JSON.stringify(
-      nbIds.map(nb => ({ id: nb, label: wpById[nb]?.label || nb, type: wpById[nb]?.type || "?" }))
-    ).replace(/"/g, "&quot;");
-
-    const safeLabel = String(n.label || n.id)
-      .replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
-
-    const shortLabel = (() => {
-      const m = String(n.label || "").match(/\d{3,}/);
-      if (m) return m[0];
-      return String(n.type || "?").slice(0, 2).toUpperCase();
-    })();
-
-    svg += `<g class="wp-node" data-id="${n.id}" data-label="${safeLabel}" data-type="${n.type||'?'}" data-nb="${nbData}" data-dc="${dc}" data-x="${n.x||0}" data-y="${n.y||0}" style="cursor:pointer">`;
-    svg += `<circle cx="${p.x.toFixed(1)}" cy="${p.y.toFixed(1)}" r="${r}" fill="${fill}" stroke="${stroke}" stroke-width="${sw}" opacity="0.92"/>`;
-    svg += `<text x="${p.x.toFixed(1)}" y="${(p.y+3.5).toFixed(1)}" text-anchor="middle" font-size="7" font-weight="500" font-family="system-ui,sans-serif" fill="${dc?'#E24B4A':'#fff'}" pointer-events="none">${shortLabel}</text>`;
-    svg += `</g>`;
-  }
-
-  svg += `</svg>`;
-  return {
-    svg,
-    disconnected: [...disconnectedIds].map(id => ({ id, ...wpById[id] })),
-    nodeCount: nodes.length,
-    edgeCount: floorEdges.length,
-    hasFloorplan: !!floorplanSVG,
-    hasRealXY,
-  };
+  return vis;
 }
 
-// ─── Group by floor and build ─────────────────────────────────────────────────
-
-const floors = {};
-for (const w of allWps) {
-  const key = `${w.building}__${w.floor}`;
-  if (!floors[key]) floors[key] = [];
-  floors[key].push(w);
+function svgCoords(clientX, clientY) {
+  var r = document.getElementById('canvas-wrap').getBoundingClientRect();
+  return { x: (clientX - r.left - tx) / scale, y: (clientY - r.top - ty) / scale };
 }
 
-const floorReports = [];
-for (const [key, nodes] of Object.entries(floors)) {
-  const [building, floor] = key.split("__");
-  const result = buildFloorSVG(key, nodes);
-  floorReports.push({ key, building, floor, ...result });
+function floorNodeIds() {
+  if (!currentKey) return [];
+  var parts = currentKey.split('__'), b = parts[0], f = parts[1];
+  return allWps
+    .filter(function(w) { return w.building === b && String(w.floor) === String(f); })
+    .map(function(w) { return w.id; });
 }
 
-floorReports.sort((a, b) =>
-  a.building.localeCompare(b.building) || String(a.floor).localeCompare(String(b.floor))
-);
-
-const totalDisconnected = floorReports.reduce((s, r) => s + r.disconnected.length, 0);
-const floorsOk          = floorReports.filter(r => r.disconnected.length === 0).length;
-const floorsWithMap     = floorReports.filter(r => r.hasFloorplan).length;
-
-// ─── HTML ─────────────────────────────────────────────────────────────────────
-
-const legendHTML = Object.entries(TYPE_COLOR).map(([type, color]) =>
-  `<span style="display:inline-flex;align-items:center;gap:4px;margin:0 10px 5px 0;font-size:11px">` +
-  `<svg width="10" height="10"><circle cx="5" cy="5" r="4" fill="${color}"/></svg>${type}</span>`
-).join("") +
-  `<span style="display:inline-flex;align-items:center;gap:4px;margin:0 10px 5px 0;font-size:11px">` +
-  `<svg width="10" height="10"><circle cx="5" cy="5" r="4" fill="#fff" stroke="#E24B4A" stroke-width="2"/></svg>disconnected</span>`;
-
-const floorButtons = floorReports.map(r => {
-  const dc      = r.disconnected.length > 0;
-  const mapIcon = r.hasFloorplan ? (r.hasRealXY ? "🗺" : "🗺~") : "";
-  return `<button onclick="show('${r.key}')" id="btn-${r.key}" ` +
-    `style="font-size:11px;padding:4px 9px;border:.5px solid #d3d1c7;border-radius:5px;background:#fff;cursor:pointer;margin:2px;` +
-    `color:${dc ? '#A32D2D' : '#2c2c2a'}">${r.building} F${r.floor} ${mapIcon}${dc ? " !" : ""}</button>`;
-}).join("");
-
-const floorPanels = floorReports.map(r => {
-  const issueHTML = r.disconnected.length
-    ? `<div style="margin-top:8px;padding:8px 12px;background:#FCEBEB;border:.5px solid #F7C1C1;border-radius:6px;font-size:11px;color:#791F1F">` +
-      `<strong>Disconnected:</strong><br>` +
-      r.disconnected.map(n => `<code style="font-size:10px">${n.id}</code> — ${n.label||''} (${n.type||'?'})`).join("<br>") +
-      `<br><br><strong>Fix:</strong> Add an edge from each node above to its nearest connected neighbour on the same floor.</div>`
-    : "";
-  return `<div id="panel-${r.key}" style="display:none">${r.svg}${issueHTML}</div>`;
-}).join("");
-
-const html = `<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<title>PSU Abington — Campus Connectivity</title>
-<style>
-  *{box-sizing:border-box;margin:0;padding:0}
-  body{font-family:system-ui,sans-serif;background:#f1efe8;padding:16px;color:#2c2c2a}
-  h1{font-size:17px;font-weight:500;margin-bottom:3px}
-  .sub{font-size:12px;color:#5f5e5a;margin-bottom:16px}
-  .summary{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:8px;margin-bottom:14px}
-  .card{background:#fff;border:.5px solid #d3d1c7;border-radius:8px;padding:12px;text-align:center}
-  .card-val{font-size:22px;font-weight:500}
-  .card-lbl{font-size:11px;color:#5f5e5a;margin-top:3px}
-  .legend{margin-bottom:12px;line-height:2}
-  .floors{margin-bottom:10px;line-height:1.8}
-  .panel-wrap{background:#e8e6e0;border:.5px solid #d3d1c7;border-radius:8px;overflow:hidden;cursor:grab;position:relative;user-select:none}
-</style>
-</head>
-<body>
-<h1>PSU Abington — Campus Waypoint Connectivity</h1>
-<p class="sub">From campusData.json · ${allWps.length} waypoints · ${allEdges.length} edges · ${floorReports.length} floors · 🗺 = floorplan overlay · 🗺~ = floorplan but positions approximate</p>
-
-<div class="summary">
-  <div class="card"><div class="card-val">${allWps.length}</div><div class="card-lbl">waypoints</div></div>
-  <div class="card"><div class="card-val">${allEdges.length}</div><div class="card-lbl">edges</div></div>
-  <div class="card"><div class="card-val" style="color:${totalDisconnected?'#A32D2D':'#3B6D11'}">${totalDisconnected}</div><div class="card-lbl">disconnected</div></div>
-  <div class="card"><div class="card-val" style="color:#3B6D11">${floorsOk}</div><div class="card-lbl">floors OK</div></div>
-  <div class="card"><div class="card-val">${floorsWithMap}</div><div class="card-lbl">with floorplan</div></div>
-</div>
-
-<div class="legend">${legendHTML}</div>
-<div class="floors">${floorButtons}</div>
-
-<div style="display:flex;align-items:center;gap:8px;margin-bottom:6px">
-  <span style="font-size:11px;color:#5f5e5a">Scroll to zoom · drag to pan · hover node for details</span>
-  <button onclick="resetZoom()" style="font-size:11px;padding:3px 9px;border:.5px solid #d3d1c7;border-radius:5px;background:#fff;cursor:pointer">Reset view</button>
-  <span id="zoom-level" style="font-size:11px;color:#888780">100%</span>
-</div>
-
-<div style="display:flex;gap:10px;align-items:flex-start">
-  <div style="flex:1;min-width:0">
-    <div class="panel-wrap" id="graph-wrap">
-      <div id="zoom-root" style="transform-origin:0 0;will-change:transform">
-        <div id="placeholder" style="padding:24px 16px;font-size:13px;color:#888780">Select a floor above to view its graph.</div>
-        ${floorPanels}
-      </div>
-    </div>
-  </div>
-  <div id="info-panel" style="display:none;width:210px;flex-shrink:0;background:#fff;border:.5px solid #d3d1c7;border-radius:8px;padding:12px;font-size:13px;position:sticky;top:10px;max-height:520px;overflow-y:auto"></div>
-</div>
-
-<p style="font-size:11px;color:#888780;margin-top:10px">
-  Hover a node to highlight its connections. Woodland waypoints align exactly with the floorplan.
-  Other buildings use force-directed layout — add x/y coordinates in campusData.json to align them.
-</p>
-
-<script>
-let scale=1,tx=0,ty=0,dragging=false,startX=0,startY=0,startTx=0,startTy=0,lastSvg=null;
-const root=document.getElementById('zoom-root');
-const wrap=document.getElementById('graph-wrap');
-const zoomLbl=document.getElementById('zoom-level');
-const info=document.getElementById('info-panel');
-
-function applyT(){
-  root.style.transform='translate('+tx+'px,'+ty+'px) scale('+scale+')';
-  zoomLbl.textContent=Math.round(scale*100)+'%';
+function edgeExists(from, to) {
+  return allEdges.some(function(e) {
+    return (e.from === from && e.to === to) || (e.from === to && e.to === from);
+  });
 }
 
-wrap.addEventListener('wheel',function(e){
+function removeEdge(from, to) {
+  allEdges = allEdges.filter(function(e) {
+    return !((e.from === from && e.to === to) || (e.from === to && e.to === from));
+  });
+}
+
+// ── Zoom / pan ─────────────────────────────────────────────────────────────────
+var wrap  = document.getElementById('canvas-wrap');
+var zroot = document.getElementById('zoom-root');
+var zoomL = document.getElementById('zoom-lbl');
+
+function applyT() {
+  zroot.style.transform = 'translate(' + tx + 'px,' + ty + 'px) scale(' + scale + ')';
+  zoomL.textContent = Math.round(scale * 100) + '%';
+}
+function resetZoom() { scale = 1; tx = 0; ty = 0; applyT(); }
+
+wrap.addEventListener('wheel', function(e) {
   e.preventDefault();
-  const r=wrap.getBoundingClientRect();
-  const mx=e.clientX-r.left, my=e.clientY-r.top;
-  const d=e.deltaY>0?0.85:1.18;
-  const ns=Math.min(10,Math.max(0.1,scale*d));
-  tx=mx-(mx-tx)*(ns/scale); ty=my-(my-ty)*(ns/scale); scale=ns; applyT();
-},{passive:false});
+  var r = wrap.getBoundingClientRect();
+  var mx = e.clientX - r.left, my = e.clientY - r.top;
+  var d = e.deltaY > 0 ? 0.85 : 1.18;
+  var ns = Math.min(12, Math.max(0.05, scale * d));
+  tx = mx - (mx - tx) * (ns / scale);
+  ty = my - (my - ty) * (ns / scale);
+  scale = ns; applyT();
+}, { passive: false });
 
-wrap.addEventListener('mousedown',function(e){
-  if(e.button!==0)return;
-  dragging=true; startX=e.clientX; startY=e.clientY; startTx=tx; startTy=ty;
-  wrap.style.cursor='grabbing';
+wrap.addEventListener('mousedown', function(e) {
+  if (e.button !== 0 || draggingNode) return;
+  panning = true; panSX = e.clientX; panSY = e.clientY; panTX = tx; panTY = ty;
+  wrap.classList.add('grabbing');
 });
-window.addEventListener('mousemove',function(e){
-  if(!dragging)return; tx=startTx+(e.clientX-startX); ty=startTy+(e.clientY-startY); applyT();
+window.addEventListener('mousemove', function(e) {
+  if (draggingNode) {
+    var sv = svgCoords(e.clientX, e.clientY);
+    positions[draggingNode].x = Math.max(0, Math.min(1000, dnOX + (sv.x - dnSX)));
+    positions[draggingNode].y = Math.max(0, Math.min(1000, dnOY + (sv.y - dnSY)));
+    render();
+    return;
+  }
+  if (!panning) return;
+  tx = panTX + (e.clientX - panSX);
+  ty = panTY + (e.clientY - panSY);
+  applyT();
 });
-window.addEventListener('mouseup',function(){ dragging=false; wrap.style.cursor='grab'; });
+window.addEventListener('mouseup', function() {
+  if (draggingNode) {
+    var p = positions[draggingNode];
+    p.x = Math.round(p.x * 10) / 10;
+    p.y = Math.round(p.y * 10) / 10;
+    if (wpById[draggingNode]) { wpById[draggingNode].x = p.x; wpById[draggingNode].y = p.y; }
+    markDirty();
+    draggingNode = null;
+    render();
+  }
+  panning = false;
+  wrap.classList.remove('grabbing');
+});
 
-function resetZoom(){ scale=1;tx=0;ty=0;applyT(); }
+// ── Render ────────────────────────────────────────────────────────────────────
+function render() {
+  if (!currentKey) return;
+  var adj     = buildAdj();
+  var nodeIds = floorNodeIds();
+  var nodeSet = {};
+  nodeIds.forEach(function(id) { nodeSet[id] = true; });
+  var fEdges  = allEdges.filter(function(e) { return nodeSet[e.from] && nodeSet[e.to]; });
 
-function bindHover(svgEl){
-  svgEl.querySelectorAll('.wp-node').forEach(function(g){
-    g.addEventListener('mouseenter',function(e){
+  // BFS disconnected
+  var start = nodeIds.find(function(id) {
+    return (adj[id] || []).some(function(nb) { return nodeSet[nb]; });
+  });
+  var reachable = start ? bfs(start, nodeSet, adj) : {};
+  var dcSet = {};
+  nodeIds.forEach(function(id) { if (!reachable[id]) dcSet[id] = true; });
+
+  // Stats
+  document.getElementById('s-wps').textContent   = allWps.length;
+  document.getElementById('s-edges').textContent  = allEdges.length;
+  var dcEl = document.getElementById('s-dc');
+  var dcCount = Object.keys(dcSet).length;
+  dcEl.textContent = dcCount;
+  dcEl.style.color = dcCount ? '#A32D2D' : '#3B6D11';
+
+  // Build SVG
+  var parts = currentKey.split('__');
+  var building = parts[0];
+
+  var svgParts = [];
+
+  // Background floorplan from hidden div
+  var fpDiv = document.getElementById('fp-' + currentKey);
+  if (fpDiv) {
+    var fpSvg = fpDiv.querySelector('svg');
+    if (fpSvg) {
+      var fd = FLOOR_DATA[currentKey];
+      var op = fd && fd.hasRealXY ? 0.35 : 0.25;
+      svgParts.push('<defs><clipPath id="fpc"><rect width="1000" height="1000"/></clipPath></defs>');
+      svgParts.push('<g clip-path="url(#fpc)" opacity="' + op + '">' + fpSvg.innerHTML + '</g>');
+    }
+  } else {
+    svgParts.push('<rect width="1000" height="1000" fill="#f8f7f4"/>');
+  }
+
+  // Edges
+  fEdges.forEach(function(e) {
+    var a = positions[e.from], b = positions[e.to];
+    if (!a || !b) return;
+    var hl = hoveredNode && (e.from === hoveredNode || e.to === hoveredNode);
+    var pd = edgePendFrom && (e.from === edgePendFrom || e.to === edgePendFrom);
+    svgParts.push(
+      '<line class="e-line"' +
+      ' data-from="' + e.from + '" data-to="' + e.to + '"' +
+      ' x1="' + a.x.toFixed(1) + '" y1="' + a.y.toFixed(1) + '"' +
+      ' x2="' + b.x.toFixed(1) + '" y2="' + b.y.toFixed(1) + '"' +
+      ' stroke="' + (hl ? '#185FA5' : pd ? '#854F0B' : 'rgba(0,0,0,0.28)') + '"' +
+      ' stroke-width="' + (hl || pd ? 2.5 : 1.5) + '"' +
+      ' style="cursor:pointer"/>'
+    );
+  });
+
+  // Nodes
+  nodeIds.forEach(function(id) {
+    var wp = wpById[id], p = positions[id];
+    if (!wp || !p) return;
+    var isDc = !!dcSet[id];
+    var isHl = hoveredNode === id;
+    var isPd = edgePendFrom === id;
+    var color  = typeColor(wp.type);
+    var fill   = isDc ? '#fff' : color;
+    var stroke = isDc ? '#E24B4A' : isPd ? '#854F0B' : isHl ? '#fff' : color;
+    var sw     = isDc || isPd ? 2.5 : isHl ? 2 : 1.5;
+    var r      = isHl || isPd ? 10 : 8;
+    var label  = wp.label || '';
+    var m      = label.match(/\d{3,}/);
+    var sl     = m ? m[0] : (wp.type || '?').slice(0, 2).toUpperCase();
+    svgParts.push(
+      '<g class="wp-node" data-id="' + id + '" style="cursor:pointer">' +
+      '<circle cx="' + p.x.toFixed(1) + '" cy="' + p.y.toFixed(1) + '"' +
+      ' r="' + r + '" fill="' + fill + '" stroke="' + stroke + '" stroke-width="' + sw + '" opacity="0.93"/>' +
+      '<text x="' + p.x.toFixed(1) + '" y="' + (p.y + 3.5).toFixed(1) + '"' +
+      ' text-anchor="middle" font-size="7" font-weight="500"' +
+      ' font-family="system-ui,sans-serif"' +
+      ' fill="' + (isDc ? '#E24B4A' : '#fff') + '" pointer-events="none">' + sl + '</text>' +
+      '</g>'
+    );
+  });
+
+  // Get or create SVG element
+  var svg = document.getElementById('main-svg');
+  if (!svg) {
+    svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+    svg.id = 'main-svg';
+    svg.setAttribute('viewBox', '0 0 1000 1000');
+    svg.setAttribute('width', '1000');
+    svg.setAttribute('height', '1000');
+    svg.style.display = 'block';
+    zroot.innerHTML = '';
+    zroot.appendChild(svg);
+  }
+  svg.innerHTML = svgParts.join('');
+
+  // Click on blank canvas in add mode
+  svg.onclick = function(e) {
+    if (mode !== 'add') return;
+    if (e.target.closest && e.target.closest('.wp-node')) return;
+    var sv = svgCoords(e.clientX, e.clientY);
+    pendingPos = { x: Math.round(sv.x * 10) / 10, y: Math.round(sv.y * 10) / 10 };
+    document.getElementById('modal-coords').textContent =
+      'Position: x=' + pendingPos.x.toFixed(1) + ', y=' + pendingPos.y.toFixed(1);
+    document.getElementById('modal-overlay').classList.add('open');
+    e.stopPropagation();
+  };
+
+  bindEvents(svg, adj, nodeSet, dcSet);
+}
+
+// ── Bind SVG events ───────────────────────────────────────────────────────────
+function bindEvents(svg, adj, nodeSet, dcSet) {
+  svg.querySelectorAll('.e-line').forEach(function(line) {
+    line.addEventListener('click', function(e) {
+      if (mode === 'move') return;
+      var from = line.dataset.from, to = line.dataset.to;
+      if (confirm('Remove edge ' + from + ' \u2194 ' + to + '?')) {
+        removeEdge(from, to);
+        markDirty();
+        render();
+      }
       e.stopPropagation();
-      var id=g.dataset.id, label=g.dataset.label, type=g.dataset.type, dc=g.dataset.dc==='true';
-      var wx=g.dataset.x, wy=g.dataset.y;
-      var hasXY = wx && wy && Number(wx) !== 0;
-      var nbs=[];
-      try{ nbs=JSON.parse(g.dataset.nb.replace(/&quot;/g,'"')); }catch(x){}
-
-      svgEl.querySelectorAll('.wp-node circle').forEach(function(c){ c.style.opacity='0.15'; });
-      svgEl.querySelectorAll('.edge').forEach(function(l){ l.style.opacity='0.08'; l.style.strokeWidth='1'; });
-
-      g.querySelector('circle').style.opacity='1';
-      g.querySelector('circle').style.strokeWidth='3';
-
-      var nbSet=new Set(nbs.map(function(n){ return n.id; }));
-      svgEl.querySelectorAll('.edge').forEach(function(l){
-        if(l.dataset.a===id||l.dataset.b===id){
-          l.style.opacity='1'; l.style.stroke='#185FA5'; l.style.strokeWidth='2.5';
-        }
-      });
-      svgEl.querySelectorAll('.wp-node').forEach(function(og){
-        if(nbSet.has(og.dataset.id)){ og.querySelector('circle').style.opacity='1'; og.querySelector('circle').style.strokeWidth='2.5'; }
-      });
-
-      var dcBadge=dc
-        ? '<span style="padding:2px 6px;border-radius:4px;background:#FCEBEB;color:#791F1F;font-size:11px">disconnected</span>'
-        : '<span style="padding:2px 6px;border-radius:4px;background:#EAF3DE;color:#27500A;font-size:11px">connected</span>';
-      var typeBadge='<span style="padding:2px 6px;border-radius:4px;background:#f1efe8;color:#2c2c2a;font-size:11px">'+type+'</span>';
-      var nbRows=nbs.length
-        ? nbs.map(function(n){
-            return '<div style="padding:3px 0;font-size:12px;border-bottom:.5px solid #f1efe8"><span style="color:#888780;font-size:10px">'+n.type+'</span> '+n.label+'</div>';
-          }).join('')
-        : '<div style="font-size:12px;color:#888780">none on this floor</div>';
-
-      var xyRow = hasXY
-        ? '<div style="font-size:11px;color:#5f5e5a;margin-bottom:8px;font-family:monospace">x: '+Number(wx).toFixed(1)+' &nbsp; y: '+Number(wy).toFixed(1)+'</div>'
-        : '<div style="font-size:11px;color:#A32D2D;margin-bottom:8px">x/y not set — add to campusData.json</div>';
-
-      info.innerHTML=
-        '<div style="font-weight:500;font-size:13px;margin-bottom:2px">'+label+'</div>'+
-        '<div style="font-size:10px;color:#888780;font-family:monospace;margin-bottom:4px;word-break:break-all">'+id+'</div>'+
-        xyRow+
-        '<div style="margin-bottom:8px">'+dcBadge+' '+typeBadge+'</div>'+
-        '<div style="font-size:12px;font-weight:500;margin-bottom:4px">Connections ('+nbs.length+')</div>'+
-        nbRows;
-      info.style.display='block';
     });
-    g.addEventListener('mouseleave',function(){
-      svgEl.querySelectorAll('.wp-node circle').forEach(function(c){ c.style.opacity=''; c.style.strokeWidth=''; });
-      svgEl.querySelectorAll('.edge').forEach(function(l){ l.style.opacity=''; l.style.stroke=''; l.style.strokeWidth=''; });
-      info.style.display='none';
+  });
+
+  svg.querySelectorAll('.wp-node').forEach(function(g) {
+    var id = g.dataset.id;
+    g.addEventListener('mouseenter', function() {
+      hoveredNode = id;
+      if (mode === 'view' || mode === 'edge') showInfo(id, adj, nodeSet);
+      render();
+    });
+    g.addEventListener('mouseleave', function() { hoveredNode = null; render(); });
+    g.addEventListener('mousedown', function(e) {
+      if (e.button !== 0) return;
+      e.stopPropagation();
+      if (mode === 'move') {
+        var sv = svgCoords(e.clientX, e.clientY);
+        draggingNode = id;
+        dnSX = sv.x; dnSY = sv.y;
+        dnOX = positions[id].x; dnOY = positions[id].y;
+      } else if (mode === 'edge') {
+        handleEdgeClick(id);
+      }
+    });
+    g.addEventListener('click', function(e) {
+      if (mode === 'view') showInfo(id, adj, nodeSet);
+      e.stopPropagation();
     });
   });
 }
 
-function show(key){
-  scale=1;tx=0;ty=0;applyT();
-  document.getElementById('placeholder').style.display='none';
-  document.querySelectorAll('[id^="panel-"]').forEach(function(el){ el.style.display='none'; });
-  document.getElementById('panel-'+key).style.display='block';
-  document.querySelectorAll('[id^="btn-"]').forEach(function(b){ b.style.fontWeight='400'; b.style.background='#fff'; });
-  var btn=document.getElementById('btn-'+key);
-  btn.style.fontWeight='500'; btn.style.background='#f1efe8';
-  var svgEl=document.getElementById('panel-'+key).querySelector('svg');
-  if(svgEl&&svgEl!==lastSvg){ bindHover(svgEl); lastSvg=svgEl; }
-}
-</script>
-</body>
-</html>`;
+// ── Node info panel ───────────────────────────────────────────────────────────
+function showInfo(id, adj, nodeSet) {
+  var w = wpById[id], p = positions[id];
+  if (!w) return;
+  var nbs = (adj[id] || []).filter(function(nb) { return nodeSet[nb]; });
+  var xyRow = (p && p.x)
+    ? '<div class="val" style="font-family:monospace;font-size:11px">x: ' + p.x.toFixed(1) + '  y: ' + p.y.toFixed(1) + '</div>'
+    : '<div class="val" style="color:#A32D2D">x/y not set</div>';
 
-// ─── Write output ─────────────────────────────────────────────────────────────
+  var rows = nbs.map(function(nb) {
+    var nw = wpById[nb];
+    return '<div class="conn-row">' +
+      '<span><span style="color:#888780;font-size:10px">' + (nw ? nw.type : '?') + '</span> ' + (nw ? nw.label || nb : nb) + '</span>' +
+      '<button class="xb" onclick="delEdge(\'' + id + '\',\'' + nb + '\')">x</button>' +
+      '</div>';
+  }).join('');
 
-if (!fs.existsSync(OUTPUT_DIR)) fs.mkdirSync(OUTPUT_DIR, { recursive: true });
-fs.writeFileSync(OUTPUT_FILE, html, "utf8");
-
-console.log("\nCampus Connectivity Report");
-console.log("===========================");
-console.log(`Waypoints : ${allWps.length}`);
-console.log(`Edges     : ${allEdges.length}`);
-console.log(`Floors    : ${floorReports.length}`);
-console.log(`With floorplan overlay: ${floorsWithMap}`);
-console.log(`Disconnected waypoints: ${totalDisconnected}\n`);
-
-for (const r of floorReports) {
-  const st  = r.disconnected.length === 0 ? "OK" : "!!";
-  const map = r.hasFloorplan ? (r.hasRealXY ? " [exact map]" : " [map~approx]") : "";
-  const dc  = r.disconnected.length ? `  — DISCONNECTED: ${r.disconnected.map(n=>n.id).join(", ")}` : "";
-  console.log(`[${st}] ${r.building.padEnd(12)} floor ${String(r.floor).padEnd(8)} ${r.nodeCount} nodes  ${r.edgeCount} edges${map}${dc}`);
+  document.getElementById('node-info').innerHTML =
+    '<h3>Node info</h3>' +
+    '<div class="lbl">Label</div><div class="val">' + (w.label || '') + '</div>' +
+    '<div class="lbl">ID</div><div class="val" style="font-family:monospace;font-size:10px">' + id + '</div>' +
+    '<div class="lbl">Position</div>' + xyRow +
+    '<div style="margin-bottom:6px">' +
+    '<span class="badge ' + (nbs.length ? 'bg' : 'br') + '">' + nbs.length + ' connections</span>' +
+    '<span class="badge bb">' + (w.type || '?') + '</span>' +
+    '<button class="badge br" style="cursor:pointer;border:none;font-size:10px" onclick="deleteWaypoint(\'' + id + '\')">delete</button>' +
+    '</div>' +
+    '<div class="lbl">Connections</div>' +
+    '<div>' + (rows || '<div style="color:#888780;font-size:11px">none on this floor</div>') + '</div>';
 }
 
-console.log(`\nOutput: ${OUTPUT_FILE}`);
-console.log("Open in any browser — no server needed.\n");
+function delEdge(from, to) {
+  removeEdge(from, to);
+  markDirty();
+  showInfo(from, buildAdj(), (function() { var s = {}; floorNodeIds().forEach(function(id) { s[id] = true; }); return s; })());
+  render();
+}
+
+function deleteWaypoint(id) {
+  if (!confirm('Delete waypoint ' + id + ' and all its edges?')) return;
+  allWps = allWps.filter(function(w) { return w.id !== id; });
+  delete wpById[id];
+  allEdges = allEdges.filter(function(e) { return e.from !== id && e.to !== id; });
+  markDirty();
+  document.getElementById('node-info').innerHTML = '<h3>Node info</h3><div style="color:#888780;font-size:11px">Deleted.</div>';
+  render();
+}
+
+// ── Edge mode ─────────────────────────────────────────────────────────────────
+function handleEdgeClick(id) {
+  if (!edgePendFrom) {
+    edgePendFrom = id;
+    document.getElementById('pending-box').style.display = 'block';
+    render();
+    return;
+  }
+  if (edgePendFrom === id) {
+    edgePendFrom = null;
+    document.getElementById('pending-box').style.display = 'none';
+    render();
+    return;
+  }
+  var from = edgePendFrom, to = id;
+  if (edgeExists(from, to)) {
+    if (confirm('Remove edge ' + from + ' \u2194 ' + to + '?')) { removeEdge(from, to); }
+  } else {
+    allEdges.push({ from: from, to: to, accessible: true });
+  }
+  edgePendFrom = null;
+  document.getElementById('pending-box').style.display = 'none';
+  markDirty();
+  render();
+}
+
+// ── Add waypoint ──────────────────────────────────────────────────────────────
+function openModal() {
+  if (!currentKey) { alert('Select a floor first.'); return; }
+  var parts = currentKey.split('__');
+  document.getElementById('m-building').value = parts[0];
+  document.getElementById('m-floor').value    = parts[1];
+  document.getElementById('m-id').value    = '';
+  document.getElementById('m-label').value = '';
+  document.getElementById('m-type').value  = 'classroom';
+  document.getElementById('modal-coords').textContent = pendingPos
+    ? 'Position: x=' + pendingPos.x.toFixed(1) + ', y=' + pendingPos.y.toFixed(1)
+    : 'Click on the map to set position, or it will be placed at center.';
+  document.getElementById('modal-overlay').classList.add('open');
+  setTimeout(function() { document.getElementById('m-id').focus(); }, 50);
+}
+
+function closeModal() {
+  document.getElementById('modal-overlay').classList.remove('open');
+  pendingPos = null;
+}
+
+function confirmAdd() {
+  var id       = document.getElementById('m-id').value.trim().replace(/\s+/g, '_');
+  var label    = document.getElementById('m-label').value.trim();
+  var type     = document.getElementById('m-type').value;
+  var building = document.getElementById('m-building').value;
+  var floor    = document.getElementById('m-floor').value;
+  if (!id || !label) { alert('ID and Label are required.'); return; }
+  if (wpById[id]) { alert('A waypoint with ID "' + id + '" already exists.'); return; }
+  var pos = pendingPos || { x: 500, y: 500 };
+  var wp  = { id: id, building: building, floor: floor, label: label, type: type, x: pos.x, y: pos.y };
+  allWps.push(wp);
+  wpById[id] = wp;
+  positions[id] = { x: pos.x, y: pos.y };
+  closeModal();
+  markDirty();
+  render();
+  var adj = buildAdj();
+  var ns  = {}; floorNodeIds().forEach(function(i) { ns[i] = true; });
+  showInfo(id, adj, ns);
+}
+
+// ── Mode switching ────────────────────────────────────────────────────────────
+var hints = {
+  view: 'Hover or click a node to inspect \u00b7 click any edge line to delete it',
+  move: 'Drag nodes to reposition \u00b7 scroll to zoom \u00b7 changes save on mouse release',
+  edge: 'Click a node then click another to add/remove the edge \u00b7 click an edge line to delete it',
+  add:  'Click anywhere on the floorplan to place a new waypoint'
+};
+
+function setMode(m) {
+  mode = m;
+  if (edgePendFrom) { edgePendFrom = null; document.getElementById('pending-box').style.display = 'none'; }
+  ['view', 'move', 'edge', 'add'].forEach(function(x) {
+    document.getElementById('btn-mode-' + x).classList.toggle('active', x === m);
+  });
+  document.getElementById('mode-hint').textContent = hints[m];
+  if (m === 'add') openModal();
+  render();
+}
+
+// ── Floor switching ───────────────────────────────────────────────────────────
+function showFloor(key) {
+  currentKey   = key;
+  edgePendFrom = null;
+  hoveredNode  = null;
+  pendingPos   = null;
+  document.getElementById('pending-box').style.display = 'none';
+  var existing = document.getElementById('main-svg');
+  if (existing) existing.remove();
+  document.querySelectorAll('.floor-btn').forEach(function(b) {
+    b.classList.toggle('active', b.dataset.key === key);
+  });
+  document.getElementById('node-info').innerHTML =
+    '<h3>Node info</h3><div style="color:#888780;font-size:11px">Hover or click a node</div>';
+  resetZoom();
+  render();
+}
+
+// ── Dirty / save ──────────────────────────────────────────────────────────────
+function markDirty() {
+  dirty = true;
+  document.getElementById('changes-lbl').style.display = 'inline';
+  document.getElementById('save-btn').classList.add('dirty');
+  document.getElementById('save-btn').textContent = 'Save changes';
+}
+
+function saveData() {
+  var updatedWps = allWps.map(function(w) {
+    var p = positions[w.id];
+    return p ? Object.assign({}, w, { x: p.x, y: p.y }) : Object.assign({}, w);
+  });
+  var out = Object.assign({}, FULL_CAMPUS, { waypoints: updatedWps, edges: allEdges });
+  var blob = new Blob([JSON.stringify(out, null, 2) + '\n'], { type: 'application/json' });
+  var a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'campusData.json';
+  a.click();
+  dirty = false;
+  document.getElementById('changes-lbl').style.display = 'none';
+  document.getElementById('save-btn').classList.remove('dirty');
+  document.getElementById('save-btn').textContent = 'Download campusData.json';
+}
