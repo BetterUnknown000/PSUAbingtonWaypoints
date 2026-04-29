@@ -540,8 +540,8 @@
       "type": "entrance",
       "latitude": 40.116752,
       "longitude": -75.108928,
-      "x": 0,
-      "y": 0,
+      "x": 143.94,
+      "y": 282.66,
       "qr_code": "QR_LARES_GND_MAIN_ENTRANCE",
       "requires_scan": true,
       "stop_radius_m": 5
@@ -554,8 +554,8 @@
       "type": "lab",
       "latitude": 40.116939,
       "longitude": -75.109334,
-      "x": 0,
-      "y": 0,
+      "x": 621.8,
+      "y": 730.36,
       "qr_code": "QR_LARES_GND_G04"
     },
     {
@@ -566,8 +566,8 @@
       "type": "lounge",
       "latitude": 40.11675,
       "longitude": -75.109007,
-      "x": 0,
-      "y": 0,
+      "x": 626.51,
+      "y": 559.62,
       "qr_code": "QR_LARES_F1_108"
     },
     {
@@ -578,8 +578,8 @@
       "type": "dining",
       "latitude": 40.116785,
       "longitude": -75.109094,
-      "x": 0,
-      "y": 0,
+      "x": 459.78,
+      "y": 488.17,
       "qr_code": "QR_LARES_F1_111"
     },
     {
@@ -590,8 +590,8 @@
       "type": "dining",
       "latitude": 40.116787,
       "longitude": -75.109091,
-      "x": 0,
-      "y": 0,
+      "x": 478.18,
+      "y": 559.57,
       "qr_code": "QR_LARES_F1_112"
     },
     {
@@ -602,8 +602,8 @@
       "type": "dining",
       "latitude": 40.116783,
       "longitude": -75.108886,
-      "x": 0,
-      "y": 0,
+      "x": 258.94,
+      "y": 284.77,
       "qr_code": "QR_LARES_F1_BANQUET"
     },
     {
@@ -614,8 +614,8 @@
       "type": "elevator",
       "latitude": 40.116712,
       "longitude": -75.109018,
-      "x": 0,
-      "y": 0,
+      "x": 709.74,
+      "y": 723.61,
       "qr_code": "QR_LARES_GND_ELEVATOR",
       "requires_scan": true,
       "stop_radius_m": 3
@@ -628,8 +628,8 @@
       "type": "elevator",
       "latitude": 40.116775,
       "longitude": -75.108985,
-      "x": 0,
-      "y": 0,
+      "x": 716.51,
+      "y": 723.6,
       "qr_code": "QR_LARES_F1_ELEVATOR",
       "requires_scan": true,
       "stop_radius_m": 3
@@ -642,8 +642,8 @@
       "type": "entrance",
       "latitude": 40.1159,
       "longitude": -75.11217,
-      "x": 0,
-      "y": 0,
+      "x": 279.18,
+      "y": 475.74,
       "qr_code": "QR_RYDAL_GND_MAIN_ENTRANCE",
       "requires_scan": true,
       "stop_radius_m": 5
@@ -656,8 +656,8 @@
       "type": "classroom",
       "latitude": 40.115898,
       "longitude": -75.11215,
-      "x": 0,
-      "y": 0,
+      "x": 651.56,
+      "y": 429.1,
       "qr_code": "QR_RYDAL_GND_001"
     },
     {
@@ -680,8 +680,8 @@
       "type": "classroom",
       "latitude": 40.115914,
       "longitude": -75.112208,
-      "x": 0,
-      "y": 0,
+      "x": 331.67,
+      "y": 580.66,
       "qr_code": "QR_RYDAL_F1_101"
     },
     {
@@ -772,8 +772,8 @@
       "type": "hallway",
       "latitude": 40.11695,
       "longitude": -75.109303,
-      "x": 0,
-      "y": 0,
+      "x": 370.07,
+      "y": 459.72,
       "qr_code": "QR_LARES_GND_HALL_01",
       "requires_scan": false,
       "stop_radius_m": 3
@@ -786,8 +786,8 @@
       "type": "hallway",
       "latitude": 40.116711,
       "longitude": -75.10902,
-      "x": 0,
-      "y": 0,
+      "x": 646.65,
+      "y": 667.33,
       "qr_code": "QR_LARES_GND_HALL_02",
       "requires_scan": false,
       "stop_radius_m": 3
@@ -800,8 +800,8 @@
       "type": "stairs",
       "latitude": 40.116713,
       "longitude": -75.109021,
-      "x": 0,
-      "y": 0,
+      "x": 665.46,
+      "y": 747.04,
       "qr_code": "QR_LARES_GND_STAIRS",
       "requires_scan": true,
       "stop_radius_m": 3
@@ -814,8 +814,8 @@
       "type": "stairs",
       "latitude": 40.116764,
       "longitude": -75.108995,
-      "x": 0,
-      "y": 0,
+      "x": 666.08,
+      "y": 750.37,
       "qr_code": "QR_LARES_F1_STAIRS",
       "requires_scan": true,
       "stop_radius_m": 3
@@ -828,8 +828,8 @@
       "type": "hallway",
       "latitude": 40.116774,
       "longitude": -75.109,
-      "x": 0,
-      "y": 0,
+      "x": 677.15,
+      "y": 652.91,
       "qr_code": "QR_LARES_F1_HALL_01",
       "requires_scan": false,
       "stop_radius_m": 3
@@ -842,8 +842,8 @@
       "type": "hallway",
       "latitude": 40.116733,
       "longitude": -75.108953,
-      "x": 0,
-      "y": 0,
+      "x": 223.27,
+      "y": 383.24,
       "qr_code": "QR_LARES_F1_HALL_02",
       "requires_scan": false,
       "stop_radius_m": 3
@@ -856,8 +856,8 @@
       "type": "entrance",
       "latitude": 40.116709,
       "longitude": -75.108877,
-      "x": 0,
-      "y": 0,
+      "x": 383.17,
+      "y": 165.24,
       "qr_code": "QR_LARES_F1_SIDE_ENTRANCE",
       "requires_scan": true,
       "stop_radius_m": 5
@@ -870,8 +870,8 @@
       "type": "hallway",
       "latitude": 40.116792,
       "longitude": -75.109055,
-      "x": 0,
-      "y": 0,
+      "x": 829.67,
+      "y": 732.92,
       "qr_code": "QR_LARES_F1_HALL_03",
       "requires_scan": false,
       "stop_radius_m": 3
@@ -2241,8 +2241,8 @@
       "type": "hallway",
       "latitude": 40.115893,
       "longitude": -75.112185,
-      "x": 0,
-      "y": 0,
+      "x": 409.64,
+      "y": 538.53,
       "qr_code": "QR_RYDAL_F1_HALL_01",
       "requires_scan": false,
       "stop_radius_m": 3
@@ -2255,8 +2255,8 @@
       "type": "hallway",
       "latitude": 40.115921,
       "longitude": -75.112174,
-      "x": 0,
-      "y": 0,
+      "x": 520.97,
+      "y": 443.03,
       "qr_code": "QR_RYDAL_F1_HALL_TOP_STAIRS",
       "requires_scan": false,
       "stop_radius_m": 3
@@ -2269,8 +2269,8 @@
       "type": "stairs",
       "latitude": 40.115913,
       "longitude": -75.112167,
-      "x": 0,
-      "y": 0,
+      "x": 581.85,
+      "y": 489.66,
       "qr_code": "QR_RYDAL_GND_STAIRS",
       "requires_scan": true,
       "stop_radius_m": 3
@@ -2283,8 +2283,8 @@
       "type": "hallway",
       "latitude": 40.115922,
       "longitude": -75.112115,
-      "x": 0,
-      "y": 0,
+      "x": 601.86,
+      "y": 450.69,
       "qr_code": "QR_RYDAL_GND_HALL_01",
       "requires_scan": false,
       "stop_radius_m": 3
@@ -2363,8 +2363,8 @@
       "type": "office",
       "latitude": 40.116708,
       "longitude": -75.108812,
-      "x": 0,
-      "y": 0
+      "x": 878.59,
+      "y": 689.57
     },
     {
       "id": "wp_lares_102b",
@@ -2374,8 +2374,8 @@
       "type": "office",
       "latitude": 40.11669,
       "longitude": -75.10881,
-      "x": 0,
-      "y": 0
+      "x": 866.17,
+      "y": 706.24
     },
     {
       "id": "wp_lares_103",
@@ -2385,8 +2385,8 @@
       "type": "office",
       "latitude": 40.116716,
       "longitude": -75.108811,
-      "x": 0,
-      "y": 0
+      "x": 856.73,
+      "y": 678.16
     },
     {
       "id": "wp_lares_203",
@@ -2396,8 +2396,8 @@
       "type": "office",
       "latitude": 40.11673,
       "longitude": -75.108931,
-      "x": 0,
-      "y": 0
+      "x": 604.62,
+      "y": 708.24
     },
     {
       "id": "wp_lares_204",
@@ -2407,8 +2407,8 @@
       "type": "office",
       "latitude": 40.116702,
       "longitude": -75.108906,
-      "x": 0,
-      "y": 0
+      "x": 642.62,
+      "y": 660.51
     },
     {
       "id": "wp_lares_206",
@@ -2418,8 +2418,8 @@
       "type": "office",
       "latitude": 40.11663,
       "longitude": -75.10889,
-      "x": 0,
-      "y": 0
+      "x": 775.88,
+      "y": 873.7
     },
     {
       "id": "wp_lares_208",
@@ -2429,8 +2429,8 @@
       "type": "office",
       "latitude": 40.116698,
       "longitude": -75.108895,
-      "x": 0,
-      "y": 0
+      "x": 847.93,
+      "y": 787.6
     },
     {
       "id": "wp_lares_209",
@@ -2440,8 +2440,8 @@
       "type": "office",
       "latitude": 40.116669,
       "longitude": -75.108802,
-      "x": 0,
-      "y": 0
+      "x": 905.64,
+      "y": 716.09
     },
     {
       "id": "wp_lares_210",
@@ -2451,8 +2451,8 @@
       "type": "office",
       "latitude": 40.116685,
       "longitude": -75.108812,
-      "x": 0,
-      "y": 0
+      "x": 833.44,
+      "y": 672.6
     },
     {
       "id": "wp_lares_211",
@@ -2462,8 +2462,8 @@
       "type": "office",
       "latitude": 40.116712,
       "longitude": -75.108854,
-      "x": 0,
-      "y": 0
+      "x": 866.63,
+      "y": 629.03
     },
     {
       "id": "wp_cloverly_main_entrance",
