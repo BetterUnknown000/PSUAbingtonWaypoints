@@ -80,7 +80,27 @@ function estimateEdgeWeight(fromWp, toWp, edge = {}) {
   return 1;
 }
 
-function isAccessibleEdge(edge, fromWp, toWp) {
+// Types that are destinations only — should never be used as through-nodes.
+// A* will add a large penalty when expanding neighbors of these types,
+// making it cheaper to walk the long way around via hallways.
+const DESTINATION_ONLY_TYPES = new Set([
+  "classroom",
+  "office",
+  "lab",
+  "dining",
+  "lounge",
+  "recreation",
+]);
+
+// Cost added when a path passes THROUGH a destination-only node.
+// Large enough to always prefer a hallway detour, but not Infinity
+// so the pathfinder can still reach isolated rooms if truly necessary.
+const ROOM_TRANSIT_PENALTY = 10000;
+
+function transitPenalty(waypoint) {
+  const type = normalize(waypoint?.type);
+  return DESTINATION_ONLY_TYPES.has(type) ? ROOM_TRANSIT_PENALTY : 0;
+}
   if (edge.accessible === true) return true;
   if (edge.accessible === false) return false;
 
@@ -178,13 +198,19 @@ export function buildGraph(options = {}) {
 
     const weight = estimateEdgeWeight(fromWp, toWp, edge);
 
-    addDirectedEdge(graph, fromId, toId, weight, {
+    // If we are expanding OUT of a destination-only room (classroom, office, etc.)
+    // add a heavy penalty so A* never routes through it as a shortcut.
+    // This does not affect routing TO the room — only routing THROUGH it.
+    const fromPenalty = transitPenalty(fromWp);
+
+    addDirectedEdge(graph, fromId, toId, weight + fromPenalty, {
       accessible: isAccessibleEdge(edge, fromWp, toWp),
       type: edge.type || null,
     });
 
     if (isBidirectionalEdge(edge)) {
-      addDirectedEdge(graph, toId, fromId, weight, {
+      const toPenalty = transitPenalty(toWp);
+      addDirectedEdge(graph, toId, fromId, weight + toPenalty, {
         accessible: isAccessibleEdge(edge, fromWp, toWp),
         type: edge.type || null,
       });
