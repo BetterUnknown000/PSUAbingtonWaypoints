@@ -345,6 +345,11 @@ function showInfo(id, adj, nodeSet) {
     '<input id="edit-label" style="width:100%;padding:4px 6px;border:.5px solid #d3d1c7;border-radius:4px;font-size:12px;font-family:inherit;margin-bottom:6px"' +
     ' value="' + (w.label || '').replace(/"/g, '&quot;') + '"/>' +
 
+    '<div class="lbl">ID</div>' +
+    '<input id="edit-id" style="width:100%;padding:4px 6px;border:.5px solid #d3d1c7;border-radius:4px;font-size:12px;font-family:monospace;margin-bottom:2px"' +
+    ' value="' + id.replace(/"/g, '&quot;') + '"/>' +
+    '<div style="font-size:10px;color:#888780;margin-bottom:6px">Renaming updates edges, rooms, entrances, and QR anchors automatically.</div>' +
+
     '<div class="lbl">Type</div>' +
     '<select id="edit-type" style="width:100%;padding:4px 6px;border:.5px solid #d3d1c7;border-radius:4px;font-size:12px;font-family:inherit;margin-bottom:6px">' +
     typeOptions + '</select>' +
@@ -352,9 +357,6 @@ function showInfo(id, adj, nodeSet) {
     '<button onclick="applyWaypointEdit(\'' + id + '\')" ' +
     'style="width:100%;padding:5px;background:#185FA5;color:#fff;border:none;border-radius:5px;font-size:12px;cursor:pointer;margin-bottom:8px">' +
     'Apply changes</button>' +
-
-    '<div class="lbl">ID</div>' +
-    '<div class="val" style="font-family:monospace;font-size:10px">' + id + '</div>' +
 
     '<div class="lbl">Position</div>' + xyRow +
 
@@ -365,72 +367,90 @@ function showInfo(id, adj, nodeSet) {
 
     '<div class="lbl">Connections</div>' +
     '<div>' + (rows || '<div style="color:#888780;font-size:11px">none on this floor</div>') + '</div>';
-
-  // Focus label field for quick editing
-  var labelEl = document.getElementById('edit-label');
-  if (labelEl) labelEl.focus();
 }
 
-// ── Apply label / type edit ───────────────────────────────────────────────────
-function applyWaypointEdit(id) {
-  var w = wpById[id];
+// ── Apply label / type / ID edit ──────────────────────────────────────────────
+function applyWaypointEdit(oldId) {
+  var w = wpById[oldId];
   if (!w) return;
 
   var newLabel = (document.getElementById('edit-label').value || '').trim();
   var newType  = document.getElementById('edit-type').value;
-
-  var oldType  = w.type;
-  var oldLabel = w.label;
+  var newId    = (document.getElementById('edit-id').value || '').trim().replace(/\s+/g, '_');
 
   if (!newLabel) { alert('Label cannot be empty.'); return; }
+  if (!newId)    { alert('ID cannot be empty.');    return; }
 
+  if (newId !== oldId) {
+    if (wpById[newId]) { alert('A waypoint with ID "' + newId + '" already exists.'); return; }
+    renameWaypointId(oldId, newId);
+    // After rename, oldId is gone — continue with newId
+    w = wpById[newId];
+  }
+
+  var oldType = w.type;
   w.label = newLabel;
   w.type  = newType;
 
-  // Sync buildings[].entrances arrays when entrance type changes
   if (oldType !== newType) {
-    syncEntranceArrays(id, w.building, oldType, newType);
+    syncEntranceArrays(newId, w.building, oldType, newType);
   }
 
   markDirty();
-
-  // Refresh panel and redraw node
   var adj = buildAdj();
   var ns  = {}; floorNodeIds().forEach(function(i) { ns[i] = true; });
-  showInfo(id, adj, ns);
+  showInfo(newId, adj, ns);
   render();
 }
 
-// ── Sync buildings[].entrances when entrance type changes ─────────────────────
-function syncEntranceArrays(id, building, oldType, newType) {
-  var buildings = FULL_CAMPUS.buildings;
-  if (!Array.isArray(buildings)) return;
+// ── Rename waypoint ID across all references ──────────────────────────────────
+function renameWaypointId(oldId, newId) {
+  var w = wpById[oldId];
+  if (!w) return;
 
-  var buildingObj = buildings.find(function(b) {
-    return b.id === building || b.name === building;
+  // 1. Update the waypoint object itself
+  w.id = newId;
+  wpById[newId] = w;
+  delete wpById[oldId];
+
+  // 2. Update allWps array
+  allWps.forEach(function(wp) { if (wp.id === oldId) wp.id = newId; });
+
+  // 3. Update edges
+  allEdges.forEach(function(e) {
+    if (e.from === oldId) e.from = newId;
+    if (e.to   === oldId) e.to   = newId;
   });
-  if (!buildingObj) return;
 
-  var entrances = buildingObj.entrances;
-  if (!Array.isArray(entrances)) return;
-
-  var wasEntrance = oldType === 'entrance';
-  var isEntrance  = newType === 'entrance';
-
-  if (!wasEntrance && isEntrance) {
-    // Promote to entrance — add to array if not already there
-    if (entrances.indexOf(id) === -1) {
-      entrances.push(id);
-      console.log('Added ' + id + ' to ' + building + ' entrances');
-    }
-  } else if (wasEntrance && !isEntrance) {
-    // Demote from entrance — remove from array
-    var idx = entrances.indexOf(id);
-    if (idx !== -1) {
-      entrances.splice(idx, 1);
-      console.log('Removed ' + id + ' from ' + building + ' entrances');
-    }
+  // 4. Update positions
+  if (positions[oldId] !== undefined) {
+    positions[newId] = positions[oldId];
+    delete positions[oldId];
   }
+
+  // 5. Update buildings[].entrances
+  var buildings = FULL_CAMPUS.buildings;
+  if (Array.isArray(buildings)) {
+    buildings.forEach(function(b) {
+      if (!Array.isArray(b.entrances)) return;
+      var idx = b.entrances.indexOf(oldId);
+      if (idx !== -1) b.entrances[idx] = newId;
+    });
+  }
+
+  // 6. Update rooms[].waypoint_id
+  var rooms = FULL_CAMPUS.rooms;
+  if (Array.isArray(rooms)) {
+    rooms.forEach(function(r) { if (r.waypoint_id === oldId) r.waypoint_id = newId; });
+  }
+
+  // 7. Update qrAnchors[].waypoint_id
+  var qrAnchors = FULL_CAMPUS.qrAnchors;
+  if (Array.isArray(qrAnchors)) {
+    qrAnchors.forEach(function(q) { if (q.waypoint_id === oldId) q.waypoint_id = newId; });
+  }
+
+  console.log('Renamed ' + oldId + ' -> ' + newId + ' across all references.');
 }
 
 function delEdge(from, to) {
