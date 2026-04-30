@@ -18,6 +18,9 @@ import { Pedometer } from "expo-sensors";
 import MapView, { Polyline } from "react-native-maps";
 
 import { loadAccessibilityMode } from "../utils/preferencesStorage";
+import * as FileSystem from 'expo-file-system';
+import * as Sharing from 'expo-sharing';
+import { writeLog, clearLog, getLogPath } from '../utils/logger';
 import DirectionArrow from "../components/DirectionArrow";
 import {
   initializeImageModel,
@@ -1510,7 +1513,7 @@ export default function NavigationPage({ route, navigation }) {
       setActiveStepIndex(0);
     }
 
-    console.log("[SCAN_APPLY]", {
+    writeLog('SCAN_APPLY', {
       qrId: scannedId,
       anchorXY: (scannedWaypoint?.x ?? "?") + "," + (scannedWaypoint?.y ?? "?"),
       anchorFloor: scannedWaypoint?.floor,
@@ -2907,6 +2910,37 @@ export default function NavigationPage({ route, navigation }) {
                   <Text style={s.detailBody}>{stageMode || "idle"}</Text>
                 </View>
               </View>
+
+              <View style={s.detailSection}>
+                <SectionTitle icon="🐛" text="Debug Log" />
+                <Pressable
+                  onPress={async () => {
+                    try {
+                      const path = getLogPath();
+                      const info = await FileSystem.getInfoAsync(path);
+                      if (info.exists) {
+                        await Sharing.shareAsync(path);
+                      } else {
+                        alert('No log yet — navigate around first.');
+                      }
+                    } catch (e) {
+                      alert('Share failed: ' + e.message);
+                    }
+                  }}
+                  style={s.debugBtn}
+                >
+                  <Text style={s.debugBtnText}>📤 Share Debug Log</Text>
+                </Pressable>
+                <Pressable
+                  onPress={async () => {
+                    await clearLog();
+                    alert('Log cleared.');
+                  }}
+                  style={[s.debugBtn, { backgroundColor: '#555', marginTop: 8 }]}
+                >
+                  <Text style={s.debugBtnText}>🗑 Clear Log</Text>
+                </Pressable>
+              </View>
             </ScrollView>
           </View>
         </View>
@@ -2917,6 +2951,19 @@ export default function NavigationPage({ route, navigation }) {
 
 const s = StyleSheet.create({
   screen: { flex: 1, backgroundColor: "#000" },
+
+  debugBtn: {
+    backgroundColor: '#0B3D91',
+    borderRadius: 8,
+    padding: 12,
+    alignItems: 'center',
+    marginTop: 4,
+  },
+  debugBtnText: {
+    color: '#fff',
+    fontWeight: '700',
+    fontSize: 14,
+  },
 
   cameraLayer: { flex: 1, backgroundColor: "#000" },
   camera: { ...StyleSheet.absoluteFillObject },
