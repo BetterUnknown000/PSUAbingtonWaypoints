@@ -101,6 +101,8 @@ function transitPenalty(waypoint) {
   const type = normalize(waypoint?.type);
   return DESTINATION_ONLY_TYPES.has(type) ? ROOM_TRANSIT_PENALTY : 0;
 }
+
+function isAccessibleEdge(edge, fromWp, toWp) {
   if (edge.accessible === true) return true;
   if (edge.accessible === false) return false;
 
