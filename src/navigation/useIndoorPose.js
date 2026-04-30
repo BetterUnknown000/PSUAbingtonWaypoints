@@ -34,7 +34,8 @@ const STRIDE_LENGTH_M = 0.75;
  
 // How much weight to give magnetometer vs gyroscope heading (0–1)
 // Lower = trust gyroscope more (better indoors where mag is noisy)
-const MAG_FUSION_WEIGHT = 0.02;
+// Complementary filter: fused = (1-alpha)*gyro + alpha*mag
+const MAG_FUSION_WEIGHT = 0.05;
  
 // Gyroscope update interval (ms)
 const GYRO_INTERVAL_MS = 100;
@@ -44,7 +45,7 @@ const HEADING_PUBLISH_INTERVAL_MS = 100; // ~10Hz arrow updates
 const ACCEL_INTERVAL_MS = 100;
  
 // Magnetometer update interval (ms)
-const MAG_INTERVAL_MS = 200;
+const MAG_INTERVAL_MS = 100;
  
 // ─── Hook ───────────────────────────────────────────────────────────────────
  
@@ -84,6 +85,7 @@ export function useIndoorPose({ anchorPose, isActive }) {
 
     poseRef.current = nextPose;
     lastHeadingPublishTsRef.current = now;
+    console.log("[LIVE_POSE]", nextPose.headingDeg?.toFixed(1), "src:", source);
     setPose(nextPose);
   }, []);
 
@@ -178,7 +180,7 @@ export function useIndoorPose({ anchorPose, isActive }) {
         poseRef.current = newPose;
         lastHeadingPublishTsRef.current = Date.now();
 
-        // Throttle React state updates to every 3 steps to avoid over-rendering
+        console.log("[STEP]", { x: newPose.x?.toFixed(1), y: newPose.y?.toFixed(1), heading: newPose.headingDeg?.toFixed(1) });
         setPose({ ...newPose });
       }
     });
