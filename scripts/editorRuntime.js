@@ -472,7 +472,10 @@ function bindEvents(svg) {
     var id = g.getAttribute('data-id');
     if (hoveredNode === id) return;
     updateHover(id);
-    if (mode === 'view' || mode === 'edge') showInfo(id, getAdj(), getNodeSet());
+    // Don't overwrite info panel while waiting for second edge click
+    if ((mode === 'view' || mode === 'edge') && !edgePendFrom) {
+      showInfo(id, getAdj(), getNodeSet());
+    }
   });
 
   svg.addEventListener('mouseout', function(e) {
@@ -635,12 +638,16 @@ function handleEdgeClick(id) {
   if (!edgePendFrom) {
     edgePendFrom = id;
     document.getElementById('pending-box').style.display = 'block';
-    updateHover(hoveredNode); return;
+    // fullRender so the orange ring appears on the selected node
+    fullRender();
+    return;
   }
   if (edgePendFrom === id) {
+    // Cancel — clicked same node again
     edgePendFrom = null;
     document.getElementById('pending-box').style.display = 'none';
-    updateHover(hoveredNode); return;
+    fullRender();
+    return;
   }
   var from = edgePendFrom, to = id;
   if (edgeExists(from, to)) {
