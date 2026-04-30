@@ -1511,13 +1511,13 @@ export default function NavigationPage({ route, navigation }) {
     }
 
     console.log("[SCAN_APPLY]", {
-      source,
-      scannedId,
-      building: scannedWaypoint?.building,
-      floor: scannedWaypoint?.floor,
-      x: scannedWaypoint?.x,
-      y: scannedWaypoint?.y,
-      bearingHint: scanMeta?.bearing_hint_deg ?? scannedWaypoint?.bearing_hint_deg ?? null,
+      qrId: scannedId,
+      anchorXY: (scannedWaypoint?.x ?? "?") + "," + (scannedWaypoint?.y ?? "?"),
+      anchorFloor: scannedWaypoint?.floor,
+      anchorHeading: scanMeta?.bearing_hint_deg ?? scannedWaypoint?.bearing_hint_deg ?? null,
+      nextWaypoint: pathIds?.[0] ? getWaypointById(pathIds[0])?.id : null,
+      payload: scanMeta,
+      anchorPose: { x: scannedWaypoint?.x, y: scannedWaypoint?.y, floor: scannedWaypoint?.floor },
     });
 
     // Dispatch to nav reducer — this is the authoritative state update
