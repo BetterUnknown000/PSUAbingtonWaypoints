@@ -9,19 +9,11 @@ function ensureDir(dirPath) {
   fs.mkdirSync(dirPath, { recursive: true });
 }
 
-function slugify(value) {
-  return String(value || "")
-    .trim()
-    .toLowerCase()
-    .replace(/[^a-z0-9]+/g, "-")
-    .replace(/^-+|-+$/g, "");
-}
-
 async function writeQrFile(waypoint, category) {
   const buildingDir = path.join(outputDir, waypoint.building);
   ensureDir(buildingDir);
 
-  const filename = `${category}-${slugify(waypoint.label)}.png`;
+  const filename = `${waypoint.id}.png`;
   const filePath = path.join(buildingDir, filename);
   const payload = buildPayload(waypoint);
 
