@@ -113,7 +113,12 @@ export default function DirectionArrow({
 
     lastArrowDeg.current = target;
 
-    console.log("[ARROW_UPDATE]", { angle: target.toFixed(1), targetBearing, heading });
+    console.log("[ARROW_UPDATE]", {
+      arrowAngle: target.toFixed(1),
+      liveHeading: heading,
+      targetBearing,
+      relativeArrowDegrees,
+    });
 
     Animated.timing(arrowAnim, {
       toValue: target,
