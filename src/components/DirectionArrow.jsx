@@ -228,9 +228,11 @@ export default function DirectionArrow({
           )}
         </View>
 
-        <View style={s.headingBadge}>
-          <Text style={s.headingBadgeText}>{Math.round(normalizedHeading)}°</Text>
-        </View>
+        {heading !== 0 ? (
+          <View style={s.headingBadge}>
+            <Text style={s.headingBadgeText}>{Math.round(normalizedHeading)}°</Text>
+          </View>
+        ) : null}
       </View>
     </Animated.View>
   );
