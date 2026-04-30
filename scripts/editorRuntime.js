@@ -42,6 +42,10 @@ var noLatLng = document.createElement('div');
 noLatLng.className = 'leg-row';
 noLatLng.innerHTML = '<div class="leg-dot" style="background:#185FA5;border:2.5px solid #F5A623"></div>entrance — missing lat/long';
 legEl.appendChild(noLatLng);
+var vertLeg = document.createElement('div');
+vertLeg.className = 'leg-row';
+vertLeg.innerHTML = '<svg width="12" height="12" style="flex-shrink:0"><circle cx="6" cy="6" r="5" fill="#854F0B" stroke="#854F0B" stroke-width="2" stroke-dasharray="3,2"/></svg><span style="font-size:11px">vertically connected</span>';
+legEl.appendChild(vertLeg);
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
 function typeColor(t) { return TYPE_COLOR[String(t || '').toLowerCase()] || '#888780'; }
@@ -168,13 +172,26 @@ function render() {
   nodeIds.forEach(function(id) { nodeSet[id] = true; });
   var fEdges  = allEdges.filter(function(e) { return nodeSet[e.from] && nodeSet[e.to]; });
 
-  // BFS disconnected
+  // BFS disconnected — same-floor edges only
   var start = nodeIds.find(function(id) {
     return (adj[id] || []).some(function(nb) { return nodeSet[nb]; });
   });
   var reachable = start ? bfs(start, nodeSet, adj) : {};
+
+  // Nodes with any cross-floor edge are vertically connected — not truly disconnected
+  var hasVertical = {};
+  nodeIds.forEach(function(id) {
+    var crossFloor = allEdges.some(function(e) {
+      if (e.from !== id && e.to !== id) return false;
+      var nb = e.from === id ? e.to : e.from;
+      var nbWp = wpById[nb];
+      return nbWp && nbWp.building === wpById[id].building && String(nbWp.floor) !== String(wpById[id].floor);
+    });
+    if (crossFloor) hasVertical[id] = true;
+  });
+
   var dcSet = {};
-  nodeIds.forEach(function(id) { if (!reachable[id]) dcSet[id] = true; });
+  nodeIds.forEach(function(id) { if (!reachable[id] && !hasVertical[id]) dcSet[id] = true; });
 
   // Stats
   document.getElementById('s-wps').textContent   = allWps.length;
@@ -228,6 +245,7 @@ function render() {
     var isDc = !!dcSet[id];
     var isHl = hoveredNode === id;
     var isPd = edgePendFrom === id;
+    var isVert = !!hasVertical[id];
     var isNoLatLng = wp.type === 'entrance' &&
       !(Number.isFinite(Number(wp.latitude)) && Number(wp.latitude) !== 0 &&
         Number.isFinite(Number(wp.longitude)) && Number(wp.longitude) !== 0);
@@ -241,13 +259,14 @@ function render() {
                : color;
     var sw = isDc || isNoLatLng || isPd ? 2.5 : isHl ? 2 : 1.5;
     var r  = isHl || isPd ? 10 : 8;
+    var dashAttr = isVert && !isHl ? ' stroke-dasharray="3,2"' : '';
     var label  = wp.label || '';
     var m      = label.match(/\d{3,}/);
     var sl     = m ? m[0] : (wp.type || '?').slice(0, 2).toUpperCase();
     svgParts.push(
       '<g class="wp-node" data-id="' + id + '" style="cursor:pointer">' +
       '<circle cx="' + p.x.toFixed(1) + '" cy="' + p.y.toFixed(1) + '"' +
-      ' r="' + r + '" fill="' + fill + '" stroke="' + stroke + '" stroke-width="' + sw + '" opacity="0.93"/>' +
+      ' r="' + r + '" fill="' + fill + '" stroke="' + stroke + '" stroke-width="' + sw + '"' + dashAttr + ' opacity="0.93"/>' +
       '<text x="' + p.x.toFixed(1) + '" y="' + (p.y + 3.5).toFixed(1) + '"' +
       ' text-anchor="middle" font-size="7" font-weight="500"' +
       ' font-family="system-ui,sans-serif"' +
