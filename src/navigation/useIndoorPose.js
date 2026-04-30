@@ -72,9 +72,16 @@ export function useIndoorPose({ anchorPose, isActive }) {
  
   // ── Heading-only pose publisher — called by gyro and magnetometer ──
   const publishHeadingOnlyPose = useCallback((source = "imu") => {
-    const now = Date.now();
     if (!poseRef.current) return;
-    if (now - lastHeadingPublishTsRef.current < HEADING_PUBLISH_INTERVAL_MS) return;
+
+    const now = Date.now();
+    const timeSinceLast = now - lastHeadingPublishTsRef.current;
+
+    // Always publish at least at 10 Hz; also publish on any meaningful turn (>0.5°)
+    const lastHeading = poseRef.current.headingDeg ?? 0;
+    const delta = Math.abs(headingDegRef.current - lastHeading);
+    const normalizedDelta = delta > 180 ? 360 - delta : delta;
+    if (timeSinceLast < HEADING_PUBLISH_INTERVAL_MS && normalizedDelta < 0.5) return;
 
     const nextPose = {
       ...poseRef.current,
