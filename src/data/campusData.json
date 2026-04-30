@@ -583,18 +583,6 @@
       "qr_code": "QR_LARES_F1_111"
     },
     {
-      "id": "wp_lares_112",
-      "building": "lares",
-      "floor": "1",
-      "label": "Room 112 - Dining Room",
-      "type": "dining",
-      "latitude": 40.116787,
-      "longitude": -75.109091,
-      "x": 480,
-      "y": 558.7,
-      "qr_code": "QR_LARES_F1_112"
-    },
-    {
       "id": "wp_lares_banquet",
       "building": "lares",
       "floor": "1",
@@ -602,8 +590,8 @@
       "type": "dining",
       "latitude": 40.116783,
       "longitude": -75.108886,
-      "x": 258.94,
-      "y": 284.77,
+      "x": 258.9,
+      "y": 284.8,
       "qr_code": "QR_LARES_F1_BANQUET"
     },
     {
@@ -847,20 +835,6 @@
       "qr_code": "QR_LARES_F1_HALL_02",
       "requires_scan": false,
       "stop_radius_m": 3
-    },
-    {
-      "id": "wp_lares_side_entrance",
-      "building": "lares",
-      "floor": "1",
-      "label": "Lares Side Entrance",
-      "type": "entrance",
-      "latitude": 40.116709,
-      "longitude": -75.108877,
-      "x": 383.17,
-      "y": 165.24,
-      "qr_code": "QR_LARES_F1_SIDE_ENTRANCE",
-      "requires_scan": true,
-      "stop_radius_m": 5
     },
     {
       "id": "wp_lares_f1_hall_03",
@@ -5169,8 +5143,8 @@
       "type": "entrance",
       "latitude": 40.116709,
       "longitude": -75.108877,
-      "x": 383.17,
-      "y": 165.24,
+      "x": 384.2,
+      "y": 169.3,
       "qr_code": "QR_LARES_F1_SIDE_ENTRANCE",
       "requires_scan": true,
       "stop_radius_m": 5
@@ -5336,40 +5310,13 @@
       "y": 587.6
     },
     {
-      "id": "wp_lares_f1_hall_05",
+      "id": "wp_lares_cafe",
       "building": "lares",
       "floor": "1",
-      "label": "Lares First Floor Hall",
-      "type": "hall",
-      "x": 431.2,
-      "y": 554.6
-    },
-    {
-      "id": "wp_lares_f1_hall_06",
-      "building": "lares",
-      "floor": "1",
-      "label": "Lares First Floor Hall",
-      "type": "hall",
-      "x": 321,
-      "y": 470.8
-    },
-    {
-      "id": "wp_lares_f1_hall_07",
-      "building": "lares",
-      "floor": "1",
-      "label": "Lares First Floor Hall",
-      "type": "hall",
-      "x": 226.9,
-      "y": 402
-    },
-    {
-      "id": "wp_lares_f1_hall_08",
-      "building": "lares",
-      "floor": "1",
-      "label": "Lares First Floor Hall",
-      "type": "hall",
-      "x": 268.3,
-      "y": 323.9
+      "label": "Cafeteria",
+      "type": "recreation",
+      "x": 244.5,
+      "y": 529.9
     },
     {
       "id": "wp_lares_f1_hall_09",
@@ -5377,8 +5324,8 @@
       "floor": "1",
       "label": "Lares First Floor Hall",
       "type": "hall",
-      "x": 296.6,
-      "y": 285.3
+      "x": 254.2,
+      "y": 339
     },
     {
       "id": "wp_lares_side_entrance_2",
@@ -6672,16 +6619,6 @@
       "accessible": true
     },
     {
-      "from": "wp_lares_111",
-      "to": "wp_lares_112",
-      "accessible": true
-    },
-    {
-      "from": "wp_lares_112",
-      "to": "wp_lares_banquet",
-      "accessible": true
-    },
-    {
       "from": "wp_lares_elevator_ground",
       "to": "wp_lares_elevator_f1",
       "accessible": true
@@ -7762,26 +7699,6 @@
       "accessible": true
     },
     {
-      "from": "wp_lares_side_entrance",
-      "to": "wp_lares_f1_hall_02",
-      "accessible": true
-    },
-    {
-      "from": "wp_lares_f1_hall_02",
-      "to": "wp_lares_side_entrance",
-      "accessible": true
-    },
-    {
-      "from": "wp_lares_f1_hall_03",
-      "to": "wp_lares_112",
-      "accessible": true
-    },
-    {
-      "from": "wp_lares_112",
-      "to": "wp_lares_f1_hall_03",
-      "accessible": true
-    },
-    {
       "from": "wp_suth_room_008_second_entrance",
       "to": "wp_suth_403a",
       "accessible": true
@@ -8219,16 +8136,6 @@
     {
       "from": "wp_suth_f4_hall_02",
       "to": "wp_suth_f4_chair",
-      "accessible": true
-    },
-    {
-      "from": "wp_lares_102a",
-      "to": "wp_lares_side_entrance",
-      "accessible": true
-    },
-    {
-      "from": "wp_lares_side_entrance",
-      "to": "wp_lares_102a",
       "accessible": true
     },
     {
@@ -9633,43 +9540,8 @@
       "accessible": true
     },
     {
-      "from": "wp_lares_f1_hall_04",
-      "to": "wp_lares_112",
-      "accessible": true
-    },
-    {
       "from": "wp_lares_f1_hall_01",
       "to": "wp_lares_f1_hall_04",
-      "accessible": true
-    },
-    {
-      "from": "wp_lares_112",
-      "to": "wp_lares_f1_hall_05",
-      "accessible": true
-    },
-    {
-      "from": "wp_lares_f1_hall_06",
-      "to": "wp_lares_111",
-      "accessible": true
-    },
-    {
-      "from": "wp_lares_f1_hall_05",
-      "to": "wp_lares_f1_hall_06",
-      "accessible": true
-    },
-    {
-      "from": "wp_lares_f1_hall_06",
-      "to": "wp_lares_f1_hall_07",
-      "accessible": true
-    },
-    {
-      "from": "wp_lares_f1_hall_07",
-      "to": "wp_lares_f1_hall_08",
-      "accessible": true
-    },
-    {
-      "from": "wp_lares_f1_hall_08",
-      "to": "wp_lares_banquet",
       "accessible": true
     },
     {
@@ -9680,11 +9552,6 @@
     {
       "from": "wp_lares_f1_hall_09",
       "to": "wp_lares_banquet",
-      "accessible": true
-    },
-    {
-      "from": "wp_lares_f1_hall_09",
-      "to": "wp_lares_f1_hall_08",
       "accessible": true
     },
     {
