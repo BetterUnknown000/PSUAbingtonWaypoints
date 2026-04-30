@@ -92,7 +92,7 @@ export function useIndoorPose({ anchorPose, isActive }) {
 
     poseRef.current = nextPose;
     lastHeadingPublishTsRef.current = now;
-    console.log("[LIVE_POSE]", nextPose.headingDeg?.toFixed(1), "src:", source);
+    console.log("[LIVE_POSE]", nextPose.x, nextPose.y, nextPose.headingDeg);
     setPose(nextPose);
   }, []);
 
