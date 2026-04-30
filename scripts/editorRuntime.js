@@ -355,7 +355,51 @@ function showInfo(id, adj, nodeSet) {
     return '<option value="' + t + '"' + (w.type === t ? ' selected' : '') + '>' + t + '</option>';
   }).join('');
 
-  var rows = nbs.map(function(nb) {
+  // ── Vertical connections panel (stairs / elevator only) ───────────────────
+  var verticalPanel = '';
+  if (w.type === 'stairs' || w.type === 'elevator') {
+    var sameType = allWps.filter(function(other) {
+      return other.id !== id &&
+             other.building === w.building &&
+             other.type === w.type &&
+             String(other.floor) !== String(w.floor);
+    });
+
+    var connectedFloors = allEdges
+      .filter(function(e) { return e.from === id || e.to === id; })
+      .map(function(e) { return e.from === id ? e.to : e.from; })
+      .filter(function(nb) {
+        var nbWp = wpById[nb];
+        return nbWp && String(nbWp.floor) !== String(w.floor);
+      });
+    var connectedSet = {};
+    connectedFloors.forEach(function(nb) { connectedSet[nb] = true; });
+
+    var vRows = sameType.map(function(other) {
+      var isConnected = !!connectedSet[other.id];
+      var dir = Number(other.floor) > Number(w.floor) ? '\u2191' : '\u2193';
+      if (other.floor === 'ground' && w.floor !== 'ground') dir = '\u2193';
+      if (w.floor === 'ground' && other.floor !== 'ground') dir = '\u2191';
+      return '<div class="conn-row">' +
+        '<span>' + dir + ' floor ' + other.floor + ' <span style="color:#888780;font-size:10px">' + other.id + '</span></span>' +
+        (isConnected
+          ? '<button class="xb" onclick="toggleVertical(\'' + id + '\',\'' + other.id + '\',false)">disconnect</button>'
+          : '<button style="font-size:10px;padding:1px 5px;border:.5px solid #b6d4a8;border-radius:3px;background:#EAF3DE;color:#27500A;cursor:pointer" onclick="toggleVertical(\'' + id + '\',\'' + other.id + '\',true)">connect</button>'
+        ) +
+        '</div>';
+    }).join('');
+
+    verticalPanel =
+      '<div style="margin-top:10px">' +
+      '<div class="lbl" style="display:flex;justify-content:space-between">' +
+        '<span>Vertical connections</span>' +
+        '<span style="color:#185FA5;font-size:10px">' + w.type + '</span>' +
+      '</div>' +
+      (vRows || '<div style="font-size:11px;color:#888780;margin-top:4px">No other ' + w.type + ' found in ' + w.building + '</div>') +
+      '</div>';
+  }
+
+
     var nw = wpById[nb];
     return '<div class="conn-row">' +
       '<span><span style="color:#888780;font-size:10px">' + (nw ? nw.type : '?') + '</span> ' +
@@ -392,7 +436,8 @@ function showInfo(id, adj, nodeSet) {
     '</div>' +
 
     '<div class="lbl">Connections</div>' +
-    '<div>' + (rows || '<div style="color:#888780;font-size:11px">none on this floor</div>') + '</div>';
+    '<div>' + (rows || '<div style="color:#888780;font-size:11px">none on this floor</div>') + '</div>' +
+    verticalPanel;
 }
 
 // ── Apply label / type / ID edit ──────────────────────────────────────────────
@@ -482,7 +527,26 @@ function renameWaypointId(oldId, newId) {
 function delEdge(from, to) {
   removeEdge(from, to);
   markDirty();
-  showInfo(from, buildAdj(), (function() { var s = {}; floorNodeIds().forEach(function(id) { s[id] = true; }); return s; })());
+  var adj = buildAdj();
+  var ns  = {}; floorNodeIds().forEach(function(i) { ns[i] = true; });
+  showInfo(from, adj, ns);
+  render();
+}
+
+function toggleVertical(idA, idB, connect) {
+  if (connect) {
+    if (!edgeExists(idA, idB)) {
+      allEdges.push({ from: idA, to: idB, accessible: true });
+    }
+  } else {
+    if (!confirm('Remove vertical connection between ' + idA + ' and ' + idB + '?')) return;
+    removeEdge(idA, idB);
+  }
+  markDirty();
+  // Refresh info panel — node might be on a different floor so use full adj
+  var adj = buildAdj();
+  var ns  = {}; floorNodeIds().forEach(function(i) { ns[i] = true; });
+  showInfo(idA, adj, ns);
   render();
 }
 
