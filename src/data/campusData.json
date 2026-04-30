@@ -4288,8 +4288,8 @@
       "floor": "2",
       "label": "Room 201",
       "type": "office",
-      "x": 761.9,
-      "y": 115.05,
+      "x": 752.9,
+      "y": 127.2,
       "qr_code": "QR_WOOD_F2_201"
     },
     {
@@ -4298,8 +4298,8 @@
       "floor": "2",
       "label": "Room 202",
       "type": "office",
-      "x": 776.55,
-      "y": 221.44,
+      "x": 758.1,
+      "y": 201.1,
       "qr_code": "QR_WOOD_F2_202"
     },
     {
@@ -4693,6 +4693,24 @@
       "type": "classroom",
       "x": 645.4,
       "y": 409.2
+    },
+    {
+      "id": "wp_wood_library_staircase_f1",
+      "building": "woodland",
+      "floor": "1",
+      "label": "Library Staircase F1",
+      "type": "stairs",
+      "x": 726.7,
+      "y": 199.2
+    },
+    {
+      "id": "wp_wood_library_staircase_f2",
+      "building": "woodland",
+      "floor": "2",
+      "label": "Library Staircase F2",
+      "type": "stairs",
+      "x": 708.8,
+      "y": 198.8
     }
   ],
   "edges": [
@@ -4880,11 +4898,6 @@
       "from": "wp_wood_f1_stairs_b",
       "to": "wp_wood_f2_stairs_b",
       "accessible": false
-    },
-    {
-      "from": "wp_wood_202",
-      "to": "wp_wood_f2_hall_13",
-      "accessible": true
     },
     {
       "from": "wp_wood_203",
@@ -8064,6 +8077,36 @@
     {
       "from": "wp_wood_f1_hall_06",
       "to": "wp_wood_188a",
+      "accessible": true
+    },
+    {
+      "from": "wp_wood_elevator_f1",
+      "to": "wp_wood_elevator_f3",
+      "accessible": true
+    },
+    {
+      "from": "wp_wood_elevator_f1",
+      "to": "wp_wood_111",
+      "accessible": true
+    },
+    {
+      "from": "wp_wood_library_f1",
+      "to": "wp_wood_library_staircase_f1",
+      "accessible": true
+    },
+    {
+      "from": "wp_wood_library_staircase_f2",
+      "to": "wp_wood_library_staircase_f1",
+      "accessible": true
+    },
+    {
+      "from": "wp_wood_library_staircase_f2",
+      "to": "wp_wood_201",
+      "accessible": true
+    },
+    {
+      "from": "wp_wood_201",
+      "to": "wp_wood_202",
       "accessible": true
     }
   ],
