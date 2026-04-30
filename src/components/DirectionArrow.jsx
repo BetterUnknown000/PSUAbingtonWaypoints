@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react";
+import { writeLog } from '../utils/logger';
 import { View, Text, StyleSheet, Animated, Easing } from "react-native";
 
 const PSU = {
@@ -133,7 +133,7 @@ export default function DirectionArrow({
 
     lastArrowDeg.current = target;
 
-    console.log("[ARROW_UPDATE]", {
+    writeLog('ARROW_UPDATE', {
       arrowAngle: target.toFixed(1),
       liveHeading: heading,
       targetBearing,
