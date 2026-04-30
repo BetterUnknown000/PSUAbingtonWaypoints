@@ -2463,7 +2463,7 @@ export default function NavigationPage({ route, navigation }) {
                 direction={fallbackArrowDirection}
                 arrived={arrived}
                 heading={viewMode === VIEW_MODE.INDOOR
-                  ? (livePose?.headingDeg ?? deviceHeading)
+                  ? 0
                   : deviceHeading}
                 targetBearing={targetBearing}
                 mode={transportMode}
