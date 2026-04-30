@@ -18,7 +18,7 @@ import { Pedometer } from "expo-sensors";
 import MapView, { Polyline } from "react-native-maps";
 
 import { loadAccessibilityMode } from "../utils/preferencesStorage";
-import * as FileSystem from 'expo-file-system';
+import * as FileSystem from 'expo-file-system/legacy';
 import * as Sharing from 'expo-sharing';
 import { writeLog, clearLog, getLogPath } from '../utils/logger';
 import DirectionArrow from "../components/DirectionArrow";
