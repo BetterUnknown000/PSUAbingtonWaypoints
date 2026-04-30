@@ -91,6 +91,7 @@ export default function DirectionArrow({
   }, [arrived, pulseAnim]);
 
   useEffect(() => {
+    if (heading === 0) return; // indoor — ring stays fixed
     Animated.timing(compassAnim, {
       toValue: normalizedHeading,
       duration: 120,
@@ -100,54 +101,49 @@ export default function DirectionArrow({
   }, [normalizedHeading, compassAnim]);
   
   useEffect(() => {
-    const current = lastArrowDeg.current;
-    let target = relativeArrowDegrees;
-
-    // If targetBearing changed significantly (new QR scan / new waypoint),
-    // snap the accumulator to the new value immediately to avoid unwinding
-    const bearingChanged = lastTargetBearing.current !== null &&
-      targetBearing !== null &&
-      Math.abs(targetBearing - lastTargetBearing.current) > 10;
-    if (bearingChanged || lastTargetBearing.current === null) {
+    if (targetBearing == null) {
+      // Fallback direction (text instruction) — snap directly
+      const target = getInstructionRotation(direction);
       lastArrowDeg.current = target;
-      lastTargetBearing.current = targetBearing;
+      lastTargetBearing.current = null;
       arrowAnim.setValue(target);
+      return;
+    }
+
+    if (heading === 0) {
+      // Indoor mode — arrow = absolute map bearing, no accumulator needed.
+      // Just animate directly to targetBearing every time it changes.
+      arrowAnim.stopAnimation();
       Animated.timing(arrowAnim, {
-        toValue: target,
-        duration: 150,
+        toValue: targetBearing,
+        duration: 200,
         easing: Easing.out(Easing.cubic),
         useNativeDriver: true,
       }).start();
+      lastArrowDeg.current = targetBearing;
+      lastTargetBearing.current = targetBearing;
+      writeLog('ARROW_UPDATE', { arrowAngle: targetBearing.toFixed(1), targetBearing, heading });
       return;
     }
-    lastTargetBearing.current = targetBearing;
 
-    // Find shortest path from current accumulated angle to new target
+    // Outdoor mode — accumulator-based rotation to avoid spinning through 360
+    const current = lastArrowDeg.current;
+    let target = relativeArrowDegrees;
     let diff = target - ((current % 360) + (current >= 0 ? 0 : 360));
     if (diff > 180) diff -= 360;
     if (diff < -180) diff += 360;
     target = current + diff;
-
-    // Clamp accumulator so it never drifts past the interpolation range
     if (target > 3600) { target -= 3600; lastArrowDeg.current = target; arrowAnim.setValue(target); }
     if (target < -3600) { target += 3600; lastArrowDeg.current = target; arrowAnim.setValue(target); }
-
     lastArrowDeg.current = target;
-
-    writeLog('ARROW_UPDATE', {
-      arrowAngle: target.toFixed(1),
-      liveHeading: heading,
-      targetBearing,
-      relativeArrowDegrees,
-    });
-
+    lastTargetBearing.current = targetBearing;
     Animated.timing(arrowAnim, {
       toValue: target,
       duration: 150,
       easing: Easing.out(Easing.cubic),
       useNativeDriver: true,
     }).start();
-  }, [relativeArrowDegrees, arrowAnim]);
+  }, [targetBearing, heading, relativeArrowDegrees, arrowAnim]);
 
   const compassRotate = compassAnim.interpolate({
     inputRange: [0, 360],
