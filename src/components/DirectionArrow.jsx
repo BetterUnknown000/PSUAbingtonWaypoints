@@ -42,6 +42,7 @@ export default function DirectionArrow({
   const compassAnim = useRef(new Animated.Value(0)).current;
   const arrowAnim = useRef(new Animated.Value(0)).current;
   const lastArrowDeg = useRef(0);
+  const lastTargetBearing = useRef(null);
 
   const normalizedHeading = normalizeDegrees(heading);
 
@@ -100,6 +101,25 @@ export default function DirectionArrow({
   useEffect(() => {
     const current = lastArrowDeg.current;
     let target = relativeArrowDegrees;
+
+    // If targetBearing changed significantly (new QR scan / new waypoint),
+    // snap the accumulator to the new value immediately to avoid unwinding
+    const bearingChanged = lastTargetBearing.current !== null &&
+      targetBearing !== null &&
+      Math.abs(targetBearing - lastTargetBearing.current) > 10;
+    if (bearingChanged || lastTargetBearing.current === null) {
+      lastArrowDeg.current = target;
+      lastTargetBearing.current = targetBearing;
+      arrowAnim.setValue(target);
+      Animated.timing(arrowAnim, {
+        toValue: target,
+        duration: 150,
+        easing: Easing.out(Easing.cubic),
+        useNativeDriver: true,
+      }).start();
+      return;
+    }
+    lastTargetBearing.current = targetBearing;
 
     // Find shortest path from current accumulated angle to new target
     let diff = target - ((current % 360) + (current >= 0 ? 0 : 360));
