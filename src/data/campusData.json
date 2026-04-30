@@ -417,20 +417,6 @@
       "qr_code": "QR_SUTH_F3_307_CALC"
     },
     {
-      "id": "wp_suth_307_entrance",
-      "building": "sutherland",
-      "floor": "3",
-      "label": "Room 307 - Main Entrance",
-      "type": "entrance",
-      "latitude": 40.115513,
-      "longitude": -75.108856,
-      "x": 293.5,
-      "y": 640.7,
-      "qr_code": "QR_SUTH_F3_307_ENTRANCE",
-      "requires_scan": true,
-      "stop_radius_m": 5
-    },
-    {
       "id": "wp_suth_308",
       "building": "sutherland",
       "floor": "3",
@@ -1105,18 +1091,6 @@
       "stop_radius_m": 3
     },
     {
-      "id": "wp_suth_testing_center",
-      "building": "sutherland",
-      "floor": "2",
-      "label": "Testing Center",
-      "type": "office",
-      "latitude": 40.115859,
-      "longitude": -75.108392,
-      "x": 589.4,
-      "y": 329.5,
-      "qr_code": "QR_SUTH_F2_TESTING_CENTER"
-    },
-    {
       "id": "wp_suth_f2_hall_04",
       "building": "sutherland",
       "floor": "2",
@@ -1226,20 +1200,6 @@
       "y": 768.6,
       "qr_code": "QR_SUTH_F2_HALL_11",
       "requires_scan": false,
-      "stop_radius_m": 3
-    },
-    {
-      "id": "wp_suth_f2_stairs",
-      "building": "sutherland",
-      "floor": "2",
-      "label": "Sutherland Stairs (Floor 2)",
-      "type": "stairs",
-      "latitude": 40.115957,
-      "longitude": -75.108602,
-      "x": 950,
-      "y": 950,
-      "qr_code": "QR_SUTH_F2_STAIRS",
-      "requires_scan": true,
       "stop_radius_m": 3
     },
     {
@@ -1437,18 +1397,6 @@
       "qr_code": "QR_SUTH_F4_HALL_02",
       "requires_scan": false,
       "stop_radius_m": 3
-    },
-    {
-      "id": "wp_suth_f4_chair",
-      "building": "sutherland",
-      "floor": "4",
-      "label": "The Chair",
-      "type": "office",
-      "latitude": 40.115945,
-      "longitude": -75.108507,
-      "x": 501.6,
-      "y": 380.7,
-      "qr_code": "QR_SUTH_F4_CHAIR"
     },
     {
       "id": "wp_suth_f4_hall_03",
@@ -2938,18 +2886,6 @@
       "qr_code": "QR_SUTH_F3_310B"
     },
     {
-      "id": "wp_suth_310cd",
-      "building": "sutherland",
-      "floor": "3",
-      "label": "Room 310C/D",
-      "type": "office",
-      "latitude": 40.1154790833,
-      "longitude": -75.10887225,
-      "x": 950,
-      "y": 950,
-      "qr_code": "QR_SUTH_F3_310CD"
-    },
-    {
       "id": "wp_suth_221",
       "building": "sutherland",
       "floor": "2",
@@ -3010,18 +2946,6 @@
       "qr_code": "QR_SUTH_F2_219"
     },
     {
-      "id": "wp_suth_lindsay_wood",
-      "building": "sutherland",
-      "floor": "3",
-      "label": "Lindsay Wood",
-      "type": "office",
-      "latitude": 40.1160471944,
-      "longitude": -75.1085529722,
-      "x": 593.9,
-      "y": 363.1,
-      "qr_code": "QR_SUTH_F3_LINDSAY_WOOD"
-    },
-    {
       "id": "wp_suth_225",
       "building": "sutherland",
       "floor": "2",
@@ -3080,18 +3004,6 @@
       "x": 374.1,
       "y": 666.3,
       "qr_code": "QR_SUTH_F2_212"
-    },
-    {
-      "id": "wp_suth_boni_fernandes_wozolek",
-      "building": "sutherland",
-      "floor": "1",
-      "label": "Dr. Boni Fernandes Wozolek",
-      "type": "office",
-      "latitude": 40.1159054722,
-      "longitude": -75.108385,
-      "x": 653.8,
-      "y": 320.1,
-      "qr_code": "QR_SUTH_F1_BONI_FERNANDES_WOZOLEK"
     },
     {
       "id": "wp_suth_117a",
@@ -4555,21 +4467,6 @@
       "x": 636.9,
       "y": 188.2,
       "qr_code": "QR_WOOD_F3_M315"
-    },
-    {
-      "id": "wp_suth_f4_side_stairs",
-      "label": "Sutherland Side Stairs (Floor 4)",
-      "type": "stairs",
-      "building": "sutherland",
-      "floor": "4",
-      "qr_code": "QR_SUTH_F4_SIDE_STAIRS",
-      "latitude": 40.115815,
-      "longitude": -75.108824,
-      "x": 540.1,
-      "y": 159.9,
-      "accessible": false,
-      "requires_scan": true,
-      "stop_radius_m": 3
     },
     {
       "id": "wp_wood_136b",
@@ -7026,176 +6923,16 @@
       "accessible": true
     },
     {
-      "from": "wp_suth_main_entrance",
-      "to": "wp_suth_106",
-      "accessible": true
-    },
-    {
-      "from": "wp_suth_main_entrance",
-      "to": "wp_suth_115a",
-      "accessible": true
-    },
-    {
-      "from": "wp_suth_main_entrance",
-      "to": "wp_suth_121",
-      "accessible": true
-    },
-    {
-      "from": "wp_suth_main_entrance",
-      "to": "wp_suth_122",
-      "accessible": true
-    },
-    {
-      "from": "wp_suth_main_entrance",
-      "to": "wp_suth_123",
-      "accessible": true
-    },
-    {
-      "from": "wp_suth_115a",
-      "to": "wp_suth_119",
-      "accessible": true
-    },
-    {
       "from": "wp_suth_106",
       "to": "wp_suth_201",
       "accessible": false
     },
     {
       "from": "wp_suth_201",
-      "to": "wp_suth_204",
-      "accessible": true
-    },
-    {
-      "from": "wp_suth_201",
-      "to": "wp_suth_215",
-      "accessible": true
-    },
-    {
-      "from": "wp_suth_201",
-      "to": "wp_suth_216",
-      "accessible": true
-    },
-    {
-      "from": "wp_suth_204",
-      "to": "wp_suth_206",
-      "accessible": true
-    },
-    {
-      "from": "wp_suth_206",
-      "to": "wp_suth_208",
-      "accessible": true
-    },
-    {
-      "from": "wp_suth_208",
-      "to": "wp_suth_209",
-      "accessible": true
-    },
-    {
-      "from": "wp_suth_209",
-      "to": "wp_suth_210",
-      "accessible": true
-    },
-    {
-      "from": "wp_suth_210",
-      "to": "wp_suth_211",
-      "accessible": true
-    },
-    {
-      "from": "wp_suth_211",
-      "to": "wp_suth_213",
-      "accessible": true
-    },
-    {
-      "from": "wp_suth_213",
-      "to": "wp_suth_217",
-      "accessible": true
-    },
-    {
-      "from": "wp_suth_215",
-      "to": "wp_suth_217",
-      "accessible": true
-    },
-    {
-      "from": "wp_suth_216",
-      "to": "wp_suth_227",
-      "accessible": true
-    },
-    {
-      "from": "wp_suth_218",
-      "to": "wp_suth_220",
-      "accessible": true
-    },
-    {
-      "from": "wp_suth_218",
-      "to": "wp_suth_227",
-      "accessible": true
-    },
-    {
-      "from": "wp_suth_220",
-      "to": "wp_suth_222",
-      "accessible": true
-    },
-    {
-      "from": "wp_suth_222",
-      "to": "wp_suth_226",
-      "accessible": true
-    },
-    {
-      "from": "wp_suth_201",
       "to": "wp_suth_305",
       "accessible": false
     },
     {
-      "from": "wp_suth_305",
-      "to": "wp_suth_306",
-      "accessible": true
-    },
-    {
-      "from": "wp_suth_306",
-      "to": "wp_suth_311",
-      "accessible": true
-    },
-    {
-      "from": "wp_suth_311",
-      "to": "wp_suth_307_entrance",
-      "accessible": true
-    },
-    {
-      "from": "wp_suth_307_entrance",
-      "to": "wp_suth_307_calc",
-      "accessible": true
-    },
-    {
-      "from": "wp_suth_307_entrance",
-      "to": "wp_suth_308",
-      "accessible": true
-    },
-    {
-      "from": "wp_suth_308",
-      "to": "wp_suth_309",
-      "accessible": true
-    },
-    {
-      "from": "wp_suth_305",
-      "to": "wp_suth_315",
-      "accessible": true
-    },
-    {
-      "from": "wp_suth_315",
-      "to": "wp_suth_320",
-      "accessible": true
-    },
-    {
-      "from": "wp_suth_315",
-      "to": "wp_suth_331",
-      "accessible": true
-    },
-    {
-      "from": "wp_suth_320",
-      "to": "wp_suth_331",
-      "accessible": true
-    },
-    {
       "from": "wp_suth_elevator_f1",
       "to": "wp_suth_elevator_f2",
       "accessible": true
@@ -7213,36 +6950,6 @@
     {
       "from": "wp_suth_elevator_f3",
       "to": "wp_suth_elevator_f2",
-      "accessible": true
-    },
-    {
-      "from": "wp_suth_elevator_f1",
-      "to": "wp_suth_main_entrance",
-      "accessible": true
-    },
-    {
-      "from": "wp_suth_main_entrance",
-      "to": "wp_suth_elevator_f1",
-      "accessible": true
-    },
-    {
-      "from": "wp_suth_elevator_f2",
-      "to": "wp_suth_201",
-      "accessible": true
-    },
-    {
-      "from": "wp_suth_201",
-      "to": "wp_suth_elevator_f2",
-      "accessible": true
-    },
-    {
-      "from": "wp_suth_elevator_f3",
-      "to": "wp_suth_305",
-      "accessible": true
-    },
-    {
-      "from": "wp_suth_305",
-      "to": "wp_suth_elevator_f3",
       "accessible": true
     },
     {
@@ -7411,86 +7118,6 @@
       "accessible": true
     },
     {
-      "from": "wp_suth_f4_hall_04",
-      "to": "wp_suth_409",
-      "accessible": true
-    },
-    {
-      "from": "wp_suth_409",
-      "to": "wp_suth_f4_hall_04",
-      "accessible": true
-    },
-    {
-      "from": "wp_suth_f4_hall_04",
-      "to": "wp_suth_408",
-      "accessible": true
-    },
-    {
-      "from": "wp_suth_408",
-      "to": "wp_suth_f4_hall_04",
-      "accessible": true
-    },
-    {
-      "from": "wp_suth_f4_hall_04",
-      "to": "wp_suth_407",
-      "accessible": true
-    },
-    {
-      "from": "wp_suth_407",
-      "to": "wp_suth_f4_hall_04",
-      "accessible": true
-    },
-    {
-      "from": "wp_suth_f4_hall_04",
-      "to": "wp_suth_406",
-      "accessible": true
-    },
-    {
-      "from": "wp_suth_406",
-      "to": "wp_suth_f4_hall_04",
-      "accessible": true
-    },
-    {
-      "from": "wp_suth_f4_hall_04",
-      "to": "wp_suth_405",
-      "accessible": true
-    },
-    {
-      "from": "wp_suth_405",
-      "to": "wp_suth_f4_hall_04",
-      "accessible": true
-    },
-    {
-      "from": "wp_suth_f4_hall_05",
-      "to": "wp_suth_404",
-      "accessible": true
-    },
-    {
-      "from": "wp_suth_404",
-      "to": "wp_suth_f4_hall_05",
-      "accessible": true
-    },
-    {
-      "from": "wp_suth_f4_hall_04",
-      "to": "wp_suth_403b",
-      "accessible": true
-    },
-    {
-      "from": "wp_suth_403b",
-      "to": "wp_suth_f4_hall_04",
-      "accessible": true
-    },
-    {
-      "from": "wp_suth_f4_hall_04",
-      "to": "wp_suth_403a",
-      "accessible": true
-    },
-    {
-      "from": "wp_suth_403a",
-      "to": "wp_suth_f4_hall_04",
-      "accessible": true
-    },
-    {
       "from": "wp_suth_f4_hall_03",
       "to": "wp_suth_403",
       "accessible": true
@@ -7531,631 +7158,6 @@
       "accessible": true
     },
     {
-      "from": "wp_suth_f4_hall_03",
-      "to": "wp_suth_413",
-      "accessible": true
-    },
-    {
-      "from": "wp_suth_413",
-      "to": "wp_suth_f4_hall_03",
-      "accessible": true
-    },
-    {
-      "from": "wp_suth_f4_hall_03",
-      "to": "wp_suth_414",
-      "accessible": true
-    },
-    {
-      "from": "wp_suth_414",
-      "to": "wp_suth_f4_hall_03",
-      "accessible": true
-    },
-    {
-      "from": "wp_suth_f4_hall_03",
-      "to": "wp_suth_415",
-      "accessible": true
-    },
-    {
-      "from": "wp_suth_415",
-      "to": "wp_suth_f4_hall_03",
-      "accessible": true
-    },
-    {
-      "from": "wp_suth_f4_hall_03",
-      "to": "wp_suth_416",
-      "accessible": true
-    },
-    {
-      "from": "wp_suth_416",
-      "to": "wp_suth_f4_hall_03",
-      "accessible": true
-    },
-    {
-      "from": "wp_suth_f4_hall_03",
-      "to": "wp_suth_417s",
-      "accessible": true
-    },
-    {
-      "from": "wp_suth_417s",
-      "to": "wp_suth_f4_hall_03",
-      "accessible": true
-    },
-    {
-      "from": "wp_suth_f4_hall_03",
-      "to": "wp_suth_418",
-      "accessible": true
-    },
-    {
-      "from": "wp_suth_418",
-      "to": "wp_suth_f4_hall_03",
-      "accessible": true
-    },
-    {
-      "from": "wp_suth_320",
-      "to": "wp_suth_320a",
-      "accessible": true
-    },
-    {
-      "from": "wp_suth_320a",
-      "to": "wp_suth_320",
-      "accessible": true
-    },
-    {
-      "from": "wp_suth_320",
-      "to": "wp_suth_321",
-      "accessible": true
-    },
-    {
-      "from": "wp_suth_321",
-      "to": "wp_suth_320",
-      "accessible": true
-    },
-    {
-      "from": "wp_suth_321",
-      "to": "wp_suth_322",
-      "accessible": true
-    },
-    {
-      "from": "wp_suth_322",
-      "to": "wp_suth_321",
-      "accessible": true
-    },
-    {
-      "from": "wp_suth_321",
-      "to": "wp_suth_323",
-      "accessible": true
-    },
-    {
-      "from": "wp_suth_323",
-      "to": "wp_suth_321",
-      "accessible": true
-    },
-    {
-      "from": "wp_suth_323",
-      "to": "wp_suth_325",
-      "accessible": true
-    },
-    {
-      "from": "wp_suth_325",
-      "to": "wp_suth_323",
-      "accessible": true
-    },
-    {
-      "from": "wp_suth_323",
-      "to": "wp_suth_324",
-      "accessible": true
-    },
-    {
-      "from": "wp_suth_324",
-      "to": "wp_suth_323",
-      "accessible": true
-    },
-    {
-      "from": "wp_suth_325",
-      "to": "wp_suth_326",
-      "accessible": true
-    },
-    {
-      "from": "wp_suth_326",
-      "to": "wp_suth_325",
-      "accessible": true
-    },
-    {
-      "from": "wp_suth_326",
-      "to": "wp_suth_327",
-      "accessible": true
-    },
-    {
-      "from": "wp_suth_327",
-      "to": "wp_suth_326",
-      "accessible": true
-    },
-    {
-      "from": "wp_suth_327",
-      "to": "wp_suth_328",
-      "accessible": true
-    },
-    {
-      "from": "wp_suth_328",
-      "to": "wp_suth_327",
-      "accessible": true
-    },
-    {
-      "from": "wp_suth_328",
-      "to": "wp_suth_329",
-      "accessible": true
-    },
-    {
-      "from": "wp_suth_329",
-      "to": "wp_suth_328",
-      "accessible": true
-    },
-    {
-      "from": "wp_suth_329",
-      "to": "wp_suth_330",
-      "accessible": true
-    },
-    {
-      "from": "wp_suth_330",
-      "to": "wp_suth_329",
-      "accessible": true
-    },
-    {
-      "from": "wp_suth_320",
-      "to": "wp_suth_317",
-      "accessible": true
-    },
-    {
-      "from": "wp_suth_317",
-      "to": "wp_suth_320",
-      "accessible": true
-    },
-    {
-      "from": "wp_suth_331",
-      "to": "wp_suth_332",
-      "accessible": true
-    },
-    {
-      "from": "wp_suth_332",
-      "to": "wp_suth_331",
-      "accessible": true
-    },
-    {
-      "from": "wp_suth_320",
-      "to": "wp_suth_317",
-      "accessible": true
-    },
-    {
-      "from": "wp_suth_332",
-      "to": "wp_suth_333",
-      "accessible": true
-    },
-    {
-      "from": "wp_suth_333",
-      "to": "wp_suth_332",
-      "accessible": true
-    },
-    {
-      "from": "wp_suth_315",
-      "to": "wp_suth_316",
-      "accessible": true
-    },
-    {
-      "from": "wp_suth_316",
-      "to": "wp_suth_315",
-      "accessible": true
-    },
-    {
-      "from": "wp_suth_316",
-      "to": "wp_suth_334",
-      "accessible": true
-    },
-    {
-      "from": "wp_suth_334",
-      "to": "wp_suth_316",
-      "accessible": true
-    },
-    {
-      "from": "wp_suth_315",
-      "to": "wp_suth_335",
-      "accessible": true
-    },
-    {
-      "from": "wp_suth_335",
-      "to": "wp_suth_315",
-      "accessible": true
-    },
-    {
-      "from": "wp_suth_315",
-      "to": "wp_suth_301",
-      "accessible": true
-    },
-    {
-      "from": "wp_suth_301",
-      "to": "wp_suth_315",
-      "accessible": true
-    },
-    {
-      "from": "wp_suth_elevator_f3",
-      "to": "wp_suth_315",
-      "accessible": true
-    },
-    {
-      "from": "wp_suth_315",
-      "to": "wp_suth_elevator_f3",
-      "accessible": true
-    },
-    {
-      "from": "wp_suth_301",
-      "to": "wp_suth_302",
-      "accessible": true
-    },
-    {
-      "from": "wp_suth_302",
-      "to": "wp_suth_301",
-      "accessible": true
-    },
-    {
-      "from": "wp_suth_315",
-      "to": "wp_suth_314",
-      "accessible": true
-    },
-    {
-      "from": "wp_suth_314",
-      "to": "wp_suth_315",
-      "accessible": true
-    },
-    {
-      "from": "wp_suth_302",
-      "to": "wp_suth_303",
-      "accessible": true
-    },
-    {
-      "from": "wp_suth_303",
-      "to": "wp_suth_302",
-      "accessible": true
-    },
-    {
-      "from": "wp_suth_314",
-      "to": "wp_suth_313",
-      "accessible": true
-    },
-    {
-      "from": "wp_suth_313",
-      "to": "wp_suth_314",
-      "accessible": true
-    },
-    {
-      "from": "wp_suth_303",
-      "to": "wp_suth_305a",
-      "accessible": true
-    },
-    {
-      "from": "wp_suth_305a",
-      "to": "wp_suth_303",
-      "accessible": true
-    },
-    {
-      "from": "wp_suth_313",
-      "to": "wp_suth_312",
-      "accessible": true
-    },
-    {
-      "from": "wp_suth_312",
-      "to": "wp_suth_313",
-      "accessible": true
-    },
-    {
-      "from": "wp_suth_312",
-      "to": "wp_suth_310a",
-      "accessible": true
-    },
-    {
-      "from": "wp_suth_310a",
-      "to": "wp_suth_312",
-      "accessible": true
-    },
-    {
-      "from": "wp_suth_310a",
-      "to": "wp_suth_310b",
-      "accessible": true
-    },
-    {
-      "from": "wp_suth_310b",
-      "to": "wp_suth_310a",
-      "accessible": true
-    },
-    {
-      "from": "wp_suth_310b",
-      "to": "wp_suth_310cd",
-      "accessible": true
-    },
-    {
-      "from": "wp_suth_310cd",
-      "to": "wp_suth_310b",
-      "accessible": true
-    },
-    {
-      "from": "wp_suth_220",
-      "to": "wp_suth_221",
-      "accessible": true
-    },
-    {
-      "from": "wp_suth_221",
-      "to": "wp_suth_220",
-      "accessible": true
-    },
-    {
-      "from": "wp_suth_221",
-      "to": "wp_suth_222",
-      "accessible": true
-    },
-    {
-      "from": "wp_suth_222",
-      "to": "wp_suth_221",
-      "accessible": true
-    },
-    {
-      "from": "wp_suth_222",
-      "to": "wp_suth_223",
-      "accessible": true
-    },
-    {
-      "from": "wp_suth_223",
-      "to": "wp_suth_222",
-      "accessible": true
-    },
-    {
-      "from": "wp_suth_223",
-      "to": "wp_suth_226",
-      "accessible": true
-    },
-    {
-      "from": "wp_suth_226",
-      "to": "wp_suth_223",
-      "accessible": true
-    },
-    {
-      "from": "wp_suth_223",
-      "to": "wp_suth_224b",
-      "accessible": true
-    },
-    {
-      "from": "wp_suth_224b",
-      "to": "wp_suth_223",
-      "accessible": true
-    },
-    {
-      "from": "wp_suth_224b",
-      "to": "wp_suth_226",
-      "accessible": true
-    },
-    {
-      "from": "wp_suth_226",
-      "to": "wp_suth_224b",
-      "accessible": true
-    },
-    {
-      "from": "wp_suth_220",
-      "to": "wp_suth_220b",
-      "accessible": true
-    },
-    {
-      "from": "wp_suth_220b",
-      "to": "wp_suth_220",
-      "accessible": true
-    },
-    {
-      "from": "wp_suth_220b",
-      "to": "wp_suth_221",
-      "accessible": true
-    },
-    {
-      "from": "wp_suth_221",
-      "to": "wp_suth_220b",
-      "accessible": true
-    },
-    {
-      "from": "wp_suth_219",
-      "to": "wp_suth_220",
-      "accessible": true
-    },
-    {
-      "from": "wp_suth_220",
-      "to": "wp_suth_219",
-      "accessible": true
-    },
-    {
-      "from": "wp_suth_220",
-      "to": "wp_suth_220b",
-      "accessible": true
-    },
-    {
-      "from": "wp_suth_220b",
-      "to": "wp_suth_220",
-      "accessible": true
-    },
-    {
-      "from": "wp_suth_218",
-      "to": "wp_suth_219",
-      "accessible": true
-    },
-    {
-      "from": "wp_suth_219",
-      "to": "wp_suth_218",
-      "accessible": true
-    },
-    {
-      "from": "wp_suth_219",
-      "to": "wp_suth_220",
-      "accessible": true
-    },
-    {
-      "from": "wp_suth_220",
-      "to": "wp_suth_219",
-      "accessible": true
-    },
-    {
-      "from": "wp_suth_334",
-      "to": "wp_suth_lindsay_wood",
-      "accessible": true
-    },
-    {
-      "from": "wp_suth_lindsay_wood",
-      "to": "wp_suth_334",
-      "accessible": true
-    },
-    {
-      "from": "wp_suth_lindsay_wood",
-      "to": "wp_suth_335",
-      "accessible": true
-    },
-    {
-      "from": "wp_suth_335",
-      "to": "wp_suth_lindsay_wood",
-      "accessible": true
-    },
-    {
-      "from": "wp_suth_219",
-      "to": "wp_suth_225",
-      "accessible": true
-    },
-    {
-      "from": "wp_suth_225",
-      "to": "wp_suth_219",
-      "accessible": true
-    },
-    {
-      "from": "wp_suth_lindsay_wood",
-      "to": "wp_suth_225",
-      "accessible": true
-    },
-    {
-      "from": "wp_suth_225",
-      "to": "wp_suth_lindsay_wood",
-      "accessible": true
-    },
-    {
-      "from": "wp_suth_218",
-      "to": "wp_suth_219",
-      "accessible": true
-    },
-    {
-      "from": "wp_suth_219",
-      "to": "wp_suth_218",
-      "accessible": true
-    },
-    {
-      "from": "wp_suth_205",
-      "to": "wp_suth_218",
-      "accessible": true
-    },
-    {
-      "from": "wp_suth_218",
-      "to": "wp_suth_205",
-      "accessible": true
-    },
-    {
-      "from": "wp_suth_205",
-      "to": "wp_suth_214",
-      "accessible": true
-    },
-    {
-      "from": "wp_suth_214",
-      "to": "wp_suth_205",
-      "accessible": true
-    },
-    {
-      "from": "wp_suth_214",
-      "to": "wp_suth_207",
-      "accessible": true
-    },
-    {
-      "from": "wp_suth_207",
-      "to": "wp_suth_214",
-      "accessible": true
-    },
-    {
-      "from": "wp_suth_214",
-      "to": "wp_suth_212",
-      "accessible": true
-    },
-    {
-      "from": "wp_suth_212",
-      "to": "wp_suth_214",
-      "accessible": true
-    },
-    {
-      "from": "wp_suth_119",
-      "to": "wp_suth_122",
-      "accessible": true
-    },
-    {
-      "from": "wp_suth_122",
-      "to": "wp_suth_119",
-      "accessible": true
-    },
-    {
-      "from": "wp_suth_119",
-      "to": "wp_suth_122",
-      "accessible": true
-    },
-    {
-      "from": "wp_suth_122",
-      "to": "wp_suth_119",
-      "accessible": true
-    },
-    {
-      "from": "wp_suth_121",
-      "to": "wp_suth_boni_fernandes_wozolek",
-      "accessible": true
-    },
-    {
-      "from": "wp_suth_boni_fernandes_wozolek",
-      "to": "wp_suth_121",
-      "accessible": true
-    },
-    {
-      "from": "wp_suth_119",
-      "to": "wp_suth_121",
-      "accessible": true
-    },
-    {
-      "from": "wp_suth_121",
-      "to": "wp_suth_119",
-      "accessible": true
-    },
-    {
-      "from": "wp_suth_121",
-      "to": "wp_suth_boni_fernandes_wozolek",
-      "accessible": true
-    },
-    {
-      "from": "wp_suth_boni_fernandes_wozolek",
-      "to": "wp_suth_121",
-      "accessible": true
-    },
-    {
-      "from": "wp_suth_121",
-      "to": "wp_suth_123",
-      "accessible": true
-    },
-    {
-      "from": "wp_suth_123",
-      "to": "wp_suth_121",
-      "accessible": true
-    },
-    {
-      "from": "wp_suth_119",
-      "to": "wp_suth_117a",
-      "accessible": true
-    },
-    {
-      "from": "wp_suth_117a",
-      "to": "wp_suth_119",
-      "accessible": true
-    },
-    {
       "from": "wp_suth_117a",
       "to": "wp_suth_117",
       "accessible": true
@@ -8163,76 +7165,6 @@
     {
       "from": "wp_suth_117",
       "to": "wp_suth_117a",
-      "accessible": true
-    },
-    {
-      "from": "wp_suth_123",
-      "to": "wp_suth_124",
-      "accessible": true
-    },
-    {
-      "from": "wp_suth_124",
-      "to": "wp_suth_123",
-      "accessible": true
-    },
-    {
-      "from": "wp_suth_124",
-      "to": "wp_suth_125",
-      "accessible": true
-    },
-    {
-      "from": "wp_suth_125",
-      "to": "wp_suth_124",
-      "accessible": true
-    },
-    {
-      "from": "wp_suth_115a",
-      "to": "wp_suth_115",
-      "accessible": true
-    },
-    {
-      "from": "wp_suth_115",
-      "to": "wp_suth_115a",
-      "accessible": true
-    },
-    {
-      "from": "wp_suth_101",
-      "to": "wp_suth_101a",
-      "accessible": true
-    },
-    {
-      "from": "wp_suth_101a",
-      "to": "wp_suth_101",
-      "accessible": true
-    },
-    {
-      "from": "wp_suth_101",
-      "to": "wp_suth_101a",
-      "accessible": true
-    },
-    {
-      "from": "wp_suth_101a",
-      "to": "wp_suth_101",
-      "accessible": true
-    },
-    {
-      "from": "wp_suth_101",
-      "to": "wp_suth_102",
-      "accessible": true
-    },
-    {
-      "from": "wp_suth_102",
-      "to": "wp_suth_101",
-      "accessible": true
-    },
-    {
-      "from": "wp_suth_102",
-      "to": "wp_suth_106",
-      "accessible": true
-    },
-    {
-      "from": "wp_suth_106",
-      "to": "wp_suth_102",
       "accessible": true
     },
     {
@@ -8376,16 +7308,6 @@
       "accessible": true
     },
     {
-      "from": "wp_suth_f1_hall_02",
-      "to": "wp_suth_106",
-      "accessible": true
-    },
-    {
-      "from": "wp_suth_106",
-      "to": "wp_suth_f1_hall_02",
-      "accessible": true
-    },
-    {
       "from": "wp_suth_f1_hall_03",
       "to": "wp_suth_117a",
       "accessible": true
@@ -8426,46 +7348,6 @@
       "accessible": true
     },
     {
-      "from": "wp_suth_f1_back_entrance",
-      "to": "wp_suth_121",
-      "accessible": true
-    },
-    {
-      "from": "wp_suth_121",
-      "to": "wp_suth_f1_back_entrance",
-      "accessible": true
-    },
-    {
-      "from": "wp_suth_f1_hall_07",
-      "to": "wp_suth_boni_fernandes_wozolek",
-      "accessible": true
-    },
-    {
-      "from": "wp_suth_boni_fernandes_wozolek",
-      "to": "wp_suth_f1_hall_07",
-      "accessible": true
-    },
-    {
-      "from": "wp_suth_f1_stairs",
-      "to": "wp_suth_123",
-      "accessible": true
-    },
-    {
-      "from": "wp_suth_123",
-      "to": "wp_suth_f1_stairs",
-      "accessible": true
-    },
-    {
-      "from": "wp_suth_f2_hall_01",
-      "to": "wp_suth_226",
-      "accessible": true
-    },
-    {
-      "from": "wp_suth_226",
-      "to": "wp_suth_f2_hall_01",
-      "accessible": true
-    },
-    {
       "from": "wp_suth_f2_hall_02",
       "to": "wp_suth_226",
       "accessible": true
@@ -8473,36 +7355,6 @@
     {
       "from": "wp_suth_226",
       "to": "wp_suth_f2_hall_02",
-      "accessible": true
-    },
-    {
-      "from": "wp_suth_f2_hall_03",
-      "to": "wp_suth_224b",
-      "accessible": true
-    },
-    {
-      "from": "wp_suth_224b",
-      "to": "wp_suth_f2_hall_03",
-      "accessible": true
-    },
-    {
-      "from": "wp_suth_testing_center",
-      "to": "wp_suth_f2_hall_03",
-      "accessible": true
-    },
-    {
-      "from": "wp_suth_f2_hall_03",
-      "to": "wp_suth_testing_center",
-      "accessible": true
-    },
-    {
-      "from": "wp_suth_f2_hall_04",
-      "to": "wp_suth_221",
-      "accessible": true
-    },
-    {
-      "from": "wp_suth_221",
-      "to": "wp_suth_f2_hall_04",
       "accessible": true
     },
     {
@@ -8523,26 +7375,6 @@
     {
       "from": "wp_suth_204",
       "to": "wp_suth_f2_hall_06",
-      "accessible": true
-    },
-    {
-      "from": "wp_suth_f2_hall_07",
-      "to": "wp_suth_214",
-      "accessible": true
-    },
-    {
-      "from": "wp_suth_214",
-      "to": "wp_suth_f2_hall_07",
-      "accessible": true
-    },
-    {
-      "from": "wp_suth_f2_hall_08",
-      "to": "wp_suth_213",
-      "accessible": true
-    },
-    {
-      "from": "wp_suth_213",
-      "to": "wp_suth_f2_hall_08",
       "accessible": true
     },
     {
@@ -8573,16 +7405,6 @@
     {
       "from": "wp_suth_208",
       "to": "wp_suth_f2_hall_11",
-      "accessible": true
-    },
-    {
-      "from": "wp_suth_f2_stairs",
-      "to": "wp_suth_226",
-      "accessible": true
-    },
-    {
-      "from": "wp_suth_226",
-      "to": "wp_suth_f2_stairs",
       "accessible": true
     },
     {
@@ -8626,26 +7448,6 @@
       "accessible": true
     },
     {
-      "from": "wp_suth_f3_hall_04",
-      "to": "wp_suth_312",
-      "accessible": true
-    },
-    {
-      "from": "wp_suth_312",
-      "to": "wp_suth_f3_hall_04",
-      "accessible": true
-    },
-    {
-      "from": "wp_suth_f3_hall_05",
-      "to": "wp_suth_311",
-      "accessible": true
-    },
-    {
-      "from": "wp_suth_311",
-      "to": "wp_suth_f3_hall_05",
-      "accessible": true
-    },
-    {
       "from": "wp_suth_f3_hall_06",
       "to": "wp_suth_f3_hall_04",
       "accessible": true
@@ -8656,46 +7458,6 @@
       "accessible": true
     },
     {
-      "from": "wp_suth_f3_hall_07",
-      "to": "wp_suth_310b",
-      "accessible": true
-    },
-    {
-      "from": "wp_suth_310b",
-      "to": "wp_suth_f3_hall_07",
-      "accessible": true
-    },
-    {
-      "from": "wp_suth_f3_hall_08",
-      "to": "wp_suth_307_entrance",
-      "accessible": true
-    },
-    {
-      "from": "wp_suth_307_entrance",
-      "to": "wp_suth_f3_hall_08",
-      "accessible": true
-    },
-    {
-      "from": "wp_suth_f3_hall_09",
-      "to": "wp_suth_308",
-      "accessible": true
-    },
-    {
-      "from": "wp_suth_308",
-      "to": "wp_suth_f3_hall_09",
-      "accessible": true
-    },
-    {
-      "from": "wp_suth_f3_hall_10",
-      "to": "wp_suth_f3_hall_08",
-      "accessible": true
-    },
-    {
-      "from": "wp_suth_f3_hall_08",
-      "to": "wp_suth_f3_hall_10",
-      "accessible": true
-    },
-    {
       "from": "wp_suth_f3_main_stairs",
       "to": "wp_suth_elevator_f3",
       "accessible": true
@@ -8703,36 +7465,6 @@
     {
       "from": "wp_suth_elevator_f3",
       "to": "wp_suth_f3_main_stairs",
-      "accessible": true
-    },
-    {
-      "from": "wp_suth_f4_hall_01",
-      "to": "wp_suth_418",
-      "accessible": true
-    },
-    {
-      "from": "wp_suth_418",
-      "to": "wp_suth_f4_hall_01",
-      "accessible": true
-    },
-    {
-      "from": "wp_suth_f4_hall_02",
-      "to": "wp_suth_418",
-      "accessible": true
-    },
-    {
-      "from": "wp_suth_418",
-      "to": "wp_suth_f4_hall_02",
-      "accessible": true
-    },
-    {
-      "from": "wp_suth_f4_chair",
-      "to": "wp_suth_f4_hall_02",
-      "accessible": true
-    },
-    {
-      "from": "wp_suth_f4_hall_02",
-      "to": "wp_suth_f4_chair",
       "accessible": true
     },
     {
@@ -8776,16 +7508,6 @@
       "accessible": true
     },
     {
-      "from": "wp_suth_f4_side_stairs",
-      "to": "wp_suth_f4_hall_01",
-      "accessible": false
-    },
-    {
-      "from": "wp_suth_f4_hall_01",
-      "to": "wp_suth_f4_side_stairs",
-      "accessible": false
-    },
-    {
       "from": "wp_suth_f4_hall_01",
       "to": "wp_suth_f4_hall_02",
       "accessible": true
@@ -8826,66 +7548,6 @@
       "accessible": true
     },
     {
-      "from": "wp_suth_f4_hall_01",
-      "to": "wp_suth_f4_chair",
-      "accessible": true
-    },
-    {
-      "from": "wp_suth_f4_chair",
-      "to": "wp_suth_f4_hall_01",
-      "accessible": true
-    },
-    {
-      "from": "wp_suth_f4_hall_01",
-      "to": "wp_suth_403",
-      "accessible": true
-    },
-    {
-      "from": "wp_suth_403",
-      "to": "wp_suth_f4_hall_01",
-      "accessible": true
-    },
-    {
-      "from": "wp_suth_f4_hall_01",
-      "to": "wp_suth_403a",
-      "accessible": true
-    },
-    {
-      "from": "wp_suth_403a",
-      "to": "wp_suth_f4_hall_01",
-      "accessible": true
-    },
-    {
-      "from": "wp_suth_f4_hall_01",
-      "to": "wp_suth_403b",
-      "accessible": true
-    },
-    {
-      "from": "wp_suth_403b",
-      "to": "wp_suth_f4_hall_01",
-      "accessible": true
-    },
-    {
-      "from": "wp_suth_f4_hall_02",
-      "to": "wp_suth_404",
-      "accessible": true
-    },
-    {
-      "from": "wp_suth_404",
-      "to": "wp_suth_f4_hall_02",
-      "accessible": true
-    },
-    {
-      "from": "wp_suth_f4_hall_02",
-      "to": "wp_suth_405",
-      "accessible": true
-    },
-    {
-      "from": "wp_suth_405",
-      "to": "wp_suth_f4_hall_02",
-      "accessible": true
-    },
-    {
       "from": "wp_suth_f4_hall_02",
       "to": "wp_suth_406",
       "accessible": true
@@ -8893,46 +7555,6 @@
     {
       "from": "wp_suth_406",
       "to": "wp_suth_f4_hall_02",
-      "accessible": true
-    },
-    {
-      "from": "wp_suth_f4_hall_03",
-      "to": "wp_suth_407",
-      "accessible": true
-    },
-    {
-      "from": "wp_suth_407",
-      "to": "wp_suth_f4_hall_03",
-      "accessible": true
-    },
-    {
-      "from": "wp_suth_f4_hall_03",
-      "to": "wp_suth_408",
-      "accessible": true
-    },
-    {
-      "from": "wp_suth_408",
-      "to": "wp_suth_f4_hall_03",
-      "accessible": true
-    },
-    {
-      "from": "wp_suth_f4_hall_03",
-      "to": "wp_suth_409",
-      "accessible": true
-    },
-    {
-      "from": "wp_suth_409",
-      "to": "wp_suth_f4_hall_03",
-      "accessible": true
-    },
-    {
-      "from": "wp_suth_f4_hall_04",
-      "to": "wp_suth_410",
-      "accessible": true
-    },
-    {
-      "from": "wp_suth_410",
-      "to": "wp_suth_f4_hall_04",
       "accessible": true
     },
     {
@@ -9004,26 +7626,6 @@
       "from": "wp_suth_417s",
       "to": "wp_suth_f4_hall_05",
       "accessible": true
-    },
-    {
-      "from": "wp_suth_f4_hall_05",
-      "to": "wp_suth_418",
-      "accessible": true
-    },
-    {
-      "from": "wp_suth_418",
-      "to": "wp_suth_f4_hall_05",
-      "accessible": true
-    },
-    {
-      "from": "wp_suth_f2_stairs",
-      "to": "wp_suth_f4_side_stairs",
-      "accessible": false
-    },
-    {
-      "from": "wp_suth_f4_side_stairs",
-      "to": "wp_suth_f2_stairs",
-      "accessible": false
     },
     {
       "from": "wp_wood_f1_staircase",
@@ -10307,16 +8909,6 @@
       "accessible": true
     },
     {
-      "from": "wp_suth_f2_stairsa",
-      "to": "wp_suth_f4_side_stairs",
-      "accessible": false
-    },
-    {
-      "from": "wp_suth_main_entrance",
-      "to": "wp_suth_f1_hall_01",
-      "accessible": true
-    },
-    {
       "from": "wp_suth_elevator_f1",
       "to": "wp_suth_elevator_f3",
       "accessible": true
@@ -10427,11 +9019,6 @@
       "accessible": true
     },
     {
-      "from": "wp_suth_106",
-      "to": "wp_suth_f1_hall_01",
-      "accessible": true
-    },
-    {
       "from": "wp_suth_elevator_f1",
       "to": "wp_suth_f1_hall_02",
       "accessible": true
@@ -10513,11 +9100,6 @@
     },
     {
       "from": "wp_suth_elevator_f1",
-      "to": "wp_suth_106",
-      "accessible": true
-    },
-    {
-      "from": "wp_suth_elevator_f1",
       "to": "wp_suth_124",
       "accessible": true
     },
@@ -10573,11 +9155,6 @@
     },
     {
       "from": "wp_suth_f2_hall_02",
-      "to": "wp_suth_225",
-      "accessible": true
-    },
-    {
-      "from": "wp_suth_f2_hall_03",
       "to": "wp_suth_225",
       "accessible": true
     },
@@ -10759,11 +9336,6 @@
     {
       "from": "wp_suth_208",
       "to": "wp_suth_f2_hall_10",
-      "accessible": true
-    },
-    {
-      "from": "wp_suth_208",
-      "to": "wp_suth_211",
       "accessible": true
     },
     {
@@ -11319,21 +9891,6 @@
     {
       "from": "wp_suth_f1_stairsa",
       "to": "wp_suth_f2_stairsa",
-      "accessible": true
-    },
-    {
-      "from": "wp_suth_f4_side_stairs",
-      "to": "wp_suth_f3_stairsa",
-      "accessible": true
-    },
-    {
-      "from": "wp_suth_f4_side_stairs",
-      "to": "wp_suth_f1_stairsa",
-      "accessible": true
-    },
-    {
-      "from": "wp_suth_f4_side_stairs",
-      "to": "wp_suth_f4_hall_05",
       "accessible": true
     },
     {
