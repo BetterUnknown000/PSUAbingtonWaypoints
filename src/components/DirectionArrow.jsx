@@ -100,19 +100,24 @@ export default function DirectionArrow({
   useEffect(() => {
     const current = lastArrowDeg.current;
     let target = relativeArrowDegrees;
-  
-    let diff = target - current;
+
+    // Find shortest path from current accumulated angle to new target
+    let diff = target - ((current % 360) + (current >= 0 ? 0 : 360));
     if (diff > 180) diff -= 360;
     if (diff < -180) diff += 360;
     target = current + diff;
-  
+
+    // Clamp accumulator so it never drifts past the interpolation range
+    if (target > 3600) { target -= 3600; lastArrowDeg.current = target; arrowAnim.setValue(target); }
+    if (target < -3600) { target += 3600; lastArrowDeg.current = target; arrowAnim.setValue(target); }
+
     lastArrowDeg.current = target;
 
     console.log("[ARROW_UPDATE]", { angle: target.toFixed(1), targetBearing, heading });
-  
+
     Animated.timing(arrowAnim, {
       toValue: target,
-      duration: 120,
+      duration: 150,
       easing: Easing.out(Easing.cubic),
       useNativeDriver: true,
     }).start();
@@ -124,8 +129,8 @@ export default function DirectionArrow({
   });
   
   const arrowRotate = arrowAnim.interpolate({
-    inputRange: [-720, 720],
-    outputRange: ["-720deg", "720deg"],
+    inputRange: [-3600, 3600],
+    outputRange: ["-3600deg", "3600deg"],
   });
 
   if (arrived) {
