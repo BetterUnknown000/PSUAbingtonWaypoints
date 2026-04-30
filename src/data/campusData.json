@@ -110,8 +110,8 @@
       "type": "entrance",
       "latitude": 40.115879,
       "longitude": -75.108886,
-      "x": 0,
-      "y": 0,
+      "x": 50,
+      "y": 50,
       "qr_code": "QR_SUTH_F1_MAIN_ENTRANCE",
       "requires_scan": true,
       "stop_radius_m": 5
@@ -124,8 +124,8 @@
       "type": "office",
       "latitude": 40.11575425,
       "longitude": -75.1088220278,
-      "x": 0,
-      "y": 0,
+      "x": 50,
+      "y": 50,
       "qr_code": "QR_SUTH_F1_106"
     },
     {
@@ -136,8 +136,8 @@
       "type": "office",
       "latitude": 40.115798,
       "longitude": -75.108639,
-      "x": 0,
-      "y": 0,
+      "x": 50,
+      "y": 50,
       "qr_code": "QR_SUTH_F1_115A"
     },
     {
@@ -148,8 +148,8 @@
       "type": "office",
       "latitude": 40.1160188889,
       "longitude": -75.1086260556,
-      "x": 0,
-      "y": 0,
+      "x": 50,
+      "y": 50,
       "qr_code": "QR_SUTH_F1_119"
     },
     {
@@ -160,8 +160,8 @@
       "type": "lounge",
       "latitude": 40.115941,
       "longitude": -75.108467,
-      "x": 0,
-      "y": 0,
+      "x": 50,
+      "y": 50,
       "qr_code": "QR_SUTH_F1_121"
     },
     {
@@ -172,8 +172,8 @@
       "type": "office",
       "latitude": 40.1160272778,
       "longitude": -75.1086155,
-      "x": 0,
-      "y": 0,
+      "x": 50,
+      "y": 50,
       "qr_code": "QR_SUTH_F1_122"
     },
     {
@@ -184,8 +184,8 @@
       "type": "office",
       "latitude": 40.1159700278,
       "longitude": -75.1086494722,
-      "x": 0,
-      "y": 0,
+      "x": 50,
+      "y": 50,
       "qr_code": "QR_SUTH_F1_123"
     },
     {
@@ -196,8 +196,8 @@
       "type": "classroom",
       "latitude": 40.115756,
       "longitude": -75.108845,
-      "x": 0,
-      "y": 0,
+      "x": 50,
+      "y": 50,
       "qr_code": "QR_SUTH_F2_201"
     },
     {
@@ -208,8 +208,8 @@
       "type": "classroom",
       "latitude": 40.11573,
       "longitude": -75.108897,
-      "x": 0,
-      "y": 0,
+      "x": 50,
+      "y": 50,
       "qr_code": "QR_SUTH_F2_204"
     },
     {
@@ -220,8 +220,8 @@
       "type": "classroom",
       "latitude": 40.115729,
       "longitude": -75.108892,
-      "x": 0,
-      "y": 0,
+      "x": 50,
+      "y": 50,
       "qr_code": "QR_SUTH_F2_206"
     },
     {
@@ -232,8 +232,8 @@
       "type": "classroom",
       "latitude": 40.115483,
       "longitude": -75.108843,
-      "x": 0,
-      "y": 0,
+      "x": 50,
+      "y": 50,
       "qr_code": "QR_SUTH_F2_208"
     },
     {
@@ -244,8 +244,8 @@
       "type": "classroom",
       "latitude": 40.115454,
       "longitude": -75.108904,
-      "x": 0,
-      "y": 0,
+      "x": 50,
+      "y": 50,
       "qr_code": "QR_SUTH_F2_209"
     },
     {
@@ -256,8 +256,8 @@
       "type": "classroom",
       "latitude": 40.115449,
       "longitude": -75.1089,
-      "x": 0,
-      "y": 0,
+      "x": 50,
+      "y": 50,
       "qr_code": "QR_SUTH_F2_210"
     },
     {
@@ -268,8 +268,8 @@
       "type": "lab",
       "latitude": 40.115492,
       "longitude": -75.108849,
-      "x": 0,
-      "y": 0,
+      "x": 50,
+      "y": 50,
       "qr_code": "QR_SUTH_F2_211"
     },
     {
@@ -280,8 +280,8 @@
       "type": "classroom",
       "latitude": 40.115586,
       "longitude": -75.108763,
-      "x": 0,
-      "y": 0,
+      "x": 50,
+      "y": 50,
       "qr_code": "QR_SUTH_F2_213"
     },
     {
@@ -292,8 +292,8 @@
       "type": "classroom",
       "latitude": 40.115756,
       "longitude": -75.108843,
-      "x": 0,
-      "y": 0,
+      "x": 50,
+      "y": 50,
       "qr_code": "QR_SUTH_F2_215"
     },
     {
@@ -304,8 +304,8 @@
       "type": "classroom",
       "latitude": 40.115792,
       "longitude": -75.108834,
-      "x": 0,
-      "y": 0,
+      "x": 50,
+      "y": 50,
       "qr_code": "QR_SUTH_F2_216"
     },
     {
@@ -316,8 +316,8 @@
       "type": "classroom",
       "latitude": 40.115744,
       "longitude": -75.108761,
-      "x": 0,
-      "y": 0,
+      "x": 50,
+      "y": 50,
       "qr_code": "QR_SUTH_F2_217"
     },
     {
@@ -328,8 +328,8 @@
       "type": "office",
       "latitude": 40.1159086389,
       "longitude": -75.1086704167,
-      "x": 0,
-      "y": 0,
+      "x": 950,
+      "y": 950,
       "qr_code": "QR_SUTH_F2_218"
     },
     {
@@ -340,8 +340,8 @@
       "type": "office",
       "latitude": 40.1159345556,
       "longitude": -75.1086192222,
-      "x": 0,
-      "y": 0,
+      "x": 50,
+      "y": 50,
       "qr_code": "QR_SUTH_F2_220"
     },
     {
@@ -352,8 +352,8 @@
       "type": "classroom",
       "latitude": 40.115945,
       "longitude": -75.108479,
-      "x": 0,
-      "y": 0,
+      "x": 50,
+      "y": 50,
       "qr_code": "QR_SUTH_F2_222"
     },
     {
@@ -364,8 +364,8 @@
       "type": "classroom",
       "latitude": 40.115968,
       "longitude": -75.108579,
-      "x": 0,
-      "y": 0,
+      "x": 50,
+      "y": 50,
       "qr_code": "QR_SUTH_F2_226"
     },
     {
@@ -376,8 +376,8 @@
       "type": "classroom",
       "latitude": 40.115868,
       "longitude": -75.108651,
-      "x": 0,
-      "y": 0,
+      "x": 950,
+      "y": 950,
       "qr_code": "QR_SUTH_F2_227"
     },
     {
@@ -388,8 +388,8 @@
       "type": "classroom",
       "latitude": 40.11582,
       "longitude": -75.108785,
-      "x": 0,
-      "y": 0,
+      "x": 50,
+      "y": 50,
       "qr_code": "QR_SUTH_F3_305"
     },
     {
@@ -400,8 +400,8 @@
       "type": "classroom",
       "latitude": 40.115776,
       "longitude": -75.108811,
-      "x": 0,
-      "y": 0,
+      "x": 50,
+      "y": 50,
       "qr_code": "QR_SUTH_F3_306"
     },
     {
@@ -412,8 +412,8 @@
       "type": "lab",
       "latitude": 40.115562,
       "longitude": -75.108714,
-      "x": 0,
-      "y": 0,
+      "x": 50,
+      "y": 50,
       "qr_code": "QR_SUTH_F3_307_CALC"
     },
     {
@@ -424,8 +424,8 @@
       "type": "entrance",
       "latitude": 40.115513,
       "longitude": -75.108856,
-      "x": 0,
-      "y": 0,
+      "x": 50,
+      "y": 50,
       "qr_code": "QR_SUTH_F3_307_ENTRANCE",
       "requires_scan": true,
       "stop_radius_m": 5
@@ -438,8 +438,8 @@
       "type": "classroom",
       "latitude": 40.115463,
       "longitude": -75.108936,
-      "x": 0,
-      "y": 0,
+      "x": 50,
+      "y": 50,
       "qr_code": "QR_SUTH_F3_308"
     },
     {
@@ -450,8 +450,8 @@
       "type": "classroom",
       "latitude": 40.115456,
       "longitude": -75.108908,
-      "x": 0,
-      "y": 0,
+      "x": 50,
+      "y": 50,
       "qr_code": "QR_SUTH_F3_309"
     },
     {
@@ -462,8 +462,8 @@
       "type": "classroom",
       "latitude": 40.115659,
       "longitude": -75.108927,
-      "x": 0,
-      "y": 0,
+      "x": 50,
+      "y": 50,
       "qr_code": "QR_SUTH_F3_311"
     },
     {
@@ -474,8 +474,8 @@
       "type": "classroom",
       "latitude": 40.115952,
       "longitude": -75.108469,
-      "x": 0,
-      "y": 0,
+      "x": 50,
+      "y": 50,
       "qr_code": "QR_SUTH_F3_320"
     },
     {
@@ -486,8 +486,8 @@
       "type": "classroom",
       "latitude": 40.115991,
       "longitude": -75.108546,
-      "x": 0,
-      "y": 0,
+      "x": 50,
+      "y": 50,
       "qr_code": "QR_SUTH_F3_331"
     },
     {
@@ -498,8 +498,8 @@
       "type": "elevator",
       "latitude": 40.115858,
       "longitude": -75.108815,
-      "x": 0,
-      "y": 0,
+      "x": 50,
+      "y": 50,
       "qr_code": "QR_SUTH_F1_ELEVATOR",
       "requires_scan": true,
       "stop_radius_m": 3
@@ -512,8 +512,8 @@
       "type": "elevator",
       "latitude": 40.115913,
       "longitude": -75.108691,
-      "x": 0,
-      "y": 0,
+      "x": 950,
+      "y": 950,
       "qr_code": "QR_SUTH_F2_ELEVATOR",
       "requires_scan": true,
       "stop_radius_m": 3
@@ -526,8 +526,8 @@
       "type": "elevator",
       "latitude": 40.115827,
       "longitude": -75.108808,
-      "x": 0,
-      "y": 0,
+      "x": 50,
+      "y": 50,
       "qr_code": "QR_SUTH_F3_ELEVATOR",
       "requires_scan": true,
       "stop_radius_m": 3
@@ -668,8 +668,8 @@
       "type": "classroom",
       "latitude": 40.115893,
       "longitude": -75.112129,
-      "x": 0,
-      "y": 0,
+      "x": 500,
+      "y": 500,
       "qr_code": "QR_RYDAL_GND_EE2"
     },
     {
@@ -692,8 +692,8 @@
       "type": "entrance",
       "latitude": 40.117489,
       "longitude": -75.109782,
-      "x": 0,
-      "y": 0,
+      "x": 950,
+      "y": 950,
       "qr_code": "QR_SPRING_ENTRANCE",
       "requires_scan": true,
       "stop_radius_m": 5
@@ -706,8 +706,8 @@
       "type": "entrance",
       "latitude": 40.11747,
       "longitude": -75.109735,
-      "x": 0,
-      "y": 0,
+      "x": 50,
+      "y": 950,
       "qr_code": "QR_SPRING_100_OUTSIDE",
       "requires_scan": true,
       "stop_radius_m": 5
@@ -720,8 +720,8 @@
       "type": "entrance",
       "latitude": 40.11748,
       "longitude": -75.109748,
-      "x": 0,
-      "y": 0,
+      "x": 50,
+      "y": 50,
       "qr_code": "QR_SPRING_100_INSIDE",
       "requires_scan": true,
       "stop_radius_m": 5
@@ -734,8 +734,8 @@
       "type": "classroom",
       "latitude": 40.117485,
       "longitude": -75.109767,
-      "x": 0,
-      "y": 0,
+      "x": 950,
+      "y": 50,
       "qr_code": "QR_SPRING_101"
     },
     {
@@ -746,8 +746,8 @@
       "type": "entrance",
       "latitude": 40.114817,
       "longitude": -75.111579,
-      "x": 0,
-      "y": 0,
+      "x": 50,
+      "y": 50,
       "qr_code": "QR_ATH_F1_MAIN_ENTRANCE",
       "requires_scan": true,
       "stop_radius_m": 5
@@ -760,8 +760,8 @@
       "type": "recreation",
       "latitude": 40.114532,
       "longitude": -75.111789,
-      "x": 0,
-      "y": 0,
+      "x": 50,
+      "y": 50,
       "qr_code": "QR_ATH_F1_BASKETBALL_COURT"
     },
     {
@@ -884,8 +884,8 @@
       "type": "entrance",
       "latitude": 40.115691,
       "longitude": -75.108856,
-      "x": 0,
-      "y": 0,
+      "x": 50,
+      "y": 50,
       "qr_code": "QR_SUTH_GND_008_SECOND_ENTRANCE",
       "requires_scan": true,
       "stop_radius_m": 5
@@ -898,8 +898,8 @@
       "type": "stairs",
       "latitude": 40.115696,
       "longitude": -75.108802,
-      "x": 0,
-      "y": 0,
+      "x": 50,
+      "y": 50,
       "qr_code": "QR_SUTH_GND_STAIRS",
       "requires_scan": true,
       "stop_radius_m": 3
@@ -912,8 +912,8 @@
       "type": "hallway",
       "latitude": 40.115682,
       "longitude": -75.108802,
-      "x": 0,
-      "y": 0,
+      "x": 50,
+      "y": 50,
       "qr_code": "QR_SUTH_GND_HALL_01",
       "requires_scan": false,
       "stop_radius_m": 3
@@ -926,8 +926,8 @@
       "type": "hallway",
       "latitude": 40.115663,
       "longitude": -75.108761,
-      "x": 0,
-      "y": 0,
+      "x": 50,
+      "y": 50,
       "qr_code": "QR_SUTH_GND_HALL_02",
       "requires_scan": false,
       "stop_radius_m": 3
@@ -940,8 +940,8 @@
       "type": "hallway",
       "latitude": 40.115609,
       "longitude": -75.108738,
-      "x": 0,
-      "y": 0,
+      "x": 950,
+      "y": 950,
       "qr_code": "QR_SUTH_GND_HALL_03",
       "requires_scan": false,
       "stop_radius_m": 3
@@ -954,8 +954,8 @@
       "type": "entrance",
       "latitude": 40.115603,
       "longitude": -75.108727,
-      "x": 0,
-      "y": 0,
+      "x": 950,
+      "y": 950,
       "qr_code": "QR_SUTH_GND_ENTRANCE",
       "requires_scan": true,
       "stop_radius_m": 5
@@ -968,8 +968,8 @@
       "type": "elevator",
       "latitude": 40.115892,
       "longitude": -75.108738,
-      "x": 0,
-      "y": 0,
+      "x": 950,
+      "y": 950,
       "qr_code": "QR_SUTH_GND_ELEVATOR",
       "requires_scan": true,
       "stop_radius_m": 3
@@ -982,8 +982,8 @@
       "type": "hallway",
       "latitude": 40.115869,
       "longitude": -75.108777,
-      "x": 0,
-      "y": 0,
+      "x": 50,
+      "y": 50,
       "qr_code": "QR_SUTH_F1_HALL_01",
       "requires_scan": false,
       "stop_radius_m": 3
@@ -996,8 +996,8 @@
       "type": "hallway",
       "latitude": 40.115729,
       "longitude": -75.108822,
-      "x": 0,
-      "y": 0,
+      "x": 950,
+      "y": 950,
       "qr_code": "QR_SUTH_F1_HALL_02",
       "requires_scan": false,
       "stop_radius_m": 3
@@ -1010,8 +1010,8 @@
       "type": "hallway",
       "latitude": 40.115937,
       "longitude": -75.108633,
-      "x": 0,
-      "y": 0,
+      "x": 50,
+      "y": 50,
       "qr_code": "QR_SUTH_F1_HALL_03",
       "requires_scan": false,
       "stop_radius_m": 3
@@ -1024,8 +1024,8 @@
       "type": "hallway",
       "latitude": 40.115974,
       "longitude": -75.108566,
-      "x": 0,
-      "y": 0,
+      "x": 950,
+      "y": 950,
       "qr_code": "QR_SUTH_F1_HALL_04",
       "requires_scan": false,
       "stop_radius_m": 3
@@ -1038,8 +1038,8 @@
       "type": "hallway",
       "latitude": 40.11597,
       "longitude": -75.108562,
-      "x": 0,
-      "y": 0,
+      "x": 950,
+      "y": 950,
       "qr_code": "QR_SUTH_F1_HALL_05",
       "requires_scan": false,
       "stop_radius_m": 3
@@ -1052,8 +1052,8 @@
       "type": "hallway",
       "latitude": 40.11596,
       "longitude": -75.108554,
-      "x": 0,
-      "y": 0,
+      "x": 50,
+      "y": 50,
       "qr_code": "QR_SUTH_F1_HALL_06",
       "requires_scan": false,
       "stop_radius_m": 3
@@ -1066,8 +1066,8 @@
       "type": "entrance",
       "latitude": 40.115906,
       "longitude": -75.108503,
-      "x": 0,
-      "y": 0,
+      "x": 50,
+      "y": 50,
       "qr_code": "QR_SUTH_F1_BACK_ENTRANCE",
       "requires_scan": true,
       "stop_radius_m": 5
@@ -1080,8 +1080,8 @@
       "type": "hallway",
       "latitude": 40.115861,
       "longitude": -75.108341,
-      "x": 0,
-      "y": 0,
+      "x": 950,
+      "y": 950,
       "qr_code": "QR_SUTH_F1_HALL_07",
       "requires_scan": false,
       "stop_radius_m": 3
@@ -1094,8 +1094,8 @@
       "type": "stairs",
       "latitude": 40.115974,
       "longitude": -75.108622,
-      "x": 0,
-      "y": 0,
+      "x": 50,
+      "y": 50,
       "qr_code": "QR_SUTH_F1_STAIRS",
       "requires_scan": true,
       "stop_radius_m": 3
@@ -1108,8 +1108,8 @@
       "type": "hallway",
       "latitude": 40.115981,
       "longitude": -75.10852,
-      "x": 0,
-      "y": 0,
+      "x": 50,
+      "y": 50,
       "qr_code": "QR_SUTH_F2_HALL_01",
       "requires_scan": false,
       "stop_radius_m": 3
@@ -1122,8 +1122,8 @@
       "type": "hallway",
       "latitude": 40.115995,
       "longitude": -75.108571,
-      "x": 0,
-      "y": 0,
+      "x": 950,
+      "y": 950,
       "qr_code": "QR_SUTH_F2_HALL_02",
       "requires_scan": false,
       "stop_radius_m": 3
@@ -1136,8 +1136,8 @@
       "type": "hallway",
       "latitude": 40.115865,
       "longitude": -75.108387,
-      "x": 0,
-      "y": 0,
+      "x": 50,
+      "y": 50,
       "qr_code": "QR_SUTH_F2_HALL_03",
       "requires_scan": false,
       "stop_radius_m": 3
@@ -1150,8 +1150,8 @@
       "type": "office",
       "latitude": 40.115859,
       "longitude": -75.108392,
-      "x": 0,
-      "y": 0,
+      "x": 950,
+      "y": 950,
       "qr_code": "QR_SUTH_F2_TESTING_CENTER"
     },
     {
@@ -1162,8 +1162,8 @@
       "type": "hallway",
       "latitude": 40.115803,
       "longitude": -75.108774,
-      "x": 0,
-      "y": 0,
+      "x": 50,
+      "y": 50,
       "qr_code": "QR_SUTH_F2_HALL_04",
       "requires_scan": false,
       "stop_radius_m": 3
@@ -1176,8 +1176,8 @@
       "type": "hallway",
       "latitude": 40.115752,
       "longitude": -75.108955,
-      "x": 0,
-      "y": 0,
+      "x": 50,
+      "y": 50,
       "qr_code": "QR_SUTH_F2_HALL_05",
       "requires_scan": false,
       "stop_radius_m": 3
@@ -1190,8 +1190,8 @@
       "type": "hallway",
       "latitude": 40.11572,
       "longitude": -75.108915,
-      "x": 0,
-      "y": 0,
+      "x": 950,
+      "y": 950,
       "qr_code": "QR_SUTH_F2_HALL_06",
       "requires_scan": false,
       "stop_radius_m": 3
@@ -1204,8 +1204,8 @@
       "type": "hallway",
       "latitude": 40.115661,
       "longitude": -75.108858,
-      "x": 0,
-      "y": 0,
+      "x": 50,
+      "y": 50,
       "qr_code": "QR_SUTH_F2_HALL_07",
       "requires_scan": false,
       "stop_radius_m": 3
@@ -1218,8 +1218,8 @@
       "type": "hallway",
       "latitude": 40.115564,
       "longitude": -75.108749,
-      "x": 0,
-      "y": 0,
+      "x": 50,
+      "y": 706.4,
       "qr_code": "QR_SUTH_F2_HALL_08",
       "requires_scan": false,
       "stop_radius_m": 3
@@ -1232,8 +1232,8 @@
       "type": "hallway",
       "latitude": 40.115543,
       "longitude": -75.108806,
-      "x": 0,
-      "y": 0,
+      "x": 950,
+      "y": 950,
       "qr_code": "QR_SUTH_F2_HALL_09",
       "requires_scan": false,
       "stop_radius_m": 3
@@ -1246,8 +1246,8 @@
       "type": "hallway",
       "latitude": 40.115501,
       "longitude": -75.108826,
-      "x": 0,
-      "y": 0,
+      "x": 950,
+      "y": 196.5,
       "qr_code": "QR_SUTH_F2_HALL_10",
       "requires_scan": false,
       "stop_radius_m": 3
@@ -1260,8 +1260,8 @@
       "type": "hallway",
       "latitude": 40.11546,
       "longitude": -75.108853,
-      "x": 0,
-      "y": 0,
+      "x": 50,
+      "y": 871.6,
       "qr_code": "QR_SUTH_F2_HALL_11",
       "requires_scan": false,
       "stop_radius_m": 3
@@ -1274,8 +1274,8 @@
       "type": "stairs",
       "latitude": 40.115957,
       "longitude": -75.108602,
-      "x": 0,
-      "y": 0,
+      "x": 950,
+      "y": 950,
       "qr_code": "QR_SUTH_F2_STAIRS",
       "requires_scan": true,
       "stop_radius_m": 3
@@ -1288,8 +1288,8 @@
       "type": "stairs",
       "latitude": 40.115825,
       "longitude": -75.108749,
-      "x": 0,
-      "y": 0,
+      "x": 950,
+      "y": 950,
       "qr_code": "QR_SUTH_F2_MAIN_STAIRS",
       "requires_scan": true,
       "stop_radius_m": 3
@@ -1302,8 +1302,8 @@
       "type": "hallway",
       "latitude": 40.115933,
       "longitude": -75.108702,
-      "x": 0,
-      "y": 0,
+      "x": 50,
+      "y": 50,
       "qr_code": "QR_SUTH_F3_HALL_01",
       "requires_scan": false,
       "stop_radius_m": 3
@@ -1316,8 +1316,8 @@
       "type": "hallway",
       "latitude": 40.115921,
       "longitude": -75.108611,
-      "x": 0,
-      "y": 0,
+      "x": 50,
+      "y": 50,
       "qr_code": "QR_SUTH_F3_HALL_02",
       "requires_scan": false,
       "stop_radius_m": 3
@@ -1330,8 +1330,8 @@
       "type": "hallway",
       "latitude": 40.115829,
       "longitude": -75.108307,
-      "x": 0,
-      "y": 0,
+      "x": 302.1,
+      "y": 301.4,
       "qr_code": "QR_SUTH_F3_HALL_03",
       "requires_scan": false,
       "stop_radius_m": 3
@@ -1344,8 +1344,8 @@
       "type": "hallway",
       "latitude": 40.115639,
       "longitude": -75.108854,
-      "x": 0,
-      "y": 0,
+      "x": 50,
+      "y": 50,
       "qr_code": "QR_SUTH_F3_HALL_04",
       "requires_scan": false,
       "stop_radius_m": 3
@@ -1358,8 +1358,8 @@
       "type": "hallway",
       "latitude": 40.115632,
       "longitude": -75.108904,
-      "x": 0,
-      "y": 0,
+      "x": 50,
+      "y": 50,
       "qr_code": "QR_SUTH_F3_HALL_05",
       "requires_scan": false,
       "stop_radius_m": 3
@@ -1372,8 +1372,8 @@
       "type": "hallway",
       "latitude": 40.115642,
       "longitude": -75.108852,
-      "x": 0,
-      "y": 0,
+      "x": 50,
+      "y": 50,
       "qr_code": "QR_SUTH_F3_HALL_06",
       "requires_scan": false,
       "stop_radius_m": 3
@@ -1386,8 +1386,8 @@
       "type": "hallway",
       "latitude": 40.115575,
       "longitude": -75.108811,
-      "x": 0,
-      "y": 0,
+      "x": 50,
+      "y": 50,
       "qr_code": "QR_SUTH_F3_HALL_07",
       "requires_scan": false,
       "stop_radius_m": 3
@@ -1400,8 +1400,8 @@
       "type": "hallway",
       "latitude": 40.115517,
       "longitude": -75.108864,
-      "x": 0,
-      "y": 0,
+      "x": 950,
+      "y": 950,
       "qr_code": "QR_SUTH_F3_HALL_08",
       "requires_scan": false,
       "stop_radius_m": 3
@@ -1414,8 +1414,8 @@
       "type": "hallway",
       "latitude": 40.115478,
       "longitude": -75.108924,
-      "x": 0,
-      "y": 0,
+      "x": 50,
+      "y": 50,
       "qr_code": "QR_SUTH_F3_HALL_09",
       "requires_scan": false,
       "stop_radius_m": 3
@@ -1428,8 +1428,8 @@
       "type": "hallway",
       "latitude": 40.115543,
       "longitude": -75.108893,
-      "x": 0,
-      "y": 0,
+      "x": 50,
+      "y": 891.9,
       "qr_code": "QR_SUTH_F3_HALL_10",
       "requires_scan": false,
       "stop_radius_m": 3
@@ -1442,8 +1442,8 @@
       "type": "stairs",
       "latitude": 40.115815,
       "longitude": -75.108824,
-      "x": 0,
-      "y": 0,
+      "x": 50,
+      "y": 50,
       "qr_code": "QR_SUTH_F3_MAIN_STAIRS",
       "requires_scan": true,
       "stop_radius_m": 3
@@ -1456,8 +1456,8 @@
       "type": "hallway",
       "latitude": 40.115856,
       "longitude": -75.108392,
-      "x": 0,
-      "y": 0,
+      "x": 50,
+      "y": 50,
       "qr_code": "QR_SUTH_F4_HALL_01",
       "requires_scan": false,
       "stop_radius_m": 3
@@ -1470,8 +1470,8 @@
       "type": "hallway",
       "latitude": 40.115941,
       "longitude": -75.108479,
-      "x": 0,
-      "y": 0,
+      "x": 50,
+      "y": 50,
       "qr_code": "QR_SUTH_F4_HALL_02",
       "requires_scan": false,
       "stop_radius_m": 3
@@ -1484,8 +1484,8 @@
       "type": "office",
       "latitude": 40.115945,
       "longitude": -75.108507,
-      "x": 0,
-      "y": 0,
+      "x": 50,
+      "y": 50,
       "qr_code": "QR_SUTH_F4_CHAIR"
     },
     {
@@ -1496,8 +1496,8 @@
       "type": "hallway",
       "latitude": 40.115798,
       "longitude": -75.108812,
-      "x": 0,
-      "y": 0,
+      "x": 50,
+      "y": 50,
       "qr_code": "QR_SUTH_F4_HALL_03",
       "requires_scan": false,
       "stop_radius_m": 3
@@ -1510,8 +1510,8 @@
       "type": "hallway",
       "latitude": 40.115642,
       "longitude": -75.10885,
-      "x": 0,
-      "y": 0,
+      "x": 50,
+      "y": 50,
       "qr_code": "QR_SUTH_F4_HALL_04",
       "requires_scan": false,
       "stop_radius_m": 3
@@ -1524,8 +1524,8 @@
       "type": "hallway",
       "latitude": 40.11557,
       "longitude": -75.108861,
-      "x": 0,
-      "y": 0,
+      "x": 50,
+      "y": 50,
       "qr_code": "QR_SUTH_F4_HALL_05",
       "requires_scan": false,
       "stop_radius_m": 3
@@ -1552,8 +1552,8 @@
       "type": "hallway",
       "latitude": 40.117045,
       "longitude": -75.110636,
-      "x": 654.31,
-      "y": 255.6,
+      "x": 666.6,
+      "y": 248.2,
       "qr_code": "QR_WOOD_F1_HALL_02",
       "requires_scan": false,
       "stop_radius_m": 3
@@ -1566,8 +1566,8 @@
       "type": "stairs",
       "latitude": 40.11705,
       "longitude": -75.11081,
-      "x": 568.04,
-      "y": 199.62,
+      "x": 562.7,
+      "y": 206.5,
       "qr_code": "QR_WOOD_F1_STAIRCASE",
       "photo": "../assets/WoodlandImages/Level1_Entry_1.jpg",
       "requires_scan": true,
@@ -1581,8 +1581,8 @@
       "type": "hallway",
       "latitude": 40.117045,
       "longitude": -75.110822,
-      "x": 584.89,
-      "y": 296.38,
+      "x": 590.2,
+      "y": 286.8,
       "qr_code": "QR_WOOD_F1_HALL_03",
       "photo": "../assets/WoodlandImages/Level1_4_1.jpg",
       "requires_scan": false,
@@ -1596,8 +1596,8 @@
       "type": "hallway",
       "latitude": 40.116936,
       "longitude": -75.110827,
-      "x": 559.17,
-      "y": 339.28,
+      "x": 558.1,
+      "y": 340.3,
       "qr_code": "QR_WOOD_F1_HALL_04",
       "photo": "../assets/WoodlandImages/Level1_4_2.jpg",
       "requires_scan": false,
@@ -1611,8 +1611,8 @@
       "type": "hallway",
       "latitude": 40.116907,
       "longitude": -75.110729,
-      "x": 615.09,
-      "y": 373.3,
+      "x": 591.7,
+      "y": 356.2,
       "qr_code": "QR_WOOD_F1_HALL_05",
       "photo": "../assets/WoodlandImages/Level1_4_1.jpg",
       "requires_scan": false,
@@ -1626,8 +1626,8 @@
       "type": "hallway",
       "latitude": 40.116915,
       "longitude": -75.110724,
-      "x": 640.0,
-      "y": 404.0,
+      "x": 643.7,
+      "y": 387,
       "qr_code": "QR_WOOD_F1_HALL_06",
       "requires_scan": false,
       "stop_radius_m": 3
@@ -1654,8 +1654,8 @@
       "type": "hallway",
       "latitude": 40.116812,
       "longitude": -75.11103,
-      "x": 516.0,
-      "y": 412.0,
+      "x": 516,
+      "y": 412,
       "qr_code": "QR_WOOD_F1_HALL_08",
       "photo": "../assets/WoodlandImages/Level1_Outside_2.jpg",
       "requires_scan": false,
@@ -1669,8 +1669,8 @@
       "type": "hallway",
       "latitude": 40.116802,
       "longitude": -75.111012,
-      "x": 492.8,
-      "y": 449.56,
+      "x": 474.2,
+      "y": 488.4,
       "qr_code": "QR_WOOD_F1_HALL_09",
       "photo": "../assets/WoodlandImages/Level1_Outside_2.jpg",
       "requires_scan": false,
@@ -1684,8 +1684,8 @@
       "type": "hallway",
       "latitude": 40.116745,
       "longitude": -75.111013,
-      "x": 437.38,
-      "y": 525.74,
+      "x": 405.4,
+      "y": 569.4,
       "qr_code": "QR_WOOD_F1_HALL_10",
       "photo": [
         "../assets/WoodlandImages/Level1_1_1.jpg",
@@ -1702,8 +1702,8 @@
       "type": "hallway",
       "latitude": 40.116614,
       "longitude": -75.111033,
-      "x": 406.84,
-      "y": 574.93,
+      "x": 431.8,
+      "y": 635.6,
       "qr_code": "QR_WOOD_F1_HALL_11",
       "photo": "../assets/WoodlandImages/Level1_2_1.jpg",
       "requires_scan": false,
@@ -1761,8 +1761,8 @@
       "type": "stairs",
       "latitude": 40.116849,
       "longitude": -75.110941,
-      "x": 494.82,
-      "y": 435.47,
+      "x": 491.1,
+      "y": 431.7,
       "qr_code": "QR_WOOD_F1_STAIRS_A",
       "requires_scan": true,
       "stop_radius_m": 3
@@ -2297,8 +2297,8 @@
       "type": "hallway",
       "latitude": 40.114736,
       "longitude": -75.111598,
-      "x": 0,
-      "y": 0,
+      "x": 50,
+      "y": 950,
       "qr_code": "QR_ATH_F1_HALL_01",
       "requires_scan": false,
       "stop_radius_m": 3
@@ -2311,8 +2311,8 @@
       "type": "recreation",
       "latitude": 40.114735,
       "longitude": -75.111628,
-      "x": 0,
-      "y": 0,
+      "x": 950,
+      "y": 950,
       "qr_code": "QR_ATH_F1_GYM"
     },
     {
@@ -2323,8 +2323,8 @@
       "type": "elevator",
       "latitude": 40.114734,
       "longitude": -75.111664,
-      "x": 0,
-      "y": 0,
+      "x": 50,
+      "y": 50,
       "qr_code": "QR_ATH_F1_ELEVATOR",
       "requires_scan": true,
       "stop_radius_m": 3
@@ -2337,8 +2337,8 @@
       "type": "stairs",
       "latitude": 40.1147985278,
       "longitude": -75.1116287222,
-      "x": 0,
-      "y": 0,
+      "x": 950,
+      "y": 950,
       "qr_code": "QR_ATH_F1_STAIRS",
       "requires_scan": true,
       "stop_radius_m": 3
@@ -2351,8 +2351,8 @@
       "type": "classroom",
       "latitude": 40.114745,
       "longitude": -75.111528,
-      "x": 0,
-      "y": 0,
+      "x": 950,
+      "y": 50,
       "qr_code": "QR_ATH_F2_CLASSROOM"
     },
     {
@@ -2473,8 +2473,8 @@
       "type": "entrance",
       "latitude": 40.1151998611,
       "longitude": -75.1132563333,
-      "x": 0,
-      "y": 0,
+      "x": 880,
+      "y": 500,
       "qr_code": "QR_CLOVERLY_F1_MAIN_ENTRANCE",
       "requires_scan": true,
       "stop_radius_m": 5
@@ -2487,8 +2487,8 @@
       "type": "office",
       "latitude": 40.115615,
       "longitude": -75.1088966944,
-      "x": 0,
-      "y": 0,
+      "x": 50,
+      "y": 50,
       "qr_code": "QR_SUTH_F4_409"
     },
     {
@@ -2499,8 +2499,8 @@
       "type": "office",
       "latitude": 40.1156013611,
       "longitude": -75.1087883611,
-      "x": 0,
-      "y": 0,
+      "x": 50,
+      "y": 50,
       "qr_code": "QR_SUTH_F4_408"
     },
     {
@@ -2511,8 +2511,8 @@
       "type": "office",
       "latitude": 40.1155741667,
       "longitude": -75.1088081667,
-      "x": 0,
-      "y": 0,
+      "x": 50,
+      "y": 50,
       "qr_code": "QR_SUTH_F4_407"
     },
     {
@@ -2523,8 +2523,8 @@
       "type": "office",
       "latitude": 40.1155805,
       "longitude": -75.1087973056,
-      "x": 0,
-      "y": 0,
+      "x": 950,
+      "y": 950,
       "qr_code": "QR_SUTH_F4_406"
     },
     {
@@ -2535,8 +2535,8 @@
       "type": "office",
       "latitude": 40.1158818056,
       "longitude": -75.1092049167,
-      "x": 0,
-      "y": 0,
+      "x": 50,
+      "y": 50,
       "qr_code": "QR_SUTH_F4_405"
     },
     {
@@ -2547,8 +2547,8 @@
       "type": "office",
       "latitude": 40.1155029444,
       "longitude": -75.1089024167,
-      "x": 0,
-      "y": 0,
+      "x": 950,
+      "y": 950,
       "qr_code": "QR_SUTH_F4_404"
     },
     {
@@ -2559,8 +2559,8 @@
       "type": "office",
       "latitude": 40.1156772778,
       "longitude": -75.1088363611,
-      "x": 0,
-      "y": 0,
+      "x": 50,
+      "y": 50,
       "qr_code": "QR_SUTH_F4_403B"
     },
     {
@@ -2571,8 +2571,8 @@
       "type": "office",
       "latitude": 40.1156952778,
       "longitude": -75.1088509306,
-      "x": 0,
-      "y": 0,
+      "x": 950,
+      "y": 950,
       "qr_code": "QR_SUTH_F4_403A"
     },
     {
@@ -2583,8 +2583,8 @@
       "type": "office",
       "latitude": 40.1156837222,
       "longitude": -75.1086025833,
-      "x": 0,
-      "y": 0,
+      "x": 50,
+      "y": 50,
       "qr_code": "QR_SUTH_F4_403"
     },
     {
@@ -2595,8 +2595,8 @@
       "type": "office",
       "latitude": 40.1156837222,
       "longitude": -75.1086025833,
-      "x": 0,
-      "y": 0,
+      "x": 950,
+      "y": 950,
       "qr_code": "QR_SUTH_F4_410"
     },
     {
@@ -2607,8 +2607,8 @@
       "type": "office",
       "latitude": 40.1157263333,
       "longitude": -75.1088281389,
-      "x": 0,
-      "y": 0,
+      "x": 950,
+      "y": 950,
       "qr_code": "QR_SUTH_F4_411"
     },
     {
@@ -2619,8 +2619,8 @@
       "type": "office",
       "latitude": 40.1157339167,
       "longitude": -75.1087466389,
-      "x": 0,
-      "y": 0,
+      "x": 50,
+      "y": 50,
       "qr_code": "QR_SUTH_F4_412"
     },
     {
@@ -2631,8 +2631,8 @@
       "type": "office",
       "latitude": 40.1156077778,
       "longitude": -75.1087495556,
-      "x": 0,
-      "y": 0,
+      "x": 950,
+      "y": 950,
       "qr_code": "QR_SUTH_F4_413"
     },
     {
@@ -2643,8 +2643,8 @@
       "type": "office",
       "latitude": 40.1157076111,
       "longitude": -75.1086652222,
-      "x": 0,
-      "y": 0,
+      "x": 950,
+      "y": 950,
       "qr_code": "QR_SUTH_F4_414"
     },
     {
@@ -2655,8 +2655,8 @@
       "type": "office",
       "latitude": 40.1156967222,
       "longitude": -75.1087026667,
-      "x": 0,
-      "y": 0,
+      "x": 950,
+      "y": 950,
       "qr_code": "QR_SUTH_F4_415"
     },
     {
@@ -2667,8 +2667,8 @@
       "type": "office",
       "latitude": 40.1160110833,
       "longitude": -75.1086610278,
-      "x": 0,
-      "y": 0,
+      "x": 950,
+      "y": 950,
       "qr_code": "QR_SUTH_F4_416"
     },
     {
@@ -2679,8 +2679,8 @@
       "type": "office",
       "latitude": 40.1160996944,
       "longitude": -75.10846025,
-      "x": 0,
-      "y": 0,
+      "x": 950,
+      "y": 950,
       "qr_code": "QR_SUTH_F4_417S"
     },
     {
@@ -2691,8 +2691,8 @@
       "type": "office",
       "latitude": 40.1160101944,
       "longitude": -75.1084646389,
-      "x": 0,
-      "y": 0,
+      "x": 950,
+      "y": 950,
       "qr_code": "QR_SUTH_F4_418"
     },
     {
@@ -2703,8 +2703,8 @@
       "type": "office",
       "latitude": 40.1169443611,
       "longitude": -75.1084318611,
-      "x": 0,
-      "y": 0,
+      "x": 950,
+      "y": 950,
       "qr_code": "QR_SUTH_F3_320A"
     },
     {
@@ -2715,8 +2715,8 @@
       "type": "office",
       "latitude": 40.1155689722,
       "longitude": -75.1086421389,
-      "x": 0,
-      "y": 0,
+      "x": 950,
+      "y": 950,
       "qr_code": "QR_SUTH_F3_321"
     },
     {
@@ -2727,8 +2727,8 @@
       "type": "office",
       "latitude": 40.1156507778,
       "longitude": -75.1084374167,
-      "x": 0,
-      "y": 0,
+      "x": 50,
+      "y": 50,
       "qr_code": "QR_SUTH_F3_322"
     },
     {
@@ -2739,8 +2739,8 @@
       "type": "office",
       "latitude": 40.1157139167,
       "longitude": -75.1082741944,
-      "x": 0,
-      "y": 0,
+      "x": 950,
+      "y": 950,
       "qr_code": "QR_SUTH_F3_323"
     },
     {
@@ -2751,8 +2751,8 @@
       "type": "office",
       "latitude": 40.1159135833,
       "longitude": -75.1083144167,
-      "x": 0,
-      "y": 0,
+      "x": 950,
+      "y": 950,
       "qr_code": "QR_SUTH_F3_325"
     },
     {
@@ -2763,8 +2763,8 @@
       "type": "office",
       "latitude": 40.1159239722,
       "longitude": -75.1082675833,
-      "x": 0,
-      "y": 0,
+      "x": 50,
+      "y": 50,
       "qr_code": "QR_SUTH_F3_324"
     },
     {
@@ -2775,8 +2775,8 @@
       "type": "office",
       "latitude": 40.1159309999,
       "longitude": -75.1082764722,
-      "x": 0,
-      "y": 0,
+      "x": 950,
+      "y": 950,
       "qr_code": "QR_SUTH_F3_326"
     },
     {
@@ -2787,8 +2787,8 @@
       "type": "office",
       "latitude": 40.1157461111,
       "longitude": -75.1084647222,
-      "x": 0,
-      "y": 0,
+      "x": 50,
+      "y": 50,
       "qr_code": "QR_SUTH_F3_327"
     },
     {
@@ -2799,8 +2799,8 @@
       "type": "office",
       "latitude": 40.1157690556,
       "longitude": -75.1084200833,
-      "x": 0,
-      "y": 0,
+      "x": 50,
+      "y": 50,
       "qr_code": "QR_SUTH_F3_328"
     },
     {
@@ -2811,8 +2811,8 @@
       "type": "office",
       "latitude": 40.1158412222,
       "longitude": -75.1083312778,
-      "x": 0,
-      "y": 0,
+      "x": 950,
+      "y": 950,
       "qr_code": "QR_SUTH_F3_329"
     },
     {
@@ -2823,8 +2823,8 @@
       "type": "office",
       "latitude": 40.115769,
       "longitude": -75.1084149722,
-      "x": 0,
-      "y": 0,
+      "x": 950,
+      "y": 950,
       "qr_code": "QR_SUTH_F3_330"
     },
     {
@@ -2835,8 +2835,8 @@
       "type": "office",
       "latitude": 40.1156872778,
       "longitude": -75.1085506944,
-      "x": 0,
-      "y": 0,
+      "x": 950,
+      "y": 950,
       "qr_code": "QR_SUTH_F3_317"
     },
     {
@@ -2847,8 +2847,8 @@
       "type": "office",
       "latitude": 40.1146335278,
       "longitude": -75.1101987222,
-      "x": 0,
-      "y": 0,
+      "x": 950,
+      "y": 950,
       "qr_code": "QR_SUTH_F3_332"
     },
     {
@@ -2859,8 +2859,8 @@
       "type": "office",
       "latitude": 40.1151632222,
       "longitude": -75.1095846667,
-      "x": 0,
-      "y": 0,
+      "x": 950,
+      "y": 950,
       "qr_code": "QR_SUTH_F3_333"
     },
     {
@@ -2871,8 +2871,8 @@
       "type": "office",
       "latitude": 40.1159619167,
       "longitude": -75.1087069167,
-      "x": 0,
-      "y": 0,
+      "x": 50,
+      "y": 50,
       "qr_code": "QR_SUTH_F3_316"
     },
     {
@@ -2883,8 +2883,8 @@
       "type": "office",
       "latitude": 40.1159621667,
       "longitude": -75.1087061111,
-      "x": 0,
-      "y": 0,
+      "x": 950,
+      "y": 950,
       "qr_code": "QR_SUTH_F3_334"
     },
     {
@@ -2895,8 +2895,8 @@
       "type": "office",
       "latitude": 40.1159920278,
       "longitude": -75.1089317778,
-      "x": 0,
-      "y": 0,
+      "x": 950,
+      "y": 950,
       "qr_code": "QR_SUTH_F3_335"
     },
     {
@@ -2907,8 +2907,8 @@
       "type": "office",
       "latitude": 40.1159188056,
       "longitude": -75.1089958333,
-      "x": 0,
-      "y": 0,
+      "x": 950,
+      "y": 950,
       "qr_code": "QR_SUTH_F3_301"
     },
     {
@@ -2919,8 +2919,8 @@
       "type": "office",
       "latitude": 40.1158121667,
       "longitude": -75.1090147778,
-      "x": 0,
-      "y": 0,
+      "x": 950,
+      "y": 950,
       "qr_code": "QR_SUTH_F3_315"
     },
     {
@@ -2931,8 +2931,8 @@
       "type": "office",
       "latitude": 40.1157614722,
       "longitude": -75.1087601667,
-      "x": 0,
-      "y": 0,
+      "x": 950,
+      "y": 950,
       "qr_code": "QR_SUTH_F3_302"
     },
     {
@@ -2943,8 +2943,8 @@
       "type": "office",
       "latitude": 40.1156701389,
       "longitude": -75.1087296944,
-      "x": 0,
-      "y": 0,
+      "x": 950,
+      "y": 950,
       "qr_code": "QR_SUTH_F3_314"
     },
     {
@@ -2955,8 +2955,8 @@
       "type": "office",
       "latitude": 40.11566875,
       "longitude": -75.1089263889,
-      "x": 0,
-      "y": 0,
+      "x": 950,
+      "y": 950,
       "qr_code": "QR_SUTH_F3_303"
     },
     {
@@ -2967,8 +2967,8 @@
       "type": "office",
       "latitude": 40.11577775,
       "longitude": -75.1087793056,
-      "x": 0,
-      "y": 0,
+      "x": 950,
+      "y": 950,
       "qr_code": "QR_SUTH_F3_313"
     },
     {
@@ -2979,8 +2979,8 @@
       "type": "office",
       "latitude": 40.11573975,
       "longitude": -75.10885675,
-      "x": 0,
-      "y": 0,
+      "x": 950,
+      "y": 950,
       "qr_code": "QR_SUTH_F3_305A"
     },
     {
@@ -2991,8 +2991,8 @@
       "type": "office",
       "latitude": 40.1156388889,
       "longitude": -75.1088329999,
-      "x": 0,
-      "y": 0,
+      "x": 950,
+      "y": 950,
       "qr_code": "QR_SUTH_F3_312"
     },
     {
@@ -3003,8 +3003,8 @@
       "type": "office",
       "latitude": 40.1155317778,
       "longitude": -75.1088064444,
-      "x": 0,
-      "y": 0,
+      "x": 950,
+      "y": 950,
       "qr_code": "QR_SUTH_F3_310A"
     },
     {
@@ -3015,8 +3015,8 @@
       "type": "office",
       "latitude": 40.1155317778,
       "longitude": -75.1088065,
-      "x": 0,
-      "y": 0,
+      "x": 950,
+      "y": 950,
       "qr_code": "QR_SUTH_F3_310B"
     },
     {
@@ -3027,8 +3027,8 @@
       "type": "office",
       "latitude": 40.1154790833,
       "longitude": -75.10887225,
-      "x": 0,
-      "y": 0,
+      "x": 950,
+      "y": 950,
       "qr_code": "QR_SUTH_F3_310CD"
     },
     {
@@ -3039,8 +3039,8 @@
       "type": "office",
       "latitude": 40.1158404167,
       "longitude": -75.108782,
-      "x": 0,
-      "y": 0,
+      "x": 950,
+      "y": 950,
       "qr_code": "QR_SUTH_F2_221"
     },
     {
@@ -3051,8 +3051,8 @@
       "type": "office",
       "latitude": 40.1159741667,
       "longitude": -75.1084079167,
-      "x": 0,
-      "y": 0,
+      "x": 950,
+      "y": 950,
       "qr_code": "QR_SUTH_F2_223"
     },
     {
@@ -3063,8 +3063,8 @@
       "type": "office",
       "latitude": 40.1159649722,
       "longitude": -75.1083949444,
-      "x": 0,
-      "y": 0,
+      "x": 950,
+      "y": 950,
       "qr_code": "QR_SUTH_F2_224B"
     },
     {
@@ -3075,8 +3075,8 @@
       "type": "office",
       "latitude": 40.1159774444,
       "longitude": -75.1084389444,
-      "x": 0,
-      "y": 0,
+      "x": 950,
+      "y": 950,
       "qr_code": "QR_SUTH_F2_220B"
     },
     {
@@ -3087,8 +3087,8 @@
       "type": "office",
       "latitude": 40.1160388889,
       "longitude": -75.1084957778,
-      "x": 0,
-      "y": 0,
+      "x": 950,
+      "y": 950,
       "qr_code": "QR_SUTH_F2_219"
     },
     {
@@ -3099,8 +3099,8 @@
       "type": "office",
       "latitude": 40.1160471944,
       "longitude": -75.1085529722,
-      "x": 0,
-      "y": 0,
+      "x": 950,
+      "y": 950,
       "qr_code": "QR_SUTH_F3_LINDSAY_WOOD"
     },
     {
@@ -3111,8 +3111,8 @@
       "type": "office",
       "latitude": 40.1160435278,
       "longitude": -75.1085539722,
-      "x": 0,
-      "y": 0,
+      "x": 950,
+      "y": 950,
       "qr_code": "QR_SUTH_F2_225"
     },
     {
@@ -3123,8 +3123,8 @@
       "type": "office",
       "latitude": 40.1157254722,
       "longitude": -75.1085855833,
-      "x": 0,
-      "y": 0,
+      "x": 950,
+      "y": 950,
       "qr_code": "QR_SUTH_F2_205"
     },
     {
@@ -3135,8 +3135,8 @@
       "type": "office",
       "latitude": 40.1156455833,
       "longitude": -75.1087860278,
-      "x": 0,
-      "y": 0,
+      "x": 950,
+      "y": 950,
       "qr_code": "QR_SUTH_F2_214"
     },
     {
@@ -3147,8 +3147,8 @@
       "type": "office",
       "latitude": 40.1155342222,
       "longitude": -75.1087668333,
-      "x": 0,
-      "y": 0,
+      "x": 950,
+      "y": 950,
       "qr_code": "QR_SUTH_F2_207"
     },
     {
@@ -3159,8 +3159,8 @@
       "type": "office",
       "latitude": 40.1155079167,
       "longitude": -75.1088191389,
-      "x": 0,
-      "y": 0,
+      "x": 950,
+      "y": 950,
       "qr_code": "QR_SUTH_F2_212"
     },
     {
@@ -3171,8 +3171,8 @@
       "type": "office",
       "latitude": 40.1159054722,
       "longitude": -75.108385,
-      "x": 0,
-      "y": 0,
+      "x": 950,
+      "y": 950,
       "qr_code": "QR_SUTH_F1_BONI_FERNANDES_WOZOLEK"
     },
     {
@@ -3183,8 +3183,8 @@
       "type": "office",
       "latitude": 40.1159425833,
       "longitude": -75.1086476111,
-      "x": 0,
-      "y": 0,
+      "x": 950,
+      "y": 950,
       "qr_code": "QR_SUTH_F1_117A"
     },
     {
@@ -3195,8 +3195,8 @@
       "type": "office",
       "latitude": 40.1159007222,
       "longitude": -75.1086970833,
-      "x": 0,
-      "y": 0,
+      "x": 950,
+      "y": 950,
       "qr_code": "QR_SUTH_F1_117"
     },
     {
@@ -3207,8 +3207,8 @@
       "type": "office",
       "latitude": 40.1159306667,
       "longitude": -75.1086643611,
-      "x": 0,
-      "y": 0,
+      "x": 950,
+      "y": 950,
       "qr_code": "QR_SUTH_F1_124"
     },
     {
@@ -3219,8 +3219,8 @@
       "type": "office",
       "latitude": 40.1159016944,
       "longitude": -75.1086692222,
-      "x": 0,
-      "y": 0,
+      "x": 950,
+      "y": 950,
       "qr_code": "QR_SUTH_F1_125"
     },
     {
@@ -3231,8 +3231,8 @@
       "type": "office",
       "latitude": 40.1158366111,
       "longitude": -75.1087675833,
-      "x": 0,
-      "y": 0,
+      "x": 950,
+      "y": 950,
       "qr_code": "QR_SUTH_F1_115"
     },
     {
@@ -3243,8 +3243,8 @@
       "type": "office",
       "latitude": 40.1158835833,
       "longitude": -75.1087516389,
-      "x": 0,
-      "y": 0,
+      "x": 950,
+      "y": 950,
       "qr_code": "QR_SUTH_F1_101A"
     },
     {
@@ -3255,8 +3255,8 @@
       "type": "office",
       "latitude": 40.1158156944,
       "longitude": -75.1089881944,
-      "x": 0,
-      "y": 0,
+      "x": 950,
+      "y": 950,
       "qr_code": "QR_SUTH_F1_101"
     },
     {
@@ -3267,8 +3267,8 @@
       "type": "office",
       "latitude": 40.11582025,
       "longitude": -75.1088163333,
-      "x": 0,
-      "y": 0,
+      "x": 950,
+      "y": 950,
       "qr_code": "QR_SUTH_F1_102"
     },
     {
@@ -3279,8 +3279,8 @@
       "type": "hall",
       "latitude": 40.1148415833,
       "longitude": -75.1115499444,
-      "x": 0,
-      "y": 0,
+      "x": 50,
+      "y": 950,
       "qr_code": "QR_ATH_F2_LANDING"
     },
     {
@@ -3291,8 +3291,8 @@
       "type": "office",
       "latitude": 40.11716,
       "longitude": -75.110521,
-      "x": 771.14,
-      "y": 197.66,
+      "x": 770.6,
+      "y": 201.9,
       "qr_code": "QR_WOOD_F1_102"
     },
     {
@@ -3303,8 +3303,8 @@
       "type": "office",
       "latitude": 40.117138,
       "longitude": -75.110538,
-      "x": 779.82,
-      "y": 197.6,
+      "x": 779.8,
+      "y": 202.9,
       "qr_code": "QR_WOOD_F1_103"
     },
     {
@@ -3327,8 +3327,8 @@
       "type": "office",
       "latitude": 40.116946,
       "longitude": -75.11064,
-      "x": 653.13,
-      "y": 391.42,
+      "x": 654.8,
+      "y": 392.5,
       "qr_code": "QR_WOOD_F1_118"
     },
     {
@@ -3339,8 +3339,8 @@
       "type": "classroom",
       "latitude": 40.117059,
       "longitude": -75.110819,
-      "x": 634.5,
-      "y": 414.49,
+      "x": 633.4,
+      "y": 416.6,
       "qr_code": "QR_WOOD_F1_119"
     },
     {
@@ -3375,8 +3375,8 @@
       "type": "classroom",
       "latitude": 40.11692,
       "longitude": -75.11063,
-      "x": 512.1,
-      "y": 440.65,
+      "x": 518,
+      "y": 438.5,
       "qr_code": "QR_WOOD_F1_124"
     },
     {
@@ -3459,8 +3459,8 @@
       "type": "elevator",
       "latitude": 40.1170594444,
       "longitude": -75.1107976944,
-      "x": 630.97,
-      "y": 223.45,
+      "x": 634.7,
+      "y": 220.8,
       "qr_code": "QR_WOOD_F1_ELEVATOR",
       "requires_scan": true,
       "stop_radius_m": 3
@@ -3473,8 +3473,8 @@
       "type": "entrance",
       "latitude": 40.11672,
       "longitude": -75.11095,
-      "x": 683.67,
-      "y": 254.18,
+      "x": 691.7,
+      "y": 254.7,
       "qr_code": "QR_WOOD_F1_MAIN_ENTRANCE",
       "photo": "../assets/WoodlandImages/Level1_Entry.jpg",
       "approach_latitude": 40.11665,
@@ -3491,7 +3491,7 @@
       "latitude": 40.117235,
       "longitude": -75.110571,
       "x": 710.51,
-      "y": 45.0,
+      "y": 45,
       "qr_code": "QR_WOOD_F2_203"
     },
     {
@@ -3538,7 +3538,7 @@
       "type": "office",
       "latitude": 40.116964,
       "longitude": -75.110886,
-      "x": 532.0,
+      "x": 532,
       "y": 271.48,
       "qr_code": "QR_WOOD_F2_218"
     },
@@ -4068,8 +4068,8 @@
       "floor": "1",
       "label": "Woodland Library",
       "type": "office",
-      "x": 677.91,
-      "y": 231.75,
+      "x": 710.9,
+      "y": 163.1,
       "qr_code": "QR_WOOD_F1_LIBRARY"
     },
     {
@@ -4080,8 +4080,8 @@
       "type": "entrance",
       "latitude": 40.11686,
       "longitude": -75.11095,
-      "x": 498.48,
-      "y": 442.09,
+      "x": 490.9,
+      "y": 441.6,
       "qr_code": "QR_WOOD_F1_ENTRANCE_SIDE_1",
       "approach_latitude": 40.11679,
       "approach_longitude": -75.11098,
@@ -4096,8 +4096,8 @@
       "type": "entrance",
       "latitude": 40.11683,
       "longitude": -75.1109,
-      "x": 431.17,
-      "y": 532.71,
+      "x": 433.3,
+      "y": 529,
       "qr_code": "QR_WOOD_F1_ENTRANCE_SIDE_2",
       "approach_latitude": 40.11676,
       "approach_longitude": -75.11093,
@@ -4121,18 +4121,6 @@
       "stop_radius_m": 5
     },
     {
-      "id": "wp_wood_101",
-      "building": "woodland",
-      "floor": "1",
-      "label": "Room 101",
-      "type": "office",
-      "latitude": 40.1172,
-      "longitude": -75.1105,
-      "x": 745.0,
-      "y": 188.0,
-      "qr_code": "QR_WOOD_F1_101"
-    },
-    {
       "id": "wp_wood_104",
       "building": "woodland",
       "floor": "1",
@@ -4140,8 +4128,8 @@
       "type": "office",
       "latitude": 40.11718,
       "longitude": -75.110545,
-      "x": 792.0,
-      "y": 205.0,
+      "x": 698.4,
+      "y": 50.7,
       "qr_code": "QR_WOOD_F1_104"
     },
     {
@@ -4152,8 +4140,8 @@
       "type": "office",
       "latitude": 40.11717,
       "longitude": -75.11056,
-      "x": 780.0,
-      "y": 220.0,
+      "x": 691.1,
+      "y": 65.2,
       "qr_code": "QR_WOOD_F1_105"
     },
     {
@@ -4164,8 +4152,8 @@
       "type": "office",
       "latitude": 40.117145,
       "longitude": -75.1106,
-      "x": 748.0,
-      "y": 255.0,
+      "x": 693.2,
+      "y": 88.5,
       "qr_code": "QR_WOOD_F1_107"
     },
     {
@@ -4176,8 +4164,8 @@
       "type": "office",
       "latitude": 40.117135,
       "longitude": -75.110618,
-      "x": 734.0,
-      "y": 274.0,
+      "x": 660.6,
+      "y": 147.8,
       "qr_code": "QR_WOOD_F1_108"
     },
     {
@@ -4188,8 +4176,8 @@
       "type": "office",
       "latitude": 40.117095,
       "longitude": -75.110735,
-      "x": 612.0,
-      "y": 332.0,
+      "x": 632.8,
+      "y": 196.9,
       "qr_code": "QR_WOOD_F1_111"
     },
     {
@@ -4200,8 +4188,8 @@
       "type": "office",
       "latitude": 40.11707,
       "longitude": -75.11077,
-      "x": 575.0,
-      "y": 352.0,
+      "x": 574.4,
+      "y": 293,
       "qr_code": "QR_WOOD_F1_113"
     },
     {
@@ -4212,8 +4200,8 @@
       "type": "office",
       "latitude": 40.117,
       "longitude": -75.110745,
-      "x": 612.0,
-      "y": 388.0,
+      "x": 565.7,
+      "y": 309.3,
       "qr_code": "QR_WOOD_F1_115"
     },
     {
@@ -4224,8 +4212,8 @@
       "type": "office",
       "latitude": 40.116965,
       "longitude": -75.110695,
-      "x": 666.0,
-      "y": 420.0,
+      "x": 533.5,
+      "y": 357.2,
       "qr_code": "QR_WOOD_F1_117"
     },
     {
@@ -4236,8 +4224,8 @@
       "type": "classroom",
       "latitude": 40.11693,
       "longitude": -75.110785,
-      "x": 566.0,
-      "y": 392.0,
+      "x": 627.9,
+      "y": 391.5,
       "qr_code": "QR_WOOD_F1_120"
     },
     {
@@ -4248,8 +4236,8 @@
       "type": "classroom",
       "latitude": 40.116905,
       "longitude": -75.110815,
-      "x": 535.0,
-      "y": 410.0,
+      "x": 535,
+      "y": 410,
       "qr_code": "QR_WOOD_F1_122"
     },
     {
@@ -4260,8 +4248,8 @@
       "type": "classroom",
       "latitude": 40.1167,
       "longitude": -75.11102,
-      "x": 435.0,
-      "y": 560.0,
+      "x": 435,
+      "y": 560,
       "qr_code": "QR_WOOD_F1_127"
     },
     {
@@ -4272,8 +4260,8 @@
       "type": "classroom",
       "latitude": 40.11666,
       "longitude": -75.111035,
-      "x": 420.0,
-      "y": 605.0,
+      "x": 432.7,
+      "y": 612.9,
       "qr_code": "QR_WOOD_F1_128"
     },
     {
@@ -4284,8 +4272,8 @@
       "type": "classroom",
       "latitude": 40.11661,
       "longitude": -75.11106,
-      "x": 402.0,
-      "y": 655.0,
+      "x": 447.8,
+      "y": 631.1,
       "qr_code": "QR_WOOD_F1_129"
     },
     {
@@ -4296,8 +4284,8 @@
       "type": "classroom",
       "latitude": 40.11657,
       "longitude": -75.111085,
-      "x": 384.0,
-      "y": 700.0,
+      "x": 384,
+      "y": 700,
       "qr_code": "QR_WOOD_F1_130"
     },
     {
@@ -4308,8 +4296,8 @@
       "type": "classroom",
       "latitude": 40.116525,
       "longitude": -75.111105,
-      "x": 360.0,
-      "y": 742.0,
+      "x": 360,
+      "y": 742,
       "qr_code": "QR_WOOD_F1_131"
     },
     {
@@ -4320,8 +4308,8 @@
       "type": "classroom",
       "latitude": 40.116505,
       "longitude": -75.111112,
-      "x": 345.0,
-      "y": 760.0,
+      "x": 345,
+      "y": 760,
       "qr_code": "QR_WOOD_F1_132A"
     },
     {
@@ -4703,19 +4691,14 @@
       "qr_code": "QR_SUTH_F4_SIDE_STAIRS",
       "latitude": 40.115815,
       "longitude": -75.108824,
-      "x": 0,
-      "y": 0,
+      "x": 950,
+      "y": 950,
       "accessible": false,
       "requires_scan": true,
       "stop_radius_m": 3
     }
   ],
   "edges": [
-    {
-      "from": "wp_wood_101",
-      "to": "wp_wood_f1_hall_02",
-      "accessible": true
-    },
     {
       "from": "wp_wood_102",
       "to": "wp_wood_f1_hall_02",
@@ -4752,11 +4735,6 @@
       "accessible": true
     },
     {
-      "from": "wp_wood_111",
-      "to": "wp_wood_f1_hall_05",
-      "accessible": true
-    },
-    {
       "from": "wp_wood_112",
       "to": "wp_wood_f1_hall_07",
       "accessible": true
@@ -4764,11 +4742,6 @@
     {
       "from": "wp_wood_113",
       "to": "wp_wood_f1_hall_04",
-      "accessible": true
-    },
-    {
-      "from": "wp_wood_113",
-      "to": "wp_wood_f1_hall_05",
       "accessible": true
     },
     {
@@ -4794,16 +4767,6 @@
     {
       "from": "wp_wood_119",
       "to": "wp_wood_f1_hall_06",
-      "accessible": true
-    },
-    {
-      "from": "wp_wood_120",
-      "to": "wp_wood_f1_hall_06",
-      "accessible": true
-    },
-    {
-      "from": "wp_wood_120",
-      "to": "wp_wood_f1_hall_07",
       "accessible": true
     },
     {
@@ -4944,16 +4907,6 @@
     {
       "from": "wp_wood_elevator_f1",
       "to": "wp_wood_elevator_f2",
-      "accessible": true
-    },
-    {
-      "from": "wp_wood_elevator_f1",
-      "to": "wp_wood_f1_hall_02",
-      "accessible": true
-    },
-    {
-      "from": "wp_wood_elevator_f1",
-      "to": "wp_wood_main_entrance",
       "accessible": true
     },
     {
@@ -8075,6 +8028,31 @@
       "from": "wp_suth_f4_side_stairs",
       "to": "wp_suth_f2_stairs",
       "accessible": false
+    },
+    {
+      "from": "wp_wood_f1_staircase",
+      "to": "wp_wood_f1_hall_01",
+      "accessible": true
+    },
+    {
+      "from": "wp_wood_111",
+      "to": "wp_wood_f1_hall_01",
+      "accessible": true
+    },
+    {
+      "from": "wp_wood_113",
+      "to": "wp_wood_f1_hall_03",
+      "accessible": true
+    },
+    {
+      "from": "wp_wood_120",
+      "to": "wp_wood_f1_hall_06",
+      "accessible": true
+    },
+    {
+      "from": "wp_wood_f1_hall_01",
+      "to": "wp_wood_elevator_f1",
+      "accessible": true
     }
   ],
   "rooms": [
