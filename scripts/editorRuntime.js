@@ -422,6 +422,7 @@ function fullRender() {
     svg.setAttribute('width', '1000');
     svg.setAttribute('height', '1000');
     svg.style.display = 'block';
+    svg._listenersBound = false;
     zroot.innerHTML = '';
     zroot.appendChild(svg);
   }
@@ -440,7 +441,12 @@ function fullRender() {
     e.stopPropagation();
   };
 
-  bindEvents(svg);
+  // Only bind event listeners once per SVG element — prevents stacking
+  // across fullRender() calls which reuse the same svg element via innerHTML
+  if (!svg._listenersBound) {
+    svg._listenersBound = true;
+    bindEvents(svg);
+  }
 }
 
 // Alias for backward compat — full render when called without hot-path context
