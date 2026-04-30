@@ -5461,10 +5461,10 @@
       "y": 193.3
     },
     {
-      "id": "Sutherland_Fourth_Floor_Hall_6",
+      "id": "wp_suth_f4_hall_06",
       "building": "sutherland",
       "floor": "4",
-      "label": "wp_suth_f4_hall_06",
+      "label": "Sutherland_Fourth_Floor_Hall_6",
       "type": "hallway",
       "x": 699.2,
       "y": 231.9
