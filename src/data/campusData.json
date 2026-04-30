@@ -578,8 +578,8 @@
       "type": "dining",
       "latitude": 40.116785,
       "longitude": -75.109094,
-      "x": 459.78,
-      "y": 488.17,
+      "x": 480.3,
+      "y": 559.1,
       "qr_code": "QR_LARES_F1_111"
     },
     {
@@ -5314,9 +5314,9 @@
       "building": "lares",
       "floor": "1",
       "label": "Cafeteria",
-      "type": "recreation",
-      "x": 244.5,
-      "y": 529.9
+      "type": "dining",
+      "x": 392.6,
+      "y": 406.5
     },
     {
       "id": "wp_lares_f1_hall_09",
@@ -5595,6 +5595,15 @@
       "type": "hallway",
       "x": 699.2,
       "y": 231.9
+    },
+    {
+      "id": "wp_dining_room",
+      "building": "lares",
+      "floor": "1",
+      "label": "Dining Room",
+      "type": "lounge",
+      "x": 239.8,
+      "y": 572
     }
   ],
   "edges": [
@@ -10947,6 +10956,11 @@
     {
       "from": "wp_suth_f4_stairsb",
       "to": "wp_suth_f2_stairsb",
+      "accessible": true
+    },
+    {
+      "from": "wp_lares_cafe",
+      "to": "wp_lares_111",
       "accessible": true
     }
   ],
