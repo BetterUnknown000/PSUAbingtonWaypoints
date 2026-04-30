@@ -1552,8 +1552,8 @@
       "type": "hallway",
       "latitude": 40.117045,
       "longitude": -75.110636,
-      "x": 657.2,
-      "y": 242.4,
+      "x": 669.3,
+      "y": 245.4,
       "qr_code": "QR_WOOD_F1_HALL_02",
       "requires_scan": false,
       "stop_radius_m": 3
@@ -1592,7 +1592,7 @@
       "id": "wp_wood_f1_hall_04",
       "building": "woodland",
       "floor": "1",
-      "label": "F1 Hall - Center",
+      "label": "F1 Hall - North Junction",
       "type": "hallway",
       "latitude": 40.116936,
       "longitude": -75.110827,
@@ -1636,7 +1636,7 @@
       "id": "wp_wood_f1_hall_07",
       "building": "woodland",
       "floor": "1",
-      "label": "F1 Hall - South Corridor",
+      "label": "F1 Hall - North Corridor",
       "type": "hallway",
       "latitude": 40.116899,
       "longitude": -75.110857,
@@ -3410,10 +3410,10 @@
       "qr_code": "QR_WOOD_F1_135"
     },
     {
-      "id": "wp_wood_136",
+      "id": "wp_wood_136a",
       "building": "woodland",
       "floor": "1",
-      "label": "Room 136",
+      "label": "Room 136A",
       "type": "classroom",
       "latitude": 40.116429,
       "longitude": -75.111215,
@@ -3430,7 +3430,7 @@
       "latitude": 40.1170594444,
       "longitude": -75.1107976944,
       "x": 633.4,
-      "y": 221.7,
+      "y": 223.5,
       "qr_code": "QR_WOOD_F1_ELEVATOR",
       "requires_scan": true,
       "stop_radius_m": 3
@@ -4666,6 +4666,33 @@
       "accessible": false,
       "requires_scan": true,
       "stop_radius_m": 3
+    },
+    {
+      "id": "wp_wood_136B",
+      "building": "woodland",
+      "floor": "1",
+      "label": "Room 136B",
+      "type": "classroom",
+      "x": 217.2,
+      "y": 877.3
+    },
+    {
+      "id": "wp_wood_f1_entrance_side_4",
+      "building": "woodland",
+      "floor": "1",
+      "label": "Woodland Side Entrance 4",
+      "type": "entrance",
+      "x": 294.7,
+      "y": 757.5
+    },
+    {
+      "id": "wp_wood_188a",
+      "building": "woodland",
+      "floor": "1",
+      "label": "Room 118A",
+      "type": "classroom",
+      "x": 645.4,
+      "y": 409.2
     }
   ],
   "edges": [
@@ -4750,7 +4777,7 @@
       "accessible": true
     },
     {
-      "from": "wp_wood_136",
+      "from": "wp_wood_136a",
       "to": "wp_wood_f1_hall_14",
       "accessible": true
     },
@@ -8023,6 +8050,21 @@
       "from": "wp_wood_f1_stairs_b",
       "to": "wp_wood_f1_hall_14",
       "accessible": true
+    },
+    {
+      "from": "wp_wood_136B",
+      "to": "wp_wood_136a",
+      "accessible": true
+    },
+    {
+      "from": "wp_wood_f1_entrance_side_4",
+      "to": "wp_wood_f1_stairs_b",
+      "accessible": true
+    },
+    {
+      "from": "wp_wood_f1_hall_06",
+      "to": "wp_wood_188a",
+      "accessible": true
     }
   ],
   "rooms": [
@@ -8382,7 +8424,7 @@
       "building": "woodland",
       "room_number": "136",
       "floor": "1",
-      "waypoint_id": "wp_wood_136",
+      "waypoint_id": "wp_wood_136a",
       "room_name": "Room 136",
       "type": "classroom"
     },
@@ -9896,7 +9938,7 @@
     },
     {
       "qr_id": "QR_WOOD_F1_136",
-      "waypoint_id": "wp_wood_136",
+      "waypoint_id": "wp_wood_136a",
       "building": "woodland",
       "floor": "1"
     },
