@@ -699,30 +699,16 @@
       "stop_radius_m": 5
     },
     {
-      "id": "wp_spring_100_outside",
+      "id": "wp_spring_entrance_east",
       "building": "springhouse",
       "floor": "1",
-      "label": "Room 100 - Outside Entrance",
+      "label": "Springhouse - East Entrance",
       "type": "entrance",
       "latitude": 40.11747,
       "longitude": -75.109735,
       "x": 945,
       "y": 600,
       "qr_code": "QR_SPRING_100_OUTSIDE",
-      "requires_scan": true,
-      "stop_radius_m": 5
-    },
-    {
-      "id": "wp_spring_100_inside",
-      "building": "springhouse",
-      "floor": "1",
-      "label": "Room 100 - Inside Entrance",
-      "type": "entrance",
-      "latitude": 40.11748,
-      "longitude": -75.109748,
-      "x": 548,
-      "y": 487,
-      "qr_code": "QR_SPRING_100_INSIDE",
       "requires_scan": true,
       "stop_radius_m": 5
     },
@@ -5085,7 +5071,7 @@
       "id": "wp_rydal_106",
       "building": "rydal",
       "floor": "1",
-      "label": "Room 106",
+      "label": "Lost and Found",
       "type": "office",
       "latitude": 40.115943295553386,
       "longitude": -75.1121632623846,
@@ -5469,6 +5455,69 @@
       "type": "stairs",
       "x": 816,
       "y": 754
+    },
+    {
+      "id": "wp_spring_entrance_west",
+      "building": "springhouse",
+      "floor": "1",
+      "label": "Springhouse - West Entrance",
+      "type": "entrance",
+      "x": 76.4,
+      "y": 367.4
+    },
+    {
+      "id": "wp_spring_102",
+      "building": "springhouse",
+      "floor": "1",
+      "label": "Room 102",
+      "type": "office",
+      "x": 85.2,
+      "y": 407.6
+    },
+    {
+      "id": "wp_spring_106",
+      "building": "springhouse",
+      "floor": "1",
+      "label": "Room 106",
+      "type": "lounge",
+      "x": 446.7,
+      "y": 514
+    },
+    {
+      "id": "wp_spring_107",
+      "building": "springhouse",
+      "floor": "1",
+      "label": "Room 107",
+      "type": "office",
+      "x": 507.9,
+      "y": 451
+    },
+    {
+      "id": "wp_spring_109",
+      "building": "springhouse",
+      "floor": "1",
+      "label": "Room 109",
+      "type": "office",
+      "x": 490.4,
+      "y": 497.4
+    },
+    {
+      "id": "wp_spring_corridor",
+      "building": "springhouse",
+      "floor": "1",
+      "label": "Springhouse Corridor",
+      "type": "hall",
+      "x": 519.2,
+      "y": 480.8
+    },
+    {
+      "id": "wp_spring_100",
+      "building": "springhouse",
+      "floor": "1",
+      "label": "Room 100",
+      "type": "classroom",
+      "x": 549,
+      "y": 489.5
     }
   ],
   "edges": [
@@ -6570,21 +6619,6 @@
     {
       "from": "wp_rydal_gnd_hall_01",
       "to": "wp_rydal_001",
-      "accessible": true
-    },
-    {
-      "from": "wp_spring_100_outside",
-      "to": "wp_spring_100_inside",
-      "accessible": true
-    },
-    {
-      "from": "wp_spring_100_inside",
-      "to": "wp_spring_entrance",
-      "accessible": true
-    },
-    {
-      "from": "wp_spring_entrance",
-      "to": "wp_spring_101",
       "accessible": true
     },
     {
@@ -9670,11 +9704,6 @@
     },
     {
       "from": "wp_spring_hall",
-      "to": "wp_spring_100_inside",
-      "accessible": true
-    },
-    {
-      "from": "wp_spring_hall",
       "to": "wp_spring_101",
       "accessible": true
     },
@@ -9731,6 +9760,66 @@
     {
       "from": "wp_lares_stairs_f1_2",
       "to": "wp_lares_stairs_f2",
+      "accessible": true
+    },
+    {
+      "from": "wp_spring_entrance_west",
+      "to": "wp_spring_102",
+      "accessible": true
+    },
+    {
+      "from": "wp_spring_102",
+      "to": "wp_spring_101",
+      "accessible": true
+    },
+    {
+      "from": "wp_spring_101",
+      "to": "wp_spring_106",
+      "accessible": true
+    },
+    {
+      "from": "wp_spring_hall",
+      "to": "wp_spring_106",
+      "accessible": true
+    },
+    {
+      "from": "wp_spring_hall",
+      "to": "wp_spring_corridor",
+      "accessible": true
+    },
+    {
+      "from": "wp_spring_hall",
+      "to": "wp_spring_109",
+      "accessible": true
+    },
+    {
+      "from": "wp_spring_hall",
+      "to": "wp_spring_107",
+      "accessible": true
+    },
+    {
+      "from": "wp_spring_107",
+      "to": "wp_spring_corridor",
+      "accessible": true
+    },
+    {
+      "from": "wp_spring_109",
+      "to": "wp_spring_corridor",
+      "accessible": true
+    },
+    {
+      "from": "wp_spring_109",
+      "to": "wp_spring_107",
+      "accessible": true
+    },
+    {
+      "from": "wp_spring_corridor",
+      "to": "wp_spring_100",
+      "accessible": true
+    },
+    {
+      "from": "wp_spring_100",
+      "to": "wp_spring_entrance_east",
       "accessible": true
     }
   ],
@@ -11869,7 +11958,7 @@
     },
     {
       "qr_id": "QR_SPRING_100_OUTSIDE",
-      "waypoint_id": "wp_spring_100_outside",
+      "waypoint_id": "wp_spring_entrance_east",
       "building": "springhouse",
       "floor": "1"
     },
