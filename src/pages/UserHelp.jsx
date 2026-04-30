@@ -51,7 +51,7 @@ const FAQS = [
     },
 ];
 
-const YOUTUBE_PLAYLIST_URL = "insert playlist once created"
+const YOUTUBE_PLAYLIST_URL = "https://youtube.com/playlist?list=PLf3IIMntMYZZdJuXB-9sZWISI1tdvd9kv&si=6Z1kQIsVb8AijLwI"
 
 function SectionHeader({ label }) {
     return (
