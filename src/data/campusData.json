@@ -43,11 +43,14 @@
       "longitude": -75.10921,
       "floors": [
         "ground",
-        "1"
+        "1",
+        "2"
       ],
       "entrances": [
         "wp_lares_main_entrance",
-        "wp_lares_side_entrance"
+        "wp_lares_side_entrance",
+        "wp_lares_ground_entrance",
+        "wp_lares_side_entrance_1"
       ]
     },
     {
@@ -148,8 +151,8 @@
       "type": "office",
       "latitude": 40.1160188889,
       "longitude": -75.1086260556,
-      "x": 91.4,
-      "y": 67,
+      "x": 50,
+      "y": 50,
       "qr_code": "QR_SUTH_F1_119"
     },
     {
@@ -160,8 +163,8 @@
       "type": "lounge",
       "latitude": 40.115941,
       "longitude": -75.108467,
-      "x": 29.3,
-      "y": 59.7,
+      "x": 50,
+      "y": 50,
       "qr_code": "QR_SUTH_F1_121"
     },
     {
@@ -172,8 +175,8 @@
       "type": "office",
       "latitude": 40.1160272778,
       "longitude": -75.1086155,
-      "x": 35.4,
-      "y": 23.2,
+      "x": 50,
+      "y": 50,
       "qr_code": "QR_SUTH_F1_122"
     },
     {
@@ -184,8 +187,8 @@
       "type": "office",
       "latitude": 40.1159700278,
       "longitude": -75.1086494722,
-      "x": 79.2,
-      "y": 23.2,
+      "x": 50,
+      "y": 50,
       "qr_code": "QR_SUTH_F1_123"
     },
     {
@@ -498,8 +501,8 @@
       "type": "elevator",
       "latitude": 40.115858,
       "longitude": -75.108815,
-      "x": 41.5,
-      "y": 91.4,
+      "x": 50,
+      "y": 50,
       "qr_code": "QR_SUTH_F1_ELEVATOR",
       "requires_scan": true,
       "stop_radius_m": 3
@@ -540,8 +543,8 @@
       "type": "entrance",
       "latitude": 40.116752,
       "longitude": -75.108928,
-      "x": 142.9,
-      "y": 279.6,
+      "x": 587.4,
+      "y": 797.2,
       "qr_code": "QR_LARES_GND_MAIN_ENTRANCE",
       "requires_scan": true,
       "stop_radius_m": 5
@@ -566,8 +569,8 @@
       "type": "lounge",
       "latitude": 40.11675,
       "longitude": -75.109007,
-      "x": 626.51,
-      "y": 559.62,
+      "x": 627.4,
+      "y": 560.4,
       "qr_code": "QR_LARES_F1_108"
     },
     {
@@ -590,8 +593,8 @@
       "type": "dining",
       "latitude": 40.116787,
       "longitude": -75.109091,
-      "x": 478.18,
-      "y": 559.57,
+      "x": 480,
+      "y": 558.7,
       "qr_code": "QR_LARES_F1_112"
     },
     {
@@ -614,8 +617,8 @@
       "type": "elevator",
       "latitude": 40.116712,
       "longitude": -75.109018,
-      "x": 709.7,
-      "y": 723.6,
+      "x": 710.7,
+      "y": 720.6,
       "qr_code": "QR_LARES_GND_ELEVATOR",
       "requires_scan": true,
       "stop_radius_m": 3
@@ -692,8 +695,8 @@
       "type": "entrance",
       "latitude": 40.117489,
       "longitude": -75.109782,
-      "x": 950,
-      "y": 950,
+      "x": 462,
+      "y": 292,
       "qr_code": "QR_SPRING_ENTRANCE",
       "requires_scan": true,
       "stop_radius_m": 5
@@ -706,8 +709,8 @@
       "type": "entrance",
       "latitude": 40.11747,
       "longitude": -75.109735,
-      "x": 50,
-      "y": 950,
+      "x": 945,
+      "y": 600,
       "qr_code": "QR_SPRING_100_OUTSIDE",
       "requires_scan": true,
       "stop_radius_m": 5
@@ -720,8 +723,8 @@
       "type": "entrance",
       "latitude": 40.11748,
       "longitude": -75.109748,
-      "x": 50,
-      "y": 50,
+      "x": 548,
+      "y": 487,
       "qr_code": "QR_SPRING_100_INSIDE",
       "requires_scan": true,
       "stop_radius_m": 5
@@ -734,8 +737,8 @@
       "type": "classroom",
       "latitude": 40.117485,
       "longitude": -75.109767,
-      "x": 950,
-      "y": 50,
+      "x": 426,
+      "y": 496,
       "qr_code": "QR_SPRING_101"
     },
     {
@@ -746,8 +749,8 @@
       "type": "entrance",
       "latitude": 40.114817,
       "longitude": -75.111579,
-      "x": 50,
-      "y": 50,
+      "x": 685.8,
+      "y": 139.3,
       "qr_code": "QR_ATH_F1_MAIN_ENTRANCE",
       "requires_scan": true,
       "stop_radius_m": 5
@@ -760,8 +763,8 @@
       "type": "recreation",
       "latitude": 40.114532,
       "longitude": -75.111789,
-      "x": 50,
-      "y": 50,
+      "x": 554.7,
+      "y": 490.8,
       "qr_code": "QR_ATH_F1_BASKETBALL_COURT"
     },
     {
@@ -772,8 +775,8 @@
       "type": "hallway",
       "latitude": 40.11695,
       "longitude": -75.109303,
-      "x": 370.07,
-      "y": 459.72,
+      "x": 680.1,
+      "y": 693.7,
       "qr_code": "QR_LARES_GND_HALL_01",
       "requires_scan": false,
       "stop_radius_m": 3
@@ -786,8 +789,8 @@
       "type": "hallway",
       "latitude": 40.116711,
       "longitude": -75.10902,
-      "x": 646.65,
-      "y": 667.33,
+      "x": 615.3,
+      "y": 640.6,
       "qr_code": "QR_LARES_GND_HALL_02",
       "requires_scan": false,
       "stop_radius_m": 3
@@ -814,8 +817,8 @@
       "type": "stairs",
       "latitude": 40.116764,
       "longitude": -75.108995,
-      "x": 666.08,
-      "y": 750.37,
+      "x": 666.7,
+      "y": 746.3,
       "qr_code": "QR_LARES_F1_STAIRS",
       "requires_scan": true,
       "stop_radius_m": 3
@@ -828,8 +831,8 @@
       "type": "hallway",
       "latitude": 40.116774,
       "longitude": -75.109,
-      "x": 677.15,
-      "y": 652.91,
+      "x": 667,
+      "y": 675.1,
       "qr_code": "QR_LARES_F1_HALL_01",
       "requires_scan": false,
       "stop_radius_m": 3
@@ -842,8 +845,8 @@
       "type": "hallway",
       "latitude": 40.116733,
       "longitude": -75.108953,
-      "x": 223.27,
-      "y": 383.24,
+      "x": 755.4,
+      "y": 685.6,
       "qr_code": "QR_LARES_F1_HALL_02",
       "requires_scan": false,
       "stop_radius_m": 3
@@ -982,8 +985,8 @@
       "type": "hallway",
       "latitude": 40.115869,
       "longitude": -75.108777,
-      "x": 120.6,
-      "y": 61,
+      "x": 50,
+      "y": 50,
       "qr_code": "QR_SUTH_F1_HALL_01",
       "requires_scan": false,
       "stop_radius_m": 3
@@ -1010,8 +1013,8 @@
       "type": "hallway",
       "latitude": 40.115937,
       "longitude": -75.108633,
-      "x": 91.4,
-      "y": 99.9,
+      "x": 50,
+      "y": 50,
       "qr_code": "QR_SUTH_F1_HALL_03",
       "requires_scan": false,
       "stop_radius_m": 3
@@ -1052,8 +1055,8 @@
       "type": "hallway",
       "latitude": 40.11596,
       "longitude": -75.108554,
-      "x": 67,
-      "y": 131.6,
+      "x": 50,
+      "y": 50,
       "qr_code": "QR_SUTH_F1_HALL_06",
       "requires_scan": false,
       "stop_radius_m": 3
@@ -1066,8 +1069,8 @@
       "type": "entrance",
       "latitude": 40.115906,
       "longitude": -75.108503,
-      "x": 155.9,
-      "y": 40.3,
+      "x": 50,
+      "y": 50,
       "qr_code": "QR_SUTH_F1_BACK_ENTRANCE",
       "requires_scan": true,
       "stop_radius_m": 5
@@ -1094,8 +1097,8 @@
       "type": "stairs",
       "latitude": 40.115974,
       "longitude": -75.108622,
-      "x": 330,
-      "y": 187.6,
+      "x": 50,
+      "y": 50,
       "qr_code": "QR_SUTH_F1_STAIRS",
       "requires_scan": true,
       "stop_radius_m": 3
@@ -1538,8 +1541,8 @@
       "type": "hallway",
       "latitude": 40.117091,
       "longitude": -75.110669,
-      "x": 614.8,
-      "y": 242.2,
+      "x": 620.59,
+      "y": 234.07,
       "qr_code": "QR_WOOD_F1_HALL_01",
       "requires_scan": false,
       "stop_radius_m": 3
@@ -1552,8 +1555,8 @@
       "type": "hallway",
       "latitude": 40.117045,
       "longitude": -75.110636,
-      "x": 669.3,
-      "y": 245.4,
+      "x": 654.31,
+      "y": 255.6,
       "qr_code": "QR_WOOD_F1_HALL_02",
       "requires_scan": false,
       "stop_radius_m": 3
@@ -1566,8 +1569,8 @@
       "type": "stairs",
       "latitude": 40.11705,
       "longitude": -75.11081,
-      "x": 579.3,
-      "y": 257.1,
+      "x": 568.04,
+      "y": 199.62,
       "qr_code": "QR_WOOD_F1_STAIRCASE",
       "photo": "../assets/WoodlandImages/Level1_Entry_1.jpg",
       "requires_scan": true,
@@ -1581,8 +1584,8 @@
       "type": "hallway",
       "latitude": 40.117045,
       "longitude": -75.110822,
-      "x": 591.5,
-      "y": 289.5,
+      "x": 584.89,
+      "y": 296.38,
       "qr_code": "QR_WOOD_F1_HALL_03",
       "photo": "../assets/WoodlandImages/Level1_4_1.jpg",
       "requires_scan": false,
@@ -1596,8 +1599,8 @@
       "type": "hallway",
       "latitude": 40.116936,
       "longitude": -75.110827,
-      "x": 559.4,
-      "y": 341.7,
+      "x": 559.17,
+      "y": 339.28,
       "qr_code": "QR_WOOD_F1_HALL_04",
       "photo": "../assets/WoodlandImages/Level1_4_2.jpg",
       "requires_scan": false,
@@ -1611,8 +1614,8 @@
       "type": "hallway",
       "latitude": 40.116907,
       "longitude": -75.110729,
-      "x": 590.4,
-      "y": 357.1,
+      "x": 615.09,
+      "y": 373.3,
       "qr_code": "QR_WOOD_F1_HALL_05",
       "photo": "../assets/WoodlandImages/Level1_4_1.jpg",
       "requires_scan": false,
@@ -1626,8 +1629,8 @@
       "type": "hallway",
       "latitude": 40.116915,
       "longitude": -75.110724,
-      "x": 645,
-      "y": 388.7,
+      "x": 640,
+      "y": 404,
       "qr_code": "QR_WOOD_F1_HALL_06",
       "requires_scan": false,
       "stop_radius_m": 3
@@ -1640,8 +1643,8 @@
       "type": "hallway",
       "latitude": 40.116899,
       "longitude": -75.110857,
-      "x": 513,
-      "y": 416.4,
+      "x": 539.34,
+      "y": 375.09,
       "qr_code": "QR_WOOD_F1_HALL_07",
       "requires_scan": false,
       "stop_radius_m": 3
@@ -1654,8 +1657,8 @@
       "type": "hallway",
       "latitude": 40.116745,
       "longitude": -75.111013,
-      "x": 405.4,
-      "y": 569.4,
+      "x": 437.38,
+      "y": 525.74,
       "qr_code": "QR_WOOD_F1_HALL_10",
       "photo": [
         "../assets/WoodlandImages/Level1_1_1.jpg",
@@ -1672,8 +1675,8 @@
       "type": "hallway",
       "latitude": 40.116614,
       "longitude": -75.111033,
-      "x": 427.8,
-      "y": 640.5,
+      "x": 406.84,
+      "y": 574.93,
       "qr_code": "QR_WOOD_F1_HALL_11",
       "photo": "../assets/WoodlandImages/Level1_2_1.jpg",
       "requires_scan": false,
@@ -1687,8 +1690,8 @@
       "type": "hallway",
       "latitude": 40.116532,
       "longitude": -75.111085,
-      "x": 353.3,
-      "y": 718.8,
+      "x": 377.01,
+      "y": 700.43,
       "qr_code": "QR_WOOD_F1_HALL_12",
       "photo": "../assets/WoodlandImages/Level1_3_1.jpg",
       "requires_scan": false,
@@ -1702,8 +1705,8 @@
       "type": "hallway",
       "latitude": 40.116443,
       "longitude": -75.111195,
-      "x": 319.3,
-      "y": 762.6,
+      "x": 319.26,
+      "y": 762.55,
       "qr_code": "QR_WOOD_F1_HALL_13",
       "requires_scan": false,
       "stop_radius_m": 3
@@ -1716,8 +1719,8 @@
       "type": "hallway",
       "latitude": 40.116385,
       "longitude": -75.111261,
-      "x": 274.3,
-      "y": 813.1,
+      "x": 284.55,
+      "y": 800.96,
       "qr_code": "QR_WOOD_F1_HALL_14",
       "photo": "../assets/WoodlandImages/Level1_3_2.jpg",
       "requires_scan": false,
@@ -1731,8 +1734,8 @@
       "type": "stairs",
       "latitude": 40.116849,
       "longitude": -75.110941,
-      "x": 491.1,
-      "y": 431.7,
+      "x": 494.82,
+      "y": 435.47,
       "qr_code": "QR_WOOD_F1_STAIRS_A",
       "requires_scan": true,
       "stop_radius_m": 3
@@ -1745,8 +1748,8 @@
       "type": "stairs",
       "latitude": 40.116458,
       "longitude": -75.111184,
-      "x": 286.3,
-      "y": 784.2,
+      "x": 293.49,
+      "y": 761.74,
       "qr_code": "QR_WOOD_F1_STAIRS_B",
       "requires_scan": true,
       "stop_radius_m": 3
@@ -1774,8 +1777,8 @@
       "type": "hallway",
       "latitude": 40.11641,
       "longitude": -75.111233,
-      "x": 336.7,
-      "y": 739.6,
+      "x": 344.83,
+      "y": 734.74,
       "qr_code": "QR_WOOD_F2_HALL_02",
       "requires_scan": false,
       "stop_radius_m": 3
@@ -1788,8 +1791,8 @@
       "type": "hallway",
       "latitude": 40.116458,
       "longitude": -75.111116,
-      "x": 390.3,
-      "y": 685.9,
+      "x": 422.11,
+      "y": 652.62,
       "qr_code": "QR_WOOD_F2_HALL_03",
       "photo": "../assets/WoodlandImages/Level2_3.jpg",
       "requires_scan": false,
@@ -1803,8 +1806,8 @@
       "type": "hallway",
       "latitude": 40.116501,
       "longitude": -75.111165,
-      "x": 433.3,
-      "y": 637.9,
+      "x": 447.04,
+      "y": 630.56,
       "qr_code": "QR_WOOD_F2_HALL_04",
       "requires_scan": false,
       "stop_radius_m": 3
@@ -1817,8 +1820,8 @@
       "type": "hallway",
       "latitude": 40.116667,
       "longitude": -75.111043,
-      "x": 404.2,
-      "y": 570.5,
+      "x": 414.15,
+      "y": 596.51,
       "qr_code": "QR_WOOD_F2_HALL_05",
       "photo": [
         "../assets/WoodlandImages/Level2_2_1",
@@ -1835,8 +1838,8 @@
       "type": "hallway",
       "latitude": 40.116668,
       "longitude": -75.111056,
-      "x": 419.1,
-      "y": 546.5,
+      "x": 411.87,
+      "y": 558.38,
       "qr_code": "QR_WOOD_F2_HALL_06",
       "requires_scan": false,
       "stop_radius_m": 3
@@ -1849,8 +1852,8 @@
       "type": "hallway",
       "latitude": 40.116847,
       "longitude": -75.110945,
-      "x": 493.6,
-      "y": 446.6,
+      "x": 491.27,
+      "y": 449.34,
       "qr_code": "QR_WOOD_F2_HALL_07",
       "photo": "../assets/WoodlandImages/Level2_1.jpg",
       "requires_scan": false,
@@ -1878,8 +1881,8 @@
       "type": "hallway",
       "latitude": 40.11695,
       "longitude": -75.11086,
-      "x": 574.2,
-      "y": 313.6,
+      "x": 577.3,
+      "y": 308.2,
       "qr_code": "QR_WOOD_F2_HALL_09",
       "requires_scan": false,
       "stop_radius_m": 3
@@ -1892,8 +1895,8 @@
       "type": "hallway",
       "latitude": 40.117118,
       "longitude": -75.110811,
-      "x": 574.7,
-      "y": 286.4,
+      "x": 582.54,
+      "y": 285.08,
       "qr_code": "QR_WOOD_F2_HALL_10",
       "requires_scan": false,
       "stop_radius_m": 3
@@ -1906,8 +1909,8 @@
       "type": "hallway",
       "latitude": 40.117089,
       "longitude": -75.110805,
-      "x": 505.1,
-      "y": 246.7,
+      "x": 504.87,
+      "y": 248.04,
       "qr_code": "QR_WOOD_F2_HALL_11",
       "requires_scan": false,
       "stop_radius_m": 3
@@ -1920,8 +1923,8 @@
       "type": "hallway",
       "latitude": 40.117075,
       "longitude": -75.110913,
-      "x": 614.9,
-      "y": 217.3,
+      "x": 618.39,
+      "y": 218.98,
       "qr_code": "QR_WOOD_F2_HALL_13",
       "requires_scan": false,
       "stop_radius_m": 3
@@ -1934,8 +1937,8 @@
       "type": "stairs",
       "latitude": 40.117073,
       "longitude": -75.110918,
-      "x": 510.8,
-      "y": 233.9,
+      "x": 508.13,
+      "y": 234.72,
       "qr_code": "QR_WOOD_F2_STAIRCASE",
       "requires_scan": true,
       "stop_radius_m": 3
@@ -1948,8 +1951,8 @@
       "type": "stairs",
       "latitude": 40.116903,
       "longitude": -75.110889,
-      "x": 492,
-      "y": 432,
+      "x": 494.25,
+      "y": 434.97,
       "qr_code": "QR_WOOD_F2_STAIRS_A",
       "requires_scan": true,
       "stop_radius_m": 3
@@ -1962,8 +1965,8 @@
       "type": "stairs",
       "latitude": 40.116407,
       "longitude": -75.111226,
-      "x": 297.6,
-      "y": 771.8,
+      "x": 299.72,
+      "y": 774.62,
       "qr_code": "QR_WOOD_F2_STAIRS_B",
       "requires_scan": true,
       "stop_radius_m": 3
@@ -1976,8 +1979,8 @@
       "type": "hallway",
       "latitude": 40.117084,
       "longitude": -75.110847,
-      "x": 597.8,
-      "y": 259,
+      "x": 591.02,
+      "y": 266.17,
       "qr_code": "QR_WOOD_F3_HALL_01",
       "photo": "../assets/WoodlandImages/Level3_4_2.jpg",
       "requires_scan": false,
@@ -1991,8 +1994,8 @@
       "type": "hallway",
       "latitude": 40.117057,
       "longitude": -75.110842,
-      "x": 566.6,
-      "y": 283.3,
+      "x": 529.81,
+      "y": 263.76,
       "qr_code": "QR_WOOD_F3_HALL_02",
       "requires_scan": false,
       "stop_radius_m": 3
@@ -2005,8 +2008,8 @@
       "type": "entrance",
       "latitude": 40.117068,
       "longitude": -75.110863,
-      "x": 488.4,
-      "y": 229.9,
+      "x": 492.62,
+      "y": 230.08,
       "qr_code": "QR_WOOD_F3_OUTSIDE",
       "photo": "../assets/WoodlandImages/Level3_3_1.jpg",
       "approach_latitude": 40.11701,
@@ -2022,8 +2025,8 @@
       "type": "hallway",
       "latitude": 40.117048,
       "longitude": -75.110845,
-      "x": 580.6,
-      "y": 302.5,
+      "x": 578.49,
+      "y": 306.93,
       "qr_code": "QR_WOOD_F3_HALL_03",
       "photo": "../assets/WoodlandImages/Level3_3.jpg",
       "requires_scan": false,
@@ -2037,8 +2040,8 @@
       "type": "hallway",
       "latitude": 40.116988,
       "longitude": -75.11086,
-      "x": 536.2,
-      "y": 377.1,
+      "x": 559.38,
+      "y": 340.29,
       "qr_code": "QR_WOOD_F3_HALL_04",
       "photo": "../assets/WoodlandImages/Level3_4_1.jpg",
       "requires_scan": false,
@@ -2052,8 +2055,8 @@
       "type": "hallway",
       "latitude": 40.117029,
       "longitude": -75.110855,
-      "x": 557.7,
-      "y": 338,
+      "x": 594.08,
+      "y": 358.24,
       "qr_code": "QR_WOOD_F3_HALL_05",
       "photo": "../assets/WoodlandImages/Level3_1.jpg",
       "requires_scan": false,
@@ -2067,8 +2070,8 @@
       "type": "hallway",
       "latitude": 40.116788,
       "longitude": -75.111043,
-      "x": 488.6,
-      "y": 450.4,
+      "x": 549.81,
+      "y": 464.21,
       "qr_code": "QR_WOOD_F3_HALL_06",
       "requires_scan": false,
       "stop_radius_m": 3
@@ -2081,8 +2084,8 @@
       "type": "hallway",
       "latitude": 40.116639,
       "longitude": -75.111061,
-      "x": 404.3,
-      "y": 568.7,
+      "x": 406.92,
+      "y": 580.26,
       "qr_code": "QR_WOOD_F3_HALL_07",
       "photo": "../assets/WoodlandImages/Level3_2.jpg",
       "requires_scan": false,
@@ -2096,8 +2099,8 @@
       "type": "hallway",
       "latitude": 40.11659,
       "longitude": -75.111037,
-      "x": 432,
-      "y": 642,
+      "x": 425.56,
+      "y": 629.99,
       "qr_code": "QR_WOOD_F3_HALL_08",
       "photo": "../assets/WoodlandImages/Level3_2_1.jpg",
       "requires_scan": false,
@@ -2111,8 +2114,8 @@
       "type": "hallway",
       "latitude": 40.116615,
       "longitude": -75.110991,
-      "x": 452.3,
-      "y": 626.3,
+      "x": 447.57,
+      "y": 629.71,
       "qr_code": "QR_WOOD_F3_HALL_09",
       "requires_scan": false,
       "stop_radius_m": 3
@@ -2125,8 +2128,8 @@
       "type": "hallway",
       "latitude": 40.116566,
       "longitude": -75.111027,
-      "x": 399.4,
-      "y": 677.2,
+      "x": 423.34,
+      "y": 652.73,
       "qr_code": "QR_WOOD_F3_HALL_10",
       "photo": "../assets/WoodlandImages/Level3_3.jpg",
       "requires_scan": false,
@@ -2140,8 +2143,8 @@
       "type": "hallway",
       "latitude": 40.116518,
       "longitude": -75.111172,
-      "x": 350.1,
-      "y": 728.2,
+      "x": 363.42,
+      "y": 714.92,
       "qr_code": "QR_WOOD_F3_HALL_11",
       "requires_scan": false,
       "stop_radius_m": 3
@@ -2154,8 +2157,8 @@
       "type": "hallway",
       "latitude": 40.116483,
       "longitude": -75.111137,
-      "x": 288.2,
-      "y": 796.7,
+      "x": 298.82,
+      "y": 784.22,
       "qr_code": "QR_WOOD_F3_HALL_12",
       "photo": "../assets/WoodlandImages/Level3_3_1.jpg",
       "requires_scan": false,
@@ -2169,8 +2172,8 @@
       "type": "stairs",
       "latitude": 40.116387,
       "longitude": -75.111156,
-      "x": 299.9,
-      "y": 774.4,
+      "x": 493.18,
+      "y": 435.09,
       "qr_code": "QR_WOOD_F3_STAIRS_A",
       "requires_scan": true,
       "stop_radius_m": 3
@@ -2183,8 +2186,8 @@
       "type": "stairs",
       "latitude": 40.116823,
       "longitude": -75.110967,
-      "x": 493.5,
-      "y": 434.1,
+      "x": 299.94,
+      "y": 774.36,
       "qr_code": "QR_WOOD_F3_STAIRS_B",
       "requires_scan": true,
       "stop_radius_m": 3
@@ -2197,8 +2200,8 @@
       "type": "hallway",
       "latitude": 40.115893,
       "longitude": -75.112185,
-      "x": 409.64,
-      "y": 538.53,
+      "x": 418.6,
+      "y": 509.5,
       "qr_code": "QR_RYDAL_F1_HALL_01",
       "requires_scan": false,
       "stop_radius_m": 3
@@ -2253,8 +2256,8 @@
       "type": "hallway",
       "latitude": 40.114736,
       "longitude": -75.111598,
-      "x": 50,
-      "y": 950,
+      "x": 637.9,
+      "y": 219.5,
       "qr_code": "QR_ATH_F1_HALL_01",
       "requires_scan": false,
       "stop_radius_m": 3
@@ -2267,8 +2270,8 @@
       "type": "recreation",
       "latitude": 40.114735,
       "longitude": -75.111628,
-      "x": 950,
-      "y": 950,
+      "x": 850.8,
+      "y": 479.8,
       "qr_code": "QR_ATH_F1_GYM"
     },
     {
@@ -2279,8 +2282,8 @@
       "type": "elevator",
       "latitude": 40.114734,
       "longitude": -75.111664,
-      "x": 50,
-      "y": 50,
+      "x": 643.7,
+      "y": 277.2,
       "qr_code": "QR_ATH_F1_ELEVATOR",
       "requires_scan": true,
       "stop_radius_m": 3
@@ -2293,8 +2296,8 @@
       "type": "stairs",
       "latitude": 40.1147985278,
       "longitude": -75.1116287222,
-      "x": 950,
-      "y": 950,
+      "x": 697,
+      "y": 217,
       "qr_code": "QR_ATH_F1_STAIRS",
       "requires_scan": true,
       "stop_radius_m": 3
@@ -2307,8 +2310,8 @@
       "type": "classroom",
       "latitude": 40.114745,
       "longitude": -75.111528,
-      "x": 950,
-      "y": 50,
+      "x": 597.6,
+      "y": 294,
       "qr_code": "QR_ATH_F2_CLASSROOM"
     },
     {
@@ -2352,8 +2355,8 @@
       "type": "office",
       "latitude": 40.11673,
       "longitude": -75.108931,
-      "x": 632.3,
-      "y": 746.6
+      "x": 631.58,
+      "y": 746.07
     },
     {
       "id": "wp_lares_204",
@@ -2363,8 +2366,8 @@
       "type": "office",
       "latitude": 40.116702,
       "longitude": -75.108906,
-      "x": 686.3,
-      "y": 679.7
+      "x": 683.9,
+      "y": 677
     },
     {
       "id": "wp_lares_206",
@@ -2374,8 +2377,8 @@
       "type": "office",
       "latitude": 40.11663,
       "longitude": -75.10889,
-      "x": 775.88,
-      "y": 873.7
+      "x": 763.27,
+      "y": 848.91
     },
     {
       "id": "wp_lares_208",
@@ -2385,8 +2388,8 @@
       "type": "office",
       "latitude": 40.116698,
       "longitude": -75.108895,
-      "x": 847.93,
-      "y": 787.6
+      "x": 839.23,
+      "y": 752.38
     },
     {
       "id": "wp_lares_209",
@@ -2396,8 +2399,8 @@
       "type": "office",
       "latitude": 40.116669,
       "longitude": -75.108802,
-      "x": 905.64,
-      "y": 716.09
+      "x": 867.7,
+      "y": 712.8
     },
     {
       "id": "wp_lares_210",
@@ -2407,8 +2410,8 @@
       "type": "office",
       "latitude": 40.116685,
       "longitude": -75.108812,
-      "x": 833.44,
-      "y": 672.6
+      "x": 859.97,
+      "y": 680.86
     },
     {
       "id": "wp_lares_211",
@@ -2418,8 +2421,8 @@
       "type": "office",
       "latitude": 40.116712,
       "longitude": -75.108854,
-      "x": 866.63,
-      "y": 629.03
+      "x": 894.46,
+      "y": 639.03
     },
     {
       "id": "wp_cloverly_main_entrance",
@@ -3247,8 +3250,8 @@
       "type": "office",
       "latitude": 40.11716,
       "longitude": -75.110521,
-      "x": 770.4,
-      "y": 201.1,
+      "x": 771.14,
+      "y": 197.66,
       "qr_code": "QR_WOOD_F1_102"
     },
     {
@@ -3259,8 +3262,8 @@
       "type": "office",
       "latitude": 40.117138,
       "longitude": -75.110538,
-      "x": 779,
-      "y": 201.3,
+      "x": 779.82,
+      "y": 197.6,
       "qr_code": "QR_WOOD_F1_103"
     },
     {
@@ -3271,8 +3274,8 @@
       "type": "classroom",
       "latitude": 40.117071,
       "longitude": -75.11081,
-      "x": 606.3,
-      "y": 222.1,
+      "x": 529.5,
+      "y": 375.47,
       "qr_code": "QR_WOOD_F1_112"
     },
     {
@@ -3283,8 +3286,8 @@
       "type": "office",
       "latitude": 40.116946,
       "longitude": -75.11064,
-      "x": 657.9,
-      "y": 393.4,
+      "x": 653.13,
+      "y": 391.42,
       "qr_code": "QR_WOOD_F1_118"
     },
     {
@@ -3295,8 +3298,8 @@
       "type": "classroom",
       "latitude": 40.117059,
       "longitude": -75.110819,
-      "x": 633.4,
-      "y": 416.6,
+      "x": 634.5,
+      "y": 414.49,
       "qr_code": "QR_WOOD_F1_119"
     },
     {
@@ -3307,8 +3310,8 @@
       "type": "classroom",
       "latitude": 40.116914,
       "longitude": -75.110833,
-      "x": 539.3,
-      "y": 386.9,
+      "x": 537.55,
+      "y": 386.01,
       "qr_code": "QR_WOOD_F1_121"
     },
     {
@@ -3319,8 +3322,8 @@
       "type": "classroom",
       "latitude": 40.116547,
       "longitude": -75.11106,
-      "x": 514.2,
-      "y": 394,
+      "x": 515.97,
+      "y": 395.77,
       "qr_code": "QR_WOOD_F1_123A"
     },
     {
@@ -3331,8 +3334,8 @@
       "type": "classroom",
       "latitude": 40.11692,
       "longitude": -75.11063,
-      "x": 514.5,
-      "y": 442.6,
+      "x": 512.1,
+      "y": 440.65,
       "qr_code": "QR_WOOD_F1_124"
     },
     {
@@ -3343,8 +3346,8 @@
       "type": "classroom",
       "latitude": 40.116525,
       "longitude": -75.111106,
-      "x": 385.9,
-      "y": 714.2,
+      "x": 383.22,
+      "y": 712.85,
       "qr_code": "QR_WOOD_F1_132B"
     },
     {
@@ -3367,8 +3370,8 @@
       "type": "classroom",
       "latitude": 40.116476,
       "longitude": -75.11112,
-      "x": 327.4,
-      "y": 778.5,
+      "x": 325.19,
+      "y": 777.13,
       "qr_code": "QR_WOOD_F1_133B"
     },
     {
@@ -3379,8 +3382,8 @@
       "type": "classroom",
       "latitude": 40.116468,
       "longitude": -75.111082,
-      "x": 315.6,
-      "y": 789.1,
+      "x": 313.79,
+      "y": 787.72,
       "qr_code": "QR_WOOD_F1_134"
     },
     {
@@ -3391,8 +3394,8 @@
       "type": "classroom",
       "latitude": 40.116513,
       "longitude": -75.111123,
-      "x": 267.6,
-      "y": 844.9,
+      "x": 265.03,
+      "y": 843.82,
       "qr_code": "QR_WOOD_F1_135"
     },
     {
@@ -3415,8 +3418,8 @@
       "type": "elevator",
       "latitude": 40.1170594444,
       "longitude": -75.1107976944,
-      "x": 633.4,
-      "y": 223.5,
+      "x": 630.97,
+      "y": 223.45,
       "qr_code": "QR_WOOD_F1_ELEVATOR",
       "requires_scan": true,
       "stop_radius_m": 3
@@ -3429,8 +3432,8 @@
       "type": "entrance",
       "latitude": 40.11672,
       "longitude": -75.11095,
-      "x": 692.1,
-      "y": 251.6,
+      "x": 683.67,
+      "y": 254.18,
       "qr_code": "QR_WOOD_F1_MAIN_ENTRANCE",
       "photo": "../assets/WoodlandImages/Level1_Entry.jpg",
       "approach_latitude": 40.11665,
@@ -3446,8 +3449,8 @@
       "type": "office",
       "latitude": 40.117235,
       "longitude": -75.110571,
-      "x": 705.5,
-      "y": 43.7,
+      "x": 710.51,
+      "y": 45,
       "qr_code": "QR_WOOD_F2_203"
     },
     {
@@ -3458,8 +3461,8 @@
       "type": "office",
       "latitude": 40.117074,
       "longitude": -75.110853,
-      "x": 615.8,
-      "y": 235.6,
+      "x": 611.59,
+      "y": 236.72,
       "qr_code": "QR_WOOD_F2_213"
     },
     {
@@ -3470,8 +3473,8 @@
       "type": "office",
       "latitude": 40.117069,
       "longitude": -75.110891,
-      "x": 607.4,
-      "y": 247.3,
+      "x": 606.42,
+      "y": 245.11,
       "qr_code": "QR_WOOD_F2_214"
     },
     {
@@ -3482,8 +3485,8 @@
       "type": "office",
       "latitude": 40.116977,
       "longitude": -75.110915,
-      "x": 511.8,
-      "y": 261.4,
+      "x": 514.45,
+      "y": 260.3,
       "qr_code": "QR_WOOD_F2_217"
     },
     {
@@ -3494,8 +3497,8 @@
       "type": "office",
       "latitude": 40.116964,
       "longitude": -75.110886,
-      "x": 528.5,
-      "y": 273,
+      "x": 532,
+      "y": 271.48,
       "qr_code": "QR_WOOD_F2_218"
     },
     {
@@ -3506,8 +3509,8 @@
       "type": "office",
       "latitude": 40.116919,
       "longitude": -75.110894,
-      "x": 545.5,
-      "y": 283.2,
+      "x": 541.01,
+      "y": 276.83,
       "qr_code": "QR_WOOD_F2_219"
     },
     {
@@ -3518,8 +3521,8 @@
       "type": "classroom",
       "latitude": 40.11692,
       "longitude": -75.110878,
-      "x": 576.6,
-      "y": 327.7,
+      "x": 573.89,
+      "y": 327.35,
       "qr_code": "QR_WOOD_F2_220"
     },
     {
@@ -3530,8 +3533,8 @@
       "type": "classroom",
       "latitude": 40.116937,
       "longitude": -75.110863,
-      "x": 573.1,
-      "y": 345.7,
+      "x": 569.99,
+      "y": 343.75,
       "qr_code": "QR_WOOD_F2_222"
     },
     {
@@ -3542,8 +3545,8 @@
       "type": "classroom",
       "latitude": 40.116793,
       "longitude": -75.111028,
-      "x": 514.1,
-      "y": 442.8,
+      "x": 511.84,
+      "y": 441.66,
       "qr_code": "QR_WOOD_F2_224"
     },
     {
@@ -3614,8 +3617,8 @@
       "type": "office",
       "latitude": 40.116585,
       "longitude": -75.110979,
-      "x": 460.7,
-      "y": 615.7,
+      "x": 458.03,
+      "y": 618.01,
       "qr_code": "QR_WOOD_F2_235"
     },
     {
@@ -3626,8 +3629,8 @@
       "type": "classroom",
       "latitude": 40.1166,
       "longitude": -75.111013,
-      "x": 459.8,
-      "y": 635.6,
+      "x": 457.97,
+      "y": 634.9,
       "qr_code": "QR_WOOD_F2_236"
     },
     {
@@ -3650,8 +3653,8 @@
       "type": "classroom",
       "latitude": 40.116461,
       "longitude": -75.111135,
-      "x": 373.2,
-      "y": 730.9,
+      "x": 371.34,
+      "y": 728.76,
       "qr_code": "QR_WOOD_F2_240"
     },
     {
@@ -3662,8 +3665,8 @@
       "type": "classroom",
       "latitude": 40.116459,
       "longitude": -75.111201,
-      "x": 329.2,
-      "y": 778.1,
+      "x": 326.09,
+      "y": 776.59,
       "qr_code": "QR_WOOD_F2_241"
     },
     {
@@ -3674,8 +3677,8 @@
       "type": "office",
       "latitude": 40.116458,
       "longitude": -75.111196,
-      "x": 312.2,
-      "y": 785,
+      "x": 310.61,
+      "y": 782.71,
       "qr_code": "QR_WOOD_F2_242"
     },
     {
@@ -3686,8 +3689,8 @@
       "type": "classroom",
       "latitude": 40.116443,
       "longitude": -75.111189,
-      "x": 269.5,
-      "y": 840.8,
+      "x": 267.6,
+      "y": 839.53,
       "qr_code": "QR_WOOD_F2_243"
     },
     {
@@ -3698,8 +3701,8 @@
       "type": "classroom",
       "latitude": 40.116452,
       "longitude": -75.111181,
-      "x": 248.5,
-      "y": 845.3,
+      "x": 251.13,
+      "y": 844.31,
       "qr_code": "QR_WOOD_F2_244"
     },
     {
@@ -3710,8 +3713,8 @@
       "type": "elevator",
       "latitude": 40.1170630556,
       "longitude": -75.1107448889,
-      "x": 633.8,
-      "y": 221.7,
+      "x": 630.77,
+      "y": 222.43,
       "qr_code": "QR_WOOD_F2_ELEVATOR",
       "requires_scan": true,
       "stop_radius_m": 3
@@ -3724,8 +3727,8 @@
       "type": "classroom",
       "latitude": 40.116991,
       "longitude": -75.110821,
-      "x": 600.5,
-      "y": 288.4,
+      "x": 626.28,
+      "y": 238.82,
       "qr_code": "QR_WOOD_F3_313"
     },
     {
@@ -3784,8 +3787,8 @@
       "type": "classroom",
       "latitude": 40.117039,
       "longitude": -75.110827,
-      "x": 576.3,
-      "y": 327.6,
+      "x": 573.68,
+      "y": 327.11,
       "qr_code": "QR_WOOD_F3_319"
     },
     {
@@ -3796,8 +3799,8 @@
       "type": "classroom",
       "latitude": 40.116955,
       "longitude": -75.110853,
-      "x": 609.5,
-      "y": 370.9,
+      "x": 606.68,
+      "y": 369.33,
       "qr_code": "QR_WOOD_F3_321"
     },
     {
@@ -3808,8 +3811,8 @@
       "type": "classroom",
       "latitude": 40.117007,
       "longitude": -75.110785,
-      "x": 590.7,
-      "y": 366.9,
+      "x": 591.66,
+      "y": 364.27,
       "qr_code": "QR_WOOD_F3_321A"
     },
     {
@@ -3820,8 +3823,8 @@
       "type": "classroom",
       "latitude": 40.116911,
       "longitude": -75.11083,
-      "x": 572.2,
-      "y": 395.9,
+      "x": 541.61,
+      "y": 380.21,
       "qr_code": "QR_WOOD_F3_321B"
     },
     {
@@ -3832,8 +3835,8 @@
       "type": "office",
       "latitude": 40.116913,
       "longitude": -75.110888,
-      "x": 530.1,
-      "y": 400.8,
+      "x": 529.59,
+      "y": 401.24,
       "qr_code": "QR_WOOD_F3_324"
     },
     {
@@ -3844,8 +3847,8 @@
       "type": "office",
       "latitude": 40.116758,
       "longitude": -75.111081,
-      "x": 494.4,
-      "y": 462.8,
+      "x": 491.23,
+      "y": 460.78,
       "qr_code": "QR_WOOD_F3_326"
     },
     {
@@ -3856,8 +3859,8 @@
       "type": "office",
       "latitude": 40.116738,
       "longitude": -75.111141,
-      "x": 452.9,
-      "y": 518.6,
+      "x": 451.59,
+      "y": 516.32,
       "qr_code": "QR_WOOD_F3_329"
     },
     {
@@ -3880,8 +3883,8 @@
       "type": "office",
       "latitude": 40.116647,
       "longitude": -75.111037,
-      "x": 458.9,
-      "y": 615.2,
+      "x": 457.57,
+      "y": 619.55,
       "qr_code": "QR_WOOD_F3_335"
     },
     {
@@ -3892,8 +3895,8 @@
       "type": "classroom",
       "latitude": 40.116767,
       "longitude": -75.111039,
-      "x": 473.3,
-      "y": 632.4,
+      "x": 472.72,
+      "y": 633.98,
       "qr_code": "QR_WOOD_F3_337"
     },
     {
@@ -3904,8 +3907,8 @@
       "type": "classroom",
       "latitude": 40.116566,
       "longitude": -75.110949,
-      "x": 475.5,
-      "y": 650.2,
+      "x": 475.45,
+      "y": 650.23,
       "qr_code": "QR_WOOD_F3_338"
     },
     {
@@ -3916,8 +3919,8 @@
       "type": "classroom",
       "latitude": 40.116553,
       "longitude": -75.110951,
-      "x": 496,
-      "y": 659.9,
+      "x": 493.12,
+      "y": 659.57,
       "qr_code": "QR_WOOD_F3_340"
     },
     {
@@ -3928,8 +3931,8 @@
       "type": "classroom",
       "latitude": 40.116542,
       "longitude": -75.111033,
-      "x": 414.2,
-      "y": 685.7,
+      "x": 413.45,
+      "y": 685.47,
       "qr_code": "QR_WOOD_F3_341"
     },
     {
@@ -3940,8 +3943,8 @@
       "type": "classroom",
       "latitude": 40.116549,
       "longitude": -75.111035,
-      "x": 408.9,
-      "y": 694,
+      "x": 405.45,
+      "y": 693.62,
       "qr_code": "QR_WOOD_F3_342"
     },
     {
@@ -3964,8 +3967,8 @@
       "type": "classroom",
       "latitude": 40.116499,
       "longitude": -75.111186,
-      "x": 331.8,
-      "y": 788.3,
+      "x": 330.39,
+      "y": 786.4,
       "qr_code": "QR_WOOD_F3_345"
     },
     {
@@ -3988,8 +3991,8 @@
       "type": "elevator",
       "latitude": 40.1170361389,
       "longitude": -75.1107876389,
-      "x": 633.2,
-      "y": 220.9,
+      "x": 628.78,
+      "y": 222.07,
       "qr_code": "QR_WOOD_F3_ELEVATOR",
       "requires_scan": true,
       "stop_radius_m": 3
@@ -4000,8 +4003,8 @@
       "floor": "1",
       "label": "Woodland Library",
       "type": "office",
-      "x": 703.3,
-      "y": 175.2,
+      "x": 677.91,
+      "y": 231.75,
       "qr_code": "QR_WOOD_F1_LIBRARY"
     },
     {
@@ -4012,8 +4015,8 @@
       "type": "entrance",
       "latitude": 40.11686,
       "longitude": -75.11095,
-      "x": 496.7,
-      "y": 445.6,
+      "x": 498.48,
+      "y": 442.09,
       "qr_code": "QR_WOOD_F1_ENTRANCE_SIDE_1",
       "approach_latitude": 40.11679,
       "approach_longitude": -75.11098,
@@ -4028,8 +4031,8 @@
       "type": "entrance",
       "latitude": 40.11683,
       "longitude": -75.1109,
-      "x": 434.2,
-      "y": 529.5,
+      "x": 431.17,
+      "y": 532.71,
       "qr_code": "QR_WOOD_F1_ENTRANCE_SIDE_2",
       "approach_latitude": 40.11676,
       "approach_longitude": -75.11093,
@@ -4044,8 +4047,8 @@
       "type": "entrance",
       "latitude": 40.11642,
       "longitude": -75.11112,
-      "x": 263.9,
-      "y": 790.3,
+      "x": 269.78,
+      "y": 791.62,
       "qr_code": "QR_WOOD_F1_ENTRANCE_SIDE_3",
       "approach_latitude": 40.11635,
       "approach_longitude": -75.11116,
@@ -4060,8 +4063,8 @@
       "type": "office",
       "latitude": 40.11718,
       "longitude": -75.110545,
-      "x": 698.4,
-      "y": 50.7,
+      "x": 792,
+      "y": 205,
       "qr_code": "QR_WOOD_F1_104"
     },
     {
@@ -4072,8 +4075,8 @@
       "type": "office",
       "latitude": 40.11717,
       "longitude": -75.11056,
-      "x": 691.1,
-      "y": 65.2,
+      "x": 780,
+      "y": 220,
       "qr_code": "QR_WOOD_F1_105"
     },
     {
@@ -4084,8 +4087,8 @@
       "type": "office",
       "latitude": 40.117145,
       "longitude": -75.1106,
-      "x": 693.2,
-      "y": 88.5,
+      "x": 748,
+      "y": 255,
       "qr_code": "QR_WOOD_F1_107"
     },
     {
@@ -4096,8 +4099,8 @@
       "type": "office",
       "latitude": 40.117135,
       "longitude": -75.110618,
-      "x": 660.6,
-      "y": 147.8,
+      "x": 734,
+      "y": 274,
       "qr_code": "QR_WOOD_F1_108"
     },
     {
@@ -4108,8 +4111,8 @@
       "type": "office",
       "latitude": 40.117095,
       "longitude": -75.110735,
-      "x": 632.8,
-      "y": 196.9,
+      "x": 612,
+      "y": 332,
       "qr_code": "QR_WOOD_F1_111"
     },
     {
@@ -4120,8 +4123,8 @@
       "type": "office",
       "latitude": 40.11707,
       "longitude": -75.11077,
-      "x": 574.8,
-      "y": 291.7,
+      "x": 575,
+      "y": 352,
       "qr_code": "QR_WOOD_F1_113"
     },
     {
@@ -4132,8 +4135,8 @@
       "type": "office",
       "latitude": 40.117,
       "longitude": -75.110745,
-      "x": 565.9,
-      "y": 308.8,
+      "x": 612,
+      "y": 388,
       "qr_code": "QR_WOOD_F1_115"
     },
     {
@@ -4144,8 +4147,8 @@
       "type": "classroom",
       "latitude": 40.116965,
       "longitude": -75.110695,
-      "x": 536.2,
-      "y": 356.8,
+      "x": 666,
+      "y": 420,
       "qr_code": "QR_WOOD_F1_117"
     },
     {
@@ -4156,8 +4159,8 @@
       "type": "classroom",
       "latitude": 40.11693,
       "longitude": -75.110785,
-      "x": 628.3,
-      "y": 391.9,
+      "x": 566,
+      "y": 392,
       "qr_code": "QR_WOOD_F1_120"
     },
     {
@@ -4168,8 +4171,8 @@
       "type": "classroom",
       "latitude": 40.116905,
       "longitude": -75.110815,
-      "x": 526,
-      "y": 374.1,
+      "x": 535,
+      "y": 410,
       "qr_code": "QR_WOOD_F1_122"
     },
     {
@@ -4180,8 +4183,8 @@
       "type": "classroom",
       "latitude": 40.1167,
       "longitude": -75.11102,
-      "x": 429.6,
-      "y": 549.2,
+      "x": 435,
+      "y": 560,
       "qr_code": "QR_WOOD_F1_127"
     },
     {
@@ -4192,8 +4195,8 @@
       "type": "classroom",
       "latitude": 40.11666,
       "longitude": -75.111035,
-      "x": 431.5,
-      "y": 614.3,
+      "x": 420,
+      "y": 605,
       "qr_code": "QR_WOOD_F1_128"
     },
     {
@@ -4204,8 +4207,8 @@
       "type": "classroom",
       "latitude": 40.11661,
       "longitude": -75.11106,
-      "x": 445.7,
-      "y": 630.4,
+      "x": 402,
+      "y": 655,
       "qr_code": "QR_WOOD_F1_129"
     },
     {
@@ -4216,8 +4219,8 @@
       "type": "classroom",
       "latitude": 40.11657,
       "longitude": -75.111085,
-      "x": 459.7,
-      "y": 615.3,
+      "x": 384,
+      "y": 700,
       "qr_code": "QR_WOOD_F1_130"
     },
     {
@@ -4228,8 +4231,8 @@
       "type": "classroom",
       "latitude": 40.116525,
       "longitude": -75.111105,
-      "x": 443.4,
-      "y": 644.2,
+      "x": 360,
+      "y": 742,
       "qr_code": "QR_WOOD_F1_131"
     },
     {
@@ -4240,8 +4243,8 @@
       "type": "classroom",
       "latitude": 40.116505,
       "longitude": -75.111112,
-      "x": 438.6,
-      "y": 660.4,
+      "x": 345,
+      "y": 760,
       "qr_code": "QR_WOOD_F1_132A"
     },
     {
@@ -4250,8 +4253,8 @@
       "floor": "2",
       "label": "Room 201",
       "type": "office",
-      "x": 752.9,
-      "y": 130.4,
+      "x": 761.9,
+      "y": 115.05,
       "qr_code": "QR_WOOD_F2_201"
     },
     {
@@ -4260,8 +4263,8 @@
       "floor": "2",
       "label": "Room 202",
       "type": "office",
-      "x": 758.3,
-      "y": 200.2,
+      "x": 776.55,
+      "y": 221.44,
       "qr_code": "QR_WOOD_F2_202"
     },
     {
@@ -4270,8 +4273,8 @@
       "floor": "2",
       "label": "Room 204",
       "type": "office",
-      "x": 692,
-      "y": 64.7,
+      "x": 681.62,
+      "y": 66.07,
       "qr_code": "QR_WOOD_F2_204"
     },
     {
@@ -4280,8 +4283,8 @@
       "floor": "2",
       "label": "Room 206",
       "type": "office",
-      "x": 691.9,
-      "y": 89.7,
+      "x": 681.99,
+      "y": 91.47,
       "qr_code": "QR_WOOD_F2_206"
     },
     {
@@ -4290,8 +4293,8 @@
       "floor": "2",
       "label": "Room 207",
       "type": "office",
-      "x": 653.1,
-      "y": 205.7,
+      "x": 673.49,
+      "y": 209.45,
       "qr_code": "QR_WOOD_F2_207"
     },
     {
@@ -4300,8 +4303,8 @@
       "floor": "2",
       "label": "Room 208",
       "type": "lounge",
-      "x": 634.2,
-      "y": 185.9,
+      "x": 639.69,
+      "y": 137.03,
       "qr_code": "QR_WOOD_F2_208"
     },
     {
@@ -4310,8 +4313,8 @@
       "floor": "2",
       "label": "Room 211",
       "type": "office",
-      "x": 650.7,
-      "y": 129.3,
+      "x": 671.31,
+      "y": 124.63,
       "qr_code": "QR_WOOD_F2_211"
     },
     {
@@ -4320,8 +4323,8 @@
       "floor": "2",
       "label": "Room 215",
       "type": "lounge",
-      "x": 602.4,
-      "y": 283.9,
+      "x": 649.17,
+      "y": 277.07,
       "qr_code": "QR_WOOD_F2_215"
     },
     {
@@ -4330,8 +4333,8 @@
       "floor": "2",
       "label": "Room 216",
       "type": "office",
-      "x": 493.5,
-      "y": 250.8,
+      "x": 483.57,
+      "y": 263.04,
       "qr_code": "QR_WOOD_F2_216"
     },
     {
@@ -4370,8 +4373,8 @@
       "floor": "2",
       "label": "Room 231",
       "type": "office",
-      "x": 430.1,
-      "y": 550.1,
+      "x": 443.21,
+      "y": 558.1,
       "qr_code": "QR_WOOD_F2_231"
     },
     {
@@ -4380,8 +4383,8 @@
       "floor": "2",
       "label": "Room 232",
       "type": "office",
-      "x": 430,
-      "y": 611.7,
+      "x": 432.66,
+      "y": 604.04,
       "qr_code": "QR_WOOD_F2_232"
     },
     {
@@ -4390,8 +4393,8 @@
       "floor": "3",
       "label": "Room 318A",
       "type": "office",
-      "x": 562.1,
-      "y": 304.6,
+      "x": 555.77,
+      "y": 310.41,
       "qr_code": "QR_WOOD_F3_318A"
     },
     {
@@ -4400,8 +4403,8 @@
       "floor": "3",
       "label": "Room 320",
       "type": "classroom",
-      "x": 550.3,
-      "y": 331.5,
+      "x": 545.53,
+      "y": 332.79,
       "qr_code": "QR_WOOD_F3_320"
     },
     {
@@ -4420,8 +4423,8 @@
       "floor": "3",
       "label": "Room 321C",
       "type": "classroom",
-      "x": 544.6,
-      "y": 448,
+      "x": 572.99,
+      "y": 432.53,
       "qr_code": "QR_WOOD_F3_321C"
     },
     {
@@ -4430,8 +4433,8 @@
       "floor": "3",
       "label": "Room 322",
       "type": "classroom",
-      "x": 523.6,
-      "y": 379.9,
+      "x": 519.05,
+      "y": 376.02,
       "qr_code": "QR_WOOD_F3_322"
     },
     {
@@ -4440,8 +4443,8 @@
       "floor": "3",
       "label": "Room 323",
       "type": "classroom",
-      "x": 512,
-      "y": 399.4,
+      "x": 509.41,
+      "y": 395.58,
       "qr_code": "QR_WOOD_F3_323"
     },
     {
@@ -4450,8 +4453,8 @@
       "floor": "3",
       "label": "Room 325",
       "type": "office",
-      "x": 523.9,
-      "y": 439.7,
+      "x": 527.71,
+      "y": 433.89,
       "qr_code": "QR_WOOD_F3_325"
     },
     {
@@ -4460,8 +4463,8 @@
       "floor": "3",
       "label": "Room 327",
       "type": "office",
-      "x": 479.6,
-      "y": 479.6,
+      "x": 501.13,
+      "y": 489.91,
       "qr_code": "QR_WOOD_F3_327"
     },
     {
@@ -4470,8 +4473,8 @@
       "floor": "3",
       "label": "Room 328",
       "type": "office",
-      "x": 467.9,
-      "y": 499.1,
+      "x": 484.98,
+      "y": 509.15,
       "qr_code": "QR_WOOD_F3_328"
     },
     {
@@ -4480,8 +4483,8 @@
       "floor": "3",
       "label": "Room 331",
       "type": "office",
-      "x": 429.7,
-      "y": 552,
+      "x": 443.21,
+      "y": 558.1,
       "qr_code": "QR_WOOD_F3_331"
     },
     {
@@ -4490,8 +4493,8 @@
       "floor": "3",
       "label": "Room 331A",
       "type": "office",
-      "x": 431,
-      "y": 559.7,
+      "x": 436.37,
+      "y": 567.66,
       "qr_code": "QR_WOOD_F3_331A"
     },
     {
@@ -4500,8 +4503,8 @@
       "floor": "3",
       "label": "Room 332",
       "type": "office",
-      "x": 430,
-      "y": 613.4,
+      "x": 432.74,
+      "y": 604.25,
       "qr_code": "QR_WOOD_F3_332"
     },
     {
@@ -4510,8 +4513,8 @@
       "floor": "3",
       "label": "Room 336",
       "type": "classroom",
-      "x": 458.7,
-      "y": 637.3,
+      "x": 450.26,
+      "y": 647.65,
       "qr_code": "QR_WOOD_F3_336"
     },
     {
@@ -4520,8 +4523,8 @@
       "floor": "3",
       "label": "Room 339",
       "type": "classroom",
-      "x": 491.3,
-      "y": 646.6,
+      "x": 492.96,
+      "y": 642.74,
       "qr_code": "QR_WOOD_F3_339"
     },
     {
@@ -4530,8 +4533,8 @@
       "floor": "3",
       "label": "Room 340A",
       "type": "classroom",
-      "x": 519.1,
-      "y": 635.2,
+      "x": 516.78,
+      "y": 626.12,
       "qr_code": "QR_WOOD_F3_340A"
     },
     {
@@ -4540,8 +4543,8 @@
       "floor": "3",
       "label": "Room 344",
       "type": "classroom",
-      "x": 336,
-      "y": 760.5,
+      "x": 336.9,
+      "y": 765.33,
       "qr_code": "QR_WOOD_F3_344"
     },
     {
@@ -4550,8 +4553,8 @@
       "floor": "3",
       "label": "Room 346A",
       "type": "classroom",
-      "x": 309.8,
-      "y": 811.9,
+      "x": 306.76,
+      "y": 809.61,
       "qr_code": "QR_WOOD_F3_346A"
     },
     {
@@ -4560,8 +4563,8 @@
       "floor": "3",
       "label": "Room 347",
       "type": "office",
-      "x": 278.2,
-      "y": 806.6,
+      "x": 294.59,
+      "y": 840.01,
       "qr_code": "QR_WOOD_F3_347"
     },
     {
@@ -4570,8 +4573,8 @@
       "floor": "3",
       "label": "Room 347A",
       "type": "office",
-      "x": 260.4,
-      "y": 839.7,
+      "x": 255.02,
+      "y": 834.66,
       "qr_code": "QR_WOOD_F3_347A"
     },
     {
@@ -4580,8 +4583,8 @@
       "floor": "3",
       "label": "Room 347B",
       "type": "office",
-      "x": 324,
-      "y": 871.3,
+      "x": 324.87,
+      "y": 883.5,
       "qr_code": "QR_WOOD_F3_347B"
     },
     {
@@ -4590,8 +4593,8 @@
       "floor": "3",
       "label": "Room M315",
       "type": "office",
-      "x": 636.9,
-      "y": 188.2,
+      "x": 629.73,
+      "y": 136.09,
       "qr_code": "QR_WOOD_F3_M315"
     },
     {
@@ -5040,6 +5043,547 @@
       "type": "office",
       "x": 452.1,
       "y": 617.4
+    },
+    {
+      "id": "wp_lares_ground_entrance",
+      "building": "lares",
+      "floor": "ground",
+      "label": "Lares Ground Floor Entrance",
+      "type": "entrance",
+      "latitude": 40.116752,
+      "longitude": -75.108928,
+      "x": 143.94,
+      "y": 282.66,
+      "qr_code": "QR_LARES_GND_ENTRANCE",
+      "requires_scan": true,
+      "stop_radius_m": 5
+    },
+    {
+      "id": "wp_lares_elevator_f2",
+      "building": "lares",
+      "floor": "2",
+      "label": "Lares Elevator (Floor 2)",
+      "type": "elevator",
+      "latitude": 40.116683120837685,
+      "longitude": -75.10893335439131,
+      "x": 710.1,
+      "y": 724.1,
+      "qr_code": "QR_LARES_F2_ELEVATOR",
+      "requires_scan": true,
+      "stop_radius_m": 3
+    },
+    {
+      "id": "wp_rydal_002",
+      "building": "rydal",
+      "floor": "ground",
+      "label": "Room 002",
+      "type": "classroom",
+      "latitude": 40.115893,
+      "longitude": -75.112129,
+      "x": 601.11,
+      "y": 366.28,
+      "qr_code": "QR_RYDAL_GND_002"
+    },
+    {
+      "id": "wp_rydal_106",
+      "building": "rydal",
+      "floor": "1",
+      "label": "Room 106",
+      "type": "office",
+      "latitude": 40.115943295553386,
+      "longitude": -75.1121632623846,
+      "x": 605.53,
+      "y": 301.15,
+      "qr_code": "QR_RYDAL_F1_106"
+    },
+    {
+      "id": "wp_rydal_107",
+      "building": "rydal",
+      "floor": "1",
+      "label": "Room 107",
+      "type": "office",
+      "latitude": 40.115927826181625,
+      "longitude": -75.11217052680982,
+      "x": 537.2,
+      "y": 342.3,
+      "qr_code": "QR_RYDAL_F1_107"
+    },
+    {
+      "id": "wp_lares_stairs_f2",
+      "building": "lares",
+      "floor": "2",
+      "label": "Lares Stairs (Floor 2)",
+      "type": "stairs",
+      "latitude": 40.116696588548514,
+      "longitude": -75.10885062437788,
+      "x": 834.6,
+      "y": 723.7,
+      "qr_code": "QR_LARES_F2_STAIRS",
+      "requires_scan": true,
+      "stop_radius_m": 3
+    },
+    {
+      "id": "wp_lares_f2_hall_01",
+      "building": "lares",
+      "floor": "2",
+      "label": "Lares Second Floor Hall 1",
+      "type": "hallway",
+      "latitude": 40.11667009206417,
+      "longitude": -75.10887664694518,
+      "x": 801.47,
+      "y": 780.49,
+      "qr_code": "QR_LARES_F2_HALL_01",
+      "requires_scan": false,
+      "stop_radius_m": 3
+    },
+    {
+      "id": "wp_lares_f2_hall_02",
+      "building": "lares",
+      "floor": "2",
+      "label": "Lares Second Floor Hall 2",
+      "type": "hallway",
+      "latitude": 40.116703124458105,
+      "longitude": -75.10891950646463,
+      "x": 732.4,
+      "y": 722,
+      "qr_code": "QR_LARES_F2_HALL_02",
+      "requires_scan": false,
+      "stop_radius_m": 3
+    },
+    {
+      "id": "wp_lares_f2_hall_03",
+      "building": "lares",
+      "floor": "2",
+      "label": "Lares Second Floor Hall 3",
+      "type": "hallway",
+      "latitude": 40.11667724971018,
+      "longitude": -75.10884080039385,
+      "x": 868.7,
+      "y": 694.2,
+      "qr_code": "QR_LARES_F2_HALL_03",
+      "requires_scan": false,
+      "stop_radius_m": 3
+    },
+    {
+      "id": "wp_lares_side_entrance_1",
+      "building": "lares",
+      "floor": "1",
+      "label": "Lares Side Entrance",
+      "type": "entrance",
+      "latitude": 40.116709,
+      "longitude": -75.108877,
+      "x": 383.17,
+      "y": 165.24,
+      "qr_code": "QR_LARES_F1_SIDE_ENTRANCE",
+      "requires_scan": true,
+      "stop_radius_m": 5
+    },
+    {
+      "id": "wp_wood_f1_hall_08",
+      "building": "woodland",
+      "floor": "1",
+      "label": "F1 Hall - Outdoor Path Junction",
+      "type": "hallway",
+      "latitude": 40.116812,
+      "longitude": -75.11103,
+      "x": 516,
+      "y": 412,
+      "qr_code": "QR_WOOD_F1_HALL_08",
+      "photo": "../assets/WoodlandImages/Level1_Outside_2.jpg",
+      "requires_scan": false,
+      "stop_radius_m": 3
+    },
+    {
+      "id": "wp_wood_f1_hall_09",
+      "building": "woodland",
+      "floor": "1",
+      "label": "F1 Hall - West Wing Entrance",
+      "type": "hallway",
+      "latitude": 40.116802,
+      "longitude": -75.111012,
+      "x": 492.8,
+      "y": 449.56,
+      "qr_code": "QR_WOOD_F1_HALL_09",
+      "photo": "../assets/WoodlandImages/Level1_Outside_2.jpg",
+      "requires_scan": false,
+      "stop_radius_m": 3
+    },
+    {
+      "id": "wp_wood_f2_hall_12",
+      "building": "woodland",
+      "floor": "2",
+      "label": "F2 Hall - North Corridor A",
+      "type": "hallway",
+      "latitude": 40.117082,
+      "longitude": -75.110875,
+      "x": 504.72,
+      "y": 220.21,
+      "qr_code": "QR_WOOD_F2_HALL_12",
+      "requires_scan": false,
+      "stop_radius_m": 3
+    },
+    {
+      "id": "wp_rydal_201",
+      "building": "rydal",
+      "floor": "2",
+      "label": "Room 201",
+      "type": "office",
+      "latitude": 40.11589513484992,
+      "longitude": -75.11225060165194,
+      "x": 410.9,
+      "y": 519.4,
+      "qr_code": "QR_RYDAL_F2_201"
+    },
+    {
+      "id": "wp_rydal_202",
+      "building": "rydal",
+      "floor": "2",
+      "label": "Room 202",
+      "type": "office",
+      "latitude": 40.11588851111085,
+      "longitude": -75.11225591024518,
+      "x": 374.35,
+      "y": 562.05,
+      "qr_code": "QR_RYDAL_F2_202"
+    },
+    {
+      "id": "wp_rydal_207",
+      "building": "rydal",
+      "floor": "2",
+      "label": "Room 207",
+      "type": "office",
+      "latitude": 40.11586605474675,
+      "longitude": -75.112266611087,
+      "x": 362.2,
+      "y": 631.14,
+      "qr_code": "QR_RYDAL_F2_207"
+    },
+    {
+      "id": "wp_rydal_209",
+      "building": "rydal",
+      "floor": "2",
+      "label": "Room 209",
+      "type": "office",
+      "latitude": 40.11587851163579,
+      "longitude": -75.1122095303264,
+      "x": 468.88,
+      "y": 512.21,
+      "qr_code": "QR_RYDAL_F2_209"
+    },
+    {
+      "id": "wp_rydal_212",
+      "building": "rydal",
+      "floor": "2",
+      "label": "Room 212",
+      "type": "office",
+      "latitude": 40.11600231013774,
+      "longitude": -75.11207737587134,
+      "x": 770.67,
+      "y": 208.44,
+      "qr_code": "QR_RYDAL_F2_212"
+    },
+    {
+      "id": "wp_rydal_217",
+      "building": "rydal",
+      "floor": "2",
+      "label": "Room 217",
+      "type": "office",
+      "latitude": 40.11591695036122,
+      "longitude": -75.1122043058796,
+      "x": 475.87,
+      "y": 442.5,
+      "qr_code": "QR_RYDAL_F2_217"
+    },
+    {
+      "id": "wp_rydal_f2_stairs_main",
+      "building": "rydal",
+      "floor": "2",
+      "label": "Rydal Second Floor Main Stairs",
+      "type": "stairs",
+      "latitude": 40.115913061577416,
+      "longitude": -75.11222391953302,
+      "x": 447.9,
+      "y": 467.9,
+      "qr_code": "QR_RYDAL_F2_STAIRS_MAIN",
+      "requires_scan": true,
+      "stop_radius_m": 3
+    },
+    {
+      "id": "wp_rydal_f2_hall_01",
+      "building": "rydal",
+      "floor": "2",
+      "label": "Rydal Second Floor Hall 1",
+      "type": "hallway",
+      "latitude": 40.11587566237375,
+      "longitude": -75.11221490768501,
+      "x": 440.09,
+      "y": 516.79,
+      "qr_code": "QR_RYDAL_F2_HALL_01",
+      "requires_scan": false,
+      "stop_radius_m": 3
+    },
+    {
+      "id": "wp_rydal_f2_hall_02",
+      "building": "rydal",
+      "floor": "2",
+      "label": "Rydal Second Floor Hall 2",
+      "type": "hallway",
+      "latitude": 40.11591132333872,
+      "longitude": -75.11216838812241,
+      "x": 569.68,
+      "y": 365.62,
+      "qr_code": "QR_RYDAL_F2_HALL_02",
+      "requires_scan": false,
+      "stop_radius_m": 3
+    },
+    {
+      "id": "wp_rydal_f2_hall_03",
+      "building": "rydal",
+      "floor": "2",
+      "label": "Rydal Second Floor Hall 3",
+      "type": "hallway",
+      "latitude": 40.115971705480966,
+      "longitude": -75.11217906113369,
+      "x": 543.59,
+      "y": 264.9,
+      "qr_code": "QR_RYDAL_F2_HALL_03",
+      "requires_scan": false,
+      "stop_radius_m": 3
+    },
+    {
+      "id": "wp_rydal_f2_hall_04",
+      "building": "rydal",
+      "floor": "2",
+      "label": "Rydal Second Floor Hall 4",
+      "type": "hallway",
+      "latitude": 40.11599779411151,
+      "longitude": -75.11211823651091,
+      "x": 711.45,
+      "y": 210.27,
+      "qr_code": "QR_RYDAL_F2_HALL_04",
+      "requires_scan": false,
+      "stop_radius_m": 3
+    },
+    {
+      "id": "wp_wood_136",
+      "building": "woodland",
+      "floor": "1",
+      "label": "Room 136",
+      "type": "classroom",
+      "latitude": 40.116429,
+      "longitude": -75.111215,
+      "x": 253.92,
+      "y": 836.96,
+      "qr_code": "QR_WOOD_F1_136"
+    },
+    {
+      "id": "wp_wood_327a",
+      "building": "woodland",
+      "floor": "3",
+      "label": "Room 327 - Dr. Judy Ozment, Chemistry",
+      "type": "office",
+      "latitude": 40.116742,
+      "longitude": -75.111125,
+      "x": 477.55,
+      "y": 478.89,
+      "qr_code": "QR_WOOD_F3_327A"
+    },
+    {
+      "id": "wp_wood_327b",
+      "building": "woodland",
+      "floor": "3",
+      "label": "Room 327 - Dr. Michael Kagan, Associate Professor of Physics",
+      "type": "office",
+      "latitude": 40.116752,
+      "longitude": -75.111093,
+      "x": 477.48,
+      "y": 478.74,
+      "qr_code": "QR_WOOD_F3_327B"
+    },
+    {
+      "id": "wp_wood_101",
+      "building": "woodland",
+      "floor": "1",
+      "label": "Room 101",
+      "type": "office",
+      "latitude": 40.1172,
+      "longitude": -75.1105,
+      "x": 745,
+      "y": 188,
+      "qr_code": "QR_WOOD_F1_101"
+    },
+    {
+      "id": "wp_wood_v201",
+      "building": "woodland",
+      "floor": "2",
+      "label": "Room V201",
+      "type": "office",
+      "x": 641.37,
+      "y": 223.52,
+      "qr_code": "QR_WOOD_F2_V201"
+    },
+    {
+      "id": "wp_wood_v301",
+      "building": "woodland",
+      "floor": "3",
+      "label": "Room V301",
+      "type": "office",
+      "x": 641.33,
+      "y": 223.33,
+      "qr_code": "QR_WOOD_F3_V301"
+    },
+    {
+      "id": "wp_lares_f2_hall_04",
+      "building": "lares",
+      "floor": "2",
+      "label": "Lares Second Floor Hall 4",
+      "type": "hall",
+      "x": 700.3,
+      "y": 697
+    },
+    {
+      "id": "wp_lares_f1_hall_04",
+      "building": "lares",
+      "floor": "1",
+      "label": "Lares Forth Floor Hall",
+      "type": "hall",
+      "x": 610.2,
+      "y": 587.6
+    },
+    {
+      "id": "wp_lares_f1_hall_05",
+      "building": "lares",
+      "floor": "1",
+      "label": "Lares First Floor Hall",
+      "type": "hall",
+      "x": 431.2,
+      "y": 554.6
+    },
+    {
+      "id": "wp_lares_f1_hall_06",
+      "building": "lares",
+      "floor": "1",
+      "label": "Lares First Floor Hall",
+      "type": "hall",
+      "x": 321,
+      "y": 470.8
+    },
+    {
+      "id": "wp_lares_f1_hall_07",
+      "building": "lares",
+      "floor": "1",
+      "label": "Lares First Floor Hall",
+      "type": "hall",
+      "x": 226.9,
+      "y": 402
+    },
+    {
+      "id": "wp_lares_f1_hall_08",
+      "building": "lares",
+      "floor": "1",
+      "label": "Lares First Floor Hall",
+      "type": "hall",
+      "x": 268.3,
+      "y": 323.9
+    },
+    {
+      "id": "wp_lares_f1_hall_09",
+      "building": "lares",
+      "floor": "1",
+      "label": "Lares First Floor Hall",
+      "type": "hall",
+      "x": 296.6,
+      "y": 285.3
+    },
+    {
+      "id": "wp_lares_side_entrance_2",
+      "building": "lares",
+      "floor": "1",
+      "label": "Lares Side Entrance",
+      "type": "entrance",
+      "x": 884.3,
+      "y": 787.3
+    },
+    {
+      "id": "wp_rydal_f1_stairs_side",
+      "building": "rydal",
+      "floor": "1",
+      "label": "Rydal First Floor Side Stairs",
+      "type": "stairs",
+      "x": 329,
+      "y": 462
+    },
+    {
+      "id": "wp_rydal_f2_hall_05",
+      "building": "rydal",
+      "floor": "2",
+      "label": "Rydal Second floor hallway",
+      "type": "hall",
+      "x": 479,
+      "y": 468
+    },
+    {
+      "id": "wp_spring_hall",
+      "building": "springhouse",
+      "floor": "1",
+      "label": "Springhouse Hallway",
+      "type": "hall",
+      "x": 449,
+      "y": 451
+    },
+    {
+      "id": "wp_ath_f1_gym_1",
+      "building": "athletic",
+      "floor": "1",
+      "label": "Room 111 - Gym 1",
+      "type": "classroom",
+      "x": 623,
+      "y": 317
+    },
+    {
+      "id": "wp_ath_f1_gym_2",
+      "building": "athletic",
+      "floor": "1",
+      "label": "Room 101 - Gym 2",
+      "type": "classroom",
+      "x": 565.8,
+      "y": 283.6
+    },
+    {
+      "id": "wp_ath_f1_hall_02",
+      "building": "athletic",
+      "floor": "1",
+      "label": "Athletic First Floor hall",
+      "type": "hall",
+      "x": 545.7,
+      "y": 436.5
+    },
+    {
+      "id": "wp_ath_elevator_f2",
+      "building": "athletic",
+      "floor": "2",
+      "label": "Athletic Elevator (Floor 2)",
+      "type": "elevator",
+      "x": 645.2,
+      "y": 275.7
+    },
+    {
+      "id": "wp_ath_f2_stairs",
+      "building": "athletic",
+      "floor": "2",
+      "label": "Athletic Second Floor Stairs",
+      "type": "stairs",
+      "x": 674.3,
+      "y": 224.3
+    },
+    {
+      "id": "wp_lares_stairs_f1_2",
+      "building": "lares",
+      "floor": "1",
+      "label": "Lares Stairs near Student Lounge",
+      "type": "stairs",
+      "x": 816,
+      "y": 754
     }
   ],
   "edges": [
@@ -8872,6 +9416,1265 @@
       "from": "wp_wood_346",
       "to": "wp_wood_f3_hall_11",
       "accessible": true
+    },
+    {
+      "from": "wp_wood_main_entrance",
+      "to": "wp_wood_112",
+      "distance": 40,
+      "accessible": true
+    },
+    {
+      "from": "wp_wood_main_entrance",
+      "to": "wp_wood_119",
+      "distance": 38,
+      "accessible": true
+    },
+    {
+      "from": "wp_wood_main_entrance",
+      "to": "wp_wood_121",
+      "distance": 22,
+      "accessible": true
+    },
+    {
+      "from": "wp_wood_main_entrance",
+      "to": "wp_wood_124",
+      "distance": 25,
+      "accessible": true
+    },
+    {
+      "from": "wp_wood_112",
+      "to": "wp_wood_119",
+      "distance": 6,
+      "accessible": true
+    },
+    {
+      "from": "wp_wood_121",
+      "to": "wp_wood_123a",
+      "distance": 42,
+      "accessible": true
+    },
+    {
+      "from": "wp_wood_123a",
+      "to": "wp_wood_132b",
+      "distance": 6,
+      "accessible": true
+    },
+    {
+      "from": "wp_wood_132b",
+      "to": "wp_wood_133a",
+      "distance": 3,
+      "accessible": true
+    },
+    {
+      "from": "wp_wood_133a",
+      "to": "wp_wood_133b",
+      "distance": 7,
+      "accessible": true
+    },
+    {
+      "from": "wp_wood_133b",
+      "to": "wp_wood_134",
+      "distance": 5,
+      "accessible": true
+    },
+    {
+      "from": "wp_wood_134",
+      "to": "wp_wood_135",
+      "distance": 5,
+      "accessible": true
+    },
+    {
+      "from": "wp_wood_135",
+      "to": "wp_wood_136",
+      "distance": 11,
+      "accessible": true
+    },
+    {
+      "from": "wp_wood_main_entrance",
+      "to": "wp_wood_220",
+      "distance": 5,
+      "accessible": false
+    },
+    {
+      "from": "wp_wood_220",
+      "to": "wp_wood_222",
+      "distance": 5,
+      "accessible": true
+    },
+    {
+      "from": "wp_wood_222",
+      "to": "wp_wood_224",
+      "distance": 18,
+      "accessible": true
+    },
+    {
+      "from": "wp_wood_224",
+      "to": "wp_wood_236",
+      "distance": 23,
+      "accessible": true
+    },
+    {
+      "from": "wp_wood_236",
+      "to": "wp_wood_238",
+      "distance": 22,
+      "accessible": true
+    },
+    {
+      "from": "wp_wood_238",
+      "to": "wp_wood_240",
+      "distance": 7,
+      "accessible": true
+    },
+    {
+      "from": "wp_wood_240",
+      "to": "wp_wood_241",
+      "distance": 8,
+      "accessible": true
+    },
+    {
+      "from": "wp_wood_241",
+      "to": "wp_wood_242",
+      "distance": 4,
+      "accessible": true
+    },
+    {
+      "from": "wp_wood_242",
+      "to": "wp_wood_243",
+      "distance": 3,
+      "accessible": true
+    },
+    {
+      "from": "wp_wood_243",
+      "to": "wp_wood_244",
+      "distance": 3,
+      "accessible": true
+    },
+    {
+      "from": "wp_wood_220",
+      "to": "wp_wood_313",
+      "distance": 5,
+      "accessible": false
+    },
+    {
+      "from": "wp_wood_313",
+      "to": "wp_wood_319",
+      "distance": 6,
+      "accessible": true
+    },
+    {
+      "from": "wp_wood_313",
+      "to": "wp_wood_321",
+      "distance": 7,
+      "accessible": true
+    },
+    {
+      "from": "wp_wood_321",
+      "to": "wp_wood_321a",
+      "distance": 6,
+      "accessible": true
+    },
+    {
+      "from": "wp_wood_321",
+      "to": "wp_wood_321b",
+      "distance": 5,
+      "accessible": true
+    },
+    {
+      "from": "wp_wood_321",
+      "to": "wp_wood_337",
+      "distance": 26,
+      "accessible": true
+    },
+    {
+      "from": "wp_wood_337",
+      "to": "wp_wood_338",
+      "distance": 23,
+      "accessible": true
+    },
+    {
+      "from": "wp_wood_338",
+      "to": "wp_wood_340",
+      "distance": 3,
+      "accessible": true
+    },
+    {
+      "from": "wp_wood_340",
+      "to": "wp_wood_341",
+      "distance": 9,
+      "accessible": true
+    },
+    {
+      "from": "wp_wood_341",
+      "to": "wp_wood_342",
+      "distance": 3,
+      "accessible": true
+    },
+    {
+      "from": "wp_wood_342",
+      "to": "wp_wood_343",
+      "distance": 7,
+      "accessible": true
+    },
+    {
+      "from": "wp_wood_343",
+      "to": "wp_wood_345",
+      "distance": 10,
+      "accessible": true
+    },
+    {
+      "from": "wp_wood_345",
+      "to": "wp_wood_346",
+      "distance": 5,
+      "accessible": true
+    },
+    {
+      "from": "wp_wood_main_entrance",
+      "to": "wp_wood_elevator_f1",
+      "distance": 12,
+      "accessible": true
+    },
+    {
+      "from": "wp_wood_elevator_f2",
+      "to": "wp_wood_220",
+      "distance": 8,
+      "accessible": true
+    },
+    {
+      "from": "wp_lares_ground_entrance",
+      "to": "wp_lares_108",
+      "distance": 5,
+      "accessible": false
+    },
+    {
+      "from": "wp_wood_main_entrance",
+      "to": "wp_wood_f1_hall_07",
+      "distance": 21.4,
+      "accessible": true
+    },
+    {
+      "from": "wp_wood_f1_hall_04",
+      "to": "wp_wood_f1_staircase",
+      "distance": 12.8,
+      "accessible": true
+    },
+    {
+      "from": "wp_wood_f1_hall_04",
+      "to": "wp_wood_119",
+      "distance": 13.7,
+      "accessible": true
+    },
+    {
+      "from": "wp_wood_f1_hall_04",
+      "to": "wp_wood_112",
+      "distance": 15.1,
+      "accessible": true
+    },
+    {
+      "from": "wp_wood_f1_hall_07",
+      "to": "wp_wood_f1_hall_05",
+      "distance": 10.9,
+      "accessible": true
+    },
+    {
+      "from": "wp_wood_f1_hall_07",
+      "to": "wp_wood_f1_hall_08",
+      "distance": 17.6,
+      "accessible": true
+    },
+    {
+      "from": "wp_wood_f1_hall_08",
+      "to": "wp_wood_f1_hall_09",
+      "distance": 1.9,
+      "accessible": true
+    },
+    {
+      "from": "wp_wood_f1_hall_09",
+      "to": "wp_wood_f1_hall_10",
+      "distance": 6.3,
+      "accessible": true
+    },
+    {
+      "from": "wp_wood_f1_hall_08",
+      "to": "wp_wood_121",
+      "distance": 20.2,
+      "accessible": true
+    },
+    {
+      "from": "wp_wood_f1_hall_10",
+      "to": "wp_wood_123a",
+      "distance": 22.4,
+      "accessible": true
+    },
+    {
+      "from": "wp_wood_f1_hall_12",
+      "to": "wp_wood_133b",
+      "distance": 6.9,
+      "accessible": true
+    },
+    {
+      "from": "wp_wood_f1_hall_12",
+      "to": "wp_wood_134",
+      "distance": 7.1,
+      "accessible": true
+    },
+    {
+      "from": "wp_wood_f1_hall_12",
+      "to": "wp_wood_135",
+      "distance": 3.9,
+      "accessible": true
+    },
+    {
+      "from": "wp_wood_f1_hall_13",
+      "to": "wp_wood_136",
+      "distance": 2.3,
+      "accessible": true
+    },
+    {
+      "from": "wp_wood_f1_hall_02",
+      "to": "wp_wood_124",
+      "distance": 13.9,
+      "accessible": true
+    },
+    {
+      "from": "wp_wood_elevator_f2",
+      "to": "wp_wood_f2_hall_10",
+      "distance": 4.2,
+      "accessible": true
+    },
+    {
+      "from": "wp_wood_f2_hall_11",
+      "to": "wp_wood_f2_hall_12",
+      "distance": 6,
+      "accessible": true
+    },
+    {
+      "from": "wp_wood_f2_hall_12",
+      "to": "wp_wood_f2_hall_13",
+      "distance": 3.3,
+      "accessible": true
+    },
+    {
+      "from": "wp_wood_f2_hall_13",
+      "to": "wp_wood_f2_staircase",
+      "distance": 0.5,
+      "accessible": true
+    },
+    {
+      "from": "wp_wood_f2_hall_11",
+      "to": "wp_wood_f2_hall_09",
+      "distance": 16.1,
+      "accessible": true
+    },
+    {
+      "from": "wp_wood_f2_hall_06",
+      "to": "wp_wood_236",
+      "distance": 8.4,
+      "accessible": true
+    },
+    {
+      "from": "wp_wood_f2_hall_04",
+      "to": "wp_wood_238",
+      "distance": 5,
+      "accessible": true
+    },
+    {
+      "from": "wp_wood_f2_hall_03",
+      "to": "wp_wood_241",
+      "distance": 7.2,
+      "accessible": true
+    },
+    {
+      "from": "wp_wood_f2_hall_03",
+      "to": "wp_wood_242",
+      "distance": 6.8,
+      "accessible": true
+    },
+    {
+      "from": "wp_wood_f2_hall_02",
+      "to": "wp_wood_243",
+      "distance": 5.2,
+      "accessible": true
+    },
+    {
+      "from": "wp_wood_f2_hall_02",
+      "to": "wp_wood_244",
+      "distance": 6.4,
+      "accessible": true
+    },
+    {
+      "from": "wp_wood_f3_hall_01",
+      "to": "wp_wood_f3_outside",
+      "distance": 2.2,
+      "accessible": true
+    },
+    {
+      "from": "wp_wood_f3_hall_07",
+      "to": "wp_wood_f3_hall_09",
+      "distance": 6.5,
+      "accessible": true
+    },
+    {
+      "from": "wp_wood_f3_hall_02",
+      "to": "wp_wood_319",
+      "distance": 2.4,
+      "accessible": true
+    },
+    {
+      "from": "wp_wood_f3_hall_03",
+      "to": "wp_wood_321",
+      "distance": 10.4,
+      "accessible": true
+    },
+    {
+      "from": "wp_wood_f3_hall_03",
+      "to": "wp_wood_321a",
+      "distance": 6.8,
+      "accessible": true
+    },
+    {
+      "from": "wp_wood_f3_hall_03",
+      "to": "wp_wood_321b",
+      "distance": 15.3,
+      "accessible": true
+    },
+    {
+      "from": "wp_wood_f3_hall_06",
+      "to": "wp_wood_337",
+      "distance": 2.4,
+      "accessible": true
+    },
+    {
+      "from": "wp_wood_f3_hall_07",
+      "to": "wp_wood_338",
+      "distance": 12.5,
+      "accessible": true
+    },
+    {
+      "from": "wp_wood_f3_hall_08",
+      "to": "wp_wood_340",
+      "distance": 8.4,
+      "accessible": true
+    },
+    {
+      "from": "wp_wood_f3_hall_09",
+      "to": "wp_wood_341",
+      "distance": 8.9,
+      "accessible": true
+    },
+    {
+      "from": "wp_wood_102",
+      "to": "wp_wood_f1_hall_01",
+      "distance": 14.7,
+      "accessible": true
+    },
+    {
+      "from": "wp_wood_103",
+      "to": "wp_wood_102",
+      "distance": 2.8,
+      "accessible": true
+    },
+    {
+      "from": "wp_wood_118",
+      "to": "wp_wood_124",
+      "distance": 3,
+      "accessible": true
+    },
+    {
+      "from": "wp_wood_203",
+      "to": "wp_wood_elevator_f2",
+      "distance": 24.2,
+      "accessible": true
+    },
+    {
+      "from": "wp_wood_213",
+      "to": "wp_wood_f2_hall_12",
+      "distance": 2.1,
+      "accessible": true
+    },
+    {
+      "from": "wp_wood_214",
+      "to": "wp_wood_f2_hall_12",
+      "distance": 2,
+      "accessible": true
+    },
+    {
+      "from": "wp_wood_217",
+      "to": "wp_wood_f2_hall_09",
+      "distance": 5.6,
+      "accessible": true
+    },
+    {
+      "from": "wp_wood_218",
+      "to": "wp_wood_f2_hall_09",
+      "distance": 2.7,
+      "accessible": true
+    },
+    {
+      "from": "wp_wood_219",
+      "to": "wp_wood_220",
+      "distance": 1.4,
+      "accessible": true
+    },
+    {
+      "from": "wp_wood_226",
+      "to": "wp_wood_217",
+      "distance": 4,
+      "accessible": true
+    },
+    {
+      "from": "wp_wood_227",
+      "to": "wp_wood_226",
+      "distance": 3.1,
+      "accessible": true
+    },
+    {
+      "from": "wp_wood_229",
+      "to": "wp_wood_224",
+      "distance": 1,
+      "accessible": true
+    },
+    {
+      "from": "wp_wood_230",
+      "to": "wp_wood_f2_hall_05",
+      "distance": 6.9,
+      "accessible": true
+    },
+    {
+      "from": "wp_wood_235",
+      "to": "wp_wood_236",
+      "distance": 3.3,
+      "accessible": true
+    },
+    {
+      "from": "wp_wood_314",
+      "to": "wp_wood_f3_hall_05",
+      "distance": 2.3,
+      "accessible": true
+    },
+    {
+      "from": "wp_wood_315",
+      "to": "wp_wood_f3_hall_05",
+      "distance": 1.5,
+      "accessible": true
+    },
+    {
+      "from": "wp_wood_316",
+      "to": "wp_wood_315",
+      "distance": 1,
+      "accessible": true
+    },
+    {
+      "from": "wp_wood_317",
+      "to": "wp_wood_314",
+      "distance": 1.1,
+      "accessible": true
+    },
+    {
+      "from": "wp_wood_324",
+      "to": "wp_wood_321b",
+      "distance": 4.9,
+      "accessible": true
+    },
+    {
+      "from": "wp_wood_326",
+      "to": "wp_wood_337",
+      "distance": 3.7,
+      "accessible": true
+    },
+    {
+      "from": "wp_wood_327a",
+      "to": "wp_wood_326",
+      "distance": 4.1,
+      "accessible": true
+    },
+    {
+      "from": "wp_wood_327b",
+      "to": "wp_wood_326",
+      "distance": 1.2,
+      "accessible": true
+    },
+    {
+      "from": "wp_wood_329",
+      "to": "wp_wood_327a",
+      "distance": 1.4,
+      "accessible": true
+    },
+    {
+      "from": "wp_wood_330",
+      "to": "wp_wood_327a",
+      "distance": 5.8,
+      "accessible": true
+    },
+    {
+      "from": "wp_wood_335",
+      "to": "wp_wood_f3_hall_07",
+      "distance": 2.2,
+      "accessible": true
+    },
+    {
+      "from": "wp_wood_library_f1",
+      "to": "wp_wood_main_entrance",
+      "distance": 6.6,
+      "accessible": true
+    },
+    {
+      "from": "wp_wood_f1_entrance_side_2",
+      "to": "wp_wood_f1_stairs_a",
+      "distance": 4.1,
+      "accessible": true
+    },
+    {
+      "from": "wp_wood_f1_entrance_side_3",
+      "to": "wp_wood_133b",
+      "distance": 6.2,
+      "accessible": true
+    },
+    {
+      "from": "wp_wood_101",
+      "to": "wp_wood_102",
+      "distance": 4.8,
+      "accessible": true
+    },
+    {
+      "from": "wp_wood_104",
+      "to": "wp_wood_102",
+      "distance": 3,
+      "accessible": true
+    },
+    {
+      "from": "wp_wood_105",
+      "to": "wp_wood_104",
+      "distance": 1.7,
+      "accessible": true
+    },
+    {
+      "from": "wp_wood_107",
+      "to": "wp_wood_105",
+      "distance": 4.4,
+      "accessible": true
+    },
+    {
+      "from": "wp_wood_108",
+      "to": "wp_wood_107",
+      "distance": 1.9,
+      "accessible": true
+    },
+    {
+      "from": "wp_wood_113",
+      "to": "wp_wood_elevator_f1",
+      "distance": 2.6,
+      "accessible": true
+    },
+    {
+      "from": "wp_wood_115",
+      "to": "wp_wood_f1_staircase",
+      "distance": 7.8,
+      "accessible": true
+    },
+    {
+      "from": "wp_wood_117",
+      "to": "wp_wood_118",
+      "distance": 5.1,
+      "accessible": true
+    },
+    {
+      "from": "wp_wood_120",
+      "to": "wp_wood_f1_hall_04",
+      "distance": 3.6,
+      "accessible": true
+    },
+    {
+      "from": "wp_wood_122",
+      "to": "wp_wood_121",
+      "distance": 1.8,
+      "accessible": true
+    },
+    {
+      "from": "wp_wood_128",
+      "to": "wp_wood_127",
+      "distance": 4.6,
+      "accessible": true
+    },
+    {
+      "from": "wp_wood_130",
+      "to": "wp_wood_123a",
+      "distance": 3.3,
+      "accessible": true
+    },
+    {
+      "from": "wp_wood_131",
+      "to": "wp_wood_132b",
+      "distance": 1,
+      "accessible": true
+    },
+    {
+      "from": "wp_wood_132a",
+      "to": "wp_wood_135",
+      "distance": 1.3,
+      "accessible": true
+    },
+    {
+      "from": "wp_wood_204",
+      "to": "wp_wood_203",
+      "distance": 10.2,
+      "accessible": true
+    },
+    {
+      "from": "wp_wood_206",
+      "to": "wp_wood_204",
+      "distance": 7.3,
+      "accessible": true
+    },
+    {
+      "from": "wp_wood_207",
+      "to": "wp_wood_elevator_f2",
+      "distance": 12.8,
+      "accessible": true
+    },
+    {
+      "from": "wp_wood_208",
+      "to": "wp_wood_206",
+      "distance": 17.8,
+      "accessible": true
+    },
+    {
+      "from": "wp_wood_215",
+      "to": "wp_wood_214",
+      "distance": 15.3,
+      "accessible": true
+    },
+    {
+      "from": "wp_wood_221",
+      "to": "wp_wood_222",
+      "distance": 7.7,
+      "accessible": true
+    },
+    {
+      "from": "wp_wood_225",
+      "to": "wp_wood_223",
+      "distance": 6.3,
+      "accessible": true
+    },
+    {
+      "from": "wp_wood_231",
+      "to": "wp_wood_230",
+      "distance": 6.9,
+      "accessible": true
+    },
+    {
+      "from": "wp_wood_v201",
+      "to": "wp_wood_elevator_f2",
+      "distance": 3,
+      "accessible": true
+    },
+    {
+      "from": "wp_wood_318a",
+      "to": "wp_wood_f3_hall_03",
+      "distance": 6.6,
+      "accessible": true
+    },
+    {
+      "from": "wp_wood_320a",
+      "to": "wp_wood_321b",
+      "distance": 7.2,
+      "accessible": true
+    },
+    {
+      "from": "wp_wood_322",
+      "to": "wp_wood_321b",
+      "distance": 6.6,
+      "accessible": true
+    },
+    {
+      "from": "wp_wood_323",
+      "to": "wp_wood_324",
+      "distance": 6,
+      "accessible": true
+    },
+    {
+      "from": "wp_wood_325",
+      "to": "wp_wood_324",
+      "distance": 9.3,
+      "accessible": true
+    },
+    {
+      "from": "wp_wood_327",
+      "to": "wp_wood_327a",
+      "distance": 7.4,
+      "accessible": true
+    },
+    {
+      "from": "wp_wood_328",
+      "to": "wp_wood_327",
+      "distance": 7.2,
+      "accessible": true
+    },
+    {
+      "from": "wp_wood_331",
+      "to": "wp_wood_330",
+      "distance": 6.9,
+      "accessible": true
+    },
+    {
+      "from": "wp_wood_339",
+      "to": "wp_wood_340",
+      "distance": 4.8,
+      "accessible": true
+    },
+    {
+      "from": "wp_wood_340a",
+      "to": "wp_wood_339",
+      "distance": 8.3,
+      "accessible": true
+    },
+    {
+      "from": "wp_wood_344",
+      "to": "wp_wood_345",
+      "distance": 6.3,
+      "accessible": true
+    },
+    {
+      "from": "wp_wood_347",
+      "to": "wp_wood_346a",
+      "distance": 9.4,
+      "accessible": true
+    },
+    {
+      "from": "wp_wood_m315",
+      "to": "wp_wood_elevator_f3",
+      "distance": 24.6,
+      "accessible": true
+    },
+    {
+      "from": "wp_wood_v301",
+      "to": "wp_wood_elevator_f3",
+      "distance": 3.6,
+      "accessible": true
+    },
+    {
+      "from": "wp_lares_f1_hall_03",
+      "to": "wp_lares_103",
+      "accessible": true
+    },
+    {
+      "from": "wp_lares_f1_hall_03",
+      "to": "wp_lares_102a",
+      "accessible": true
+    },
+    {
+      "from": "wp_lares_f1_hall_03",
+      "to": "wp_lares_102b",
+      "accessible": true
+    },
+    {
+      "from": "wp_lares_main_entrance",
+      "to": "wp_lares_stairs_f1",
+      "accessible": true
+    },
+    {
+      "from": "wp_lares_f2_hall_01",
+      "to": "wp_lares_f2_hall_02",
+      "accessible": true
+    },
+    {
+      "from": "wp_lares_f2_hall_01",
+      "to": "wp_lares_206",
+      "accessible": true
+    },
+    {
+      "from": "wp_lares_f2_hall_01",
+      "to": "wp_lares_208",
+      "accessible": true
+    },
+    {
+      "from": "wp_lares_f2_hall_01",
+      "to": "wp_lares_stairs_f2",
+      "accessible": true
+    },
+    {
+      "from": "wp_lares_stairs_f2",
+      "to": "wp_lares_208",
+      "accessible": true
+    },
+    {
+      "from": "wp_lares_stairs_f2",
+      "to": "wp_lares_209",
+      "accessible": true
+    },
+    {
+      "from": "wp_lares_stairs_f2",
+      "to": "wp_lares_f2_hall_03",
+      "accessible": true
+    },
+    {
+      "from": "wp_lares_f2_hall_01",
+      "to": "wp_lares_f2_hall_03",
+      "accessible": true
+    },
+    {
+      "from": "wp_lares_f2_hall_03",
+      "to": "wp_lares_210",
+      "accessible": true
+    },
+    {
+      "from": "wp_lares_f2_hall_03",
+      "to": "wp_lares_211",
+      "accessible": true
+    },
+    {
+      "from": "wp_lares_f2_hall_01",
+      "to": "wp_lares_209",
+      "accessible": true
+    },
+    {
+      "from": "wp_lares_elevator_f2",
+      "to": "wp_lares_f2_hall_02",
+      "accessible": true
+    },
+    {
+      "from": "wp_lares_f2_hall_02",
+      "to": "wp_lares_f2_hall_04",
+      "accessible": true
+    },
+    {
+      "from": "wp_lares_f2_hall_04",
+      "to": "wp_lares_204",
+      "accessible": true
+    },
+    {
+      "from": "wp_lares_f2_hall_04",
+      "to": "wp_lares_203",
+      "accessible": true
+    },
+    {
+      "from": "wp_lares_elevator_f2",
+      "to": "wp_lares_f2_hall_04",
+      "accessible": true
+    },
+    {
+      "from": "wp_lares_main_entrance",
+      "to": "wp_lares_f1_hall_01",
+      "accessible": true
+    },
+    {
+      "from": "wp_lares_f1_hall_01",
+      "to": "wp_lares_elevator_f1",
+      "accessible": true
+    },
+    {
+      "from": "wp_lares_f1_hall_01",
+      "to": "wp_lares_108",
+      "accessible": true
+    },
+    {
+      "from": "wp_lares_elevator_f1",
+      "to": "wp_lares_f1_hall_02",
+      "accessible": true
+    },
+    {
+      "from": "wp_lares_f1_hall_01",
+      "to": "wp_lares_f1_hall_02",
+      "accessible": true
+    },
+    {
+      "from": "wp_lares_f1_hall_02",
+      "to": "wp_lares_f1_hall_03",
+      "accessible": true
+    },
+    {
+      "from": "wp_lares_f1_hall_02",
+      "to": "wp_lares_f1_hall_04",
+      "accessible": true
+    },
+    {
+      "from": "wp_lares_f1_hall_04",
+      "to": "wp_lares_108",
+      "accessible": true
+    },
+    {
+      "from": "wp_lares_f1_hall_04",
+      "to": "wp_lares_111",
+      "accessible": true
+    },
+    {
+      "from": "wp_lares_f1_hall_04",
+      "to": "wp_lares_112",
+      "accessible": true
+    },
+    {
+      "from": "wp_lares_f1_hall_01",
+      "to": "wp_lares_f1_hall_04",
+      "accessible": true
+    },
+    {
+      "from": "wp_lares_112",
+      "to": "wp_lares_f1_hall_05",
+      "accessible": true
+    },
+    {
+      "from": "wp_lares_f1_hall_06",
+      "to": "wp_lares_111",
+      "accessible": true
+    },
+    {
+      "from": "wp_lares_f1_hall_05",
+      "to": "wp_lares_f1_hall_06",
+      "accessible": true
+    },
+    {
+      "from": "wp_lares_f1_hall_06",
+      "to": "wp_lares_f1_hall_07",
+      "accessible": true
+    },
+    {
+      "from": "wp_lares_f1_hall_07",
+      "to": "wp_lares_f1_hall_08",
+      "accessible": true
+    },
+    {
+      "from": "wp_lares_f1_hall_08",
+      "to": "wp_lares_banquet",
+      "accessible": true
+    },
+    {
+      "from": "wp_lares_side_entrance_1",
+      "to": "wp_lares_f1_hall_09",
+      "accessible": true
+    },
+    {
+      "from": "wp_lares_f1_hall_09",
+      "to": "wp_lares_banquet",
+      "accessible": true
+    },
+    {
+      "from": "wp_lares_f1_hall_09",
+      "to": "wp_lares_f1_hall_08",
+      "accessible": true
+    },
+    {
+      "from": "wp_lares_side_entrance_2",
+      "to": "wp_lares_f1_hall_03",
+      "accessible": true
+    },
+    {
+      "from": "wp_rydal_f1_hall_01",
+      "to": "wp_rydal_107",
+      "accessible": true
+    },
+    {
+      "from": "wp_rydal_f1_hall_01",
+      "to": "wp_rydal_106",
+      "accessible": true
+    },
+    {
+      "from": "wp_rydal_f1_hall_top_stairs",
+      "to": "wp_rydal_106",
+      "accessible": true
+    },
+    {
+      "from": "wp_rydal_f1_hall_top_stairs",
+      "to": "wp_rydal_107",
+      "accessible": true
+    },
+    {
+      "from": "wp_rydal_main_entrance",
+      "to": "wp_rydal_f1_stairs_side",
+      "accessible": true
+    },
+    {
+      "from": "wp_rydal_f1_stairs_side",
+      "to": "wp_rydal_101",
+      "accessible": true
+    },
+    {
+      "from": "wp_rydal_f1_stairs_side",
+      "to": "wp_rydal_f2_stairs_main",
+      "accessible": true
+    },
+    {
+      "from": "wp_lares_stairs_f2",
+      "to": "wp_lares_stairs_f1",
+      "accessible": true
+    },
+    {
+      "from": "wp_lares_stairs_f2",
+      "to": "wp_lares_stairs_ground",
+      "accessible": true
+    },
+    {
+      "from": "wp_lares_elevator_f2",
+      "to": "wp_lares_elevator_ground",
+      "accessible": true
+    },
+    {
+      "from": "wp_lares_elevator_f2",
+      "to": "wp_lares_elevator_f1",
+      "accessible": true
+    },
+    {
+      "from": "wp_lares_stairs_f1",
+      "to": "wp_lares_stairs_ground",
+      "accessible": true
+    },
+    {
+      "from": "wp_lares_stairs_ground",
+      "to": "wp_lares_g04",
+      "accessible": true
+    },
+    {
+      "from": "wp_lares_stairs_ground",
+      "to": "wp_lares_ground_hall_01",
+      "accessible": true
+    },
+    {
+      "from": "wp_lares_ground_hall_01",
+      "to": "wp_lares_elevator_ground",
+      "accessible": true
+    },
+    {
+      "from": "wp_lares_ground_hall_02",
+      "to": "wp_lares_ground_hall_01",
+      "accessible": true
+    },
+    {
+      "from": "wp_lares_ground_hall_02",
+      "to": "wp_lares_g04",
+      "accessible": true
+    },
+    {
+      "from": "wp_lares_ground_hall_02",
+      "to": "wp_lares_ground_entrance",
+      "accessible": true
+    },
+    {
+      "from": "wp_rydal_f2_stairs_main",
+      "to": "wp_rydal_209",
+      "accessible": true
+    },
+    {
+      "from": "wp_rydal_f2_hall_02",
+      "to": "wp_rydal_f2_hall_03",
+      "accessible": true
+    },
+    {
+      "from": "wp_rydal_f2_hall_03",
+      "to": "wp_rydal_f2_hall_04",
+      "accessible": true
+    },
+    {
+      "from": "wp_rydal_f2_hall_04",
+      "to": "wp_rydal_212",
+      "accessible": true
+    },
+    {
+      "from": "wp_rydal_f2_hall_01",
+      "to": "wp_rydal_201",
+      "accessible": true
+    },
+    {
+      "from": "wp_rydal_f2_hall_01",
+      "to": "wp_rydal_202",
+      "accessible": true
+    },
+    {
+      "from": "wp_rydal_f2_hall_01",
+      "to": "wp_rydal_207",
+      "accessible": true
+    },
+    {
+      "from": "wp_rydal_f2_stairs_main",
+      "to": "wp_rydal_f2_hall_01",
+      "accessible": true
+    },
+    {
+      "from": "wp_rydal_f2_stairs_main",
+      "to": "wp_rydal_f2_hall_05",
+      "accessible": true
+    },
+    {
+      "from": "wp_rydal_f2_hall_05",
+      "to": "wp_rydal_217",
+      "accessible": true
+    },
+    {
+      "from": "wp_rydal_f2_hall_05",
+      "to": "wp_rydal_f2_hall_02",
+      "accessible": true
+    },
+    {
+      "from": "wp_rydal_gnd_hall_01",
+      "to": "wp_rydal_002",
+      "accessible": true
+    },
+    {
+      "from": "wp_spring_entrance",
+      "to": "wp_spring_hall",
+      "accessible": true
+    },
+    {
+      "from": "wp_spring_hall",
+      "to": "wp_spring_100_inside",
+      "accessible": true
+    },
+    {
+      "from": "wp_spring_hall",
+      "to": "wp_spring_101",
+      "accessible": true
+    },
+    {
+      "from": "wp_ath_f1_hall_01",
+      "to": "wp_ath_f1_gym_1",
+      "accessible": true
+    },
+    {
+      "from": "wp_ath_f1_hall_01",
+      "to": "wp_ath_f1_gym_2",
+      "accessible": true
+    },
+    {
+      "from": "wp_ath_f1_hall_01",
+      "to": "wp_ath_f1_hall_02",
+      "accessible": true
+    },
+    {
+      "from": "wp_ath_f1_hall_02",
+      "to": "wp_ath_basketball_court",
+      "accessible": true
+    },
+    {
+      "from": "wp_ath_elevator_f2",
+      "to": "wp_ath_f2_classroom",
+      "accessible": true
+    },
+    {
+      "from": "wp_ath_f2_stairs",
+      "to": "wp_ath_f2_classroom",
+      "accessible": true
+    },
+    {
+      "from": "wp_ath_f2_stairs",
+      "to": "wp_ath_f1_stairs",
+      "accessible": true
+    },
+    {
+      "from": "wp_ath_elevator_f2",
+      "to": "wp_ath_elevator_f1",
+      "accessible": true
+    },
+    {
+      "from": "wp_lares_side_entrance_2",
+      "to": "wp_lares_stairs_f1_2",
+      "accessible": true
+    },
+    {
+      "from": "wp_lares_f1_hall_03",
+      "to": "wp_lares_stairs_f1_2",
+      "accessible": true
+    },
+    {
+      "from": "wp_lares_stairs_f1_2",
+      "to": "wp_lares_stairs_f2",
+      "accessible": true
     }
   ],
   "rooms": [
@@ -10458,6 +12261,22 @@
       "waypoint_id": "wp_ath_f2_landing",
       "room_name": "Athletic 2nd Floor Landing",
       "type": "hall"
+    },
+    {
+      "building": "woodland",
+      "room_number": "136",
+      "floor": "1",
+      "waypoint_id": "wp_wood_136",
+      "room_name": "Room 136",
+      "type": "classroom"
+    },
+    {
+      "building": "rydal",
+      "room_number": "002",
+      "floor": "ground",
+      "waypoint_id": "wp_rydal_002",
+      "room_name": "Room 002",
+      "type": "classroom"
     }
   ],
   "qrAnchors": [
@@ -12154,6 +13973,30 @@
       "graph_rev": "2026-04-27",
       "bearing_hint_deg": null,
       "active": true
+    },
+    {
+      "qr_id": "QR_WOOD_F1_136",
+      "waypoint_id": "wp_wood_136",
+      "building": "woodland",
+      "floor": "1"
+    },
+    {
+      "qr_id": "QR_LARES_GND_ENTRANCE",
+      "waypoint_id": "wp_lares_ground_entrance",
+      "building": "lares",
+      "floor": "ground"
+    },
+    {
+      "qr_id": "QR_RYDAL_GND_002",
+      "waypoint_id": "wp_rydal_002",
+      "building": "rydal",
+      "floor": "ground"
+    },
+    {
+      "qr_id": "QR_LARES_F1_SIDE_ENTRANCE",
+      "waypoint_id": "wp_lares_side_entrance_1",
+      "building": "lares",
+      "floor": "1"
     }
   ]
 }
