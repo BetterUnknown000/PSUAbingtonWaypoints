@@ -15,8 +15,10 @@
       "entrances": [
         "wp_suth_main_entrance",
         "wp_suth_ground_entrance",
-        "wp_suth_f1_back_entrance",
-        "wp_suth_room_008_second_entrance"
+        "wp_suth_l_entrance",
+        "wp_suth_entrance_left",
+        "wp_suth_entrance_back_left",
+        "wp_suth_f1_back_entrance"
       ]
     },
     {
@@ -6114,6 +6116,8 @@
       "floor": "1",
       "label": "Left Entrance",
       "type": "entrance",
+      "latitude": 40.11604884396653,
+      "longitude": -75.10852537874551,
       "x": 627.6,
       "y": 93.3
     },
@@ -6123,6 +6127,8 @@
       "floor": "1",
       "label": "MainLeft Entrance",
       "type": "entrance",
+      "latitude": 40.116000384497134,
+      "longitude": -75.10867933744474,
       "x": 495.6,
       "y": 139.5
     },
@@ -6132,6 +6138,8 @@
       "floor": "1",
       "label": "Sutherland Back Left Entrance",
       "type": "entrance",
+      "latitude": 40.1158954656637,
+      "longitude": -75.10854200847415,
       "x": 605.9,
       "y": 245.6
     }
