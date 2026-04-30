@@ -17,6 +17,7 @@
  
 import { useEffect, useRef, useState, useCallback } from "react";
 import { Accelerometer, Gyroscope, Magnetometer } from "expo-sensors";
+import { writeLog } from "../utils/logger";
  
 // ─── Tuning constants ────────────────────────────────────────────────────────
  
@@ -92,7 +93,7 @@ export function useIndoorPose({ anchorPose, isActive }) {
 
     poseRef.current = nextPose;
     lastHeadingPublishTsRef.current = now;
-    console.log("[LIVE_POSE]", nextPose.x, nextPose.y, nextPose.headingDeg);
+    writeLog('LIVE_POSE', { x: nextPose.x, y: nextPose.y, headingDeg: nextPose.headingDeg });
     setPose(nextPose);
   }, []);
 
