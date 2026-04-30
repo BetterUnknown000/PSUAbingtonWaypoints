@@ -1,5 +1,6 @@
-import { writeLog } from '../utils/logger';
+import React, { useEffect, useRef } from "react";
 import { View, Text, StyleSheet, Animated, Easing } from "react-native";
+import { writeLog } from '../utils/logger';
 
 const PSU = {
   blue: "#0B3D91",
