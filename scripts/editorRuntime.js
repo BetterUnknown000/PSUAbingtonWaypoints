@@ -34,13 +34,13 @@ Object.keys(TYPE_COLOR).forEach(function(type) {
   r.innerHTML = '<div class="leg-dot" style="background:' + TYPE_COLOR[type] + '"></div>' + type;
   legEl.appendChild(r);
 });
-var dc = document.createElement('div');
-dc.className = 'leg-row';
-dc.innerHTML = '<div class="leg-dot" style="background:#fff;border:2px solid #E24B4A"></div>disconnected';
-legEl.appendChild(dc);
+var dcLeg = document.createElement('div');
+dcLeg.className = 'leg-row';
+dcLeg.innerHTML = '<div class="leg-dot" style="background:#fff;border:2px solid #E24B4A"></div>disconnected';
+legEl.appendChild(dcLeg);
 var noLatLng = document.createElement('div');
 noLatLng.className = 'leg-row';
-noLatLng.innerHTML = '<div class="leg-dot" style="background:#185FA5;border:2.5px solid #F5A623"></div>entrance — missing lat/long';
+noLatLng.innerHTML = '<div class="leg-dot" style="background:#185FA5;border:2.5px solid #F5A623"></div>entrance \u2014 missing lat/long';
 legEl.appendChild(noLatLng);
 var vertLeg = document.createElement('div');
 vertLeg.className = 'leg-row';
@@ -98,7 +98,28 @@ function removeEdge(from, to) {
   });
 }
 
-// ── Zoom / pan ─────────────────────────────────────────────────────────────────
+// ── Sync buildings[].entrances when type changes ──────────────────────────────
+function syncEntranceArrays(id, building, oldType, newType) {
+  var buildings = FULL_CAMPUS.buildings;
+  if (!Array.isArray(buildings)) return;
+  var buildingObj = null;
+  for (var i = 0; i < buildings.length; i++) {
+    if (buildings[i].id === building || buildings[i].name === building) {
+      buildingObj = buildings[i]; break;
+    }
+  }
+  if (!buildingObj || !Array.isArray(buildingObj.entrances)) return;
+  var wasEntrance = oldType === 'entrance';
+  var isEntrance  = newType === 'entrance';
+  if (!wasEntrance && isEntrance) {
+    if (buildingObj.entrances.indexOf(id) === -1) buildingObj.entrances.push(id);
+  } else if (wasEntrance && !isEntrance) {
+    var idx = buildingObj.entrances.indexOf(id);
+    if (idx !== -1) buildingObj.entrances.splice(idx, 1);
+  }
+}
+
+// ── Zoom / pan ────────────────────────────────────────────────────────────────
 var wrap  = document.getElementById('canvas-wrap');
 var zroot = document.getElementById('zoom-root');
 var zoomL = document.getElementById('zoom-lbl');
@@ -130,12 +151,9 @@ window.addEventListener('mousemove', function(e) {
     var sv = svgCoords(e.clientX, e.clientY);
     positions[draggingNode].x = Math.max(0, Math.min(1000, dnOX + (sv.x - dnSX)));
     positions[draggingNode].y = Math.max(0, Math.min(1000, dnOY + (sv.y - dnSY)));
-    // Update x/y display in real time while dragging
     var p = positions[draggingNode];
     var xyEl = document.querySelector('#node-info .val[data-xy]');
-    if (xyEl) {
-      xyEl.textContent = 'x: ' + p.x.toFixed(1) + '  y: ' + p.y.toFixed(1);
-    }
+    if (xyEl) xyEl.textContent = 'x: ' + p.x.toFixed(1) + '  y: ' + p.y.toFixed(1);
     render();
     return;
   }
@@ -151,7 +169,6 @@ window.addEventListener('mouseup', function() {
     p.y = Math.round(p.y * 10) / 10;
     if (wpById[draggingNode]) { wpById[draggingNode].x = p.x; wpById[draggingNode].y = p.y; }
     markDirty();
-    // Refresh the full info panel after drop so all values are current
     var id = draggingNode;
     draggingNode = null;
     var adj = buildAdj();
@@ -170,57 +187,52 @@ function render() {
   var nodeIds = floorNodeIds();
   var nodeSet = {};
   nodeIds.forEach(function(id) { nodeSet[id] = true; });
-  var fEdges  = allEdges.filter(function(e) { return nodeSet[e.from] && nodeSet[e.to]; });
+  var fEdges = allEdges.filter(function(e) { return nodeSet[e.from] && nodeSet[e.to]; });
 
-  // BFS disconnected — same-floor edges only.
-  // Seed from the main cluster AND from any node with a cross-floor edge,
-  // so rooms reachable only via a vertical bridge are not marked disconnected.
+  // Find vertically connected nodes
   var hasVertical = {};
   nodeIds.forEach(function(id) {
     var wp = wpById[id];
     if (!wp) return;
-    var crossFloor = allEdges.some(function(e) {
+    var cross = allEdges.some(function(e) {
       if (e.from !== id && e.to !== id) return false;
       var nb = e.from === id ? e.to : e.from;
       var nbWp = wpById[nb];
       return nbWp && nbWp.building === wp.building && String(nbWp.floor) !== String(wp.floor);
     });
-    if (crossFloor) hasVertical[id] = true;
+    if (cross) hasVertical[id] = true;
   });
 
-  // Collect all BFS seeds: main cluster start + all vertical bridge nodes
+  // Multi-seed BFS: main cluster + all vertical bridge nodes
   var seeds = [];
-  var mainStart = nodeIds.find(function(id) {
-    return (adj[id] || []).some(function(nb) { return nodeSet[nb]; });
-  });
+  var mainStart = null;
+  for (var mi = 0; mi < nodeIds.length; mi++) {
+    var mid = nodeIds[mi];
+    if ((adj[mid] || []).some(function(nb) { return nodeSet[nb]; })) { mainStart = mid; break; }
+  }
   if (mainStart) seeds.push(mainStart);
   nodeIds.forEach(function(id) { if (hasVertical[id] && seeds.indexOf(id) === -1) seeds.push(id); });
 
-  // Multi-seed BFS
   var reachable = {};
   seeds.forEach(function(seed) {
-    var visited = bfs(seed, nodeSet, adj);
-    Object.keys(visited).forEach(function(id) { reachable[id] = true; });
+    var vis = bfs(seed, nodeSet, adj);
+    Object.keys(vis).forEach(function(id) { reachable[id] = true; });
   });
 
   var dcSet = {};
   nodeIds.forEach(function(id) { if (!reachable[id]) dcSet[id] = true; });
 
   // Stats
-  document.getElementById('s-wps').textContent   = allWps.length;
-  document.getElementById('s-edges').textContent  = allEdges.length;
+  document.getElementById('s-wps').textContent  = allWps.length;
+  document.getElementById('s-edges').textContent = allEdges.length;
   var dcEl = document.getElementById('s-dc');
   var dcCount = Object.keys(dcSet).length;
   dcEl.textContent = dcCount;
   dcEl.style.color = dcCount ? '#A32D2D' : '#3B6D11';
 
-  // Build SVG
-  var parts = currentKey.split('__');
-  var building = parts[0];
-
   var svgParts = [];
 
-  // Background floorplan from hidden div
+  // Floorplan background
   var fpDiv = document.getElementById('fp-' + currentKey);
   if (fpDiv) {
     var fpSvg = fpDiv.querySelector('svg');
@@ -234,30 +246,35 @@ function render() {
     svgParts.push('<rect width="1000" height="1000" fill="#f8f7f4"/>');
   }
 
-  // Edges
+  // Edges — invisible 12px hit area + visible thin line on top
+  // The wide transparent line captures clicks reliably in all browsers
   fEdges.forEach(function(e) {
     var a = positions[e.from], b = positions[e.to];
     if (!a || !b) return;
     var hl = hoveredNode && (e.from === hoveredNode || e.to === hoveredNode);
     var pd = edgePendFrom && (e.from === edgePendFrom || e.to === edgePendFrom);
+    var visColor = hl ? '#185FA5' : pd ? '#854F0B' : 'rgba(0,0,0,0.28)';
+    var visSW    = hl || pd ? 2.5 : 1.5;
+    var coords   = ' x1="' + a.x.toFixed(1) + '" y1="' + a.y.toFixed(1) + '" x2="' + b.x.toFixed(1) + '" y2="' + b.y.toFixed(1) + '"';
+    // Invisible wide hit area (class carries data-from/to for event delegation)
     svgParts.push(
-      '<line class="e-line"' +
-      ' data-from="' + e.from + '" data-to="' + e.to + '"' +
-      ' x1="' + a.x.toFixed(1) + '" y1="' + a.y.toFixed(1) + '"' +
-      ' x2="' + b.x.toFixed(1) + '" y2="' + b.y.toFixed(1) + '"' +
-      ' stroke="' + (hl ? '#185FA5' : pd ? '#854F0B' : 'rgba(0,0,0,0.28)') + '"' +
-      ' stroke-width="' + (hl || pd ? 2.5 : 1.5) + '"' +
-      ' style="cursor:pointer"/>'
+      '<line class="e-line" data-from="' + e.from + '" data-to="' + e.to + '"' + coords +
+      ' stroke="transparent" stroke-width="12" pointer-events="stroke" style="cursor:pointer"/>'
+    );
+    // Visible thin line (no pointer events — the hit area handles it)
+    svgParts.push(
+      '<line' + coords +
+      ' stroke="' + visColor + '" stroke-width="' + visSW + '" pointer-events="none"/>'
     );
   });
 
-  // Nodes
+  // Nodes — pointer-events="all" required for Chrome/Safari to fire events on <g>
   nodeIds.forEach(function(id) {
     var wp = wpById[id], p = positions[id];
     if (!wp || !p) return;
-    var isDc = !!dcSet[id];
-    var isHl = hoveredNode === id;
-    var isPd = edgePendFrom === id;
+    var isDc   = !!dcSet[id];
+    var isHl   = hoveredNode === id;
+    var isPd   = edgePendFrom === id;
     var isVert = !!hasVertical[id];
     var isNoLatLng = wp.type === 'entrance' &&
       !(Number.isFinite(Number(wp.latitude)) && Number(wp.latitude) !== 0 &&
@@ -265,30 +282,25 @@ function render() {
 
     var color  = typeColor(wp.type);
     var fill   = isDc ? '#fff' : color;
-    var stroke = isDc ? '#E24B4A'
-               : isNoLatLng ? '#F5A623'
-               : isPd ? '#854F0B'
-               : isHl ? '#fff'
-               : color;
-    var sw = isDc || isNoLatLng || isPd ? 2.5 : isHl ? 2 : 1.5;
-    var r  = isHl || isPd ? 10 : 8;
-    var dashAttr = isVert && !isHl ? ' stroke-dasharray="3,2"' : '';
-    var label  = wp.label || '';
-    var m      = label.match(/\d{3,}/);
+    var stroke = isDc ? '#E24B4A' : isNoLatLng ? '#F5A623' : isPd ? '#854F0B' : isHl ? '#fff' : color;
+    var sw     = isDc || isNoLatLng || isPd ? 2.5 : isHl ? 2 : 1.5;
+    var r      = isHl || isPd ? 10 : 8;
+    var dash   = isVert && !isHl ? ' stroke-dasharray="3,2"' : '';
+    var m      = (wp.label || '').match(/\d{3,}/);
     var sl     = m ? m[0] : (wp.type || '?').slice(0, 2).toUpperCase();
+
     svgParts.push(
-      '<g class="wp-node" data-id="' + id + '" style="cursor:pointer">' +
+      '<g class="wp-node" data-id="' + id + '" pointer-events="all" style="cursor:pointer">' +
       '<circle cx="' + p.x.toFixed(1) + '" cy="' + p.y.toFixed(1) + '"' +
-      ' r="' + r + '" fill="' + fill + '" stroke="' + stroke + '" stroke-width="' + sw + '"' + dashAttr + ' opacity="0.93"/>' +
+      ' r="' + r + '" fill="' + fill + '" stroke="' + stroke + '" stroke-width="' + sw + '"' + dash + ' opacity="0.93"/>' +
       '<text x="' + p.x.toFixed(1) + '" y="' + (p.y + 3.5).toFixed(1) + '"' +
-      ' text-anchor="middle" font-size="7" font-weight="500"' +
-      ' font-family="system-ui,sans-serif"' +
+      ' text-anchor="middle" font-size="7" font-weight="500" font-family="system-ui,sans-serif"' +
       ' fill="' + (isDc ? '#E24B4A' : '#fff') + '" pointer-events="none">' + sl + '</text>' +
       '</g>'
     );
   });
 
-  // Get or create SVG element
+  // Get or create SVG
   var svg = document.getElementById('main-svg');
   if (!svg) {
     svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
@@ -302,10 +314,12 @@ function render() {
   }
   svg.innerHTML = svgParts.join('');
 
-  // Click on blank canvas in add mode
+  // Add-mode canvas click
   svg.onclick = function(e) {
     if (mode !== 'add') return;
-    if (e.target.closest && e.target.closest('.wp-node')) return;
+    // Use composedPath for shadow DOM compat; fall back to target check
+    var target = e.target || e.srcElement;
+    if (target && target.closest && target.closest('.wp-node')) return;
     var sv = svgCoords(e.clientX, e.clientY);
     pendingPos = { x: Math.round(sv.x * 10) / 10, y: Math.round(sv.y * 10) / 10 };
     document.getElementById('modal-coords').textContent =
@@ -317,46 +331,76 @@ function render() {
   bindEvents(svg, adj, nodeSet, dcSet);
 }
 
-// ── Bind SVG events ───────────────────────────────────────────────────────────
+// ── Bind SVG events (event delegation on svg element) ─────────────────────────
 function bindEvents(svg, adj, nodeSet, dcSet) {
-  svg.querySelectorAll('.e-line').forEach(function(line) {
-    line.addEventListener('click', function(e) {
+  // Use event delegation on the SVG itself — more reliable than per-element listeners
+  // which can be dropped when innerHTML is reset
+
+  svg.addEventListener('click', function(e) {
+    // Edge hit area click
+    if (e.target.classList && e.target.classList.contains('e-line')) {
       if (mode === 'move') return;
-      var from = line.dataset.from, to = line.dataset.to;
+      var from = e.target.dataset.from, to = e.target.dataset.to;
       if (confirm('Remove edge ' + from + ' \u2194 ' + to + '?')) {
         removeEdge(from, to);
         markDirty();
         render();
       }
       e.stopPropagation();
-    });
+      return;
+    }
+    // Node click
+    var g = closest(e.target, '.wp-node');
+    if (g) {
+      var id = g.getAttribute('data-id');
+      if (mode === 'view') showInfo(id, adj, nodeSet);
+      if (mode === 'edge') handleEdgeClick(id);
+      e.stopPropagation();
+    }
   });
 
-  svg.querySelectorAll('.wp-node').forEach(function(g) {
-    var id = g.dataset.id;
-    g.addEventListener('mouseenter', function() {
-      hoveredNode = id;
-      if (mode === 'view' || mode === 'edge') showInfo(id, adj, nodeSet);
-      render();
-    });
-    g.addEventListener('mouseleave', function() { hoveredNode = null; render(); });
-    g.addEventListener('mousedown', function(e) {
-      if (e.button !== 0) return;
-      e.stopPropagation();
-      if (mode === 'move') {
-        var sv = svgCoords(e.clientX, e.clientY);
-        draggingNode = id;
-        dnSX = sv.x; dnSY = sv.y;
-        dnOX = positions[id].x; dnOY = positions[id].y;
-      } else if (mode === 'edge') {
-        handleEdgeClick(id);
-      }
-    });
-    g.addEventListener('click', function(e) {
-      if (mode === 'view') showInfo(id, adj, nodeSet);
-      e.stopPropagation();
-    });
+  svg.addEventListener('mouseover', function(e) {
+    var g = closest(e.target, '.wp-node');
+    if (!g) return;
+    var id = g.getAttribute('data-id');
+    if (hoveredNode === id) return;
+    hoveredNode = id;
+    if (mode === 'view' || mode === 'edge') showInfo(id, adj, nodeSet);
+    render();
   });
+
+  svg.addEventListener('mouseout', function(e) {
+    var g = closest(e.target, '.wp-node');
+    if (!g) return;
+    // Only clear if leaving entirely (not moving to child)
+    var rel = e.relatedTarget;
+    if (rel && closest(rel, '.wp-node') === g) return;
+    hoveredNode = null;
+    render();
+  });
+
+  svg.addEventListener('mousedown', function(e) {
+    if (e.button !== 0) return;
+    var g = closest(e.target, '.wp-node');
+    if (!g) return;
+    var id = g.getAttribute('data-id');
+    e.stopPropagation();
+    if (mode === 'move') {
+      var sv = svgCoords(e.clientX, e.clientY);
+      draggingNode = id;
+      dnSX = sv.x; dnSY = sv.y;
+      dnOX = positions[id].x; dnOY = positions[id].y;
+    }
+  });
+}
+
+// ── Cross-browser closest() polyfill ──────────────────────────────────────────
+function closest(el, selector) {
+  while (el && el !== document) {
+    if (el.matches ? el.matches(selector) : el.msMatchesSelector && el.msMatchesSelector(selector)) return el;
+    el = el.parentNode;
+  }
+  return null;
 }
 
 // ── Node info panel ───────────────────────────────────────────────────────────
@@ -367,7 +411,7 @@ function showInfo(id, adj, nodeSet) {
 
   var xyRow = (p && p.x)
     ? '<div class="val" data-xy style="font-family:monospace;font-size:11px">x: ' + p.x.toFixed(1) + '  y: ' + p.y.toFixed(1) + '</div>'
-    : '<div class="val" style="color:#A32D2D">x/y not set — drag in Move mode</div>';
+    : '<div class="val" style="color:#A32D2D">x/y not set \u2014 drag in Move mode</div>';
 
   var latLngWarning = '';
   if (w.type === 'entrance') {
@@ -376,7 +420,7 @@ function showInfo(id, adj, nodeSet) {
     latLngWarning = hasLatLng
       ? '<div style="font-size:11px;color:#3B6D11;margin-bottom:6px">\u2713 lat: ' + Number(w.latitude).toFixed(6) + ', lng: ' + Number(w.longitude).toFixed(6) + '</div>'
       : '<div style="padding:6px 8px;background:#FFF3E0;border:.5px solid #F5A623;border-radius:5px;font-size:11px;color:#854F0B;margin-bottom:6px">' +
-        '\u26A0 Entrance is missing lat/long. Outdoor routing to this entrance will not work. Add latitude and longitude in campusData.json directly.</div>';
+        '\u26A0 Entrance is missing lat/long. Outdoor routing will not work. Add lat/long in campusData.json.</div>';
   }
 
   var typeOptions = Object.keys(TYPE_COLOR).map(function(t) {
@@ -388,40 +432,38 @@ function showInfo(id, adj, nodeSet) {
     return '<div class="conn-row">' +
       '<span><span style="color:#888780;font-size:10px">' + (nw ? nw.type : '?') + '</span> ' +
       (nw ? nw.label || nb : nb) + '</span>' +
-      '<button class="xb" onclick="delEdge(\'' + id + '\',\'' + nb + '\')">x</button>' +
-      '</div>';
+      '<button class="xb" onclick="delEdge(\'' + id + '\',\'' + nb + '\')">x</button></div>';
   }).join('');
 
   var verticalPanel = '';
   if (w.type === 'stairs' || w.type === 'elevator') {
     var sameType = allWps.filter(function(other) {
-      return other.id !== id &&
-             other.building === w.building &&
-             other.type === w.type &&
-             String(other.floor) !== String(w.floor);
+      return other.id !== id && other.building === w.building &&
+             other.type === w.type && String(other.floor) !== String(w.floor);
     });
     var connectedSet = {};
     allEdges
       .filter(function(e) { return e.from === id || e.to === id; })
       .map(function(e) { return e.from === id ? e.to : e.from; })
-      .filter(function(nb) { var nbWp = wpById[nb]; return nbWp && String(nbWp.floor) !== String(w.floor); })
+      .filter(function(nb) { var nw = wpById[nb]; return nw && String(nw.floor) !== String(w.floor); })
       .forEach(function(nb) { connectedSet[nb] = true; });
 
     var vRows = sameType.map(function(other) {
-      var isConnected = !!connectedSet[other.id];
+      var isConn = !!connectedSet[other.id];
       var dir = (other.floor === 'ground' && w.floor !== 'ground') ? '\u2193'
               : (w.floor === 'ground' && other.floor !== 'ground') ? '\u2191'
-              : (Number(other.floor) > Number(w.floor))            ? '\u2191' : '\u2193';
-      return '<div class="conn-row">' +
-        '<span>' + dir + ' floor ' + other.floor + ' <span style="color:#888780;font-size:10px">' + other.id + '</span></span>' +
-        (isConnected
+              : (Number(other.floor) > Number(w.floor)) ? '\u2191' : '\u2193';
+      return '<div class="conn-row"><span>' + dir + ' floor ' + other.floor +
+        ' <span style="color:#888780;font-size:10px">' + other.id + '</span></span>' +
+        (isConn
           ? '<button class="xb" onclick="toggleVertical(\'' + id + '\',\'' + other.id + '\',false)">disconnect</button>'
           : '<button style="font-size:10px;padding:1px 5px;border:.5px solid #b6d4a8;border-radius:3px;background:#EAF3DE;color:#27500A;cursor:pointer" onclick="toggleVertical(\'' + id + '\',\'' + other.id + '\',true)">connect</button>'
         ) + '</div>';
     }).join('');
 
     verticalPanel = '<div style="margin-top:10px">' +
-      '<div class="lbl" style="display:flex;justify-content:space-between"><span>Vertical connections</span><span style="color:#185FA5;font-size:10px">' + w.type + '</span></div>' +
+      '<div class="lbl" style="display:flex;justify-content:space-between">' +
+      '<span>Vertical connections</span><span style="color:#185FA5;font-size:10px">' + w.type + '</span></div>' +
       (vRows || '<div style="font-size:11px;color:#888780;margin-top:4px">No other ' + w.type + ' found in ' + w.building + '</div>') +
       '</div>';
   }
@@ -439,8 +481,7 @@ function showInfo(id, adj, nodeSet) {
     '<div class="lbl">Position</div>' + xyRow + latLngWarning +
     '<div style="margin-bottom:6px;margin-top:4px">' +
     '<span class="badge ' + (nbs.length ? 'bg' : 'br') + '">' + nbs.length + ' connections</span> ' +
-    '<button class="badge br" style="cursor:pointer;border:none;font-size:10px" onclick="deleteWaypoint(\'' + id + '\')">delete</button>' +
-    '</div>' +
+    '<button class="badge br" style="cursor:pointer;border:none;font-size:10px" onclick="deleteWaypoint(\'' + id + '\')">delete</button></div>' +
     '<div class="lbl">Connections</div>' +
     '<div>' + (rows || '<div style="color:#888780;font-size:11px">none on this floor</div>') + '</div>' +
     verticalPanel;
@@ -450,29 +491,20 @@ function showInfo(id, adj, nodeSet) {
 function applyWaypointEdit(oldId) {
   var w = wpById[oldId];
   if (!w) return;
-
   var newLabel = (document.getElementById('edit-label').value || '').trim();
   var newType  = document.getElementById('edit-type').value;
   var newId    = (document.getElementById('edit-id').value || '').trim().replace(/\s+/g, '_');
-
   if (!newLabel) { alert('Label cannot be empty.'); return; }
   if (!newId)    { alert('ID cannot be empty.');    return; }
-
   if (newId !== oldId) {
     if (wpById[newId]) { alert('A waypoint with ID "' + newId + '" already exists.'); return; }
     renameWaypointId(oldId, newId);
-    // After rename, oldId is gone — continue with newId
     w = wpById[newId];
   }
-
   var oldType = w.type;
   w.label = newLabel;
   w.type  = newType;
-
-  if (oldType !== newType) {
-    syncEntranceArrays(newId, w.building, oldType, newType);
-  }
-
+  if (oldType !== newType) syncEntranceArrays(newId, w.building, oldType, newType);
   markDirty();
   var adj = buildAdj();
   var ns  = {}; floorNodeIds().forEach(function(i) { ns[i] = true; });
@@ -484,28 +516,18 @@ function applyWaypointEdit(oldId) {
 function renameWaypointId(oldId, newId) {
   var w = wpById[oldId];
   if (!w) return;
-
-  // 1. Update the waypoint object itself
   w.id = newId;
   wpById[newId] = w;
   delete wpById[oldId];
-
-  // 2. Update allWps array
   allWps.forEach(function(wp) { if (wp.id === oldId) wp.id = newId; });
-
-  // 3. Update edges
   allEdges.forEach(function(e) {
     if (e.from === oldId) e.from = newId;
     if (e.to   === oldId) e.to   = newId;
   });
-
-  // 4. Update positions
   if (positions[oldId] !== undefined) {
     positions[newId] = positions[oldId];
     delete positions[oldId];
   }
-
-  // 5. Update buildings[].entrances
   var buildings = FULL_CAMPUS.buildings;
   if (Array.isArray(buildings)) {
     buildings.forEach(function(b) {
@@ -514,44 +536,33 @@ function renameWaypointId(oldId, newId) {
       if (idx !== -1) b.entrances[idx] = newId;
     });
   }
-
-  // 6. Update rooms[].waypoint_id
-  var rooms = FULL_CAMPUS.rooms;
-  if (Array.isArray(rooms)) {
-    rooms.forEach(function(r) { if (r.waypoint_id === oldId) r.waypoint_id = newId; });
+  if (Array.isArray(FULL_CAMPUS.rooms)) {
+    FULL_CAMPUS.rooms.forEach(function(r) { if (r.waypoint_id === oldId) r.waypoint_id = newId; });
   }
-
-  // 7. Update qrAnchors[].waypoint_id
-  var qrAnchors = FULL_CAMPUS.qrAnchors;
-  if (Array.isArray(qrAnchors)) {
-    qrAnchors.forEach(function(q) { if (q.waypoint_id === oldId) q.waypoint_id = newId; });
+  if (Array.isArray(FULL_CAMPUS.qrAnchors)) {
+    FULL_CAMPUS.qrAnchors.forEach(function(q) { if (q.waypoint_id === oldId) q.waypoint_id = newId; });
   }
-
-  console.log('Renamed ' + oldId + ' -> ' + newId + ' across all references.');
 }
 
 function delEdge(from, to) {
   removeEdge(from, to);
   markDirty();
   var adj = buildAdj();
-  var ns  = {}; floorNodeIds().forEach(function(i) { ns[i] = true; });
+  var ns = {}; floorNodeIds().forEach(function(i) { ns[i] = true; });
   showInfo(from, adj, ns);
   render();
 }
 
 function toggleVertical(idA, idB, connect) {
   if (connect) {
-    if (!edgeExists(idA, idB)) {
-      allEdges.push({ from: idA, to: idB, accessible: true });
-    }
+    if (!edgeExists(idA, idB)) allEdges.push({ from: idA, to: idB, accessible: true });
   } else {
     if (!confirm('Remove vertical connection between ' + idA + ' and ' + idB + '?')) return;
     removeEdge(idA, idB);
   }
   markDirty();
-  // Refresh info panel — node might be on a different floor so use full adj
   var adj = buildAdj();
-  var ns  = {}; floorNodeIds().forEach(function(i) { ns[i] = true; });
+  var ns = {}; floorNodeIds().forEach(function(i) { ns[i] = true; });
   showInfo(idA, adj, ns);
   render();
 }
@@ -571,18 +582,16 @@ function handleEdgeClick(id) {
   if (!edgePendFrom) {
     edgePendFrom = id;
     document.getElementById('pending-box').style.display = 'block';
-    render();
-    return;
+    render(); return;
   }
   if (edgePendFrom === id) {
     edgePendFrom = null;
     document.getElementById('pending-box').style.display = 'none';
-    render();
-    return;
+    render(); return;
   }
   var from = edgePendFrom, to = id;
   if (edgeExists(from, to)) {
-    if (confirm('Remove edge ' + from + ' \u2194 ' + to + '?')) { removeEdge(from, to); }
+    if (confirm('Remove edge ' + from + ' \u2194 ' + to + '?')) removeEdge(from, to);
   } else {
     allEdges.push({ from: from, to: to, accessible: true });
   }
@@ -635,17 +644,26 @@ function confirmAdd() {
 }
 
 // ── Mode switching ────────────────────────────────────────────────────────────
+// Disable editing modes until a floor is selected
+['move','edge','add'].forEach(function(m) {
+  var btn = document.getElementById('btn-mode-' + m);
+  btn.disabled = true;
+  btn.style.opacity = '0.4';
+  btn.style.cursor = 'not-allowed';
+});
+document.getElementById('mode-hint').textContent = 'Select a floor above to begin';
+
 var hints = {
-  view: 'Hover or click a node to inspect \u00b7 click any edge line to delete it',
+  view: 'Hover or click a node to inspect \u00b7 click any edge to delete it',
   move: 'Drag nodes to reposition \u00b7 scroll to zoom \u00b7 changes save on mouse release',
-  edge: 'Click a node then click another to add/remove the edge \u00b7 click an edge line to delete it',
+  edge: 'Click a node then click another to add/remove edge \u00b7 click an edge to delete it',
   add:  'Click anywhere on the floorplan to place a new waypoint'
 };
 
 function setMode(m) {
   mode = m;
   if (edgePendFrom) { edgePendFrom = null; document.getElementById('pending-box').style.display = 'none'; }
-  ['view', 'move', 'edge', 'add'].forEach(function(x) {
+  ['view','move','edge','add'].forEach(function(x) {
     document.getElementById('btn-mode-' + x).classList.toggle('active', x === m);
   });
   document.getElementById('mode-hint').textContent = hints[m];
@@ -664,6 +682,13 @@ function showFloor(key) {
   if (existing) existing.remove();
   document.querySelectorAll('.floor-btn').forEach(function(b) {
     b.classList.toggle('active', b.dataset.key === key);
+  });
+  // Enable editing mode buttons now a floor is loaded
+  ['move','edge','add'].forEach(function(m) {
+    var btn = document.getElementById('btn-mode-' + m);
+    btn.disabled = false;
+    btn.style.opacity = '';
+    btn.style.cursor = '';
   });
   document.getElementById('node-info').innerHTML =
     '<h3>Node info</h3><div style="color:#888780;font-size:11px">Hover or click a node</div>';
