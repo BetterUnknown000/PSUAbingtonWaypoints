@@ -107,6 +107,8 @@ export default function DirectionArrow({
     target = current + diff;
   
     lastArrowDeg.current = target;
+
+    console.log("[ARROW_UPDATE]", { angle: target.toFixed(1), targetBearing, heading });
   
     Animated.timing(arrowAnim, {
       toValue: target,
