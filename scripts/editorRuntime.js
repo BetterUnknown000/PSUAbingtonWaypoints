@@ -341,65 +341,17 @@ function showInfo(id, adj, nodeSet) {
   if (w.type === 'entrance') {
     var hasLatLng = Number.isFinite(Number(w.latitude)) && Number(w.latitude) !== 0 &&
                    Number.isFinite(Number(w.longitude)) && Number(w.longitude) !== 0;
-    if (hasLatLng) {
-      latLngWarning = '<div style="font-size:11px;color:#3B6D11;margin-bottom:6px">' +
-        '\u2713 lat: ' + Number(w.latitude).toFixed(6) + ', lng: ' + Number(w.longitude).toFixed(6) + '</div>';
-    } else {
-      latLngWarning = '<div style="padding:6px 8px;background:#FFF3E0;border:.5px solid #F5A623;border-radius:5px;font-size:11px;color:#854F0B;margin-bottom:6px">' +
-        '\u26A0 Entrance is missing lat/long. Outdoor routing to this entrance will not work. ' +
-        'Add latitude and longitude in campusData.json directly.</div>';
-    }
+    latLngWarning = hasLatLng
+      ? '<div style="font-size:11px;color:#3B6D11;margin-bottom:6px">\u2713 lat: ' + Number(w.latitude).toFixed(6) + ', lng: ' + Number(w.longitude).toFixed(6) + '</div>'
+      : '<div style="padding:6px 8px;background:#FFF3E0;border:.5px solid #F5A623;border-radius:5px;font-size:11px;color:#854F0B;margin-bottom:6px">' +
+        '\u26A0 Entrance is missing lat/long. Outdoor routing to this entrance will not work. Add latitude and longitude in campusData.json directly.</div>';
   }
 
   var typeOptions = Object.keys(TYPE_COLOR).map(function(t) {
     return '<option value="' + t + '"' + (w.type === t ? ' selected' : '') + '>' + t + '</option>';
   }).join('');
 
-  // ── Vertical connections panel (stairs / elevator only) ───────────────────
-  var verticalPanel = '';
-  if (w.type === 'stairs' || w.type === 'elevator') {
-    var sameType = allWps.filter(function(other) {
-      return other.id !== id &&
-             other.building === w.building &&
-             other.type === w.type &&
-             String(other.floor) !== String(w.floor);
-    });
-
-    var connectedFloors = allEdges
-      .filter(function(e) { return e.from === id || e.to === id; })
-      .map(function(e) { return e.from === id ? e.to : e.from; })
-      .filter(function(nb) {
-        var nbWp = wpById[nb];
-        return nbWp && String(nbWp.floor) !== String(w.floor);
-      });
-    var connectedSet = {};
-    connectedFloors.forEach(function(nb) { connectedSet[nb] = true; });
-
-    var vRows = sameType.map(function(other) {
-      var isConnected = !!connectedSet[other.id];
-      var dir = Number(other.floor) > Number(w.floor) ? '\u2191' : '\u2193';
-      if (other.floor === 'ground' && w.floor !== 'ground') dir = '\u2193';
-      if (w.floor === 'ground' && other.floor !== 'ground') dir = '\u2191';
-      return '<div class="conn-row">' +
-        '<span>' + dir + ' floor ' + other.floor + ' <span style="color:#888780;font-size:10px">' + other.id + '</span></span>' +
-        (isConnected
-          ? '<button class="xb" onclick="toggleVertical(\'' + id + '\',\'' + other.id + '\',false)">disconnect</button>'
-          : '<button style="font-size:10px;padding:1px 5px;border:.5px solid #b6d4a8;border-radius:3px;background:#EAF3DE;color:#27500A;cursor:pointer" onclick="toggleVertical(\'' + id + '\',\'' + other.id + '\',true)">connect</button>'
-        ) +
-        '</div>';
-    }).join('');
-
-    verticalPanel =
-      '<div style="margin-top:10px">' +
-      '<div class="lbl" style="display:flex;justify-content:space-between">' +
-        '<span>Vertical connections</span>' +
-        '<span style="color:#185FA5;font-size:10px">' + w.type + '</span>' +
-      '</div>' +
-      (vRows || '<div style="font-size:11px;color:#888780;margin-top:4px">No other ' + w.type + ' found in ' + w.building + '</div>') +
-      '</div>';
-  }
-
-
+  var rows = nbs.map(function(nb) {
     var nw = wpById[nb];
     return '<div class="conn-row">' +
       '<span><span style="color:#888780;font-size:10px">' + (nw ? nw.type : '?') + '</span> ' +
@@ -408,33 +360,55 @@ function showInfo(id, adj, nodeSet) {
       '</div>';
   }).join('');
 
+  var verticalPanel = '';
+  if (w.type === 'stairs' || w.type === 'elevator') {
+    var sameType = allWps.filter(function(other) {
+      return other.id !== id &&
+             other.building === w.building &&
+             other.type === w.type &&
+             String(other.floor) !== String(w.floor);
+    });
+    var connectedSet = {};
+    allEdges
+      .filter(function(e) { return e.from === id || e.to === id; })
+      .map(function(e) { return e.from === id ? e.to : e.from; })
+      .filter(function(nb) { var nbWp = wpById[nb]; return nbWp && String(nbWp.floor) !== String(w.floor); })
+      .forEach(function(nb) { connectedSet[nb] = true; });
+
+    var vRows = sameType.map(function(other) {
+      var isConnected = !!connectedSet[other.id];
+      var dir = (other.floor === 'ground' && w.floor !== 'ground') ? '\u2193'
+              : (w.floor === 'ground' && other.floor !== 'ground') ? '\u2191'
+              : (Number(other.floor) > Number(w.floor))            ? '\u2191' : '\u2193';
+      return '<div class="conn-row">' +
+        '<span>' + dir + ' floor ' + other.floor + ' <span style="color:#888780;font-size:10px">' + other.id + '</span></span>' +
+        (isConnected
+          ? '<button class="xb" onclick="toggleVertical(\'' + id + '\',\'' + other.id + '\',false)">disconnect</button>'
+          : '<button style="font-size:10px;padding:1px 5px;border:.5px solid #b6d4a8;border-radius:3px;background:#EAF3DE;color:#27500A;cursor:pointer" onclick="toggleVertical(\'' + id + '\',\'' + other.id + '\',true)">connect</button>'
+        ) + '</div>';
+    }).join('');
+
+    verticalPanel = '<div style="margin-top:10px">' +
+      '<div class="lbl" style="display:flex;justify-content:space-between"><span>Vertical connections</span><span style="color:#185FA5;font-size:10px">' + w.type + '</span></div>' +
+      (vRows || '<div style="font-size:11px;color:#888780;margin-top:4px">No other ' + w.type + ' found in ' + w.building + '</div>') +
+      '</div>';
+  }
+
   document.getElementById('node-info').innerHTML =
     '<h3>Node info</h3>' +
-
     '<div class="lbl">Label</div>' +
-    '<input id="edit-label" style="width:100%;padding:4px 6px;border:.5px solid #d3d1c7;border-radius:4px;font-size:12px;font-family:inherit;margin-bottom:6px"' +
-    ' value="' + (w.label || '').replace(/"/g, '&quot;') + '"/>' +
-
+    '<input id="edit-label" style="width:100%;padding:4px 6px;border:.5px solid #d3d1c7;border-radius:4px;font-size:12px;font-family:inherit;margin-bottom:6px" value="' + (w.label || '').replace(/"/g, '&quot;') + '"/>' +
     '<div class="lbl">ID</div>' +
-    '<input id="edit-id" style="width:100%;padding:4px 6px;border:.5px solid #d3d1c7;border-radius:4px;font-size:12px;font-family:monospace;margin-bottom:2px"' +
-    ' value="' + id.replace(/"/g, '&quot;') + '"/>' +
+    '<input id="edit-id" style="width:100%;padding:4px 6px;border:.5px solid #d3d1c7;border-radius:4px;font-size:12px;font-family:monospace;margin-bottom:2px" value="' + id.replace(/"/g, '&quot;') + '"/>' +
     '<div style="font-size:10px;color:#888780;margin-bottom:6px">Renaming updates edges, rooms, entrances, and QR anchors automatically.</div>' +
-
     '<div class="lbl">Type</div>' +
-    '<select id="edit-type" style="width:100%;padding:4px 6px;border:.5px solid #d3d1c7;border-radius:4px;font-size:12px;font-family:inherit;margin-bottom:6px">' +
-    typeOptions + '</select>' +
-
-    '<button onclick="applyWaypointEdit(\'' + id + '\')" ' +
-    'style="width:100%;padding:5px;background:#185FA5;color:#fff;border:none;border-radius:5px;font-size:12px;cursor:pointer;margin-bottom:8px">' +
-    'Apply changes</button>' +
-
+    '<select id="edit-type" style="width:100%;padding:4px 6px;border:.5px solid #d3d1c7;border-radius:4px;font-size:12px;font-family:inherit;margin-bottom:6px">' + typeOptions + '</select>' +
+    '<button onclick="applyWaypointEdit(\'' + id + '\')" style="width:100%;padding:5px;background:#185FA5;color:#fff;border:none;border-radius:5px;font-size:12px;cursor:pointer;margin-bottom:8px">Apply changes</button>' +
     '<div class="lbl">Position</div>' + xyRow + latLngWarning +
-
     '<div style="margin-bottom:6px;margin-top:4px">' +
     '<span class="badge ' + (nbs.length ? 'bg' : 'br') + '">' + nbs.length + ' connections</span> ' +
     '<button class="badge br" style="cursor:pointer;border:none;font-size:10px" onclick="deleteWaypoint(\'' + id + '\')">delete</button>' +
     '</div>' +
-
     '<div class="lbl">Connections</div>' +
     '<div>' + (rows || '<div style="color:#888780;font-size:11px">none on this floor</div>') + '</div>' +
     verticalPanel;
