@@ -38,6 +38,10 @@ var dc = document.createElement('div');
 dc.className = 'leg-row';
 dc.innerHTML = '<div class="leg-dot" style="background:#fff;border:2px solid #E24B4A"></div>disconnected';
 legEl.appendChild(dc);
+var noLatLng = document.createElement('div');
+noLatLng.className = 'leg-row';
+noLatLng.innerHTML = '<div class="leg-dot" style="background:#185FA5;border:2.5px solid #F5A623"></div>entrance — missing lat/long';
+legEl.appendChild(noLatLng);
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
 function typeColor(t) { return TYPE_COLOR[String(t || '').toLowerCase()] || '#888780'; }
@@ -224,11 +228,19 @@ function render() {
     var isDc = !!dcSet[id];
     var isHl = hoveredNode === id;
     var isPd = edgePendFrom === id;
+    var isNoLatLng = wp.type === 'entrance' &&
+      !(Number.isFinite(Number(wp.latitude)) && Number(wp.latitude) !== 0 &&
+        Number.isFinite(Number(wp.longitude)) && Number(wp.longitude) !== 0);
+
     var color  = typeColor(wp.type);
     var fill   = isDc ? '#fff' : color;
-    var stroke = isDc ? '#E24B4A' : isPd ? '#854F0B' : isHl ? '#fff' : color;
-    var sw     = isDc || isPd ? 2.5 : isHl ? 2 : 1.5;
-    var r      = isHl || isPd ? 10 : 8;
+    var stroke = isDc ? '#E24B4A'
+               : isNoLatLng ? '#F5A623'
+               : isPd ? '#854F0B'
+               : isHl ? '#fff'
+               : color;
+    var sw = isDc || isNoLatLng || isPd ? 2.5 : isHl ? 2 : 1.5;
+    var r  = isHl || isPd ? 10 : 8;
     var label  = wp.label || '';
     var m      = label.match(/\d{3,}/);
     var sl     = m ? m[0] : (wp.type || '?').slice(0, 2).toUpperCase();
@@ -325,6 +337,20 @@ function showInfo(id, adj, nodeSet) {
     ? '<div class="val" data-xy style="font-family:monospace;font-size:11px">x: ' + p.x.toFixed(1) + '  y: ' + p.y.toFixed(1) + '</div>'
     : '<div class="val" style="color:#A32D2D">x/y not set — drag in Move mode</div>';
 
+  var latLngWarning = '';
+  if (w.type === 'entrance') {
+    var hasLatLng = Number.isFinite(Number(w.latitude)) && Number(w.latitude) !== 0 &&
+                   Number.isFinite(Number(w.longitude)) && Number(w.longitude) !== 0;
+    if (hasLatLng) {
+      latLngWarning = '<div style="font-size:11px;color:#3B6D11;margin-bottom:6px">' +
+        '\u2713 lat: ' + Number(w.latitude).toFixed(6) + ', lng: ' + Number(w.longitude).toFixed(6) + '</div>';
+    } else {
+      latLngWarning = '<div style="padding:6px 8px;background:#FFF3E0;border:.5px solid #F5A623;border-radius:5px;font-size:11px;color:#854F0B;margin-bottom:6px">' +
+        '\u26A0 Entrance is missing lat/long. Outdoor routing to this entrance will not work. ' +
+        'Add latitude and longitude in campusData.json directly.</div>';
+    }
+  }
+
   var typeOptions = Object.keys(TYPE_COLOR).map(function(t) {
     return '<option value="' + t + '"' + (w.type === t ? ' selected' : '') + '>' + t + '</option>';
   }).join('');
@@ -358,7 +384,7 @@ function showInfo(id, adj, nodeSet) {
     'style="width:100%;padding:5px;background:#185FA5;color:#fff;border:none;border-radius:5px;font-size:12px;cursor:pointer;margin-bottom:8px">' +
     'Apply changes</button>' +
 
-    '<div class="lbl">Position</div>' + xyRow +
+    '<div class="lbl">Position</div>' + xyRow + latLngWarning +
 
     '<div style="margin-bottom:6px;margin-top:4px">' +
     '<span class="badge ' + (nbs.length ? 'bg' : 'br') + '">' + nbs.length + ' connections</span> ' +
