@@ -540,8 +540,8 @@
       "type": "entrance",
       "latitude": 40.116752,
       "longitude": -75.108928,
-      "x": 142.9,
-      "y": 279.6,
+      "x": 587.4,
+      "y": 797.2,
       "qr_code": "QR_LARES_GND_MAIN_ENTRANCE",
       "requires_scan": true,
       "stop_radius_m": 5
@@ -566,8 +566,8 @@
       "type": "lounge",
       "latitude": 40.11675,
       "longitude": -75.109007,
-      "x": 626.51,
-      "y": 559.62,
+      "x": 627.4,
+      "y": 560.4,
       "qr_code": "QR_LARES_F1_108"
     },
     {
@@ -590,8 +590,8 @@
       "type": "dining",
       "latitude": 40.116787,
       "longitude": -75.109091,
-      "x": 478.18,
-      "y": 559.57,
+      "x": 480,
+      "y": 558.7,
       "qr_code": "QR_LARES_F1_112"
     },
     {
@@ -614,8 +614,8 @@
       "type": "elevator",
       "latitude": 40.116712,
       "longitude": -75.109018,
-      "x": 709.7,
-      "y": 723.6,
+      "x": 710.7,
+      "y": 720.6,
       "qr_code": "QR_LARES_GND_ELEVATOR",
       "requires_scan": true,
       "stop_radius_m": 3
@@ -692,8 +692,8 @@
       "type": "entrance",
       "latitude": 40.117489,
       "longitude": -75.109782,
-      "x": 950,
-      "y": 950,
+      "x": 462,
+      "y": 292,
       "qr_code": "QR_SPRING_ENTRANCE",
       "requires_scan": true,
       "stop_radius_m": 5
@@ -706,8 +706,8 @@
       "type": "entrance",
       "latitude": 40.11747,
       "longitude": -75.109735,
-      "x": 50,
-      "y": 950,
+      "x": 945,
+      "y": 600,
       "qr_code": "QR_SPRING_100_OUTSIDE",
       "requires_scan": true,
       "stop_radius_m": 5
@@ -720,8 +720,8 @@
       "type": "entrance",
       "latitude": 40.11748,
       "longitude": -75.109748,
-      "x": 50,
-      "y": 50,
+      "x": 548,
+      "y": 487,
       "qr_code": "QR_SPRING_100_INSIDE",
       "requires_scan": true,
       "stop_radius_m": 5
@@ -734,8 +734,8 @@
       "type": "classroom",
       "latitude": 40.117485,
       "longitude": -75.109767,
-      "x": 950,
-      "y": 50,
+      "x": 426,
+      "y": 496,
       "qr_code": "QR_SPRING_101"
     },
     {
@@ -746,8 +746,8 @@
       "type": "entrance",
       "latitude": 40.114817,
       "longitude": -75.111579,
-      "x": 50,
-      "y": 50,
+      "x": 685.8,
+      "y": 139.3,
       "qr_code": "QR_ATH_F1_MAIN_ENTRANCE",
       "requires_scan": true,
       "stop_radius_m": 5
@@ -760,8 +760,8 @@
       "type": "recreation",
       "latitude": 40.114532,
       "longitude": -75.111789,
-      "x": 50,
-      "y": 50,
+      "x": 554.7,
+      "y": 490.8,
       "qr_code": "QR_ATH_F1_BASKETBALL_COURT"
     },
     {
@@ -772,8 +772,8 @@
       "type": "hallway",
       "latitude": 40.11695,
       "longitude": -75.109303,
-      "x": 370.07,
-      "y": 459.72,
+      "x": 680.1,
+      "y": 693.7,
       "qr_code": "QR_LARES_GND_HALL_01",
       "requires_scan": false,
       "stop_radius_m": 3
@@ -786,8 +786,8 @@
       "type": "hallway",
       "latitude": 40.116711,
       "longitude": -75.10902,
-      "x": 646.65,
-      "y": 667.33,
+      "x": 615.3,
+      "y": 640.6,
       "qr_code": "QR_LARES_GND_HALL_02",
       "requires_scan": false,
       "stop_radius_m": 3
@@ -800,8 +800,8 @@
       "type": "stairs",
       "latitude": 40.116713,
       "longitude": -75.109021,
-      "x": 665.46,
-      "y": 747.04,
+      "x": 665.5,
+      "y": 747,
       "qr_code": "QR_LARES_GND_STAIRS",
       "requires_scan": true,
       "stop_radius_m": 3
@@ -814,8 +814,8 @@
       "type": "stairs",
       "latitude": 40.116764,
       "longitude": -75.108995,
-      "x": 666.08,
-      "y": 750.37,
+      "x": 666.7,
+      "y": 746.3,
       "qr_code": "QR_LARES_F1_STAIRS",
       "requires_scan": true,
       "stop_radius_m": 3
@@ -828,8 +828,8 @@
       "type": "hallway",
       "latitude": 40.116774,
       "longitude": -75.109,
-      "x": 677.15,
-      "y": 652.91,
+      "x": 667,
+      "y": 675.1,
       "qr_code": "QR_LARES_F1_HALL_01",
       "requires_scan": false,
       "stop_radius_m": 3
@@ -842,8 +842,8 @@
       "type": "hallway",
       "latitude": 40.116733,
       "longitude": -75.108953,
-      "x": 223.27,
-      "y": 383.24,
+      "x": 755.4,
+      "y": 685.6,
       "qr_code": "QR_LARES_F1_HALL_02",
       "requires_scan": false,
       "stop_radius_m": 3
@@ -870,8 +870,8 @@
       "type": "hallway",
       "latitude": 40.116792,
       "longitude": -75.109055,
-      "x": 829.67,
-      "y": 732.92,
+      "x": 829.7,
+      "y": 732.9,
       "qr_code": "QR_LARES_F1_HALL_03",
       "requires_scan": false,
       "stop_radius_m": 3
@@ -2197,8 +2197,8 @@
       "type": "hallway",
       "latitude": 40.115893,
       "longitude": -75.112185,
-      "x": 409.64,
-      "y": 538.53,
+      "x": 418.6,
+      "y": 509.5,
       "qr_code": "QR_RYDAL_F1_HALL_01",
       "requires_scan": false,
       "stop_radius_m": 3
@@ -2253,8 +2253,8 @@
       "type": "hallway",
       "latitude": 40.114736,
       "longitude": -75.111598,
-      "x": 50,
-      "y": 950,
+      "x": 637.9,
+      "y": 219.5,
       "qr_code": "QR_ATH_F1_HALL_01",
       "requires_scan": false,
       "stop_radius_m": 3
@@ -2267,8 +2267,8 @@
       "type": "recreation",
       "latitude": 40.114735,
       "longitude": -75.111628,
-      "x": 950,
-      "y": 950,
+      "x": 850.8,
+      "y": 479.8,
       "qr_code": "QR_ATH_F1_GYM"
     },
     {
@@ -2279,8 +2279,8 @@
       "type": "elevator",
       "latitude": 40.114734,
       "longitude": -75.111664,
-      "x": 50,
-      "y": 50,
+      "x": 643.7,
+      "y": 277.2,
       "qr_code": "QR_ATH_F1_ELEVATOR",
       "requires_scan": true,
       "stop_radius_m": 3
@@ -2293,8 +2293,8 @@
       "type": "stairs",
       "latitude": 40.1147985278,
       "longitude": -75.1116287222,
-      "x": 950,
-      "y": 950,
+      "x": 697,
+      "y": 217,
       "qr_code": "QR_ATH_F1_STAIRS",
       "requires_scan": true,
       "stop_radius_m": 3
@@ -2307,8 +2307,8 @@
       "type": "classroom",
       "latitude": 40.114745,
       "longitude": -75.111528,
-      "x": 950,
-      "y": 50,
+      "x": 597.6,
+      "y": 294,
       "qr_code": "QR_ATH_F2_CLASSROOM"
     },
     {
@@ -2352,8 +2352,8 @@
       "type": "office",
       "latitude": 40.11673,
       "longitude": -75.108931,
-      "x": 632.3,
-      "y": 746.6
+      "x": 631.58,
+      "y": 746.07
     },
     {
       "id": "wp_lares_204",
@@ -2363,8 +2363,8 @@
       "type": "office",
       "latitude": 40.116702,
       "longitude": -75.108906,
-      "x": 686.3,
-      "y": 679.7
+      "x": 683.9,
+      "y": 677
     },
     {
       "id": "wp_lares_206",
@@ -2374,8 +2374,8 @@
       "type": "office",
       "latitude": 40.11663,
       "longitude": -75.10889,
-      "x": 775.88,
-      "y": 873.7
+      "x": 763.27,
+      "y": 848.91
     },
     {
       "id": "wp_lares_208",
@@ -2385,8 +2385,8 @@
       "type": "office",
       "latitude": 40.116698,
       "longitude": -75.108895,
-      "x": 847.93,
-      "y": 787.6
+      "x": 839.23,
+      "y": 752.38
     },
     {
       "id": "wp_lares_209",
@@ -2396,8 +2396,8 @@
       "type": "office",
       "latitude": 40.116669,
       "longitude": -75.108802,
-      "x": 905.64,
-      "y": 716.09
+      "x": 867.7,
+      "y": 712.8
     },
     {
       "id": "wp_lares_210",
@@ -2407,8 +2407,8 @@
       "type": "office",
       "latitude": 40.116685,
       "longitude": -75.108812,
-      "x": 833.44,
-      "y": 672.6
+      "x": 859.97,
+      "y": 680.86
     },
     {
       "id": "wp_lares_211",
@@ -2418,8 +2418,8 @@
       "type": "office",
       "latitude": 40.116712,
       "longitude": -75.108854,
-      "x": 866.63,
-      "y": 629.03
+      "x": 894.46,
+      "y": 639.03
     },
     {
       "id": "wp_cloverly_main_entrance",
@@ -5040,6 +5040,435 @@
       "type": "office",
       "x": 452.1,
       "y": 617.4
+    },
+    {
+      "id": "wp_lares_ground_entrance",
+      "building": "lares",
+      "floor": "ground",
+      "label": "Lares Ground Floor Entrance",
+      "type": "entrance",
+      "latitude": 40.116752,
+      "longitude": -75.108928,
+      "x": 143.94,
+      "y": 282.66,
+      "qr_code": "QR_LARES_GND_ENTRANCE",
+      "requires_scan": true,
+      "stop_radius_m": 5
+    },
+    {
+      "id": "wp_lares_elevator_f2",
+      "building": "lares",
+      "floor": "2",
+      "label": "Lares Elevator (Floor 2)",
+      "type": "elevator",
+      "latitude": 40.116683120837685,
+      "longitude": -75.10893335439131,
+      "x": 710.1,
+      "y": 724.1,
+      "qr_code": "QR_LARES_F2_ELEVATOR",
+      "requires_scan": true,
+      "stop_radius_m": 3
+    },
+    {
+      "id": "wp_rydal_002",
+      "building": "rydal",
+      "floor": "ground",
+      "label": "Room 002",
+      "type": "classroom",
+      "latitude": 40.115893,
+      "longitude": -75.112129,
+      "x": 601.11,
+      "y": 366.28,
+      "qr_code": "QR_RYDAL_GND_002"
+    },
+    {
+      "id": "wp_rydal_106",
+      "building": "rydal",
+      "floor": "1",
+      "label": "Room 106",
+      "type": "office",
+      "latitude": 40.115943295553386,
+      "longitude": -75.1121632623846,
+      "x": 605.53,
+      "y": 301.15,
+      "qr_code": "QR_RYDAL_F1_106"
+    },
+    {
+      "id": "wp_rydal_107",
+      "building": "rydal",
+      "floor": "1",
+      "label": "Room 107",
+      "type": "office",
+      "latitude": 40.115927826181625,
+      "longitude": -75.11217052680982,
+      "x": 537.2,
+      "y": 342.3,
+      "qr_code": "QR_RYDAL_F1_107"
+    },
+    {
+      "id": "wp_lares_stairs_f2",
+      "building": "lares",
+      "floor": "2",
+      "label": "Lares Stairs (Floor 2)",
+      "type": "stairs",
+      "latitude": 40.116696588548514,
+      "longitude": -75.10885062437788,
+      "x": 834.6,
+      "y": 723.7,
+      "qr_code": "QR_LARES_F2_STAIRS",
+      "requires_scan": true,
+      "stop_radius_m": 3
+    },
+    {
+      "id": "wp_lares_f2_hall_01",
+      "building": "lares",
+      "floor": "2",
+      "label": "Lares Second Floor Hall 1",
+      "type": "hallway",
+      "latitude": 40.11667009206417,
+      "longitude": -75.10887664694518,
+      "x": 801.47,
+      "y": 780.49,
+      "qr_code": "QR_LARES_F2_HALL_01",
+      "requires_scan": false,
+      "stop_radius_m": 3
+    },
+    {
+      "id": "wp_lares_f2_hall_02",
+      "building": "lares",
+      "floor": "2",
+      "label": "Lares Second Floor Hall 2",
+      "type": "hallway",
+      "latitude": 40.116703124458105,
+      "longitude": -75.10891950646463,
+      "x": 732.4,
+      "y": 722,
+      "qr_code": "QR_LARES_F2_HALL_02",
+      "requires_scan": false,
+      "stop_radius_m": 3
+    },
+    {
+      "id": "wp_lares_f2_hall_03",
+      "building": "lares",
+      "floor": "2",
+      "label": "Lares Second Floor Hall 3",
+      "type": "hallway",
+      "latitude": 40.11667724971018,
+      "longitude": -75.10884080039385,
+      "x": 868.7,
+      "y": 694.2,
+      "qr_code": "QR_LARES_F2_HALL_03",
+      "requires_scan": false,
+      "stop_radius_m": 3
+    },
+    {
+      "id": "wp_lares_side_entrance_1",
+      "building": "lares",
+      "floor": "1",
+      "label": "Lares Side Entrance",
+      "type": "entrance",
+      "latitude": 40.116709,
+      "longitude": -75.108877,
+      "x": 383.17,
+      "y": 165.24,
+      "qr_code": "QR_LARES_F1_SIDE_ENTRANCE",
+      "requires_scan": true,
+      "stop_radius_m": 5
+    },
+    {
+      "id": "wp_rydal_201",
+      "building": "rydal",
+      "floor": "2",
+      "label": "Room 201",
+      "type": "office",
+      "latitude": 40.11589513484992,
+      "longitude": -75.11225060165194,
+      "x": 410.9,
+      "y": 519.4,
+      "qr_code": "QR_RYDAL_F2_201"
+    },
+    {
+      "id": "wp_rydal_202",
+      "building": "rydal",
+      "floor": "2",
+      "label": "Room 202",
+      "type": "office",
+      "latitude": 40.11588851111085,
+      "longitude": -75.11225591024518,
+      "x": 374.35,
+      "y": 562.05,
+      "qr_code": "QR_RYDAL_F2_202"
+    },
+    {
+      "id": "wp_rydal_207",
+      "building": "rydal",
+      "floor": "2",
+      "label": "Room 207",
+      "type": "office",
+      "latitude": 40.11586605474675,
+      "longitude": -75.112266611087,
+      "x": 362.2,
+      "y": 631.14,
+      "qr_code": "QR_RYDAL_F2_207"
+    },
+    {
+      "id": "wp_rydal_209",
+      "building": "rydal",
+      "floor": "2",
+      "label": "Room 209",
+      "type": "office",
+      "latitude": 40.11587851163579,
+      "longitude": -75.1122095303264,
+      "x": 468.88,
+      "y": 512.21,
+      "qr_code": "QR_RYDAL_F2_209"
+    },
+    {
+      "id": "wp_rydal_212",
+      "building": "rydal",
+      "floor": "2",
+      "label": "Room 212",
+      "type": "office",
+      "latitude": 40.11600231013774,
+      "longitude": -75.11207737587134,
+      "x": 770.67,
+      "y": 208.44,
+      "qr_code": "QR_RYDAL_F2_212"
+    },
+    {
+      "id": "wp_rydal_217",
+      "building": "rydal",
+      "floor": "2",
+      "label": "Room 217",
+      "type": "office",
+      "latitude": 40.11591695036122,
+      "longitude": -75.1122043058796,
+      "x": 475.87,
+      "y": 442.5,
+      "qr_code": "QR_RYDAL_F2_217"
+    },
+    {
+      "id": "wp_rydal_f2_stairs_main",
+      "building": "rydal",
+      "floor": "2",
+      "label": "Rydal Second Floor Main Stairs",
+      "type": "stairs",
+      "latitude": 40.115913061577416,
+      "longitude": -75.11222391953302,
+      "x": 447.9,
+      "y": 467.9,
+      "qr_code": "QR_RYDAL_F2_STAIRS_MAIN",
+      "requires_scan": true,
+      "stop_radius_m": 3
+    },
+    {
+      "id": "wp_rydal_f2_hall_01",
+      "building": "rydal",
+      "floor": "2",
+      "label": "Rydal Second Floor Hall 1",
+      "type": "hallway",
+      "latitude": 40.11587566237375,
+      "longitude": -75.11221490768501,
+      "x": 440.09,
+      "y": 516.79,
+      "qr_code": "QR_RYDAL_F2_HALL_01",
+      "requires_scan": false,
+      "stop_radius_m": 3
+    },
+    {
+      "id": "wp_rydal_f2_hall_02",
+      "building": "rydal",
+      "floor": "2",
+      "label": "Rydal Second Floor Hall 2",
+      "type": "hallway",
+      "latitude": 40.11591132333872,
+      "longitude": -75.11216838812241,
+      "x": 569.68,
+      "y": 365.62,
+      "qr_code": "QR_RYDAL_F2_HALL_02",
+      "requires_scan": false,
+      "stop_radius_m": 3
+    },
+    {
+      "id": "wp_rydal_f2_hall_03",
+      "building": "rydal",
+      "floor": "2",
+      "label": "Rydal Second Floor Hall 3",
+      "type": "hallway",
+      "latitude": 40.115971705480966,
+      "longitude": -75.11217906113369,
+      "x": 543.59,
+      "y": 264.9,
+      "qr_code": "QR_RYDAL_F2_HALL_03",
+      "requires_scan": false,
+      "stop_radius_m": 3
+    },
+    {
+      "id": "wp_rydal_f2_hall_04",
+      "building": "rydal",
+      "floor": "2",
+      "label": "Rydal Second Floor Hall 4",
+      "type": "hallway",
+      "latitude": 40.11599779411151,
+      "longitude": -75.11211823651091,
+      "x": 711.45,
+      "y": 210.27,
+      "qr_code": "QR_RYDAL_F2_HALL_04",
+      "requires_scan": false,
+      "stop_radius_m": 3
+    },
+    {
+      "id": "wp_lares_f2_hall_04",
+      "building": "lares",
+      "floor": "2",
+      "label": "Lares Second Floor Hall 4",
+      "type": "hall",
+      "x": 700.3,
+      "y": 697
+    },
+    {
+      "id": "wp_lares_f1_hall_04",
+      "building": "lares",
+      "floor": "1",
+      "label": "Lares Forth Floor Hall",
+      "type": "hall",
+      "x": 610.2,
+      "y": 587.6
+    },
+    {
+      "id": "wp_lares_f1_hall_05",
+      "building": "lares",
+      "floor": "1",
+      "label": "Lares First Floor Hall",
+      "type": "hall",
+      "x": 431.2,
+      "y": 554.6
+    },
+    {
+      "id": "wp_lares_f1_hall_06",
+      "building": "lares",
+      "floor": "1",
+      "label": "Lares First Floor Hall",
+      "type": "hall",
+      "x": 321,
+      "y": 470.8
+    },
+    {
+      "id": "wp_lares_f1_hall_07",
+      "building": "lares",
+      "floor": "1",
+      "label": "Lares First Floor Hall",
+      "type": "hall",
+      "x": 226.9,
+      "y": 402
+    },
+    {
+      "id": "wp_lares_f1_hall_08",
+      "building": "lares",
+      "floor": "1",
+      "label": "Lares First Floor Hall",
+      "type": "hall",
+      "x": 268.3,
+      "y": 323.9
+    },
+    {
+      "id": "wp_lares_f1_hall_09",
+      "building": "lares",
+      "floor": "1",
+      "label": "Lares First Floor Hall",
+      "type": "hall",
+      "x": 296.6,
+      "y": 285.3
+    },
+    {
+      "id": "wp_lares_side_entrance_2",
+      "building": "lares",
+      "floor": "1",
+      "label": "Lares Side Entrance",
+      "type": "entrance",
+      "x": 884.3,
+      "y": 787.3
+    },
+    {
+      "id": "wp_rydal_f1_stairs_side",
+      "building": "rydal",
+      "floor": "1",
+      "label": "Rydal First Floor Side Stairs",
+      "type": "stairs",
+      "x": 329,
+      "y": 462
+    },
+    {
+      "id": "wp_rydal_f2_hall_05",
+      "building": "rydal",
+      "floor": "2",
+      "label": "Rydal Second floor hallway",
+      "type": "hall",
+      "x": 479,
+      "y": 468
+    },
+    {
+      "id": "wp_spring_hall",
+      "building": "springhouse",
+      "floor": "1",
+      "label": "Springhouse Hallway",
+      "type": "hall",
+      "x": 449,
+      "y": 451
+    },
+    {
+      "id": "wp_ath_f1_gym_1",
+      "building": "athletic",
+      "floor": "1",
+      "label": "Room 111 - Gym 1",
+      "type": "classroom",
+      "x": 623,
+      "y": 317
+    },
+    {
+      "id": "wp_ath_f1_gym_2",
+      "building": "athletic",
+      "floor": "1",
+      "label": "Room 101 - Gym 2",
+      "type": "classroom",
+      "x": 565.8,
+      "y": 283.6
+    },
+    {
+      "id": "wp_ath_f1_hall_02",
+      "building": "athletic",
+      "floor": "1",
+      "label": "Athletic First Floor hall",
+      "type": "hall",
+      "x": 545.7,
+      "y": 436.5
+    },
+    {
+      "id": "wp_ath_elevator_f2",
+      "building": "athletic",
+      "floor": "2",
+      "label": "Athletic Elevator (Floor 2)",
+      "type": "elevator",
+      "x": 645.2,
+      "y": 275.7
+    },
+    {
+      "id": "wp_ath_f2_stairs",
+      "building": "athletic",
+      "floor": "2",
+      "label": "Athletic Second Floor Stairs",
+      "type": "stairs",
+      "x": 674.3,
+      "y": 224.3
+    },
+    {
+      "id": "wp_lares_stairs_f1_2",
+      "building": "lares",
+      "floor": "1",
+      "label": "Lares Stairs near Student Lounge",
+      "type": "stairs",
+      "x": 816,
+      "y": 754
     }
   ],
   "edges": [
@@ -8871,6 +9300,437 @@
     {
       "from": "wp_wood_346",
       "to": "wp_wood_f3_hall_11",
+      "accessible": true
+    },
+    {
+      "from": "wp_lares_ground_entrance",
+      "to": "wp_lares_108",
+      "distance": 5,
+      "accessible": false
+    },
+    {
+      "from": "wp_lares_f1_hall_03",
+      "to": "wp_lares_103",
+      "accessible": true
+    },
+    {
+      "from": "wp_lares_f1_hall_03",
+      "to": "wp_lares_102a",
+      "accessible": true
+    },
+    {
+      "from": "wp_lares_f1_hall_03",
+      "to": "wp_lares_102b",
+      "accessible": true
+    },
+    {
+      "from": "wp_lares_main_entrance",
+      "to": "wp_lares_stairs_f1",
+      "accessible": true
+    },
+    {
+      "from": "wp_lares_f2_hall_01",
+      "to": "wp_lares_f2_hall_02",
+      "accessible": true
+    },
+    {
+      "from": "wp_lares_f2_hall_01",
+      "to": "wp_lares_206",
+      "accessible": true
+    },
+    {
+      "from": "wp_lares_f2_hall_01",
+      "to": "wp_lares_208",
+      "accessible": true
+    },
+    {
+      "from": "wp_lares_f2_hall_01",
+      "to": "wp_lares_stairs_f2",
+      "accessible": true
+    },
+    {
+      "from": "wp_lares_stairs_f2",
+      "to": "wp_lares_208",
+      "accessible": true
+    },
+    {
+      "from": "wp_lares_stairs_f2",
+      "to": "wp_lares_209",
+      "accessible": true
+    },
+    {
+      "from": "wp_lares_stairs_f2",
+      "to": "wp_lares_f2_hall_03",
+      "accessible": true
+    },
+    {
+      "from": "wp_lares_f2_hall_01",
+      "to": "wp_lares_f2_hall_03",
+      "accessible": true
+    },
+    {
+      "from": "wp_lares_f2_hall_03",
+      "to": "wp_lares_210",
+      "accessible": true
+    },
+    {
+      "from": "wp_lares_f2_hall_03",
+      "to": "wp_lares_211",
+      "accessible": true
+    },
+    {
+      "from": "wp_lares_f2_hall_01",
+      "to": "wp_lares_209",
+      "accessible": true
+    },
+    {
+      "from": "wp_lares_elevator_f2",
+      "to": "wp_lares_f2_hall_02",
+      "accessible": true
+    },
+    {
+      "from": "wp_lares_f2_hall_02",
+      "to": "wp_lares_f2_hall_04",
+      "accessible": true
+    },
+    {
+      "from": "wp_lares_f2_hall_04",
+      "to": "wp_lares_204",
+      "accessible": true
+    },
+    {
+      "from": "wp_lares_f2_hall_04",
+      "to": "wp_lares_203",
+      "accessible": true
+    },
+    {
+      "from": "wp_lares_elevator_f2",
+      "to": "wp_lares_f2_hall_04",
+      "accessible": true
+    },
+    {
+      "from": "wp_lares_main_entrance",
+      "to": "wp_lares_f1_hall_01",
+      "accessible": true
+    },
+    {
+      "from": "wp_lares_f1_hall_01",
+      "to": "wp_lares_elevator_f1",
+      "accessible": true
+    },
+    {
+      "from": "wp_lares_f1_hall_01",
+      "to": "wp_lares_108",
+      "accessible": true
+    },
+    {
+      "from": "wp_lares_elevator_f1",
+      "to": "wp_lares_f1_hall_02",
+      "accessible": true
+    },
+    {
+      "from": "wp_lares_f1_hall_01",
+      "to": "wp_lares_f1_hall_02",
+      "accessible": true
+    },
+    {
+      "from": "wp_lares_f1_hall_02",
+      "to": "wp_lares_f1_hall_03",
+      "accessible": true
+    },
+    {
+      "from": "wp_lares_f1_hall_02",
+      "to": "wp_lares_f1_hall_04",
+      "accessible": true
+    },
+    {
+      "from": "wp_lares_f1_hall_04",
+      "to": "wp_lares_108",
+      "accessible": true
+    },
+    {
+      "from": "wp_lares_f1_hall_04",
+      "to": "wp_lares_111",
+      "accessible": true
+    },
+    {
+      "from": "wp_lares_f1_hall_04",
+      "to": "wp_lares_112",
+      "accessible": true
+    },
+    {
+      "from": "wp_lares_f1_hall_01",
+      "to": "wp_lares_f1_hall_04",
+      "accessible": true
+    },
+    {
+      "from": "wp_lares_112",
+      "to": "wp_lares_f1_hall_05",
+      "accessible": true
+    },
+    {
+      "from": "wp_lares_f1_hall_06",
+      "to": "wp_lares_111",
+      "accessible": true
+    },
+    {
+      "from": "wp_lares_f1_hall_05",
+      "to": "wp_lares_f1_hall_06",
+      "accessible": true
+    },
+    {
+      "from": "wp_lares_f1_hall_06",
+      "to": "wp_lares_f1_hall_07",
+      "accessible": true
+    },
+    {
+      "from": "wp_lares_f1_hall_07",
+      "to": "wp_lares_f1_hall_08",
+      "accessible": true
+    },
+    {
+      "from": "wp_lares_f1_hall_08",
+      "to": "wp_lares_banquet",
+      "accessible": true
+    },
+    {
+      "from": "wp_lares_side_entrance_1",
+      "to": "wp_lares_f1_hall_09",
+      "accessible": true
+    },
+    {
+      "from": "wp_lares_f1_hall_09",
+      "to": "wp_lares_banquet",
+      "accessible": true
+    },
+    {
+      "from": "wp_lares_f1_hall_09",
+      "to": "wp_lares_f1_hall_08",
+      "accessible": true
+    },
+    {
+      "from": "wp_lares_side_entrance_2",
+      "to": "wp_lares_f1_hall_03",
+      "accessible": true
+    },
+    {
+      "from": "wp_rydal_f1_hall_01",
+      "to": "wp_rydal_107",
+      "accessible": true
+    },
+    {
+      "from": "wp_rydal_f1_hall_01",
+      "to": "wp_rydal_106",
+      "accessible": true
+    },
+    {
+      "from": "wp_rydal_f1_hall_top_stairs",
+      "to": "wp_rydal_106",
+      "accessible": true
+    },
+    {
+      "from": "wp_rydal_f1_hall_top_stairs",
+      "to": "wp_rydal_107",
+      "accessible": true
+    },
+    {
+      "from": "wp_rydal_main_entrance",
+      "to": "wp_rydal_f1_stairs_side",
+      "accessible": true
+    },
+    {
+      "from": "wp_rydal_f1_stairs_side",
+      "to": "wp_rydal_101",
+      "accessible": true
+    },
+    {
+      "from": "wp_rydal_f1_stairs_side",
+      "to": "wp_rydal_f2_stairs_main",
+      "accessible": true
+    },
+    {
+      "from": "wp_lares_stairs_f2",
+      "to": "wp_lares_stairs_f1",
+      "accessible": true
+    },
+    {
+      "from": "wp_lares_stairs_f2",
+      "to": "wp_lares_stairs_ground",
+      "accessible": true
+    },
+    {
+      "from": "wp_lares_elevator_f2",
+      "to": "wp_lares_elevator_ground",
+      "accessible": true
+    },
+    {
+      "from": "wp_lares_elevator_f2",
+      "to": "wp_lares_elevator_f1",
+      "accessible": true
+    },
+    {
+      "from": "wp_lares_stairs_f1",
+      "to": "wp_lares_stairs_ground",
+      "accessible": true
+    },
+    {
+      "from": "wp_lares_stairs_ground",
+      "to": "wp_lares_g04",
+      "accessible": true
+    },
+    {
+      "from": "wp_lares_stairs_ground",
+      "to": "wp_lares_ground_hall_01",
+      "accessible": true
+    },
+    {
+      "from": "wp_lares_ground_hall_01",
+      "to": "wp_lares_elevator_ground",
+      "accessible": true
+    },
+    {
+      "from": "wp_lares_ground_hall_02",
+      "to": "wp_lares_ground_hall_01",
+      "accessible": true
+    },
+    {
+      "from": "wp_lares_ground_hall_02",
+      "to": "wp_lares_g04",
+      "accessible": true
+    },
+    {
+      "from": "wp_lares_ground_hall_02",
+      "to": "wp_lares_ground_entrance",
+      "accessible": true
+    },
+    {
+      "from": "wp_rydal_f2_stairs_main",
+      "to": "wp_rydal_209",
+      "accessible": true
+    },
+    {
+      "from": "wp_rydal_f2_hall_02",
+      "to": "wp_rydal_f2_hall_03",
+      "accessible": true
+    },
+    {
+      "from": "wp_rydal_f2_hall_03",
+      "to": "wp_rydal_f2_hall_04",
+      "accessible": true
+    },
+    {
+      "from": "wp_rydal_f2_hall_04",
+      "to": "wp_rydal_212",
+      "accessible": true
+    },
+    {
+      "from": "wp_rydal_f2_hall_01",
+      "to": "wp_rydal_201",
+      "accessible": true
+    },
+    {
+      "from": "wp_rydal_f2_hall_01",
+      "to": "wp_rydal_202",
+      "accessible": true
+    },
+    {
+      "from": "wp_rydal_f2_hall_01",
+      "to": "wp_rydal_207",
+      "accessible": true
+    },
+    {
+      "from": "wp_rydal_f2_stairs_main",
+      "to": "wp_rydal_f2_hall_01",
+      "accessible": true
+    },
+    {
+      "from": "wp_rydal_f2_stairs_main",
+      "to": "wp_rydal_f2_hall_05",
+      "accessible": true
+    },
+    {
+      "from": "wp_rydal_f2_hall_05",
+      "to": "wp_rydal_217",
+      "accessible": true
+    },
+    {
+      "from": "wp_rydal_f2_hall_05",
+      "to": "wp_rydal_f2_hall_02",
+      "accessible": true
+    },
+    {
+      "from": "wp_rydal_gnd_hall_01",
+      "to": "wp_rydal_002",
+      "accessible": true
+    },
+    {
+      "from": "wp_spring_entrance",
+      "to": "wp_spring_hall",
+      "accessible": true
+    },
+    {
+      "from": "wp_spring_hall",
+      "to": "wp_spring_100_inside",
+      "accessible": true
+    },
+    {
+      "from": "wp_spring_hall",
+      "to": "wp_spring_101",
+      "accessible": true
+    },
+    {
+      "from": "wp_ath_f1_hall_01",
+      "to": "wp_ath_f1_gym_1",
+      "accessible": true
+    },
+    {
+      "from": "wp_ath_f1_hall_01",
+      "to": "wp_ath_f1_gym_2",
+      "accessible": true
+    },
+    {
+      "from": "wp_ath_f1_hall_01",
+      "to": "wp_ath_f1_hall_02",
+      "accessible": true
+    },
+    {
+      "from": "wp_ath_f1_hall_02",
+      "to": "wp_ath_basketball_court",
+      "accessible": true
+    },
+    {
+      "from": "wp_ath_elevator_f2",
+      "to": "wp_ath_f2_classroom",
+      "accessible": true
+    },
+    {
+      "from": "wp_ath_f2_stairs",
+      "to": "wp_ath_f2_classroom",
+      "accessible": true
+    },
+    {
+      "from": "wp_ath_f2_stairs",
+      "to": "wp_ath_f1_stairs",
+      "accessible": true
+    },
+    {
+      "from": "wp_ath_elevator_f2",
+      "to": "wp_ath_elevator_f1",
+      "accessible": true
+    },
+    {
+      "from": "wp_lares_side_entrance_2",
+      "to": "wp_lares_stairs_f1_2",
+      "accessible": true
+    },
+    {
+      "from": "wp_lares_f1_hall_03",
+      "to": "wp_lares_stairs_f1_2",
+      "accessible": true
+    },
+    {
+      "from": "wp_lares_stairs_f1_2",
+      "to": "wp_lares_stairs_f2",
       "accessible": true
     }
   ],
