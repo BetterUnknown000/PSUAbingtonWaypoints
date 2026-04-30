@@ -172,26 +172,39 @@ function render() {
   nodeIds.forEach(function(id) { nodeSet[id] = true; });
   var fEdges  = allEdges.filter(function(e) { return nodeSet[e.from] && nodeSet[e.to]; });
 
-  // BFS disconnected — same-floor edges only
-  var start = nodeIds.find(function(id) {
-    return (adj[id] || []).some(function(nb) { return nodeSet[nb]; });
-  });
-  var reachable = start ? bfs(start, nodeSet, adj) : {};
-
-  // Nodes with any cross-floor edge are vertically connected — not truly disconnected
+  // BFS disconnected — same-floor edges only.
+  // Seed from the main cluster AND from any node with a cross-floor edge,
+  // so rooms reachable only via a vertical bridge are not marked disconnected.
   var hasVertical = {};
   nodeIds.forEach(function(id) {
+    var wp = wpById[id];
+    if (!wp) return;
     var crossFloor = allEdges.some(function(e) {
       if (e.from !== id && e.to !== id) return false;
       var nb = e.from === id ? e.to : e.from;
       var nbWp = wpById[nb];
-      return nbWp && nbWp.building === wpById[id].building && String(nbWp.floor) !== String(wpById[id].floor);
+      return nbWp && nbWp.building === wp.building && String(nbWp.floor) !== String(wp.floor);
     });
     if (crossFloor) hasVertical[id] = true;
   });
 
+  // Collect all BFS seeds: main cluster start + all vertical bridge nodes
+  var seeds = [];
+  var mainStart = nodeIds.find(function(id) {
+    return (adj[id] || []).some(function(nb) { return nodeSet[nb]; });
+  });
+  if (mainStart) seeds.push(mainStart);
+  nodeIds.forEach(function(id) { if (hasVertical[id] && seeds.indexOf(id) === -1) seeds.push(id); });
+
+  // Multi-seed BFS
+  var reachable = {};
+  seeds.forEach(function(seed) {
+    var visited = bfs(seed, nodeSet, adj);
+    Object.keys(visited).forEach(function(id) { reachable[id] = true; });
+  });
+
   var dcSet = {};
-  nodeIds.forEach(function(id) { if (!reachable[id] && !hasVertical[id]) dcSet[id] = true; });
+  nodeIds.forEach(function(id) { if (!reachable[id]) dcSet[id] = true; });
 
   // Stats
   document.getElementById('s-wps').textContent   = allWps.length;
