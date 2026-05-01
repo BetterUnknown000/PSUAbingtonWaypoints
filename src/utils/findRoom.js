@@ -54,10 +54,16 @@ export function findRoom(buildingId, roomNumber) {
 
   if (!room) return null;
 
-  // 2. Match waypoint
-  const waypoint = (_getAllRooms() || []).find(
-    (w) => w.id === room.waypoint_id
-  );
+  // 2. Match waypoint — look it up by ID from the loaded building cache.
+  // If the building hasn't been loaded yet (before QR scan), the cache will
+  // be empty, so fall back to the room record itself which has x/y/floor.
+  const waypoint = getWaypointById(room.waypoint_id) || (room.waypoint_id ? {
+    id: room.waypoint_id,
+    building: room.building,
+    floor: room.floor,
+    label: room.room_name || `Room ${room.room_number}`,
+    type: room.type || 'classroom',
+  } : null);
 
   // 3. Match building metadata
   const building = (_getAllBuildings() || []).find(
