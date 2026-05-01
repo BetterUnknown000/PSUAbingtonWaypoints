@@ -27,7 +27,12 @@ import {
   loadReferenceImageDatabase,
   identifyLocationFromFrame,
 } from "../utils/imageRecognition";
-import campusData from "../data/campusData.json";
+import {
+  getAllBuildings,
+  getAllRooms,
+  getWaypointById as _getWpById,
+  preloadBuilding,
+} from "../utils/campusDataLoader";
 import { findRoom } from "../utils/findRoom";
 import {
   findWaypointByQrData,
@@ -188,7 +193,7 @@ function guessBuildingFromGps(userGps) {
     };
   }
 
-  const candidates = (campusData.buildings || [])
+  const candidates = (getAllBuildings())
     .map((building) => {
       const distance = haversineMeters(
         Number(userGps.latitude),
@@ -300,7 +305,7 @@ export default function NavigationPage({ route, navigation }) {
     if (!startWaypointId && !startQrId) return null;
 
     return (
-      (campusData.waypoints || []).find((waypoint) => {
+      (getAllRooms() || []).find((waypoint) => {
         return (
           waypoint.id === startWaypointId || waypoint.qr_code === startQrId
         );
@@ -397,7 +402,8 @@ export default function NavigationPage({ route, navigation }) {
     const candidate =
       waypoint?.meters_per_px ??
       waypoint?.metersPerPx ??
-      campusData?.floorScales?.[buildingId]?.[String(floorId)] ??
+      // floorScales removed — use MAP_PIXELS_PER_METER constant
+      null ??
       DEFAULT_METERS_PER_PX;
 
     const numeric = Number(candidate);
@@ -588,7 +594,7 @@ export default function NavigationPage({ route, navigation }) {
   }, [userGps]);
 
   const buildingOptions = useMemo(() => {
-    return [...(campusData.buildings || [])].sort((a, b) =>
+    return [...(getAllBuildings())].sort((a, b) =>
       String(a.name).localeCompare(String(b.name))
     );
   }, []);
@@ -1063,9 +1069,7 @@ export default function NavigationPage({ route, navigation }) {
     const result = route.params?.visualLocateResult;
     if (!result?.waypointId) return;
 
-    const matchedWaypoint = (campusData.waypoints || []).find(
-      (waypoint) => waypoint.id === result.waypointId
-    );
+    const matchedWaypoint = _getWpById(result.waypointId);
 
     if (!matchedWaypoint) return;
 
@@ -1503,6 +1507,9 @@ export default function NavigationPage({ route, navigation }) {
 
     const scannedId = scannedWaypoint.id || scannedWaypoint.waypoint_id || "";
     const isOnCurrentPath = Array.isArray(pathIds) && pathIds.includes(scannedId);
+
+    // Eagerly load this building's data so graph builds are instant
+    if (scannedWaypoint.building) preloadBuilding(scannedWaypoint.building);
 
     setCurrentWaypointLabel(scannedWaypoint.label || scannedWaypoint.id);
     setCurrentBuildingId(scannedWaypoint.building || "");
