@@ -6,6 +6,9 @@
  * Falls back to haversine if the proxy is unavailable.
  */
 
+const ORS_BASE = "https://api.heigit.org/openrouteservice/v2";
+const ORS_KEY  = process.env.EXPO_PUBLIC_ORS_API_KEY || "";
+
 export async function rankEntrances({
   userGps,
   entrances = [],
@@ -98,10 +101,11 @@ async function fetchOrsMatrix({ userGps, candidates, apiBaseUrl, timeoutMs }) {
       metrics: ["distance", "duration"],
     };
 
-    const response = await fetch(`${apiBaseUrl}/ors/matrix`, {
+    const response = await fetch(`${ORS_BASE}/matrix/foot-walking`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
+        "Authorization": ORS_KEY,
       },
       body: JSON.stringify(body),
       signal: controller.signal,
