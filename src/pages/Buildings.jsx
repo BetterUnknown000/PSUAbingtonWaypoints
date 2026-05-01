@@ -9,7 +9,7 @@ import {
 } from "react-native";
 import { SafeAreaView, useSafeAreaInsets } from "react-native-safe-area-context";
 import { getAllBuildings } from "../utils/findRoom";
-import { getAllBuildings, getAllRooms, getWaypointById, getAllEntrances } from '../utils/campusDataLoader';
+import { getAllRooms, getWaypointById, getAllEntrances } from '../utils/campusDataLoader';
 import BottomMenu, { BOTTOM_MENU_HEIGHT } from "../components/BottomMenu";
 
 const PSU = {
