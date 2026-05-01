@@ -1439,6 +1439,37 @@ export default function NavigationPage({ route, navigation }) {
       return;
     }
 
+    // ── Step-count-based advancement (primary indoor method) ──────────────────
+    // PDR heading is unreliable without bearing_hint_deg so position-based
+    // advancement often fails. Instead, estimate steps needed to reach the
+    // next waypoint from the current anchor and advance when that count is met.
+    const currentWp = getWaypointById(currentWaypointId);
+    const MAP_PX_PER_M = 1 / metersPerPx;
+    const STRIDE_M = 0.75;
+    if (
+      currentWp?.x != null && currentWp?.y != null &&
+      nextWaypoint?.x != null && nextWaypoint?.y != null
+    ) {
+      const dx = Number(nextWaypoint.x) - Number(currentWp.x);
+      const dy = Number(nextWaypoint.y) - Number(currentWp.y);
+      const distPx = Math.sqrt(dx * dx + dy * dy);
+      const distM = distPx * metersPerPx;
+      const stepsNeeded = Math.max(5, Math.round(distM / STRIDE_M));
+      const stepsSinceAnchor = stepCount - lastStepAnchorCount;
+
+      if (stepsSinceAnchor >= stepsNeeded) {
+        const next = getWaypointById(nextPathWaypointId || nextWaypoint.id);
+        const advanceTo = nextPathWaypointId || nextWaypoint.id;
+        setCurrentWaypointId(advanceTo);
+        if (next?.building) setCurrentBuildingId(next.building);
+        if (next?.label) setCurrentWaypointLabel(next.label);
+        setPreviousIndoorDistance(null);
+        setLastStepAnchorCount(stepCount);
+        return;
+      }
+    }
+
+    // ── Position-based advancement (fallback if x/y available) ───────────────
     const advanced = advanceRouteIfNeededIndoor({
       currentWaypointId,
       currentIndoorPosition: livePose,
