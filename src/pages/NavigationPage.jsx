@@ -30,6 +30,7 @@ import {
 import {
   getAllBuildings,
   getAllRooms,
+  getWaypointById,
   getWaypointById as _getWpById,
   preloadBuilding,
 } from "../utils/campusDataLoader";
