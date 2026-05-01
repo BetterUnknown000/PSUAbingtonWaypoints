@@ -1235,6 +1235,10 @@ export default function NavigationPage({ route, navigation }) {
   useEffect(() => {
     if (!destinationBuilding && !destinationRoom) return;
     const destBuildingId = destinationBuilding?.id || destinationRoom?.building || "";
+
+    // Eagerly load destination building data so waypoints are available immediately
+    if (destBuildingId) preloadBuilding(destBuildingId);
+
     const alreadyIndoor = Boolean(
       currentBuildingId &&
       navState.anchorPose &&
