@@ -1,4 +1,11 @@
-import campusData from "../data/campusData.json";
+import {
+  getWaypointById,
+  getBuildingWaypoints,
+  getBuildingEdges,
+  getAllBuildings,
+  getBuildingEntrances,
+  getAllRooms,
+} from './campusDataLoader';
 import { findRoom } from "./findRoom";
 import { buildGraph } from "./buildGraph";
 import { aStar } from "./astar";
@@ -54,8 +61,9 @@ export function getRoomFloor(buildingId, roomNumber) {
   return result?.room?.floor || null;
 }
 
-export function getEdgeDistance(fromId, toId) {
-  const graph = buildGraph();
+export function getEdgeDistance(fromId, toId, buildingId) {
+  if (!buildingId) return 0;
+  const graph = buildGraph({ buildingId });
   const edge = (graph[fromId] || []).find((n) => n.id === toId);
   return edge ? Number(edge.weight || 0) : 0;
 }
