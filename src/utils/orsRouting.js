@@ -37,16 +37,7 @@ export async function fetchOrsRoute(originGps, destinationGps) {
   }
 
   if (!API_BASE_URL) {
-    throw new Error("Missing EXPO_PUBLIC_API_BASE_URL — set this in your .env file");
-  }
-
-  // Warn clearly when localhost is used on a physical device
-  if (API_BASE_URL.includes("localhost") || API_BASE_URL.includes("127.0.0.1")) {
-    throw new Error(
-      "Outdoor routing requires a reachable proxy server. " +
-      "Replace 'localhost' in EXPO_PUBLIC_API_BASE_URL with your computer's local IP address " +
-      "(e.g. http://192.168.x.x:3001) so your phone can reach the server."
-    );
+    throw new Error("Missing EXPO_PUBLIC_API_BASE_URL");
   }
 
   const body = {
