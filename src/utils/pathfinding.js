@@ -142,10 +142,9 @@ function buildSameFloorGraph({ buildingId, floor, accessibleOnly = false, stairs
   }
 
   const allowedIds = new Set(
-    (campusData.waypoints || [])
+    getBuildingWaypoints(buildingId)
       .filter((w) => {
         return (
-          normalize(w.building) === normalize(buildingId) &&
           String(w.floor || "") === String(floor || "")
         );
       })
@@ -298,8 +297,7 @@ function findNearestPathToAnyTarget(startWaypointId, targetWaypointIds = [], opt
 }
 
 function getVerticalCandidates(buildingId, floor, accessibleOnly = false, stairsOnly = false) {
-  return (campusData.waypoints || []).filter((w) => {
-    if (normalize(w.building) !== normalize(buildingId)) return false;
+  return getBuildingWaypoints(buildingId).filter((w) => {
     if (String(w.floor || "") !== String(floor || "")) return false;
 
     if (stairsOnly) {
@@ -353,11 +351,8 @@ function findNearestSameFloorVerticalTarget(
 }
 
 function buildUnknownIndoorAnchorInstructions(buildingId, destinationRoomNumber) {
-  const anchors = (campusData.waypoints || []).filter((w) => {
-    return (
-      normalize(w.building) === normalize(buildingId) &&
-      (w.type === "stairs" || w.type === "elevator" || w.type === "entrance")
-    );
+  const anchors = getBuildingWaypoints(buildingId).filter((w) => {
+    return w.type === "stairs" || w.type === "elevator" || w.type === "entrance";
   });
 
   const anchorLabels = anchors.slice(0, 4).map((a) => a.label).filter(Boolean);
