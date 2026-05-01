@@ -36,7 +36,6 @@ import {
 import { findRoom } from "../utils/findRoom";
 import {
   findWaypointByQrData,
-  getWaypointById,
   getBuildingEntrances,
 } from "../utils/qrWaypointLookup";
 import { buildStageNavigation, findNearestExitRoute } from "../utils/pathfinding";
