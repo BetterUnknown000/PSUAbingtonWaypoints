@@ -1,34 +1,15 @@
 // orsRouting.js
-// Fetches a walking route from OpenRouteService and returns
-// coordinates + turn-by-turn steps for outdoor navigation.
-//
-// Usage:
-//   import { fetchOrsRoute } from "../utils/orsRouting";
-//   const result = await fetchOrsRoute(
-//     { latitude: 40.1, longitude: -75.1 },   // origin
-//     { latitude: 40.11, longitude: -75.11 }  // destination
-//   );
-//   result.coordinates  — [{ latitude, longitude }, ...]
-//   result.steps        — [{ instruction, distance, duration }, ...]
-//   result.totalMeters  — number
-//   result.totalSeconds — number
+// Calls OpenRouteService directly from the app — no proxy server needed.
+// The API key is embedded via EXPO_PUBLIC_ORS_API_KEY in .env
 
-const API_BASE_URL = String(process.env.EXPO_PUBLIC_API_BASE_URL || "").replace(/\/$/, "");
-// Fallback step text when ORS instruction is missing
+const ORS_BASE = "https://api.heigit.org/openrouteservice/v2";
+const ORS_KEY  = process.env.EXPO_PUBLIC_ORS_API_KEY || "";
+
 function describeStep(instruction = "", distanceMeters = 0) {
-  const dist =
-    distanceMeters > 0
-      ? distanceMeters >= 100
-        ? `${Math.round(distanceMeters)} m`
-        : `${Math.round(distanceMeters)} m`
-      : "";
+  const dist = distanceMeters > 0 ? `${Math.round(distanceMeters)} m` : "";
   return instruction
-    ? dist
-      ? `${instruction} (${dist})`
-      : instruction
-    : dist
-    ? `Continue ${dist}`
-    : "Continue straight";
+    ? dist ? `${instruction} (${dist})` : instruction
+    : dist ? `Continue ${dist}` : "Continue straight";
 }
 
 export async function fetchOrsRoute(originGps, destinationGps) {
@@ -36,13 +17,15 @@ export async function fetchOrsRoute(originGps, destinationGps) {
     throw new Error("fetchOrsRoute: origin and destination GPS are required");
   }
 
-  if (!API_BASE_URL) {
-    throw new Error("Missing EXPO_PUBLIC_API_BASE_URL");
+  if (!ORS_KEY) {
+    throw new Error(
+      "Missing EXPO_PUBLIC_ORS_API_KEY in .env — add your ORS API key to enable outdoor routing"
+    );
   }
 
   const body = {
     coordinates: [
-      [Number(originGps.longitude), Number(originGps.latitude)],
+      [Number(originGps.longitude),      Number(originGps.latitude)],
       [Number(destinationGps.longitude), Number(destinationGps.latitude)],
     ],
     instructions: true,
@@ -50,58 +33,53 @@ export async function fetchOrsRoute(originGps, destinationGps) {
     units: "m",
   };
 
-  const response = await fetch(`${API_BASE_URL}/ors/directions`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      Accept: "application/geo+json, application/json",
-    },
-    body: JSON.stringify(body),
-  });
+  const response = await fetch(
+    `${ORS_BASE}/directions/foot-walking/geojson`,
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Accept": "application/geo+json, application/json",
+        "Authorization": ORS_KEY,
+      },
+      body: JSON.stringify(body),
+    }
+  );
 
   if (!response.ok) {
-    const errorText = await response.text().catch(() => "");
-    throw new Error(
-      `ORS request failed: ${response.status} ${response.statusText} — ${errorText}`
-    );
+    const text = await response.text().catch(() => "");
+    if (response.status === 403 || response.status === 429) {
+      throw new Error(`ORS quota exceeded (${response.status}) — try again later.`);
+    }
+    throw new Error(`ORS directions failed: ${response.status} — ${text}`);
   }
 
   const json = await response.json();
-  
-  /* Support BOTH ORS response formats:
-     1. { routes:[...] }
-     2. GeoJSON { features:[...] }
-  */
 
   let geometryCoords = [];
   let segments = [];
   let summary = {};
 
-  if (json?.routes?.[0]) {
-    const route = json.routes[0];
-
-    geometryCoords = route.geometry?.coordinates || [];
-    segments = route.segments || [];
-    summary = route.summary || {};
-  } else if (json?.features?.[0]) {
+  if (json?.features?.[0]) {
     const feature = json.features[0];
-
     geometryCoords = feature.geometry?.coordinates || [];
     segments = feature.properties?.segments || [];
     summary = feature.properties?.summary || {};
+  } else if (json?.routes?.[0]) {
+    const route = json.routes[0];
+    geometryCoords = route.geometry?.coordinates || [];
+    segments = route.segments || [];
+    summary = route.summary || {};
   } else {
     throw new Error("ORS returned no routes");
   }
 
-  /* Convert [lng, lat] => { latitude, longitude } */
   const coordinates = geometryCoords.map(([lng, lat]) => ({
     latitude: Number(lat),
     longitude: Number(lng),
   }));
 
-  /* Build step list */
   const steps = [];
-
   for (const segment of segments) {
     for (const step of segment.steps || []) {
       steps.push({
@@ -113,20 +91,16 @@ export async function fetchOrsRoute(originGps, destinationGps) {
       });
     }
   }
+
   const totalMeters =
     Number(summary.distance) ||
-    segments.reduce((sum, segment) => sum + Number(segment.distance || 0), 0) ||
+    segments.reduce((sum, s) => sum + Number(s.distance || 0), 0) ||
     null;
 
   const totalSeconds =
     Number(summary.duration) ||
-    segments.reduce((sum, segment) => sum + Number(segment.duration || 0), 0) ||
+    segments.reduce((sum, s) => sum + Number(s.duration || 0), 0) ||
     0;
 
-  return {
-  coordinates,
-  steps,
-  totalMeters,
-  totalSeconds,
-  };
+  return { coordinates, steps, totalMeters, totalSeconds };
 }
