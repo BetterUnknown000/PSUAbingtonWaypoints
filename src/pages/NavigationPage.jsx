@@ -359,7 +359,7 @@ export default function NavigationPage({ route, navigation }) {
   const [lastStepAnchorCount, setLastStepAnchorCount] = useState(0);
 
   // ─── Indoor pose from IMU/PDR ─────────────────────────────────────────────
-  const { pose: indoorPose, resetPose: resetIndoorPose } = useIndoorPose({
+  const { pose: indoorPose, resetPose: resetIndoorPose, pdrStepCount } = useIndoorPose({
     anchorPose: navState.anchorPose,
     isActive: isIndoorMode(navState),
   });
@@ -948,9 +948,11 @@ export default function NavigationPage({ route, navigation }) {
         setOrsMeters(null);
         lastOrsFetchKeyRef.current = null;
         setOrsError(
-          error?.message === "Route request timed out"
+          error?.message?.includes("localhost") || error?.message?.includes("127.0.0.1")
+            ? "Outdoor routing needs a LAN server. Set EXPO_PUBLIC_API_BASE_URL to your computer's IP (e.g. http://192.168.x.x:3001)."
+            : error?.message === "Route request timed out"
             ? "Outdoor route request timed out."
-            : "Failed to load outdoor route."
+            : "Outdoor routing unavailable — follow signs to the building."
         );
       } finally {
         if (!cancelled) {
@@ -1455,7 +1457,7 @@ export default function NavigationPage({ route, navigation }) {
       const distPx = Math.sqrt(dx * dx + dy * dy);
       const distM = distPx * metersPerPx;
       const stepsNeeded = Math.max(5, Math.round(distM / STRIDE_M));
-      const stepsSinceAnchor = stepCount - lastStepAnchorCount;
+      const stepsSinceAnchor = pdrStepCount;  // pdrStepCount resets to 0 on each QR scan
 
       if (stepsSinceAnchor >= stepsNeeded) {
         const next = getWaypointById(nextPathWaypointId || nextWaypoint.id);
@@ -1464,7 +1466,6 @@ export default function NavigationPage({ route, navigation }) {
         if (next?.building) setCurrentBuildingId(next.building);
         if (next?.label) setCurrentWaypointLabel(next.label);
         setPreviousIndoorDistance(null);
-        setLastStepAnchorCount(stepCount);
         return;
       }
     }
@@ -1496,7 +1497,6 @@ export default function NavigationPage({ route, navigation }) {
       if (next?.label) setCurrentWaypointLabel(next.label);
 
       setPreviousIndoorDistance(null);
-      setLastStepAnchorCount(stepCount);
     }
   }, [
     viewMode,
@@ -1511,7 +1511,7 @@ export default function NavigationPage({ route, navigation }) {
     currentWaypointObj,
     currentBuildingId,
     previousIndoorDistance,
-    stepCount,
+    pdrStepCount,
   ]);
 
   function showScanBadge(label) {
