@@ -457,7 +457,10 @@ export default function NavigationPage({ route, navigation }) {
 
   const targetBearing = useMemo(() => {
     if (viewMode === VIEW_MODE.INDOOR) {
-      return computeMapBearing(livePose, nextWaypoint);
+      // Use anchorPose (exact QR scan position) not livePose (drifts with PDR).
+      // Without bearing_hint_deg the gyroscope heading is unanchored to the map,
+      // so PDR moves livePose in a wrong direction. anchorPose is always exact.
+      return computeMapBearing(navState.anchorPose, nextWaypoint);
     }
 
     if (
@@ -475,7 +478,7 @@ export default function NavigationPage({ route, navigation }) {
       Number(nextWaypoint.latitude),
       Number(nextWaypoint.longitude)
     );
-  }, [viewMode, livePose, userGps, nextWaypoint]);
+  }, [viewMode, navState.anchorPose, userGps, nextWaypoint]);
 
   const fallbackArrowDirection = useMemo(() => {
     if (targetBearing !== null) return "straight";
