@@ -42,6 +42,7 @@ export default function DirectionArrow({
   const compassAnim = useRef(new Animated.Value(0)).current;
   const arrowAnim = useRef(new Animated.Value(0)).current;
   const lastArrowDeg = useRef(0);
+  const lastTargetBearing = useRef(null);
 
   const normalizedHeading = normalizeDegrees(heading);
 
@@ -89,6 +90,7 @@ export default function DirectionArrow({
   }, [arrived, pulseAnim]);
 
   useEffect(() => {
+    if (heading === 0) return; // indoor — ring stays fixed
     Animated.timing(compassAnim, {
       toValue: normalizedHeading,
       duration: 120,
@@ -98,23 +100,48 @@ export default function DirectionArrow({
   }, [normalizedHeading, compassAnim]);
   
   useEffect(() => {
+    if (targetBearing == null) {
+      // Fallback: text instruction direction
+      const target = getInstructionRotation(direction);
+      lastArrowDeg.current = target;
+      lastTargetBearing.current = null;
+      arrowAnim.setValue(target);
+      return;
+    }
+
+    if (heading === 0) {
+      // Indoor mode — animate directly to targetBearing.
+      // No accumulator: targetBearing IS the arrow angle.
+      arrowAnim.stopAnimation();
+      Animated.timing(arrowAnim, {
+        toValue: targetBearing,
+        duration: 200,
+        easing: Easing.out(Easing.cubic),
+        useNativeDriver: true,
+      }).start();
+      lastArrowDeg.current = targetBearing;
+      lastTargetBearing.current = targetBearing;
+      return;
+    }
+
+    // Outdoor mode — accumulator to avoid spinning through 360
     const current = lastArrowDeg.current;
     let target = relativeArrowDegrees;
-  
-    let diff = target - current;
+    let diff = target - ((current % 360) + (current >= 0 ? 0 : 360));
     if (diff > 180) diff -= 360;
     if (diff < -180) diff += 360;
     target = current + diff;
-  
+    if (target > 3600)  { target -= 3600; lastArrowDeg.current = target; arrowAnim.setValue(target); }
+    if (target < -3600) { target += 3600; lastArrowDeg.current = target; arrowAnim.setValue(target); }
     lastArrowDeg.current = target;
-  
+    lastTargetBearing.current = targetBearing;
     Animated.timing(arrowAnim, {
       toValue: target,
-      duration: 120,
+      duration: 150,
       easing: Easing.out(Easing.cubic),
       useNativeDriver: true,
     }).start();
-  }, [relativeArrowDegrees, arrowAnim]);
+  }, [targetBearing, heading, relativeArrowDegrees, arrowAnim]);
 
   const compassRotate = compassAnim.interpolate({
     inputRange: [0, 360],
@@ -122,8 +149,8 @@ export default function DirectionArrow({
   });
   
   const arrowRotate = arrowAnim.interpolate({
-    inputRange: [-720, 720],
-    outputRange: ["-720deg", "720deg"],
+    inputRange: [-3600, 3600],
+    outputRange: ["-3600deg", "3600deg"],
   });
 
   if (arrived) {
@@ -195,9 +222,11 @@ export default function DirectionArrow({
           )}
         </View>
 
-        <View style={s.headingBadge}>
-          <Text style={s.headingBadgeText}>{Math.round(normalizedHeading)}°</Text>
-        </View>
+        {heading !== 0 ? (
+          <View style={s.headingBadge}>
+            <Text style={s.headingBadgeText}>{Math.round(normalizedHeading)}°</Text>
+          </View>
+        ) : null}
       </View>
     </Animated.View>
   );
