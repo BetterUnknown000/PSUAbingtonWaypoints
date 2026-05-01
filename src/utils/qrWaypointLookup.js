@@ -37,6 +37,9 @@ export function getWaypointFromQrCode(rawQrData) {
   }
 }
 
+// Alias used by NavigationPage
+export const findWaypointByQrData = getWaypointFromQrCode;
+
 export function getQrAnchorForWaypoint(waypointId) {
   // QR anchors are now per-building; use the waypoint itself as anchor info
   const wp = _getById(waypointId);
