@@ -1,12 +1,12 @@
 // src/utils/findRoom.js
-import campusData from "../data/campusData.json";
+import { getAllBuildings, getAllRooms, getWaypointById } from './campusDataLoader';
 
 /*
 // ---- CONNECTION CHECK ----
 console.log("campusData loaded:", {
-  buildings: campusData.buildings?.length ?? "NOT FOUND",
-  rooms: campusData.rooms?.length ?? "NOT FOUND",
-  waypoints: campusData.waypoints?.length ?? "NOT FOUND",
+  buildings: getAllBuildings()?.length ?? "NOT FOUND",
+  rooms: getAllRooms()?.length ?? "NOT FOUND",
+  waypoints: getAllRooms()?.length ?? "NOT FOUND",
 });
 // ---- END CONNECTION CHECK ----
 */
@@ -46,7 +46,7 @@ export function findRoom(buildingId, roomNumber) {
   const rnum = normalizeRoomNumber(roomNumber);
 
   // 1. Match room
-  const room = (campusData.rooms || []).find(
+  const room = (getAllRooms() || []).find(
     (r) =>
       normalizeBuildingId(r.building) === bid &&
       normalizeRoomNumber(r.room_number) === rnum
@@ -55,12 +55,12 @@ export function findRoom(buildingId, roomNumber) {
   if (!room) return null;
 
   // 2. Match waypoint
-  const waypoint = (campusData.waypoints || []).find(
+  const waypoint = (getAllRooms() || []).find(
     (w) => w.id === room.waypoint_id
   );
 
   // 3. Match building metadata
-  const building = (campusData.buildings || []).find(
+  const building = (getAllBuildings() || []).find(
     (b) => normalizeBuildingId(b.id) === bid
   );
 
@@ -82,7 +82,7 @@ export function findRoomsByBuilding(buildingId) {
 
   const bid = normalizeBuildingId(buildingId);
 
-  return (campusData.rooms || []).filter(
+  return (getAllRooms() || []).filter(
     (r) => normalizeBuildingId(r.building) === bid
   );
 }
@@ -93,7 +93,7 @@ export function findRoomsByBuilding(buildingId) {
  * @returns {Array}
  */
 export function getAllBuildings() {
-  return [...(campusData.buildings || [])].sort((a, b) =>
+  return [...(getAllBuildings() || [])].sort((a, b) =>
     String(a.name).localeCompare(String(b.name))
   );
 }
