@@ -11,8 +11,6 @@ import { buildGraph } from "./buildGraph";
 import { aStar } from "./astar";
 import {
   getBuildingById,
-  getBuildingEntrances,
-  getWaypointById,
   isAtBuildingEntrance,
 } from "./qrWaypointLookup";
 import { isNearDestinationBuilding } from "./location";
