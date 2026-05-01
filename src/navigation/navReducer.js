@@ -1,4 +1,3 @@
-
 /**
  * navReducer.js
  *
@@ -97,6 +96,22 @@ export function navReducer(state, event) {
     // ─── Destination ────────────────────────────────────────────────────────
  
     case NavEvent.SET_DESTINATION: {
+      // If user is already anchored inside the destination building,
+      // stay in indoor mode instead of resetting to outdoor routing.
+      if (
+        event.alreadyIndoor &&
+        state.anchorPose &&
+        state.mode === NavMode.INDOOR_ANCHORED
+      ) {
+        return {
+          ...state,
+          mode: NavMode.INDOOR_ANCHORED,
+          destinationBuildingId: event.destinationBuildingId || null,
+          destinationRoomNumber: event.destinationRoomNumber || null,
+          destinationWaypointId: event.destinationWaypointId || null,
+          emergencyMode: false,
+        };
+      }
       return {
         ...initialNavState,
         mode: NavMode.OUTDOOR_ROUTE,
