@@ -1,68 +1,53 @@
-import campusData from "../data/campusData.json";
-import { findWaypointFromQrPayload, parseQrPayload } from "./qrPayload";
- 
-function normalize(value) {
-  return String(value || "").trim().toLowerCase();
-}
- 
+/**
+ * qrWaypointLookup.js
+ *
+ * Waypoint/building lookup helpers backed by campusDataLoader.
+ * All functions are synchronous — they operate on already-loaded data.
+ * Call preloadBuilding() before navigating indoors.
+ */
+
+import { findWaypointFromQrPayload, parseQrPayload } from './qrPayload';
+import {
+  getWaypointById as _getById,
+  getBuildingById,
+  getBuildingEntrances,
+  getAllBuildings,
+  getAllEntrances,
+  getAllRooms,
+  findRoomByNumber,
+  preloadBuilding,
+} from './campusDataLoader';
+
+// Re-export for backward compatibility
+export { preloadBuilding };
+
 export function getWaypointById(id) {
-  return (campusData.waypoints || []).find((w) => w.id === id) || null;
+  return _getById(id);
 }
- 
-export function getBuildingById(id) {
-  return (
-    (campusData.buildings || []).find(
-      (b) => normalize(b.id) === normalize(id)
-    ) || null
-  );
-}
- 
-export function getBuildingEntrances(buildingId) {
-  const building = getBuildingById(buildingId);
- 
-  if (!building || !Array.isArray(building.entrances)) {
-    return [];
+
+export { getBuildingById, getBuildingEntrances, getAllBuildings, getAllEntrances, getAllRooms, findRoomByNumber };
+
+export function getWaypointFromQrCode(rawQrData) {
+  try {
+    const payload = parseQrPayload(rawQrData);
+    if (!payload) return null;
+    return findWaypointFromQrPayload(payload) || null;
+  } catch {
+    return null;
   }
- 
-  return building.entrances
-    .map((id) => getWaypointById(id))
-    .filter(Boolean);
 }
- 
-export function isAtBuildingEntrance(waypointId, buildingId) {
-  const building = getBuildingById(buildingId);
- 
-  if (!building || !Array.isArray(building.entrances)) {
-    return false;
-  }
- 
-  return building.entrances.includes(waypointId);
+
+export function getQrAnchorForWaypoint(waypointId) {
+  // QR anchors are now per-building; use the waypoint itself as anchor info
+  const wp = _getById(waypointId);
+  if (!wp) return null;
+  return {
+    qr_id: wp.qr_code || waypointId,
+    waypoint_id: waypointId,
+    building: wp.building,
+    floor: wp.floor,
+    x: wp.x,
+    y: wp.y,
+    bearing_hint_deg: wp.bearing_hint_deg ?? null,
+  };
 }
- 
-export function findWaypointByQrData(qrData) {
-  const payload = parseQrPayload(qrData);
-  const payloadMatch = findWaypointFromQrPayload(payload);
- 
-  if (payloadMatch) {
-    // Merge payload fields into the waypoint — v3 QR x/y overrides campusData
-    return {
-      ...payloadMatch,
-      ...(payload?.x != null ? { x: payload.x } : {}),
-      ...(payload?.y != null ? { y: payload.y } : {}),
-      ...(payload?.role ? { role: payload.role } : {}),
-      ...(payload?.graph_rev ? { graph_rev: payload.graph_rev } : {}),
-    };
-  }
- 
-  const normalized = normalize(qrData);
- 
-  return (
-    (campusData.waypoints || []).find((w) => {
-      return (
-        normalize(w.id) === normalized ||
-        normalize(w.qr_code) === normalized
-      );
-    }) || null
-  );
-}
- 
