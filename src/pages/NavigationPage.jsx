@@ -2517,7 +2517,7 @@ export default function NavigationPage({ route, navigation }) {
               <DirectionArrow
                 direction={fallbackArrowDirection}
                 arrived={arrived}
-                heading={viewMode === VIEW_MODE.INDOOR ? 0 : deviceHeading}
+                heading={deviceHeading}
                 targetBearing={targetBearing}
                 mode={transportMode}
               />
