@@ -1230,11 +1230,18 @@ export default function NavigationPage({ route, navigation }) {
   // Dispatch SET_DESTINATION to nav reducer when destination is set
   useEffect(() => {
     if (!destinationBuilding && !destinationRoom) return;
+    const destBuildingId = destinationBuilding?.id || destinationRoom?.building || "";
+    const alreadyIndoor = Boolean(
+      currentBuildingId &&
+      navState.anchorPose &&
+      normalize(currentBuildingId) === normalize(destBuildingId)
+    );
     navDispatch({
       type: NavEvent.SET_DESTINATION,
-      destinationBuildingId: destinationBuilding?.id || destinationRoom?.building || "",
+      destinationBuildingId: destBuildingId,
       destinationRoomNumber: destinationRoom?.room_number || "",
       destinationWaypointId: null,
+      alreadyIndoor,
     });
   }, [destinationBuilding, destinationRoom]);
 
