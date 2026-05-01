@@ -1,5 +1,5 @@
 // src/utils/findRoom.js
-import { getAllBuildings, getAllRooms, getWaypointById } from './campusDataLoader';
+import { getAllBuildings as _getAllBuildings, getAllRooms as _getAllRooms, getWaypointById } from './campusDataLoader';
 
 /*
 // ---- CONNECTION CHECK ----
@@ -60,7 +60,7 @@ export function findRoom(buildingId, roomNumber) {
   );
 
   // 3. Match building metadata
-  const building = (getAllBuildings() || []).find(
+  const building = (_getAllBuildings() || []).find(
     (b) => normalizeBuildingId(b.id) === bid
   );
 
@@ -93,7 +93,7 @@ export function findRoomsByBuilding(buildingId) {
  * @returns {Array}
  */
 export function getAllBuildings() {
-  return [...(getAllBuildings() || [])].sort((a, b) =>
+  return [...(_getAllBuildings() || [])].sort((a, b) =>
     String(a.name).localeCompare(String(b.name))
   );
 }
