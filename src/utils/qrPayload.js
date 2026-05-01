@@ -1,4 +1,4 @@
-import campusData from "../data/campusData.json";
+import { getAllBuildings, getAllRooms, getWaypointById, getAllEntrances } from '../utils/campusDataLoader';
  
 export const APP_SCHEME = "psuabingtonwaypoints";
 export const QR_NAVIGATION_ROUTE = "navigation";
@@ -213,7 +213,7 @@ export function findWaypointFromQrPayload(payload) {
   const normalizedQrId = normalize(payload.qr_id);
  
   return (
-    (campusData.waypoints || []).find((waypoint) => {
+    (getAllEntrances()).find((waypoint) => {
       return (
         (normalizedWaypointId && normalize(waypoint.id) === normalizedWaypointId) ||
         (normalizedQrId && normalize(waypoint.qr_code) === normalizedQrId)
