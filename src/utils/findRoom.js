@@ -5,8 +5,8 @@ import { getAllBuildings as _getAllBuildings, getAllRooms as _getAllRooms, getWa
 // ---- CONNECTION CHECK ----
 console.log("campusData loaded:", {
   buildings: getAllBuildings()?.length ?? "NOT FOUND",
-  rooms: getAllRooms()?.length ?? "NOT FOUND",
-  waypoints: getAllRooms()?.length ?? "NOT FOUND",
+  rooms: _getAllRooms()?.length ?? "NOT FOUND",
+  waypoints: _getAllRooms()?.length ?? "NOT FOUND",
 });
 // ---- END CONNECTION CHECK ----
 */
@@ -46,7 +46,7 @@ export function findRoom(buildingId, roomNumber) {
   const rnum = normalizeRoomNumber(roomNumber);
 
   // 1. Match room
-  const room = (getAllRooms() || []).find(
+  const room = (_getAllRooms() || []).find(
     (r) =>
       normalizeBuildingId(r.building) === bid &&
       normalizeRoomNumber(r.room_number) === rnum
@@ -55,7 +55,7 @@ export function findRoom(buildingId, roomNumber) {
   if (!room) return null;
 
   // 2. Match waypoint
-  const waypoint = (getAllRooms() || []).find(
+  const waypoint = (_getAllRooms() || []).find(
     (w) => w.id === room.waypoint_id
   );
 
@@ -82,7 +82,7 @@ export function findRoomsByBuilding(buildingId) {
 
   const bid = normalizeBuildingId(buildingId);
 
-  return (getAllRooms() || []).filter(
+  return (_getAllRooms() || []).filter(
     (r) => normalizeBuildingId(r.building) === bid
   );
 }
