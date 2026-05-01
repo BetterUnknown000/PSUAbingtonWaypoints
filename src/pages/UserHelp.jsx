@@ -51,7 +51,7 @@ const FAQS = [
     },
 ];
 
-const YOUTUBE_PLAYLIST_URL = "insert playlist once created"
+const YOUTUBE_PLAYLIST_URL = "https://youtube.com/playlist?list=PLf3IIMntMYZZdJuXB-9sZWISI1tdvd9kv&si=6Z1kQIsVb8AijLwI"
 
 function SectionHeader({ label }) {
     return (
@@ -97,7 +97,7 @@ export default function UserHelp({ navigation }) {
                 >
                     <View style={s.hero}>
                         <View style={s.heroTag}>
-                            <Text style={s.heroTagText}>LionNav (will change)</Text>
+                            <Text style={s.heroTagText}>AbingtonNav</Text>
                         </View>
                         <Text style={s.heroTitle}>Help &{"\n"}Support</Text>
                         <Text style={s.heroSub}>
@@ -127,7 +127,7 @@ export default function UserHelp({ navigation }) {
                                 </View>
                             </View>
                             <View style={s.playlistInfo}>
-                                <Text style={s.playlistTitle}>Campus App — Tutorial Series</Text>
+                                <Text style={s.playlistTitle}>AbingtonNav App — Tutorial Series</Text>
                                 <Text style={s.playlistSub}>
                                     Step-by-step video guides covering navigation, schedules, QR codes, and more.
                                 </Text>
