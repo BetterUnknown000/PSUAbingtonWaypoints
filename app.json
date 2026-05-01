@@ -16,19 +16,38 @@
         {
           "action": "VIEW",
           "autoVerify": true,
-          "data": [{ "scheme": "psuabingtonwaypoints" }],
-          "category": ["BROWSABLE", "DEFAULT"]
+          "data": [
+            {
+              "scheme": "psuabingtonwaypoints"
+            }
+          ],
+          "category": [
+            "BROWSABLE",
+            "DEFAULT"
+          ]
         }
       ]
     },
     "plugins": [
-      ["expo-location", {
-        "locationAlwaysAndWhenInUsePermission": "This app uses location to navigate you around campus."
-      }],
-      ["expo-camera", {
-        "cameraPermission": "This app uses the camera to scan QR codes for navigation."
-      }],
+      [
+        "expo-location",
+        {
+          "locationAlwaysAndWhenInUsePermission": "This app uses location to navigate you around campus."
+        }
+      ],
+      [
+        "expo-camera",
+        {
+          "cameraPermission": "This app uses the camera to scan QR codes for navigation."
+        }
+      ],
       "expo-sensors"
-    ]
+    ],
+    "ios": {
+      "infoPlist": {
+        "NSMotionUsageDescription": "This app uses motion sensors to track your movement for indoor navigation.",
+        "NSLocationWhenInUseUsageDescription": "This app uses your location to provide campus navigation."
+      }
+    }
   }
 }
