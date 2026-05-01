@@ -17,7 +17,6 @@
  
 import { useEffect, useRef, useState, useCallback } from "react";
 import { Accelerometer, Gyroscope, Magnetometer } from "expo-sensors";
-import { writeLog } from "../utils/logger";
  
 // ─── Tuning constants ────────────────────────────────────────────────────────
  
@@ -35,8 +34,7 @@ const STRIDE_LENGTH_M = 0.75;
  
 // How much weight to give magnetometer vs gyroscope heading (0–1)
 // Lower = trust gyroscope more (better indoors where mag is noisy)
-// Complementary filter: fused = (1-alpha)*gyro + alpha*mag
-const MAG_FUSION_WEIGHT = 0.05;
+const MAG_FUSION_WEIGHT = 0.02;
  
 // Gyroscope update interval (ms)
 const GYRO_INTERVAL_MS = 100;
@@ -46,7 +44,7 @@ const HEADING_PUBLISH_INTERVAL_MS = 100; // ~10Hz arrow updates
 const ACCEL_INTERVAL_MS = 100;
  
 // Magnetometer update interval (ms)
-const MAG_INTERVAL_MS = 100;
+const MAG_INTERVAL_MS = 200;
  
 // ─── Hook ───────────────────────────────────────────────────────────────────
  
@@ -73,16 +71,9 @@ export function useIndoorPose({ anchorPose, isActive }) {
  
   // ── Heading-only pose publisher — called by gyro and magnetometer ──
   const publishHeadingOnlyPose = useCallback((source = "imu") => {
-    if (!poseRef.current) return;
-
     const now = Date.now();
-    const timeSinceLast = now - lastHeadingPublishTsRef.current;
-
-    // Always publish at least at 10 Hz; also publish on any meaningful turn (>0.5°)
-    const lastHeading = poseRef.current.headingDeg ?? 0;
-    const delta = Math.abs(headingDegRef.current - lastHeading);
-    const normalizedDelta = delta > 180 ? 360 - delta : delta;
-    if (timeSinceLast < HEADING_PUBLISH_INTERVAL_MS && normalizedDelta < 0.5) return;
+    if (!poseRef.current) return;
+    if (now - lastHeadingPublishTsRef.current < HEADING_PUBLISH_INTERVAL_MS) return;
 
     const nextPose = {
       ...poseRef.current,
@@ -93,7 +84,6 @@ export function useIndoorPose({ anchorPose, isActive }) {
 
     poseRef.current = nextPose;
     lastHeadingPublishTsRef.current = now;
-    writeLog('LIVE_POSE', { x: nextPose.x, y: nextPose.y, headingDeg: nextPose.headingDeg });
     setPose(nextPose);
   }, []);
 
@@ -188,7 +178,7 @@ export function useIndoorPose({ anchorPose, isActive }) {
         poseRef.current = newPose;
         lastHeadingPublishTsRef.current = Date.now();
 
-        console.log("[STEP]", { x: newPose.x?.toFixed(1), y: newPose.y?.toFixed(1), heading: newPose.headingDeg?.toFixed(1) });
+        // Throttle React state updates to every 3 steps to avoid over-rendering
         setPose({ ...newPose });
       }
     });
