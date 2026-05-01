@@ -2,15 +2,6 @@
  * server/index.js
  *
  * Lightweight ORS proxy server.
- * Keeps the OpenRouteService API key off the client entirely.
- *
- * Deploy this anywhere Node.js runs (Railway, Render, Fly.io, your own VPS).
- * Set the environment variable ORS_API_KEY on the server — never in the app.
- *
- * Start locally:
- *   cd server && npm install && node index.js
- *
- * The Expo app points at this server via EXPO_PUBLIC_API_BASE_URL in .env
  */
 
 const express = require("express");
@@ -30,7 +21,7 @@ if (!ORS_KEY) {
 app.post("/ors/matrix", async (req, res) => {
   try {
     const ors = await fetch(
-      "https://api.openrouteservice.org/v2/matrix/foot-walking",
+      "https://api.heigit.org/openrouteservice/v2/matrix/foot-walking",
       {
         method: "POST",
         headers: {
@@ -56,7 +47,7 @@ app.post("/ors/directions", async (req, res) => {
     const { profile = "foot-walking", ...body } = req.body;
 
     const ors = await fetch(
-      `https://api.openrouteservice.org/v2/directions/${profile}/geojson`,
+      `https://api.heigit.org/openrouteservice/v2/directions/${profile}/geojson`,
       {
         method: "POST",
         headers: {
