@@ -180,6 +180,7 @@ export function useIndoorPose({ anchorPose, isActive }) {
         poseRef.current = newPose;
         lastHeadingPublishTsRef.current = Date.now();
         writeLog('STEP', { x: newPose.x?.toFixed(1), y: newPose.y?.toFixed(1), heading: newPose.headingDeg?.toFixed(1) });
+        setPdrStepCount(c => c + 1);
         setPose({ ...newPose });
       }
     });
@@ -192,12 +193,13 @@ export function useIndoorPose({ anchorPose, isActive }) {
     };
   }, [isActive]);
  
-  // ── Hard reset — called when a new QR is scanned ──
+  const [pdrStepCount, setPdrStepCount] = useState(0);
   const resetPose = useCallback((newAnchorPose) => {
     if (!newAnchorPose) return;
     poseRef.current = { ...newAnchorPose, source: "qr" };
     headingDegRef.current = newAnchorPose.headingDeg ?? headingDegRef.current;
     lastStepTimeRef.current = 0;
+    setPdrStepCount(0);
     setPose({ ...newAnchorPose, source: "qr" });
   }, []);
  
@@ -213,7 +215,7 @@ export function useIndoorPose({ anchorPose, isActive }) {
     }
   }, [isActive]);
  
-  return { pose, resetPose };
+  return { pose, resetPose, pdrStepCount };
 }
  
 // ─── Helpers ─────────────────────────────────────────────────────────────────
