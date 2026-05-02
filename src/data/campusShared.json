@@ -15,8 +15,8 @@
       "entrances": [
         "wp_suth_main_entrance",
         "wp_suth_ground_entrance",
-        "wp_suth_l_entrance",
-        "wp_suth_entrance_left",
+        "wp_suth_entrance_B",
+        "wp_suth_entrance_c",
         "wp_suth_entrance_back_left",
         "wp_suth_f1_back_entrance"
       ]
@@ -32,7 +32,7 @@
         "3"
       ],
       "entrances": [
-        "wp_wood_main_entrance",
+        "wp_wood_library_entrance",
         "wp_wood_f1_entrance_side_1",
         "wp_wood_f1_entrance_side_2",
         "wp_wood_f1_entrance_side_3"
@@ -238,8 +238,8 @@
       "type": "entrance",
       "latitude": 40.115906,
       "longitude": -75.108503,
-      "x": 557.4,
-      "y": 430.2,
+      "x": 560.1,
+      "y": 434,
       "qr_code": "QR_SUTH_F1_BACK_ENTRANCE",
       "requires_scan": true,
       "stop_radius_m": 5
@@ -276,10 +276,10 @@
       "stop_radius_m": 5
     },
     {
-      "id": "wp_wood_main_entrance",
+      "id": "wp_wood_library_entrance",
       "building": "woodland",
       "floor": "1",
-      "label": "Woodland Main Entrance",
+      "label": "Woodland Library Entrance",
       "type": "entrance",
       "latitude": 40.11672,
       "longitude": -75.11095,
@@ -441,10 +441,10 @@
       "y": 751
     },
     {
-      "id": "wp_suth_entrance_left",
+      "id": "wp_suth_entrance_c",
       "building": "sutherland",
       "floor": "1",
-      "label": "Left Entrance",
+      "label": "Sutherland Entrance C",
       "type": "entrance",
       "latitude": 40.11604884396653,
       "longitude": -75.10852537874551,
@@ -452,10 +452,10 @@
       "y": 93.3
     },
     {
-      "id": "wp_suth_l_entrance",
+      "id": "wp_suth_entrance_B",
       "building": "sutherland",
       "floor": "1",
-      "label": "MainLeft Entrance",
+      "label": "Sutherland Entrance B",
       "type": "entrance",
       "latitude": 40.116000384497134,
       "longitude": -75.10867933744474,
@@ -1023,7 +1023,7 @@
       "building": "woodland",
       "room_number": "ELEV",
       "floor": "1",
-      "waypoint_id": "wp_wood_elevator_f1",
+      "waypoint_id": "wp_wood_f1_elevator",
       "room_name": "Elevator",
       "type": "elevator"
     },

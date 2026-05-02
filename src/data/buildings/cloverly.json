@@ -1,0 +1,51 @@
+{
+  "building": {
+    "id": "cloverly",
+    "name": "Cloverly Building",
+    "latitude": 40.1151998611,
+    "longitude": -75.1132563333,
+    "floors": [
+      "1"
+    ],
+    "entrances": [
+      "wp_cloverly_main_entrance"
+    ]
+  },
+  "waypoints": [
+    {
+      "id": "wp_cloverly_main_entrance",
+      "building": "cloverly",
+      "floor": "1",
+      "label": "Cloverly Main Entrance",
+      "type": "entrance",
+      "latitude": 40.1151998611,
+      "longitude": -75.1132563333,
+      "x": 880,
+      "y": 500,
+      "qr_code": "QR_CLOVERLY_F1_MAIN_ENTRANCE",
+      "requires_scan": true,
+      "stop_radius_m": 5
+    }
+  ],
+  "edges": [
+    {
+      "from": "wp_rydal_main_entrance",
+      "to": "wp_cloverly_main_entrance",
+      "accessible": true
+    },
+    {
+      "from": "wp_cloverly_main_entrance",
+      "to": "wp_rydal_main_entrance",
+      "accessible": true
+    }
+  ],
+  "rooms": [],
+  "qrAnchors": [
+    {
+      "qr_id": "QR_CLOVERLY_F1_MAIN_ENTRANCE",
+      "waypoint_id": "wp_cloverly_main_entrance",
+      "building": "cloverly",
+      "floor": "1"
+    }
+  ]
+}

@@ -1,0 +1,155 @@
+{
+  "building": {
+    "id": "springhouse",
+    "name": "Springhouse",
+    "latitude": 40.117489,
+    "longitude": -75.109782,
+    "floors": [
+      "1"
+    ],
+    "entrances": [
+      "wp_spring_entrance"
+    ]
+  },
+  "waypoints": [
+    {
+      "id": "wp_spring_entrance",
+      "building": "springhouse",
+      "floor": "1",
+      "label": "Springhouse Main Entrance",
+      "type": "entrance",
+      "latitude": 40.117489,
+      "longitude": -75.109782,
+      "x": 462,
+      "y": 292,
+      "qr_code": "QR_SPRING_ENTRANCE",
+      "requires_scan": true,
+      "stop_radius_m": 5
+    },
+    {
+      "id": "wp_spring_100_outside",
+      "building": "springhouse",
+      "floor": "1",
+      "label": "Room 100 - Outside Entrance",
+      "type": "entrance",
+      "latitude": 40.11747,
+      "longitude": -75.109735,
+      "x": 945,
+      "y": 600,
+      "qr_code": "QR_SPRING_100_OUTSIDE",
+      "requires_scan": true,
+      "stop_radius_m": 5
+    },
+    {
+      "id": "wp_spring_100_inside",
+      "building": "springhouse",
+      "floor": "1",
+      "label": "Room 100 - Inside Entrance",
+      "type": "entrance",
+      "latitude": 40.11748,
+      "longitude": -75.109748,
+      "x": 548,
+      "y": 487,
+      "qr_code": "QR_SPRING_100_INSIDE",
+      "requires_scan": true,
+      "stop_radius_m": 5
+    },
+    {
+      "id": "wp_spring_101",
+      "building": "springhouse",
+      "floor": "1",
+      "label": "Room 101",
+      "type": "classroom",
+      "latitude": 40.117485,
+      "longitude": -75.109767,
+      "x": 426,
+      "y": 496,
+      "qr_code": "QR_SPRING_101"
+    },
+    {
+      "id": "wp_spring_hall",
+      "building": "springhouse",
+      "floor": "1",
+      "label": "Springhouse Hallway",
+      "type": "hall",
+      "x": 449,
+      "y": 451
+    }
+  ],
+  "edges": [
+    {
+      "from": "wp_spring_100_outside",
+      "to": "wp_spring_100_inside",
+      "accessible": true
+    },
+    {
+      "from": "wp_spring_100_inside",
+      "to": "wp_spring_entrance",
+      "accessible": true
+    },
+    {
+      "from": "wp_spring_entrance",
+      "to": "wp_spring_101",
+      "accessible": true
+    },
+    {
+      "from": "wp_spring_entrance",
+      "to": "wp_spring_hall",
+      "accessible": true
+    },
+    {
+      "from": "wp_spring_hall",
+      "to": "wp_spring_100_inside",
+      "accessible": true
+    },
+    {
+      "from": "wp_spring_hall",
+      "to": "wp_spring_101",
+      "accessible": true
+    }
+  ],
+  "rooms": [
+    {
+      "building": "springhouse",
+      "room_number": "100",
+      "floor": "1",
+      "waypoint_id": "wp_spring_100_inside",
+      "room_name": "Room 100",
+      "type": "classroom"
+    },
+    {
+      "building": "springhouse",
+      "room_number": "101",
+      "floor": "1",
+      "waypoint_id": "wp_spring_101",
+      "room_name": "Room 101",
+      "type": "classroom"
+    }
+  ],
+  "qrAnchors": [
+    {
+      "qr_id": "QR_SPRING_ENTRANCE",
+      "waypoint_id": "wp_spring_entrance",
+      "building": "springhouse",
+      "floor": "1"
+    },
+    {
+      "qr_id": "QR_SPRING_100_OUTSIDE",
+      "waypoint_id": "wp_spring_100_outside",
+      "building": "springhouse",
+      "floor": "1"
+    },
+    {
+      "qr_id": "QR_SPRING_100_INSIDE",
+      "waypoint_id": "wp_spring_100_inside",
+      "building": "springhouse",
+      "floor": "1"
+    },
+    {
+      "qr_id": "QR_SPRING_101",
+      "waypoint_id": "wp_spring_101",
+      "building": "springhouse",
+      "floor": "1"
+    }
+  ]
+}
