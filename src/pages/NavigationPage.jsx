@@ -33,6 +33,7 @@ import {
   getWaypointById,
   getWaypointById as _getWpById,
   preloadBuilding,
+  getBuildingData,
 } from "../utils/campusDataLoader";
 import { findRoom } from "../utils/findRoom";
 import {
@@ -600,15 +601,32 @@ export default function NavigationPage({ route, navigation }) {
   }, [viewMode, livePose, currentWaypointId, pathIds, currentStep, stageMessage, getMetersPerPx, pdrStepCount, pdrStepAtLastAdvance]);
 
   const formattedDistance = useMemo(() => {
-    // Indoors — use live pose-derived distance if available
+    // Indoors — use step-based live distance if available
     if (viewMode === VIEW_MODE.INDOOR && liveIndoorGuidance?.remainingDistanceM != null) {
       return formatDistance(liveIndoorGuidance.remainingDistanceM);
+    }
+    // Indoors fallback — compute total remaining path distance from waypoint coordinates
+    if (viewMode === VIEW_MODE.INDOOR && pathIds.length > 0 && currentWaypointId) {
+      const startIdx = pathIds.indexOf(currentWaypointId);
+      if (startIdx >= 0) {
+        let totalM = 0;
+        for (let i = startIdx; i < pathIds.length - 1; i++) {
+          const a = getWaypointById(pathIds[i]);
+          const b = getWaypointById(pathIds[i + 1]);
+          if (a?.x != null && a?.y != null && b?.x != null && b?.y != null) {
+            const dx = Number(b.x) - Number(a.x);
+            const dy = Number(b.y) - Number(a.y);
+            totalM += Math.sqrt(dx * dx + dy * dy) * DEFAULT_METERS_PER_PX;
+          }
+        }
+        if (totalM > 0) return formatDistance(totalM);
+      }
     }
     if (orsMeters !== null && viewMode === VIEW_MODE.OUTDOOR) {
       return formatDistance(orsMeters);
     }
     return formatDistance(routeDistance);
-  }, [viewMode, liveIndoorGuidance, routeDistance, orsMeters]);
+  }, [viewMode, liveIndoorGuidance, routeDistance, orsMeters, pathIds, currentWaypointId]);
 
   const gpsBuildingGuess = useMemo(() => {
     return guessBuildingFromGps(userGps);
@@ -1560,14 +1578,16 @@ export default function NavigationPage({ route, navigation }) {
     if (label) setLastScannedText(label);
   }
 
-  function applyScannedWaypoint(scannedWaypoint, source = "qr", scanMeta = {}) {
+  async function applyScannedWaypoint(scannedWaypoint, source = "qr", scanMeta = {}) {
     if (!scannedWaypoint) return;
 
     const scannedId = scannedWaypoint.id || scannedWaypoint.waypoint_id || "";
     const isOnCurrentPath = Array.isArray(pathIds) && pathIds.includes(scannedId);
 
-    // Eagerly load this building's data so graph builds are instant
-    if (scannedWaypoint.building) preloadBuilding(scannedWaypoint.building);
+    // AWAIT building data load so buildGraph has data when the nav effect runs
+    if (scannedWaypoint.building) {
+      await getBuildingData(scannedWaypoint.building);
+    }
     // Reset step-based advancement counter on each QR scan
     setPdrStepAtLastAdvance(0);
 
