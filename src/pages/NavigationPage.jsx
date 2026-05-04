@@ -1464,33 +1464,32 @@ export default function NavigationPage({ route, navigation }) {
     if (!livePose || !currentWaypointId || pathIds.length === 0 || arrived) return;
     if (!nextWaypoint) return;
 
-    if (nextWaypoint.requires_scan === true && nearNextWaypoint) {
-      return; // pause progression until the required QR is scanned
+    // Only block advancement if the NEXT waypoint explicitly requires a QR scan
+    // AND the user is already within its stop radius (i.e. physically there).
+    // Stairs/elevator vertical transitions still require QR scan.
+    if (nextWaypoint.requires_scan === true) {
+      const currentWpForCheck = getWaypointById(currentWaypointId);
+      if (currentWpForCheck?.x != null && nextWaypoint?.x != null) {
+        const dx = Number(nextWaypoint.x) - Number(currentWpForCheck.x);
+        const dy = Number(nextWaypoint.y) - Number(currentWpForCheck.y);
+        const distPxCheck = Math.sqrt(dx * dx + dy * dy);
+        const metersPerPxCheck = getMetersPerPx(nextWaypoint.building, nextWaypoint.floor, nextWaypoint);
+        const distMCheck = distPxCheck * metersPerPxCheck;
+        const stopR = Number(nextWaypoint.stop_radius_m ?? 3);
+        if (distMCheck <= stopR * 2) {
+          return; // close enough — wait for QR scan
+        }
+      }
+      // Not close yet — keep advancing via steps normally
     }
 
-    const metersPerPx = getMetersPerPx(
-      nextWaypoint.building,
-      nextWaypoint.floor,
-      nextWaypoint
-    );
-    const stopRadiusM = Number(nextWaypoint.stop_radius_m ?? 3);
-    const closeThresholdPx = Math.max(8, Math.round(stopRadiusM / metersPerPx));
-    const nearThresholdPx = Math.max(closeThresholdPx + 6, Math.round((stopRadiusM * 1.75) / metersPerPx));
-
-    const currentIndex = pathIds.indexOf(currentWaypointId);
-    const nextPathWaypointId = currentIndex >= 0 ? pathIds[currentIndex + 1] : null;
-    const nextPathWaypoint = nextPathWaypointId ? getWaypointById(nextPathWaypointId) : null;
-    if (nextPathWaypoint?.type === "stairs" || nextPathWaypoint?.type === "elevator") {
-      return;
-    }
-
-    // ── Step-count-based advancement (primary indoor method) ──────────────────
-    // PDR heading is unreliable without bearing_hint_deg so position-based
-    // advancement often fails. Instead, estimate steps needed to reach the
-    // next waypoint from the current anchor and advance when that count is met.
+    // ── Step-count-based advancement ──────────────────────────────────────────
+    // Compute pixel distance from current waypoint to next, convert to steps.
+    // This doesn't depend on PDR position — just step count since last advance.
     const currentWp = getWaypointById(currentWaypointId);
-    const MAP_PX_PER_M = 1 / metersPerPx;
+    const metersPerPx = getMetersPerPx(nextWaypoint.building, nextWaypoint.floor, nextWaypoint);
     const STRIDE_M = 0.75;
+
     if (
       currentWp?.x != null && currentWp?.y != null &&
       nextWaypoint?.x != null && nextWaypoint?.y != null
@@ -1499,12 +1498,26 @@ export default function NavigationPage({ route, navigation }) {
       const dy = Number(nextWaypoint.y) - Number(currentWp.y);
       const distPx = Math.sqrt(dx * dx + dy * dy);
       const distM = distPx * metersPerPx;
-      const stepsNeeded = Math.max(5, Math.round(distM / STRIDE_M));
+      const stepsNeeded = Math.max(3, Math.round(distM / STRIDE_M));
       const stepsSinceAnchor = pdrStepCount - pdrStepAtLastAdvance;
 
+      writeLog('ADVANCE_CHECK', {
+        currentWaypointId,
+        nextWpId: nextWaypoint.id,
+        distM: distM.toFixed(1),
+        stepsNeeded,
+        stepsSince: stepsSinceAnchor,
+        pdrTotal: pdrStepCount,
+      });
+
       if (stepsSinceAnchor >= stepsNeeded) {
-        const next = getWaypointById(nextPathWaypointId || nextWaypoint.id);
+        const currentIndex = pathIds.indexOf(currentWaypointId);
+        const nextPathWaypointId = currentIndex >= 0 ? pathIds[currentIndex + 1] : null;
         const advanceTo = nextPathWaypointId || nextWaypoint.id;
+        const next = getWaypointById(advanceTo);
+
+        writeLog('ADVANCE', { from: currentWaypointId, to: advanceTo, steps: stepsSinceAnchor });
+
         setCurrentWaypointId(advanceTo);
         if (next?.building) setCurrentBuildingId(next.building);
         if (next?.label) setCurrentWaypointLabel(next.label);
@@ -1514,34 +1527,9 @@ export default function NavigationPage({ route, navigation }) {
       }
     }
 
-    // ── Position-based advancement (fallback if x/y available) ───────────────
-    const advanced = advanceRouteIfNeededIndoor({
-      currentWaypointId,
-      currentIndoorPosition: livePose,
-      pathIds,
-      deviceHeading: livePose?.headingDeg ?? deviceHeading,
-      currentFloor: livePose?.floor ?? currentWaypointObj?.floor ?? null,
-      currentBuildingId,
-      previousDistanceToNext: previousIndoorDistance,
-      closeThreshold: closeThresholdPx,
-      nearThreshold: nearThresholdPx,
-      headingToleranceDegrees: 60,
-    });
-
-    if (Number.isFinite(advanced.distanceToNext)) {
-      setPreviousIndoorDistance(advanced.distanceToNext);
-    }
-
-    if (advanced.advanced && advanced.currentWaypointId !== currentWaypointId) {
-      const next = getWaypointById(advanced.currentWaypointId);
-
-      setCurrentWaypointId(advanced.currentWaypointId);
-
-      if (next?.building) setCurrentBuildingId(next.building);
-      if (next?.label) setCurrentWaypointLabel(next.label);
-
-      setPreviousIndoorDistance(null);
-    }
+    // Position-based advancement is intentionally removed — PDR position
+    // drifts in the wrong direction without bearing calibration.
+    // Step-count advancement above is the sole method.
   }, [
     viewMode,
     livePose,
@@ -1549,12 +1537,7 @@ export default function NavigationPage({ route, navigation }) {
     pathIds,
     arrived,
     nextWaypoint,
-    nearNextWaypoint,
     getMetersPerPx,
-    deviceHeading,
-    currentWaypointObj,
-    currentBuildingId,
-    previousIndoorDistance,
     pdrStepCount,
     pdrStepAtLastAdvance,
   ]);
