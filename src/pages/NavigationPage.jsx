@@ -357,6 +357,9 @@ export default function NavigationPage({ route, navigation }) {
   const [pedometerAvailable, setPedometerAvailable] = useState(false);
   const [stepCount, setStepCount] = useState(0);
   const [lastStepAnchorCount, setLastStepAnchorCount] = useState(0);
+  // Tracks pdrStepCount at the moment we last advanced to a new waypoint.
+  // Reset on QR scan (pdrStepCount resets to 0 then too).
+  const [pdrStepAtLastAdvance, setPdrStepAtLastAdvance] = useState(0);
 
   // ─── Indoor pose from IMU/PDR ─────────────────────────────────────────────
   const { pose: indoorPose, resetPose: resetIndoorPose, pdrStepCount } = useIndoorPose({
@@ -544,9 +547,25 @@ export default function NavigationPage({ route, navigation }) {
     const nextWp = nextWaypointId ? getWaypointById(nextWaypointId) : null;
     if (!nextWp) return null;
 
-    const distPx = computeMapDistance(livePose, nextWp);
     const metersPerPx = getMetersPerPx(nextWp.building, nextWp.floor, nextWp);
-    const distM = Number.isFinite(distPx) ? distPx * metersPerPx : null;
+    const STRIDE_M = 0.75;
+
+    // Compute total distance from current waypoint to next waypoint in map pixels
+    const currentWp = getWaypointById(currentWaypointId);
+    let distM = null;
+    if (
+      currentWp?.x != null && currentWp?.y != null &&
+      nextWp?.x != null && nextWp?.y != null
+    ) {
+      const dx = Number(nextWp.x) - Number(currentWp.x);
+      const dy = Number(nextWp.y) - Number(currentWp.y);
+      const totalDistPx = Math.sqrt(dx * dx + dy * dy);
+      const totalDistM = totalDistPx * metersPerPx;
+      // Estimate remaining distance using step count since last waypoint advance
+      const stepsSince = Math.max(0, pdrStepCount - pdrStepAtLastAdvance);
+      const walkedM = stepsSince * STRIDE_M;
+      distM = Math.max(0, totalDistM - walkedM);
+    }
 
     // Estimate remaining path distance after the next waypoint
     const afterIdx = pathIds.indexOf(nextWaypointId);
@@ -557,14 +576,16 @@ export default function NavigationPage({ route, navigation }) {
         const b = getWaypointById(pathIds[i + 1]);
         if (a?.x != null && a?.y != null && b?.x != null && b?.y != null) {
           const legMetersPerPx = getMetersPerPx(a.building, a.floor, a);
-          remainingAfterM += computeMapDistance(a, b) * legMetersPerPx;
+          const legDx = Number(b.x) - Number(a.x);
+          const legDy = Number(b.y) - Number(a.y);
+          remainingAfterM += Math.sqrt(legDx * legDx + legDy * legDy) * legMetersPerPx;
         }
       }
     }
 
     const remainingM = distM != null ? distM + remainingAfterM : null;
 
-    // Dynamic instruction based on distance to next waypoint
+    // Dynamic instruction based on estimated distance to next waypoint
     let instruction = currentStep?.text || stageMessage || "";
     if (distM != null) {
       const stopRadiusM = Number(nextWp.stop_radius_m ?? 3);
@@ -576,7 +597,7 @@ export default function NavigationPage({ route, navigation }) {
     }
 
     return { nextWaypointId, nextWaypoint: nextWp, distanceToNextM: distM, remainingDistanceM: remainingM, instruction };
-  }, [viewMode, livePose, currentWaypointId, pathIds, currentStep, stageMessage, getMetersPerPx]);
+  }, [viewMode, livePose, currentWaypointId, pathIds, currentStep, stageMessage, getMetersPerPx, pdrStepCount, pdrStepAtLastAdvance]);
 
   const formattedDistance = useMemo(() => {
     // Indoors — use live pose-derived distance if available
@@ -1457,7 +1478,7 @@ export default function NavigationPage({ route, navigation }) {
       const distPx = Math.sqrt(dx * dx + dy * dy);
       const distM = distPx * metersPerPx;
       const stepsNeeded = Math.max(5, Math.round(distM / STRIDE_M));
-      const stepsSinceAnchor = pdrStepCount;  // pdrStepCount resets to 0 on each QR scan
+      const stepsSinceAnchor = pdrStepCount - pdrStepAtLastAdvance;
 
       if (stepsSinceAnchor >= stepsNeeded) {
         const next = getWaypointById(nextPathWaypointId || nextWaypoint.id);
@@ -1466,6 +1487,7 @@ export default function NavigationPage({ route, navigation }) {
         if (next?.building) setCurrentBuildingId(next.building);
         if (next?.label) setCurrentWaypointLabel(next.label);
         setPreviousIndoorDistance(null);
+        setPdrStepAtLastAdvance(pdrStepCount);
         return;
       }
     }
@@ -1512,6 +1534,7 @@ export default function NavigationPage({ route, navigation }) {
     currentBuildingId,
     previousIndoorDistance,
     pdrStepCount,
+    pdrStepAtLastAdvance,
   ]);
 
   function showScanBadge(label) {
@@ -1545,6 +1568,8 @@ export default function NavigationPage({ route, navigation }) {
 
     // Eagerly load this building's data so graph builds are instant
     if (scannedWaypoint.building) preloadBuilding(scannedWaypoint.building);
+    // Reset step-based advancement counter on each QR scan
+    setPdrStepAtLastAdvance(0);
 
     setCurrentWaypointLabel(scannedWaypoint.label || scannedWaypoint.id);
     setCurrentBuildingId(scannedWaypoint.building || "");
