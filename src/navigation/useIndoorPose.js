@@ -16,6 +16,7 @@
  */
  
 import { useEffect, useRef, useState, useCallback } from "react";
+import { Platform } from "react-native";
 import { Accelerometer, Gyroscope, Magnetometer } from "expo-sensors";
 import { writeLog } from "../utils/logger";
  
@@ -25,7 +26,12 @@ import { writeLog } from "../utils/logger";
 const MAP_PIXELS_PER_METER = 3.5;
  
 // Step detection — vertical acceleration spike threshold (m/s²)
-const STEP_THRESHOLD = 1.8;
+// Step detection threshold — works on both iOS (G-force units ~0-2) and Android (m/s² ~0-20).
+// We detect step via Z-axis acceleration change exceeding this value.
+// iOS typically produces delta ~0.3-0.8G per step; Android ~3-8 m/s².
+// Using a value that works for iOS since that's the primary test device.
+const STEP_THRESHOLD = Platform.OS === "ios" ? 0.3 : 3.0;
+const STEP_THRESHOLD_ANDROID = 3.0; // fallback for Android if needed
  
 // Minimum time between detected steps (ms) — prevents double-counting
 const STEP_COOLDOWN_MS = 300;
