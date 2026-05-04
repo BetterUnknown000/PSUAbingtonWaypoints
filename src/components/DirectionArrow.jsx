@@ -107,8 +107,16 @@ export default function DirectionArrow({
       return;
     }
 
+    // If targetBearing changed by more than 10° (new waypoint), snap the
+    // accumulator to the new relativeArrowDegrees so the arrow doesn't unwind.
+    const bearingJumped = lastTargetBearing.current != null &&
+      Math.abs(((targetBearing - lastTargetBearing.current) + 540) % 360 - 180) > 10;
+    if (bearingJumped) {
+      lastArrowDeg.current = relativeArrowDegrees;
+      arrowAnim.setValue(relativeArrowDegrees);
+    }
+
     // Accumulator-based rotation — shortest path, no spinning through 360.
-    // Works for both indoor and outdoor since heading is always compass-referenced.
     const current = lastArrowDeg.current;
     let target = relativeArrowDegrees;
     let diff = target - ((current % 360) + (current >= 0 ? 0 : 360));
