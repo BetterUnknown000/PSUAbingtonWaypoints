@@ -4457,6 +4457,8 @@
       "floor": "1",
       "label": "Woodland Side Entrance 4",
       "type": "entrance",
+      "latitude": 40.11661
+      "longitude": -75.11115
       "x": 294.7,
       "y": 757.5
     },
