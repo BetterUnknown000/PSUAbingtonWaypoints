@@ -30,9 +30,21 @@ function safeJson(obj) {
 }
 
 // ── Floorplan loader ──────────────────────────────────────────────────────────
+// Filename aliases: some buildings use non-standard names for certain floors.
+const FLOOR_ALIASES = {
+  'rydal__ground':      'rydal_basement_with_outline.svg',
+  'sutherland__ground': 'sutherland_floor1_with_outline.svg', // no ground SVG — use floor1 as proxy
+  'athletic__ground':   'athletic_ground_with_outline.svg',
+  'athletic__mezzanine':'athletic_mezzanine_with_outline.svg',
+};
+
 function getFloorplanInner(building, floor) {
-  const key   = floor === 'ground' ? 'ground' : ('floor' + floor);
-  const names = [building + '_' + key + '_with_outline.svg', building + '_' + key + '.svg'];
+  const aliasKey = building + '__' + floor;
+  const aliased  = FLOOR_ALIASES[aliasKey];
+  const key      = floor === 'ground' ? 'ground' : ('floor' + floor);
+  const names    = aliased
+    ? [aliased, building + '_' + key + '_with_outline.svg', building + '_' + key + '.svg']
+    : [building + '_' + key + '_with_outline.svg', building + '_' + key + '.svg'];
   for (const name of names) {
     const p = path.join(FLOORPLAN_DIR, name);
     if (fs.existsSync(p)) {
@@ -48,8 +60,12 @@ function getFloorplanInner(building, floor) {
 }
 
 function hasFloorplan(building, floor) {
-  const key   = floor === 'ground' ? 'ground' : ('floor' + floor);
-  const names = [building + '_' + key + '_with_outline.svg', building + '_' + key + '.svg'];
+  const aliasKey = building + '__' + floor;
+  const aliased  = FLOOR_ALIASES[aliasKey];
+  const key      = floor === 'ground' ? 'ground' : ('floor' + floor);
+  const names    = aliased
+    ? [aliased, building + '_' + key + '_with_outline.svg', building + '_' + key + '.svg']
+    : [building + '_' + key + '_with_outline.svg', building + '_' + key + '.svg'];
   return names.some(function(n) { return fs.existsSync(path.join(FLOORPLAN_DIR, n)); });
 }
 
