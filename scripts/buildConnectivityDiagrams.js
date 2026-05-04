@@ -33,7 +33,7 @@ function safeJson(obj) {
 // Filename aliases: some buildings use non-standard names for certain floors.
 const FLOOR_ALIASES = {
   'rydal__ground':      'rydal_basement_with_outline.svg',
-  'sutherland__ground': 'sutherland_floor1_with_outline.svg', // no ground SVG — use floor1 as proxy
+  'sutherland__ground': 'sutherland_floor5_with_outline.svg',
   'athletic__ground':   'athletic_ground_with_outline.svg',
   'athletic__mezzanine':'athletic_mezzanine_with_outline.svg',
 };
