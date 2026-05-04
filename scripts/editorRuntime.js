@@ -516,13 +516,23 @@ function showInfo(id, adj, nodeSet) {
     ? '<div class="val" data-xy style="font-family:monospace;font-size:11px">x: ' + p.x.toFixed(1) + '  y: ' + p.y.toFixed(1) + '</div>'
     : '<div class="val" style="color:#A32D2D">x/y not set \u2014 drag in Move mode</div>';
 
-  var latLngWarning = '';
+  var latLngSection = '';
   if (w.type === 'entrance') {
     var hasLL = Number.isFinite(Number(w.latitude)) && Number(w.latitude) !== 0 &&
                 Number.isFinite(Number(w.longitude)) && Number(w.longitude) !== 0;
-    latLngWarning = hasLL
-      ? '<div style="font-size:11px;color:#3B6D11;margin-bottom:6px">\u2713 lat: ' + Number(w.latitude).toFixed(6) + ', lng: ' + Number(w.longitude).toFixed(6) + '</div>'
-      : '<div style="padding:6px 8px;background:#FFF3E0;border:.5px solid #F5A623;border-radius:5px;font-size:11px;color:#854F0B;margin-bottom:6px">\u26A0 Entrance missing lat/long. Outdoor routing will not work.</div>';
+    var latVal = hasLL ? Number(w.latitude).toFixed(7)  : '';
+    var lngVal = hasLL ? Number(w.longitude).toFixed(7) : '';
+    var llStatus = hasLL
+      ? '<div style=\"font-size:11px;color:#3B6D11;margin-bottom:4px\">\u2713 Lat/long is set</div>'
+      : '<div style=\"padding:4px 8px;background:#FFF3E0;border:.5px solid #F5A623;border-radius:5px;font-size:11px;color:#854F0B;margin-bottom:4px\">\u26A0 Missing lat/long \u2014 outdoor routing will not work.</div>';
+    latLngSection =
+      '<div class=\"lbl\" style=\"margin-top:8px\">Lat / Long</div>' +
+      llStatus +
+      '<div style=\"display:flex;gap:4px;margin-bottom:2px\">' +
+        '<input id=\"edit-lat\" placeholder=\"latitude\" style=\"flex:1;padding:4px 6px;border:.5px solid #d3d1c7;border-radius:4px;font-size:11px;font-family:monospace\" value=\"' + latVal + '\"/>' +
+        '<input id=\"edit-lng\" placeholder=\"longitude\" style=\"flex:1;padding:4px 6px;border:.5px solid #d3d1c7;border-radius:4px;font-size:11px;font-family:monospace\" value=\"' + lngVal + '\"/>' +
+      '</div>' +
+      '<button onclick=\"applyLatLng(\'' + id + '\')\" style=\"width:100%;padding:4px;background:#3B6D11;color:#fff;border:none;border-radius:5px;font-size:11px;cursor:pointer;margin-bottom:6px\">Save Lat/Long</button>';
   }
 
   var typeOptions = Object.keys(TYPE_COLOR).map(function(t) {
@@ -568,12 +578,41 @@ function showInfo(id, adj, nodeSet) {
     '<div style="font-size:10px;color:#888780;margin-bottom:6px">Renaming updates edges, rooms, entrances and QR anchors.</div>' +
     '<div class="lbl">Type</div><select id="edit-type" style="width:100%;padding:4px 6px;border:.5px solid #d3d1c7;border-radius:4px;font-size:12px;font-family:inherit;margin-bottom:6px">' + typeOptions + '</select>' +
     '<button onclick="applyWaypointEdit(\'' + id + '\')" style="width:100%;padding:5px;background:#185FA5;color:#fff;border:none;border-radius:5px;font-size:12px;cursor:pointer;margin-bottom:8px">Apply changes</button>' +
-    '<div class="lbl">Position</div>' + xyRow + latLngWarning +
+    '<div class="lbl">Position</div>' + xyRow + latLngSection +
     '<div style="margin-bottom:6px;margin-top:4px"><span class="badge ' + (nbs.length ? 'bg' : 'br') + '">' + nbs.length + ' connections</span> <button class="badge br" style="cursor:pointer;border:none;font-size:10px" onclick="deleteWaypoint(\'' + id + '\')">delete</button></div>' +
     '<div class="lbl">Connections</div><div>' + (rows || '<div style="color:#888780;font-size:11px">none on this floor</div>') + '</div>' + verticalPanel;
 }
 
 // ── Edit / rename ─────────────────────────────────────────────────────────────
+function applyLatLng(id) {
+  var w = wpById[id];
+  if (!w) return;
+  var latInput = document.getElementById('edit-lat');
+  var lngInput = document.getElementById('edit-lng');
+  if (!latInput || !lngInput) return;
+  var lat = parseFloat(latInput.value.trim());
+  var lng = parseFloat(lngInput.value.trim());
+  if (!Number.isFinite(lat) || lat < -90 || lat > 90)  { alert('Invalid latitude (must be -90 to 90).');   return; }
+  if (!Number.isFinite(lng) || lng < -180 || lng > 180) { alert('Invalid longitude (must be -180 to 180).'); return; }
+  w.latitude  = lat;
+  w.longitude = lng;
+  // Also update approach coords on the building entrance record if present
+  if (Array.isArray(FULL_CAMPUS.buildings)) {
+    FULL_CAMPUS.buildings.forEach(function(b) {
+      if (!Array.isArray(b.entrances)) return;
+      b.entrances.forEach(function(entId) {
+        if (entId === id) {
+          b.latitude  = b.latitude  || lat;
+          b.longitude = b.longitude || lng;
+        }
+      });
+    });
+  }
+  invalidateCache(); markDirty();
+  showInfo(id, getAdj(), getNodeSet());
+  alert('\u2713 Lat/long saved: ' + lat.toFixed(7) + ', ' + lng.toFixed(7));
+}
+
 function applyWaypointEdit(oldId) {
   var w = wpById[oldId];
   if (!w) return;
