@@ -306,8 +306,8 @@
       "type": "classroom",
       "latitude": 40.115792,
       "longitude": -75.108834,
-      "x": 394.6,
-      "y": 388.9,
+      "x": 395.9,
+      "y": 392.7,
       "qr_code": "QR_SUTH_F2_216"
     },
     {
@@ -378,8 +378,8 @@
       "type": "classroom",
       "latitude": 40.115868,
       "longitude": -75.108651,
-      "x": 485.4,
-      "y": 247.4,
+      "x": 487.8,
+      "y": 246.8,
       "qr_code": "QR_SUTH_F2_227"
     },
     {
@@ -1037,10 +1037,10 @@
       "stop_radius_m": 3
     },
     {
-      "id": "wp_suth_f2_hall_01",
+      "id": "wp_suth_f2_hall_b",
       "building": "sutherland",
       "floor": "2",
-      "label": "Sutherland Second Floor Hall 1",
+      "label": "Sutherland F2 Hall B",
       "type": "hallway",
       "latitude": 40.115981,
       "longitude": -75.10852,
@@ -1051,10 +1051,10 @@
       "stop_radius_m": 3
     },
     {
-      "id": "wp_suth_f2_hall_02",
+      "id": "wp_suth_f2_junction_a",
       "building": "sutherland",
       "floor": "2",
-      "label": "Sutherland Second Floor Hall 2",
+      "label": "Sutherland F2 Junction A",
       "type": "hallway",
       "latitude": 40.115995,
       "longitude": -75.108571,
@@ -1065,10 +1065,10 @@
       "stop_radius_m": 3
     },
     {
-      "id": "wp_suth_f2_hall_03",
+      "id": "wp_suth_f2_hall_a",
       "building": "sutherland",
       "floor": "2",
-      "label": "Sutherland Second Floor Hall 3",
+      "label": "Sutherland F2 Hall A",
       "type": "hallway",
       "latitude": 40.115865,
       "longitude": -75.108387,
@@ -1093,10 +1093,10 @@
       "stop_radius_m": 3
     },
     {
-      "id": "wp_suth_f2_hall_05",
+      "id": "wp_suth_f2_hall_c",
       "building": "sutherland",
       "floor": "2",
-      "label": "Sutherland Second Floor Hall 5",
+      "label": "Sutherland F2 Hall C",
       "type": "hallway",
       "latitude": 40.115752,
       "longitude": -75.108955,
@@ -1107,10 +1107,10 @@
       "stop_radius_m": 3
     },
     {
-      "id": "wp_suth_f2_hall_06",
+      "id": "wp_suth_f2_junction_c",
       "building": "sutherland",
       "floor": "2",
-      "label": "Sutherland Second Floor Hall 6",
+      "label": "Sutherland F2 Junction C",
       "type": "hallway",
       "latitude": 40.11572,
       "longitude": -75.108915,
@@ -1121,10 +1121,10 @@
       "stop_radius_m": 3
     },
     {
-      "id": "wp_suth_f2_hall_07",
+      "id": "wp_suth_f2_hall_end_C",
       "building": "sutherland",
       "floor": "2",
-      "label": "Sutherland Second Floor Hall 7",
+      "label": "Sutherland F2 Hall End C",
       "type": "hallway",
       "latitude": 40.115661,
       "longitude": -75.108858,
@@ -1135,24 +1135,10 @@
       "stop_radius_m": 3
     },
     {
-      "id": "wp_suth_f2_hall_08",
+      "id": "wp_suth_f2_junction_d",
       "building": "sutherland",
       "floor": "2",
-      "label": "Sutherland Second Floor Hall 8",
-      "type": "hallway",
-      "latitude": 40.115564,
-      "longitude": -75.108749,
-      "x": 371.1,
-      "y": 609.6,
-      "qr_code": "QR_SUTH_F2_HALL_08",
-      "requires_scan": false,
-      "stop_radius_m": 3
-    },
-    {
-      "id": "wp_suth_f2_hall_09",
-      "building": "sutherland",
-      "floor": "2",
-      "label": "Sutherland Second Floor Hall 9",
+      "label": "Sutherland F2 Junction D",
       "type": "hallway",
       "latitude": 40.115543,
       "longitude": -75.108806,
@@ -1163,10 +1149,10 @@
       "stop_radius_m": 3
     },
     {
-      "id": "wp_suth_f2_hall_10",
+      "id": "wp_suth_f2_hall_d",
       "building": "sutherland",
       "floor": "2",
-      "label": "Sutherland Second Floor Hall 10",
+      "label": "Sutherland F2 Hall D",
       "type": "hallway",
       "latitude": 40.115501,
       "longitude": -75.108826,
@@ -1177,10 +1163,10 @@
       "stop_radius_m": 3
     },
     {
-      "id": "wp_suth_f2_hall_11",
+      "id": "wp_suth_f2_hall_end_d",
       "building": "sutherland",
       "floor": "2",
-      "label": "Sutherland Second Floor Hall 11",
+      "label": "Sutherland F2 Hall End D",
       "type": "hallway",
       "latitude": 40.11546,
       "longitude": -75.108853,
@@ -1191,15 +1177,15 @@
       "stop_radius_m": 3
     },
     {
-      "id": "wp_suth_f2_main_stairs",
+      "id": "wp_suth_f2_staircase_a",
       "building": "sutherland",
       "floor": "2",
-      "label": "Sutherland Main Stairs (Floor 2)",
+      "label": "Sutherland F2 Staircase A",
       "type": "stairs",
       "latitude": 40.115825,
       "longitude": -75.108749,
-      "x": 422.5,
-      "y": 302.9,
+      "x": 421.8,
+      "y": 319,
       "qr_code": "QR_SUTH_F2_MAIN_STAIRS",
       "requires_scan": true,
       "stop_radius_m": 3
@@ -2898,11 +2884,11 @@
       "qr_code": "QR_SUTH_F2_223"
     },
     {
-      "id": "wp_suth_224b",
+      "id": "wp_suth_224",
       "building": "sutherland",
       "floor": "2",
-      "label": "Room 224B",
-      "type": "office",
+      "label": "Room 224",
+      "type": "classroom",
       "latitude": 40.1159649722,
       "longitude": -75.1083949444,
       "x": 706.3,
@@ -5277,10 +5263,10 @@
       "y": 754
     },
     {
-      "id": "wp_suth_f2_stairsa",
+      "id": "wp_suth_f2_staircase_b",
       "building": "sutherland",
       "floor": "2",
-      "label": "Sutherland Stairs Hall2/3 (Floor 2)",
+      "label": "Sutherland F2 Staircase B",
       "type": "stairs",
       "latitude": 40.115957,
       "longitude": -75.108602,
@@ -5357,19 +5343,19 @@
       "y": 588.3
     },
     {
-      "id": "wp_suth_f2_hall_12",
+      "id": "wp_suth_f2_hall_end_b",
       "building": "sutherland",
       "floor": "2",
-      "label": "Sutherland Second Floor Hall 12",
+      "label": "Sutherland F2 Hall End B",
       "type": "hallway",
       "x": 777.5,
       "y": 307.8
     },
     {
-      "id": "wp_suth_f2_stairsb",
+      "id": "wp_suth_f2_staircase_c",
       "building": "sutherland",
       "floor": "2",
-      "label": "Sutherland Stairs Hall1/12 (Floor 2)",
+      "label": "Sutherland F2 Staircase C",
       "type": "stairs",
       "x": 729,
       "y": 251.7
@@ -5969,10 +5955,10 @@
       "y": 662
     },
     {
-      "id": "wp_suth_f2_stairsc",
+      "id": "wp_suth_f2_staircase_d",
       "building": "sutherland",
       "floor": "2",
-      "label": "Sutherland Stairs (Floor 2)",
+      "label": "Sutherland F2 Staircase D",
       "type": "stairs",
       "latitude": 40.115957,
       "longitude": -75.108602,
@@ -6407,6 +6393,168 @@
       "type": "office",
       "x": 856.9,
       "y": 307.2
+    },
+    {
+      "id": "wp_suth_213a",
+      "building": "sutherland",
+      "floor": "2",
+      "label": "Room 213A",
+      "type": "office",
+      "x": 404,
+      "y": 654.5
+    },
+    {
+      "id": "wp_suth_212a",
+      "building": "sutherland",
+      "floor": "2",
+      "label": "Room 212A",
+      "type": "office",
+      "x": 414.6,
+      "y": 690.6
+    },
+    {
+      "id": "wp_suth_206a",
+      "building": "sutherland",
+      "floor": "2",
+      "label": "Room 206A",
+      "type": "office",
+      "x": 336.5,
+      "y": 609.7
+    },
+    {
+      "id": "wp_suth_215c",
+      "building": "sutherland",
+      "floor": "2",
+      "label": "Room 215C",
+      "type": "office",
+      "x": 305.3,
+      "y": 515.5
+    },
+    {
+      "id": "wp_suth_214b",
+      "building": "sutherland",
+      "floor": "2",
+      "label": "Room 214B",
+      "type": "office",
+      "x": 402.7,
+      "y": 571.6
+    },
+    {
+      "id": "wp_suth_214a",
+      "building": "sutherland",
+      "floor": "2",
+      "label": "Room 214A",
+      "type": "office",
+      "x": 386.6,
+      "y": 591.6
+    },
+    {
+      "id": "wp_suth_203",
+      "building": "sutherland",
+      "floor": "2",
+      "label": "Room 203",
+      "type": "office",
+      "x": 316.9,
+      "y": 447.7
+    },
+    {
+      "id": "wp_suth_202",
+      "building": "sutherland",
+      "floor": "2",
+      "label": "Room 202",
+      "type": "office",
+      "x": 333.4,
+      "y": 428.7
+    },
+    {
+      "id": "wp_suth_227b",
+      "building": "sutherland",
+      "floor": "2",
+      "label": "Room 227B",
+      "type": "office",
+      "x": 476.3,
+      "y": 255.3
+    },
+    {
+      "id": "wp_suth_227a",
+      "building": "sutherland",
+      "floor": "2",
+      "label": "Room 227A",
+      "type": "office",
+      "x": 435.2,
+      "y": 263.2
+    },
+    {
+      "id": "wp_suth_219a",
+      "building": "sutherland",
+      "floor": "2",
+      "label": "Room 219A",
+      "type": "office",
+      "x": 652.8,
+      "y": 268.6
+    },
+    {
+      "id": "wp_suth_224a",
+      "building": "sutherland",
+      "floor": "2",
+      "label": "Room 224A",
+      "type": "office",
+      "x": 629.6,
+      "y": 166.5
+    },
+    {
+      "id": "wp_suth_226a",
+      "building": "sutherland",
+      "floor": "2",
+      "label": "Room 226A",
+      "type": "office",
+      "x": 503.3,
+      "y": 85.8
+    },
+    {
+      "id": "wp_suth_226c",
+      "building": "sutherland",
+      "floor": "2",
+      "label": "Room 226C",
+      "type": "office",
+      "x": 540.1,
+      "y": 135.3
+    },
+    {
+      "id": "wp_suth_226b",
+      "building": "sutherland",
+      "floor": "2",
+      "label": "Room 226b",
+      "type": "office",
+      "x": 513.8,
+      "y": 112.4
+    },
+    {
+      "id": "wp_suth_220c",
+      "building": "sutherland",
+      "floor": "2",
+      "label": "Room 220C",
+      "type": "office",
+      "x": 745,
+      "y": 305.5
+    },
+    {
+      "id": "wp_suth_221a",
+      "building": "sutherland",
+      "floor": "2",
+      "label": "Room 221A",
+      "type": "office",
+      "x": 724.4,
+      "y": 329
+    },
+    {
+      "id": "wp_suth_221b",
+      "building": "sutherland",
+      "floor": "2",
+      "label": "Room 221B",
+      "type": "classroom",
+      "x": 760.7,
+      "y": 340.5
     }
   ],
   "edges": [
@@ -7531,73 +7679,13 @@
       "accessible": true
     },
     {
-      "from": "wp_suth_f2_hall_02",
+      "from": "wp_suth_f2_junction_a",
       "to": "wp_suth_226",
       "accessible": true
     },
     {
       "from": "wp_suth_226",
-      "to": "wp_suth_f2_hall_02",
-      "accessible": true
-    },
-    {
-      "from": "wp_suth_f2_hall_05",
-      "to": "wp_suth_204",
-      "accessible": true
-    },
-    {
-      "from": "wp_suth_204",
-      "to": "wp_suth_f2_hall_05",
-      "accessible": true
-    },
-    {
-      "from": "wp_suth_f2_hall_06",
-      "to": "wp_suth_204",
-      "accessible": true
-    },
-    {
-      "from": "wp_suth_204",
-      "to": "wp_suth_f2_hall_06",
-      "accessible": true
-    },
-    {
-      "from": "wp_suth_f2_hall_09",
-      "to": "wp_suth_207",
-      "accessible": true
-    },
-    {
-      "from": "wp_suth_207",
-      "to": "wp_suth_f2_hall_09",
-      "accessible": true
-    },
-    {
-      "from": "wp_suth_f2_hall_10",
-      "to": "wp_suth_212",
-      "accessible": true
-    },
-    {
-      "from": "wp_suth_212",
-      "to": "wp_suth_f2_hall_10",
-      "accessible": true
-    },
-    {
-      "from": "wp_suth_f2_hall_11",
-      "to": "wp_suth_208",
-      "accessible": true
-    },
-    {
-      "from": "wp_suth_208",
-      "to": "wp_suth_f2_hall_11",
-      "accessible": true
-    },
-    {
-      "from": "wp_suth_f2_main_stairs",
-      "to": "wp_suth_f2_hall_04",
-      "accessible": true
-    },
-    {
-      "from": "wp_suth_f2_hall_04",
-      "to": "wp_suth_f2_main_stairs",
+      "to": "wp_suth_f2_junction_a",
       "accessible": true
     },
     {
@@ -9042,7 +9130,7 @@
       "accessible": true
     },
     {
-      "from": "wp_suth_f2_stairsa",
+      "from": "wp_suth_f2_staircase_b",
       "to": "wp_suth_226",
       "accessible": true
     },
@@ -9218,82 +9306,82 @@
     },
     {
       "from": "wp_suth_223",
-      "to": "wp_suth_f2_hall_12",
+      "to": "wp_suth_f2_hall_end_b",
       "accessible": true
     },
     {
       "from": "wp_suth_222",
-      "to": "wp_suth_f2_hall_12",
+      "to": "wp_suth_f2_hall_end_b",
       "accessible": true
     },
     {
       "from": "wp_suth_221",
-      "to": "wp_suth_f2_hall_12",
+      "to": "wp_suth_f2_hall_end_b",
       "accessible": true
     },
     {
       "from": "wp_suth_220b",
-      "to": "wp_suth_f2_hall_12",
+      "to": "wp_suth_f2_hall_end_b",
       "accessible": true
     },
     {
-      "from": "wp_suth_f2_hall_01",
-      "to": "wp_suth_f2_hall_12",
+      "from": "wp_suth_f2_hall_b",
+      "to": "wp_suth_f2_hall_end_b",
       "accessible": true
     },
     {
-      "from": "wp_suth_f2_hall_12",
-      "to": "wp_suth_224b",
+      "from": "wp_suth_f2_hall_end_b",
+      "to": "wp_suth_224",
       "accessible": true
     },
     {
-      "from": "wp_suth_f2_hall_01",
+      "from": "wp_suth_f2_hall_b",
       "to": "wp_suth_220",
       "accessible": true
     },
     {
-      "from": "wp_suth_f2_hall_01",
+      "from": "wp_suth_f2_hall_b",
       "to": "wp_suth_219",
       "accessible": true
     },
     {
       "from": "wp_suth_219",
-      "to": "wp_suth_f2_hall_02",
+      "to": "wp_suth_f2_junction_a",
       "accessible": true
     },
     {
       "from": "wp_suth_220b",
-      "to": "wp_suth_f2_hall_01",
+      "to": "wp_suth_f2_hall_b",
       "accessible": true
     },
     {
-      "from": "wp_suth_f2_hall_02",
+      "from": "wp_suth_f2_junction_a",
       "to": "wp_suth_225",
       "accessible": true
     },
     {
-      "from": "wp_suth_f2_hall_03",
-      "to": "wp_suth_f2_hall_02",
+      "from": "wp_suth_f2_hall_a",
+      "to": "wp_suth_f2_junction_a",
       "accessible": true
     },
     {
-      "from": "wp_suth_f2_stairsa",
-      "to": "wp_suth_f2_hall_02",
+      "from": "wp_suth_f2_staircase_b",
+      "to": "wp_suth_f2_junction_a",
       "accessible": true
     },
     {
-      "from": "wp_suth_f2_stairsa",
-      "to": "wp_suth_f2_hall_03",
+      "from": "wp_suth_f2_staircase_b",
+      "to": "wp_suth_f2_hall_a",
       "accessible": true
     },
     {
-      "from": "wp_suth_f2_hall_03",
+      "from": "wp_suth_f2_hall_a",
       "to": "wp_suth_218",
       "accessible": true
     },
     {
       "from": "wp_suth_f2_hall_04",
-      "to": "wp_suth_f2_hall_03",
+      "to": "wp_suth_f2_hall_a",
       "accessible": true
     },
     {
@@ -9303,7 +9391,7 @@
     },
     {
       "from": "wp_suth_elevator_f2",
-      "to": "wp_suth_f2_hall_03",
+      "to": "wp_suth_f2_hall_a",
       "accessible": true
     },
     {
@@ -9323,7 +9411,7 @@
     },
     {
       "from": "wp_suth_217",
-      "to": "wp_suth_f2_hall_03",
+      "to": "wp_suth_f2_hall_a",
       "accessible": true
     },
     {
@@ -9333,7 +9421,7 @@
     },
     {
       "from": "wp_suth_227",
-      "to": "wp_suth_f2_hall_03",
+      "to": "wp_suth_f2_hall_a",
       "accessible": true
     },
     {
@@ -9352,153 +9440,138 @@
       "accessible": true
     },
     {
-      "from": "wp_suth_f2_hall_05",
+      "from": "wp_suth_f2_hall_c",
       "to": "wp_suth_216",
       "accessible": true
     },
     {
       "from": "wp_suth_201",
-      "to": "wp_suth_f2_hall_05",
+      "to": "wp_suth_f2_hall_c",
       "accessible": true
     },
     {
-      "from": "wp_suth_f2_hall_06",
+      "from": "wp_suth_f2_junction_c",
       "to": "wp_suth_201",
       "accessible": true
     },
     {
-      "from": "wp_suth_f2_hall_05",
+      "from": "wp_suth_f2_hall_c",
       "to": "wp_suth_215",
       "accessible": true
     },
     {
       "from": "wp_suth_215",
-      "to": "wp_suth_f2_hall_06",
+      "to": "wp_suth_f2_junction_c",
       "accessible": true
     },
     {
-      "from": "wp_suth_f2_hall_06",
+      "from": "wp_suth_f2_junction_c",
       "to": "wp_suth_205",
       "accessible": true
     },
     {
-      "from": "wp_suth_f2_hall_06",
+      "from": "wp_suth_f2_junction_c",
       "to": "wp_suth_206",
       "accessible": true
     },
     {
-      "from": "wp_suth_f2_hall_07",
+      "from": "wp_suth_f2_hall_end_C",
       "to": "wp_suth_206",
       "accessible": true
     },
     {
-      "from": "wp_suth_f2_hall_06",
-      "to": "wp_suth_f2_hall_05",
+      "from": "wp_suth_f2_junction_c",
+      "to": "wp_suth_f2_hall_c",
       "accessible": true
     },
     {
-      "from": "wp_suth_f2_hall_06",
-      "to": "wp_suth_f2_hall_07",
-      "accessible": true
-    },
-    {
-      "from": "wp_suth_f2_hall_07",
-      "to": "wp_suth_f2_hall_08",
-      "accessible": true
-    },
-    {
-      "from": "wp_suth_f2_hall_08",
-      "to": "wp_suth_f2_hall_09",
-      "accessible": true
-    },
-    {
-      "from": "wp_suth_f2_hall_08",
-      "to": "wp_suth_214",
+      "from": "wp_suth_f2_junction_c",
+      "to": "wp_suth_f2_hall_end_C",
       "accessible": true
     },
     {
       "from": "wp_suth_214",
-      "to": "wp_suth_f2_hall_09",
+      "to": "wp_suth_f2_junction_d",
       "accessible": true
     },
     {
-      "from": "wp_suth_f2_hall_09",
+      "from": "wp_suth_f2_junction_d",
       "to": "wp_suth_213",
       "accessible": true
     },
     {
-      "from": "wp_suth_f2_hall_09",
+      "from": "wp_suth_f2_junction_d",
       "to": "wp_suth_212",
       "accessible": true
     },
     {
       "from": "wp_suth_207",
-      "to": "wp_suth_f2_hall_10",
+      "to": "wp_suth_f2_hall_d",
       "accessible": true
     },
     {
-      "from": "wp_suth_f2_hall_09",
-      "to": "wp_suth_f2_hall_10",
+      "from": "wp_suth_f2_junction_d",
+      "to": "wp_suth_f2_hall_d",
       "accessible": true
     },
     {
-      "from": "wp_suth_f2_hall_10",
-      "to": "wp_suth_f2_hall_11",
+      "from": "wp_suth_f2_hall_d",
+      "to": "wp_suth_f2_hall_end_d",
       "accessible": true
     },
     {
       "from": "wp_suth_208",
-      "to": "wp_suth_f2_hall_10",
+      "to": "wp_suth_f2_hall_d",
       "accessible": true
     },
     {
       "from": "wp_suth_211",
-      "to": "wp_suth_f2_hall_11",
+      "to": "wp_suth_f2_hall_end_d",
       "accessible": true
     },
     {
-      "from": "wp_suth_f2_hall_11",
+      "from": "wp_suth_f2_hall_end_d",
       "to": "wp_suth_209",
       "accessible": true
     },
     {
-      "from": "wp_suth_f2_hall_11",
+      "from": "wp_suth_f2_hall_end_d",
       "to": "wp_suth_210",
       "accessible": true
     },
     {
-      "from": "wp_suth_224b",
-      "to": "wp_suth_f2_hall_01",
+      "from": "wp_suth_224",
+      "to": "wp_suth_f2_hall_b",
       "accessible": true
     },
     {
-      "from": "wp_suth_f2_hall_01",
-      "to": "wp_suth_f2_hall_02",
+      "from": "wp_suth_f2_hall_b",
+      "to": "wp_suth_f2_junction_a",
       "accessible": true
     },
     {
       "from": "wp_suth_f2_hall_04",
-      "to": "wp_suth_f2_hall_05",
+      "to": "wp_suth_f2_hall_c",
       "accessible": true
     },
     {
-      "from": "wp_suth_224b",
-      "to": "wp_suth_f2_stairsb",
+      "from": "wp_suth_224",
+      "to": "wp_suth_f2_staircase_c",
       "accessible": true
     },
     {
-      "from": "wp_suth_f2_stairsb",
+      "from": "wp_suth_f2_staircase_c",
       "to": "wp_suth_220b",
       "accessible": true
     },
     {
-      "from": "wp_suth_f2_stairsb",
-      "to": "wp_suth_f2_hall_12",
+      "from": "wp_suth_f2_staircase_c",
+      "to": "wp_suth_f2_hall_end_b",
       "accessible": true
     },
     {
-      "from": "wp_suth_f2_hall_01",
-      "to": "wp_suth_f2_stairsb",
+      "from": "wp_suth_f2_hall_b",
+      "to": "wp_suth_f2_staircase_c",
       "accessible": true
     },
     {
@@ -9923,7 +9996,7 @@
     },
     {
       "from": "wp_suth_f3_stairsb",
-      "to": "wp_suth_f2_stairsb",
+      "to": "wp_suth_f2_staircase_c",
       "accessible": true
     },
     {
@@ -9943,17 +10016,17 @@
     },
     {
       "from": "wp_suth_f3_stairsa",
-      "to": "wp_suth_f2_stairsa",
+      "to": "wp_suth_f2_staircase_b",
       "accessible": true
     },
     {
       "from": "wp_suth_f3_main_stairs",
-      "to": "wp_suth_f2_main_stairs",
+      "to": "wp_suth_f2_staircase_a",
       "accessible": true
     },
     {
       "from": "wp_suth_f1_staircase_a",
-      "to": "wp_suth_f2_main_stairs",
+      "to": "wp_suth_f2_staircase_a",
       "accessible": true
     },
     {
@@ -9983,7 +10056,7 @@
     },
     {
       "from": "wp_suth_f1_staircase",
-      "to": "wp_suth_f2_stairsb",
+      "to": "wp_suth_f2_staircase_c",
       "accessible": true
     },
     {
@@ -9998,7 +10071,7 @@
     },
     {
       "from": "wp_suth_f1_staircase_b",
-      "to": "wp_suth_f2_stairsa",
+      "to": "wp_suth_f2_staircase_b",
       "accessible": true
     },
     {
@@ -10133,7 +10206,7 @@
     },
     {
       "from": "wp_suth_f4_stairsb",
-      "to": "wp_suth_f2_stairsb",
+      "to": "wp_suth_f2_staircase_c",
       "accessible": true
     },
     {
@@ -10637,7 +10710,7 @@
       "accessible": true
     },
     {
-      "from": "wp_suth_f2_stairsa",
+      "from": "wp_suth_f2_staircase_b",
       "to": "wp_suth_f4_stairsa",
       "accessible": false
     },
@@ -10657,23 +10730,23 @@
       "accessible": true
     },
     {
-      "from": "wp_suth_f2_hall_10",
+      "from": "wp_suth_f2_hall_d",
       "to": "wp_suth_213",
       "accessible": true
     },
     {
       "from": "wp_suth_211",
-      "to": "wp_suth_f2_hall_10",
+      "to": "wp_suth_f2_hall_d",
       "accessible": true
     },
     {
       "from": "wp_suth_f1_staircase_e",
-      "to": "wp_suth_f2_stairsc",
+      "to": "wp_suth_f2_staircase_d",
       "accessible": true
     },
     {
       "from": "wp_suth_f3_stairsc",
-      "to": "wp_suth_f2_stairsc",
+      "to": "wp_suth_f2_staircase_d",
       "accessible": true
     },
     {
@@ -10777,18 +10850,18 @@
       "accessible": true
     },
     {
-      "from": "wp_suth_f2_stairsc",
+      "from": "wp_suth_f2_staircase_d",
       "to": "wp_suth_206",
       "accessible": true
     },
     {
-      "from": "wp_suth_f2_stairsc",
-      "to": "wp_suth_f2_hall_06",
+      "from": "wp_suth_f2_staircase_d",
+      "to": "wp_suth_f2_junction_c",
       "accessible": true
     },
     {
-      "from": "wp_suth_f2_stairsc",
-      "to": "wp_suth_f2_hall_07",
+      "from": "wp_suth_f2_staircase_d",
+      "to": "wp_suth_f2_hall_end_C",
       "accessible": true
     },
     {
@@ -10863,7 +10936,7 @@
     },
     {
       "from": "wp_suth_f4_stairsc",
-      "to": "wp_suth_f2_stairsc",
+      "to": "wp_suth_f2_staircase_d",
       "accessible": true
     },
     {
@@ -11309,6 +11382,181 @@
     {
       "from": "wp_suth_119",
       "to": "wp_suth_119d",
+      "accessible": true
+    },
+    {
+      "from": "wp_suth_f2_staircase_a",
+      "to": "wp_suth_f2_hall_04",
+      "accessible": true
+    },
+    {
+      "from": "wp_suth_f2_staircase_a",
+      "to": "wp_suth_f2_hall_c",
+      "accessible": true
+    },
+    {
+      "from": "wp_suth_f2_staircase_a",
+      "to": "wp_suth_216",
+      "accessible": true
+    },
+    {
+      "from": "wp_suth_204",
+      "to": "wp_suth_f2_hall_c",
+      "accessible": true
+    },
+    {
+      "from": "wp_suth_f2_junction_c",
+      "to": "wp_suth_204",
+      "accessible": true
+    },
+    {
+      "from": "wp_suth_f2_junction_d",
+      "to": "wp_suth_f2_hall_end_C",
+      "accessible": true
+    },
+    {
+      "from": "wp_suth_214",
+      "to": "wp_suth_f2_hall_end_C",
+      "accessible": true
+    },
+    {
+      "from": "wp_suth_f2_hall_end_d",
+      "to": "wp_suth_208",
+      "accessible": true
+    },
+    {
+      "from": "wp_suth_f2_hall_d",
+      "to": "wp_suth_212",
+      "accessible": true
+    },
+    {
+      "from": "wp_suth_207",
+      "to": "wp_suth_f2_junction_d",
+      "accessible": true
+    },
+    {
+      "from": "wp_suth_213",
+      "to": "wp_suth_213a",
+      "accessible": true
+    },
+    {
+      "from": "wp_suth_212",
+      "to": "wp_suth_212a",
+      "accessible": true
+    },
+    {
+      "from": "wp_suth_206",
+      "to": "wp_suth_206a",
+      "accessible": true
+    },
+    {
+      "from": "wp_suth_f2_junction_c",
+      "to": "wp_suth_215c",
+      "accessible": true
+    },
+    {
+      "from": "wp_suth_f2_hall_end_C",
+      "to": "wp_suth_215c",
+      "accessible": true
+    },
+    {
+      "from": "wp_suth_f2_staircase_d",
+      "to": "wp_suth_215c",
+      "accessible": true
+    },
+    {
+      "from": "wp_suth_214",
+      "to": "wp_suth_214a",
+      "accessible": true
+    },
+    {
+      "from": "wp_suth_214",
+      "to": "wp_suth_214b",
+      "accessible": true
+    },
+    {
+      "from": "wp_suth_203",
+      "to": "wp_suth_f2_junction_c",
+      "accessible": true
+    },
+    {
+      "from": "wp_suth_202",
+      "to": "wp_suth_f2_junction_c",
+      "accessible": true
+    },
+    {
+      "from": "wp_suth_202",
+      "to": "wp_suth_f2_hall_c",
+      "accessible": true
+    },
+    {
+      "from": "wp_suth_203",
+      "to": "wp_suth_f2_hall_c",
+      "accessible": true
+    },
+    {
+      "from": "wp_suth_227a",
+      "to": "wp_suth_227b",
+      "accessible": true
+    },
+    {
+      "from": "wp_suth_227b",
+      "to": "wp_suth_f2_hall_04",
+      "accessible": true
+    },
+    {
+      "from": "wp_suth_227b",
+      "to": "wp_suth_elevator_f2",
+      "accessible": true
+    },
+    {
+      "from": "wp_suth_227b",
+      "to": "wp_suth_f2_hall_a",
+      "accessible": true
+    },
+    {
+      "from": "wp_suth_219",
+      "to": "wp_suth_219a",
+      "accessible": true
+    },
+    {
+      "from": "wp_suth_f2_junction_a",
+      "to": "wp_suth_224a",
+      "accessible": true
+    },
+    {
+      "from": "wp_suth_224a",
+      "to": "wp_suth_f2_hall_b",
+      "accessible": true
+    },
+    {
+      "from": "wp_suth_226b",
+      "to": "wp_suth_226c",
+      "accessible": true
+    },
+    {
+      "from": "wp_suth_226c",
+      "to": "wp_suth_f2_junction_a",
+      "accessible": true
+    },
+    {
+      "from": "wp_suth_226",
+      "to": "wp_suth_226a",
+      "accessible": true
+    },
+    {
+      "from": "wp_suth_221a",
+      "to": "wp_suth_220b",
+      "accessible": true
+    },
+    {
+      "from": "wp_suth_220b",
+      "to": "wp_suth_220c",
+      "accessible": true
+    },
+    {
+      "from": "wp_suth_221b",
+      "to": "wp_suth_f2_hall_end_b",
       "accessible": true
     }
   ],
@@ -12677,7 +12925,7 @@
       "building": "sutherland",
       "room_number": "224B",
       "floor": "2",
-      "waypoint_id": "wp_suth_224b",
+      "waypoint_id": "wp_suth_224",
       "room_name": "Room 224B",
       "type": "office"
     },
@@ -13651,19 +13899,19 @@
     },
     {
       "qr_id": "QR_SUTH_F2_HALL_01",
-      "waypoint_id": "wp_suth_f2_hall_01",
+      "waypoint_id": "wp_suth_f2_hall_b",
       "building": "sutherland",
       "floor": "2"
     },
     {
       "qr_id": "QR_SUTH_F2_HALL_02",
-      "waypoint_id": "wp_suth_f2_hall_02",
+      "waypoint_id": "wp_suth_f2_junction_a",
       "building": "sutherland",
       "floor": "2"
     },
     {
       "qr_id": "QR_SUTH_F2_HALL_03",
-      "waypoint_id": "wp_suth_f2_hall_03",
+      "waypoint_id": "wp_suth_f2_hall_a",
       "building": "sutherland",
       "floor": "2"
     },
@@ -13681,19 +13929,19 @@
     },
     {
       "qr_id": "QR_SUTH_F2_HALL_05",
-      "waypoint_id": "wp_suth_f2_hall_05",
+      "waypoint_id": "wp_suth_f2_hall_c",
       "building": "sutherland",
       "floor": "2"
     },
     {
       "qr_id": "QR_SUTH_F2_HALL_06",
-      "waypoint_id": "wp_suth_f2_hall_06",
+      "waypoint_id": "wp_suth_f2_junction_c",
       "building": "sutherland",
       "floor": "2"
     },
     {
       "qr_id": "QR_SUTH_F2_HALL_07",
-      "waypoint_id": "wp_suth_f2_hall_07",
+      "waypoint_id": "wp_suth_f2_hall_end_C",
       "building": "sutherland",
       "floor": "2"
     },
@@ -13705,19 +13953,19 @@
     },
     {
       "qr_id": "QR_SUTH_F2_HALL_09",
-      "waypoint_id": "wp_suth_f2_hall_09",
+      "waypoint_id": "wp_suth_f2_junction_d",
       "building": "sutherland",
       "floor": "2"
     },
     {
       "qr_id": "QR_SUTH_F2_HALL_10",
-      "waypoint_id": "wp_suth_f2_hall_10",
+      "waypoint_id": "wp_suth_f2_hall_d",
       "building": "sutherland",
       "floor": "2"
     },
     {
       "qr_id": "QR_SUTH_F2_HALL_11",
-      "waypoint_id": "wp_suth_f2_hall_11",
+      "waypoint_id": "wp_suth_f2_hall_end_d",
       "building": "sutherland",
       "floor": "2"
     },
@@ -13729,7 +13977,7 @@
     },
     {
       "qr_id": "QR_SUTH_F2_MAIN_STAIRS",
-      "waypoint_id": "wp_suth_f2_main_stairs",
+      "waypoint_id": "wp_suth_f2_staircase_a",
       "building": "sutherland",
       "floor": "2"
     },
@@ -14419,7 +14667,7 @@
     },
     {
       "qr_id": "QR_SUTH_F2_224B",
-      "waypoint_id": "wp_suth_224b",
+      "waypoint_id": "wp_suth_224",
       "building": "sutherland",
       "floor": "2"
     },
