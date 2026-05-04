@@ -467,10 +467,14 @@ export default function NavigationPage({ route, navigation }) {
 
   const targetBearing = useMemo(() => {
     if (viewMode === VIEW_MODE.INDOOR) {
-      // Use anchorPose (exact QR scan position) not livePose (drifts with PDR).
-      // Without bearing_hint_deg the gyroscope heading is unanchored to the map,
-      // so PDR moves livePose in a wrong direction. anchorPose is always exact.
-      return computeMapBearing(navState.anchorPose, nextWaypoint);
+      // Once we've advanced past the QR anchor waypoint, compute bearing FROM
+      // the current waypoint's map coordinates (exact, no drift) TO the next.
+      // This updates the arrow whenever currentWaypointId advances.
+      const currentWp = getWaypointById(currentWaypointId);
+      const fromPose = (currentWp?.x != null && currentWp?.y != null)
+        ? currentWp
+        : navState.anchorPose;
+      return computeMapBearing(fromPose, nextWaypoint);
     }
 
     if (
@@ -488,7 +492,7 @@ export default function NavigationPage({ route, navigation }) {
       Number(nextWaypoint.latitude),
       Number(nextWaypoint.longitude)
     );
-  }, [viewMode, navState.anchorPose, userGps, nextWaypoint]);
+  }, [viewMode, navState.anchorPose, currentWaypointId, userGps, nextWaypoint]);
 
   const fallbackArrowDirection = useMemo(() => {
     if (targetBearing !== null) return "straight";
