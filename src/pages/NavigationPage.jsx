@@ -2565,7 +2565,13 @@ export default function NavigationPage({ route, navigation }) {
                 <Text style={s.scanPromptIcon}>📷</Text>
                 <Text style={s.scanPromptText}>Point your camera at a nearby QR code to begin</Text>
               </View>
-            ) : shouldShowScanPrompt(navState) || nearNextWaypoint ? (
+            ) : shouldShowScanPrompt(navState) || nearNextWaypoint || (
+              // Hide arrow for the full approach to any vertical-transition QR node
+              // (stairs or elevator). The arrow is meaningless here — the user just
+              // needs to walk to the physical fixture and scan it.
+              nextWaypoint?.requires_scan === true &&
+              (nextWaypoint?.type === "stairs" || nextWaypoint?.type === "elevator")
+            ) ? (
               <View style={s.scanPromptWrap}>
                 <Text style={s.scanPromptIcon}>
                   {nextWaypoint?.type === "stairs" ? "🪜" : nextWaypoint?.type === "elevator" ? "🛗" : "📷"}
