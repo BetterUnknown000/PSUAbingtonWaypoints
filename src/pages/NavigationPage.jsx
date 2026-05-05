@@ -518,6 +518,13 @@ export default function NavigationPage({ route, navigation }) {
     if (!nextWaypoint) return false;
     if (nextWaypoint.requires_scan !== true) return false;
 
+    // Guard: never trigger a scan prompt for the node we're currently anchored at.
+    // Without this, after scanning a staircase QR the livePose resets to that
+    // node's position, and while nextWaypoint is still stale (same staircase),
+    // nearNextWaypoint immediately fires true → NEAR_REQUIRED_ANCHOR → AWAIT_SCAN_ANCHOR
+    // → camera rescans → VERTICAL_TRANSFER → rescans → INDOOR_ANCHORED → loop.
+    if (nextWaypoint.id === currentWaypointId) return false;
+
     if (livePose?.x != null && livePose?.y != null) {
       const distPx = computeMapDistance(livePose, nextWaypoint);
       const metersPerPx = getMetersPerPx(
@@ -525,13 +532,24 @@ export default function NavigationPage({ route, navigation }) {
         nextWaypoint.floor,
         nextWaypoint
       );
-      const stopRadiusM = Number(nextWaypoint.stop_radius_m ?? 3);
       const distMeters = Number.isFinite(distPx) ? distPx * metersPerPx : Infinity;
-      return distMeters <= stopRadiusM;
+
+      // Use a generous trigger radius for vertical transitions (stairs/elevator).
+      // The user needs to SEE the "scan QR" prompt in time to stop and scan,
+      // so fire earlier than the physical stop_radius_m. Default 3m is too tight
+      // given PDR lag — use 10m for stairs/elevator, fallback to stop_radius_m
+      // for other required-scan nodes (e.g. mandatory hallway anchors).
+      const type = String(nextWaypoint.type || "").toLowerCase();
+      const isVertical = type === "stairs" || type === "elevator";
+      const triggerRadiusM = isVertical
+        ? Math.max(10, Number(nextWaypoint.stop_radius_m ?? 3))
+        : Number(nextWaypoint.stop_radius_m ?? 3);
+
+      return distMeters <= triggerRadiusM;
     }
 
     return false;
-  }, [viewMode, nextWaypoint, livePose, getMetersPerPx]);
+  }, [viewMode, nextWaypoint, livePose, getMetersPerPx, currentWaypointId]);
 
   // Dispatch reducer events when proximity or arrival state changes
   useEffect(() => {
@@ -1537,7 +1555,12 @@ export default function NavigationPage({ route, navigation }) {
         const metersPerPxCheck = getMetersPerPx(nextWaypoint.building, nextWaypoint.floor, nextWaypoint);
         const distMCheck = distPxCheck * metersPerPxCheck;
         const stopR = Number(nextWaypoint.stop_radius_m ?? 3);
-        if (distMCheck <= stopR * 2) {
+        // Use the same generous trigger radius as nearNextWaypoint so step-count
+        // advancement stops at the same time the "scan QR" prompt appears.
+        const typeCheck = String(nextWaypoint.type || "").toLowerCase();
+        const isVerticalCheck = typeCheck === "stairs" || typeCheck === "elevator";
+        const blockRadiusM = isVerticalCheck ? Math.max(10, stopR) : stopR * 2;
+        if (distMCheck <= blockRadiusM) {
           return; // close enough — wait for QR scan
         }
       }
