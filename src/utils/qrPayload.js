@@ -1,4 +1,9 @@
-import { getAllBuildings, getAllRooms, getWaypointById, getAllEntrances } from '../utils/campusDataLoader';
+import { getAllBuildings, getAllRooms, getWaypointById, getAllEntrances, getBuildingWaypoints } from '../utils/campusDataLoader';
+
+// Safe wrapper — returns [] if building not yet loaded
+function getBuildingWaypointsSafe(buildingId) {
+  try { return getBuildingWaypoints(buildingId) || []; } catch { return []; }
+}
  
 export const APP_SCHEME = "psuabingtonwaypoints";
 export const QR_NAVIGATION_ROUTE = "navigation";
@@ -204,22 +209,42 @@ export function parseQrPayload(qrData) {
  
 /**
  * Look up the waypoint object from a parsed payload.
- * Checks waypoint_id first, then qr_id/qr_code.
+ * Checks waypoint_id first (fast path via getWaypointById which searches all
+ * loaded buildings), then falls back to scanning by qr_id/qr_code.
+ * Previously this only searched getAllEntrances(), which meant staircases,
+ * elevators, and hallway anchors were never found — causing "Scanned: …"
+ * to appear instead of a proper location update.
  */
 export function findWaypointFromQrPayload(payload) {
   if (!payload || typeof payload !== "object") return null;
- 
+
   const normalizedWaypointId = normalize(payload.waypoint_id);
   const normalizedQrId = normalize(payload.qr_id);
- 
-  return (
-    (getAllEntrances()).find((waypoint) => {
-      return (
-        (normalizedWaypointId && normalize(waypoint.id) === normalizedWaypointId) ||
-        (normalizedQrId && normalize(waypoint.qr_code) === normalizedQrId)
-      );
-    }) || null
-  );
+
+  // Fast path: direct ID lookup searches all loaded building waypoints
+  if (normalizedWaypointId) {
+    const byId = getWaypointById(normalizedWaypointId);
+    if (byId) return byId;
+  }
+
+  // Fallback: scan entrances by qr_code (legacy v2 QRs that only carry qr_id)
+  if (normalizedQrId) {
+    const byQrCode = (getAllEntrances()).find(
+      (waypoint) => normalize(waypoint.qr_code) === normalizedQrId
+    );
+    if (byQrCode) return byQrCode;
+  }
+
+  // Last resort: scan ALL waypoints in loaded buildings by qr_code
+  if (normalizedQrId) {
+    for (const building of getAllBuildings()) {
+      const wps = getBuildingWaypointsSafe(building.id);
+      const match = wps.find((w) => normalize(w.qr_code) === normalizedQrId);
+      if (match) return match;
+    }
+  }
+
+  return null;
 }
  
 // ─── Helpers ─────────────────────────────────────────────────────────────────
