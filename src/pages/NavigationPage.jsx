@@ -1289,9 +1289,18 @@ export default function NavigationPage({ route, navigation }) {
     if (destBuildingId) preloadBuilding(destBuildingId);
 
     const alreadyIndoor = Boolean(
-      currentBuildingId &&
-      navState.anchorPose &&
-      normalize(currentBuildingId) === normalize(destBuildingId)
+      destBuildingId && (
+        // QR-anchored inside the destination building
+        (navState.anchorPose &&
+          currentBuildingId &&
+          normalize(currentBuildingId) === normalize(destBuildingId)) ||
+        // currentBuildingId set (from a previous scan or GPS) — no anchor needed
+        (currentBuildingId &&
+          normalize(currentBuildingId) === normalize(destBuildingId)) ||
+        // GPS strongly places user inside the destination building
+        (gpsBuildingGuess?.building?.id &&
+          normalize(gpsBuildingGuess.building.id) === normalize(destBuildingId))
+      )
     );
     navDispatch({
       type: NavEvent.SET_DESTINATION,
