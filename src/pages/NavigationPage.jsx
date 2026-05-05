@@ -68,7 +68,7 @@ import {
   GRAPH_REV,
 } from "../utils/qrPayload";
 
-const DEFAULT_METERS_PER_PX = 0.15; // temporary fallback until all floors are calibrated
+const DEFAULT_METERS_PER_PX = 0.065; // GPS-calibrated from Woodland entrance pairs (~0.056–0.068 range)
 
 const PSU = {
   blue: "#001E44",
@@ -567,12 +567,23 @@ export default function NavigationPage({ route, navigation }) {
     if (!nextWp) return null;
 
     const metersPerPx = getMetersPerPx(nextWp.building, nextWp.floor, nextWp);
-    const STRIDE_M = 0.75;
+    const currentWp = getWaypointById(currentWaypointId); // used by fallback branch below
 
-    // Compute total distance from current waypoint to next waypoint in map pixels
-    const currentWp = getWaypointById(currentWaypointId);
+    // Prefer livePose-based distance: measures actual pixel distance from the
+    // user's current estimated position to the next waypoint. This is
+    // direction-aware — walking away increases the value, walking toward
+    // decreases it. The old step-count subtraction (totalDist - steps × stride)
+    // was direction-ignorant: any walking reduced the number regardless of heading.
     let distM = null;
     if (
+      livePose?.x != null && livePose?.y != null &&
+      nextWp?.x != null && nextWp?.y != null
+    ) {
+      const dx = Number(nextWp.x) - Number(livePose.x);
+      const dy = Number(nextWp.y) - Number(livePose.y);
+      distM = Math.sqrt(dx * dx + dy * dy) * metersPerPx;
+    } else if (
+      // Fallback: if livePose isn't tracking yet, estimate from anchor + steps
       currentWp?.x != null && currentWp?.y != null &&
       nextWp?.x != null && nextWp?.y != null
     ) {
@@ -580,10 +591,8 @@ export default function NavigationPage({ route, navigation }) {
       const dy = Number(nextWp.y) - Number(currentWp.y);
       const totalDistPx = Math.sqrt(dx * dx + dy * dy);
       const totalDistM = totalDistPx * metersPerPx;
-      // Estimate remaining distance using step count since last waypoint advance
       const stepsSince = Math.max(0, pdrStepCount - pdrStepAtLastAdvance);
-      const walkedM = stepsSince * STRIDE_M;
-      distM = Math.max(0, totalDistM - walkedM);
+      distM = Math.max(0, totalDistM - stepsSince * 0.75);
     }
 
     // Estimate remaining path distance after the next waypoint
