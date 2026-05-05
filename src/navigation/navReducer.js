@@ -96,29 +96,36 @@ export function navReducer(state, event) {
     // ─── Destination ────────────────────────────────────────────────────────
  
     case NavEvent.SET_DESTINATION: {
-      // If user is already anchored inside the destination building,
-      // stay in indoor mode instead of resetting to outdoor routing.
-      if (
-        event.alreadyIndoor &&
-        state.anchorPose &&
-        state.mode === NavMode.INDOOR_ANCHORED
-      ) {
-        return {
-          ...state,
-          mode: NavMode.INDOOR_ANCHORED,
-          destinationBuildingId: event.destinationBuildingId || null,
-          destinationRoomNumber: event.destinationRoomNumber || null,
-          destinationWaypointId: event.destinationWaypointId || null,
-          emergencyMode: false,
-        };
-      }
-      return {
-        ...initialNavState,
-        mode: NavMode.OUTDOOR_ROUTE,
+      const destFields = {
         destinationBuildingId: event.destinationBuildingId || null,
         destinationRoomNumber: event.destinationRoomNumber || null,
         destinationWaypointId: event.destinationWaypointId || null,
         emergencyMode: false,
+      };
+
+      if (event.alreadyIndoor) {
+        // Case 1: Already anchored (QR scanned) inside the destination building —
+        // stay in INDOOR_ANCHORED and just update the destination fields.
+        if (state.anchorPose && state.mode === NavMode.INDOOR_ANCHORED) {
+          return { ...state, ...destFields };
+        }
+
+        // Case 2: GPS/building-ID says the user is inside the destination building
+        // but they haven't scanned a QR yet. Skip outdoor routing entirely and
+        // prompt them to scan the nearest entrance/hallway QR to get a position.
+        return {
+          ...initialNavState,
+          ...destFields,
+          mode: NavMode.AWAIT_ENTRY_QR,
+          expectedQrRole: "entrance",
+        };
+      }
+
+      // Normal case: user is outdoors or in a different building.
+      return {
+        ...initialNavState,
+        ...destFields,
+        mode: NavMode.OUTDOOR_ROUTE,
       };
     }
  
