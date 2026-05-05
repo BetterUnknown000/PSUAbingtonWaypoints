@@ -1143,7 +1143,13 @@ export default function NavigationPage({ route, navigation }) {
     if (gpsBuildingGuess.building && gpsBuildingGuess.confidence === "high") {
       setCurrentBuildingId(gpsBuildingGuess.building.id);
     }
-  }, [gpsBuildingGuess, currentBuildingId]);
+    // IMPORTANT: Use primitive values (not the object itself) as deps.
+    // gpsBuildingGuess is a new object reference on every GPS update, so
+    // putting it directly in the array causes an infinite update loop:
+    //   GPS update → new gpsBuildingGuess ref → effect fires → setCurrentBuildingId
+    //   → re-render → new GPS → new ref → effect fires again → ...
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [gpsBuildingGuess.building?.id, gpsBuildingGuess.confidence, currentBuildingId]);
 
   useEffect(() => {
     if (viewMode !== VIEW_MODE.INDOOR) return;
@@ -1407,15 +1413,48 @@ export default function NavigationPage({ route, navigation }) {
         }
       }
     } else {
-      nav = buildStageNavigation({
-        currentWaypointId,
-        currentBuildingId,
-        destinationBuildingId:
-          destinationBuilding?.id || destinationRoom?.building || "",
-        destinationRoomNumber: destinationRoom?.room_number || "",
-        userGps,
-        accessibleOnly: accessibilityMode,
-      });
+      const destBuildingId = destinationBuilding?.id || destinationRoom?.building || "";
+      const alreadyInsideDestBuilding =
+        destBuildingId &&
+        currentBuildingId &&
+        normalize(currentBuildingId) === normalize(destBuildingId);
+
+      // When the user is physically inside the destination building but hasn't
+      // scanned a QR yet, navState.mode is AWAIT_ENTRY_QR. buildStageNavigation
+      // doesn't know this — it sees no currentWaypoint and falls through to
+      // outdoor guidance, producing "You are near…" instead of "You are inside…".
+      // Intercept here and produce the correct prompt directly.
+      if (
+        navState.mode === NavMode.AWAIT_ENTRY_QR &&
+        alreadyInsideDestBuilding &&
+        !currentWaypointId
+      ) {
+        const buildingName = destinationBuilding?.name || destBuildingId;
+        nav = {
+          mode: "indoor_find_anchor",
+          path: [],
+          steps: [
+            {
+              id: "step-0",
+              text: `You are already inside ${buildingName}. Scan a nearby QR code to get your precise location.`,
+            },
+          ],
+          nextWaypoint: null,
+          distance: Infinity,
+          arrived: false,
+          transportMode: "arrow",
+          message: `You are already inside ${buildingName}. Scan a nearby QR code to get your precise location.`,
+        };
+      } else {
+        nav = buildStageNavigation({
+          currentWaypointId,
+          currentBuildingId,
+          destinationBuildingId: destBuildingId,
+          destinationRoomNumber: destinationRoom?.room_number || "",
+          userGps,
+          accessibleOnly: accessibilityMode,
+        });
+      }
     }
 
     setSteps(Array.isArray(nav.steps) ? nav.steps : []);
