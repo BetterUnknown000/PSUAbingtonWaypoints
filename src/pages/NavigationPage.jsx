@@ -336,6 +336,20 @@ export default function NavigationPage({ route, navigation }) {
   const [stageMode, setStageMode] = useState("idle");
   const [stageMessage, setStageMessage] = useState("");
 
+  // ─── viewMode must be declared HERE — before ALL useMemos that depend on it ─
+  // (navState and stageMode are both available from above)
+  // Previously this was declared at line ~646 which caused it to be `undefined`
+  // inside every memo that used it (React Native's Babel transforms const→var,
+  // so TDZ errors become undefined reads instead of crashes).
+  const viewMode = useMemo(() => {
+    if (isIndoorMode(navState)) return VIEW_MODE.INDOOR;
+    if (isOutdoorMode(navState)) return VIEW_MODE.OUTDOOR;
+    // Legacy fallback for stageMode-driven transitions
+    const indoorModes = ["indoor_destination", "indoor_find_anchor", "vertical_transfer"];
+    if (indoorModes.includes(stageMode)) return VIEW_MODE.INDOOR;
+    return VIEW_MODE.OUTDOOR;
+  }, [navState, stageMode]);
+
   const [gpsPermissionGranted, setGpsPermissionGranted] = useState(false);
   const [gpsLoading, setGpsLoading] = useState(true);
   const [userGps, setUserGps] = useState(null);
@@ -641,16 +655,6 @@ export default function NavigationPage({ route, navigation }) {
       String(a.name).localeCompare(String(b.name))
     );
   }, []);
-
-  // viewMode derived from navState — indoor ONLY after a real QR scan
-  const viewMode = useMemo(() => {
-    if (isIndoorMode(navState)) return VIEW_MODE.INDOOR;
-    if (isOutdoorMode(navState)) return VIEW_MODE.OUTDOOR;
-    // Legacy fallback for stageMode-driven transitions
-    const indoorModes = ["indoor_destination", "indoor_find_anchor", "vertical_transfer"];
-    if (indoorModes.includes(stageMode)) return VIEW_MODE.INDOOR;
-    return VIEW_MODE.OUTDOOR;
-  }, [navState, stageMode]);
 
   const outdoorTargetBuilding = useMemo(() => {
     return getOutdoorTargetBuilding({
@@ -1527,9 +1531,39 @@ export default function NavigationPage({ route, navigation }) {
       }
     }
 
-    // Position-based advancement is intentionally removed — PDR position
-    // drifts in the wrong direction without bearing calibration.
-    // Step-count advancement above is the sole method.
+    // ── Position-based advancement (proximity) for non-scan waypoints ────────
+    // When the next waypoint does NOT require a QR scan, advance automatically
+    // once the PDR-estimated position is within the waypoint's stop radius.
+    // This fires in addition to step-count advancement above so the arrow
+    // updates promptly when the user physically reaches a node.
+    if (
+      nextWaypoint.requires_scan !== true &&
+      livePose?.x != null && livePose?.y != null &&
+      nextWaypoint?.x != null && nextWaypoint?.y != null
+    ) {
+      const dx = Number(nextWaypoint.x) - Number(livePose.x);
+      const dy = Number(nextWaypoint.y) - Number(livePose.y);
+      const distPx = Math.sqrt(dx * dx + dy * dy);
+      const metersPerPxPos = getMetersPerPx(nextWaypoint.building, nextWaypoint.floor, nextWaypoint);
+      const distMPos = distPx * metersPerPxPos;
+      // Use stop_radius_m from the waypoint (default 5 m for passive nodes)
+      const stopRPos = Number(nextWaypoint.stop_radius_m ?? 5);
+
+      if (distMPos <= stopRPos) {
+        const currentIndexPos = pathIds.indexOf(currentWaypointId);
+        const nextPathWpId = currentIndexPos >= 0 ? pathIds[currentIndexPos + 1] : null;
+        const advanceTo = nextPathWpId || nextWaypoint.id;
+        const next = getWaypointById(advanceTo);
+
+        writeLog('ADVANCE_PROXIMITY', { from: currentWaypointId, to: advanceTo, distM: distMPos.toFixed(1) });
+
+        setCurrentWaypointId(advanceTo);
+        if (next?.building) setCurrentBuildingId(next.building);
+        if (next?.label) setCurrentWaypointLabel(next.label);
+        setPreviousIndoorDistance(null);
+        setPdrStepAtLastAdvance(pdrStepCount);
+      }
+    }
   }, [
     viewMode,
     livePose,
