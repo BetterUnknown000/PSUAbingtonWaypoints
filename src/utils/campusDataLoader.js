@@ -120,8 +120,14 @@ export function getAllEntrances() {
 export function getBuildingEntrances(buildingId) {
   const building = getBuildingById(buildingId);
   if (!building || !Array.isArray(building.entrances)) return [];
+  // Search campusShared.entrances first; fall back to the per-building cache
+  // for entrances stored only in the building's own JSON file.
+  const buildingWaypoints = getBuildingWaypoints(buildingId);
   return building.entrances
-    .map(id => getAllEntrances().find(e => e.id === id))
+    .map(id =>
+      getAllEntrances().find(e => e.id === id) ||
+      buildingWaypoints.find(w => w.id === id)
+    )
     .filter(Boolean);
 }
 
