@@ -1849,6 +1849,9 @@ export default function NavigationPage({ route, navigation }) {
       setLastStepAnchorCount(stepCount);
       setPendingTransitionType(null);
       navDispatch({ type: NavEvent.FORCE_OUTDOOR });
+      // Clear accumulated IMU/PDR pose so stale indoor coordinates do not
+      // linger if the user re-enters a building before the next QR scan.
+      resetIndoorPose(null);
 
       setOrsCoords([]);
       setOrsSteps([]);
