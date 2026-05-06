@@ -63,10 +63,10 @@ export function validateQrAnchor(payload, activeGraphRev = GRAPH_REV) {
     return { ok: false, reason: "inactive_qr" };
   }
 
-  // Bug 8: reject QRs whose graph_rev is strictly older than the app's current
-  // revision (string comparison works for YYYY-MM-DD format). A QR that is
-  // newer than the installed app is still valid — calling it "outdated" and
-  // showing "Please update the QR poster" to the user would be wrong.
+  // Reject QRs whose graph_rev is strictly older than the app's current
+  // revision (YYYY-MM-DD string comparison works correctly for date ordering).
+  // A QR that is newer than the installed app is still valid — only stale
+  // (older) revisions require a poster update.
   if (
     payload.graph_rev &&
     activeGraphRev &&
