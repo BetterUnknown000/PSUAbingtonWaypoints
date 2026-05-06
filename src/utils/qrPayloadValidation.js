@@ -5,13 +5,13 @@
  * Prevents zero x/y, stale graph revisions, and missing required fields
  * from silently corrupting the indoor pose.
  */
- 
+
 import { GRAPH_REV } from "./qrPayload";
- 
+
 /**
- * Roles that require valid non-zero indoor x/y to be useful as anchors.
+ * Roles that require a building field to be useful.
  */
-const INDOOR_ANCHOR_ROLES = new Set([
+const ROLES_NEEDING_BUILDING = new Set([
   "entrance",
   "hallway",
   "hallway_anchor",
@@ -20,7 +20,33 @@ const INDOOR_ANCHOR_ROLES = new Set([
   "anchor",
   "exit",
 ]);
- 
+
+/**
+ * Roles that require a floor field to be useful.
+ */
+const ROLES_NEEDING_FLOOR = new Set([
+  "hallway",
+  "hallway_anchor",
+  "stairs",
+  "elevator",
+  "anchor",
+  "exit",
+]);
+
+/**
+ * Roles that require valid non-zero indoor x/y to be useful as anchors.
+ * NOTE: "entrance" is intentionally excluded — entrances only need building/floor
+ * to get the user inside; precise x/y is not required to begin indoor routing.
+ */
+const ROLES_NEEDING_INDOOR_XY = new Set([
+  "hallway",
+  "hallway_anchor",
+  "stairs",
+  "elevator",
+  "anchor",
+  "exit",
+]);
+
 /**
  * Validate a parsed QR payload.
  *
@@ -32,10 +58,6 @@ const INDOOR_ANCHOR_ROLES = new Set([
  */
 export function validateQrAnchor(payload, activeGraphRev = GRAPH_REV) {
   if (!payload) return { ok: false, reason: "empty_qr" };
-
-  if (Number(payload.version) !== 3) {
-    return { ok: false, reason: "unsupported_qr" };
-  }
 
   if (payload.qr_deployed === false) {
     return { ok: false, reason: "inactive_qr" };
@@ -51,8 +73,21 @@ export function validateQrAnchor(payload, activeGraphRev = GRAPH_REV) {
   }
 
   const role = String(payload.role || payload.type || "").toLowerCase();
+
+  // Building is required for all known indoor/entrance roles
+  if (ROLES_NEEDING_BUILDING.has(role) && !payload.building) {
+    return { ok: false, reason: "missing_building" };
+  }
+
+  // Floor is required for all routing roles (entrance is exempt —
+  // the user just needs to get inside, floor can be inferred from the scan)
+  if (ROLES_NEEDING_FLOOR.has(role) && !payload.floor) {
+    return { ok: false, reason: "missing_floor" };
+  }
+
+  // x/y coordinates required for precise indoor anchor roles
   const needsIndoorXY =
-    INDOOR_ANCHOR_ROLES.has(role) || payload.requires_scan === true;
+    ROLES_NEEDING_INDOOR_XY.has(role) || payload.requires_scan === true;
 
   if (needsIndoorXY) {
     const x = Number(payload.x);
@@ -62,13 +97,13 @@ export function validateQrAnchor(payload, activeGraphRev = GRAPH_REV) {
       !Number.isFinite(y) ||
       (x === 0 && y === 0)
     ) {
-      return { ok: false, reason: "missing_xy" };
+      return { ok: false, reason: "invalid_indoor_anchor" };
     }
   }
 
   return { ok: true };
 }
- 
+
 /**
  * Returns a user-friendly message for a validation failure reason.
  */
