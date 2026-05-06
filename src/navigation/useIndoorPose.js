@@ -57,6 +57,7 @@ const MAG_INTERVAL_MS = 200;
  
 export function useIndoorPose({ anchorPose, isActive }) {
   const [pose, setPose] = useState(anchorPose || null);
+  const [pdrStepCount, setPdrStepCount] = useState(0);
  
   // Refs for sensor state (avoid re-render on every sensor tick)
   const poseRef = useRef(anchorPose || null);
@@ -199,7 +200,6 @@ export function useIndoorPose({ anchorPose, isActive }) {
     };
   }, [isActive]);
  
-  const [pdrStepCount, setPdrStepCount] = useState(0);
   const resetPose = useCallback((newAnchorPose) => {
     if (!newAnchorPose) return;
     poseRef.current = { ...newAnchorPose, source: "qr" };
