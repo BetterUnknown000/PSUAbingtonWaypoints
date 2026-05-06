@@ -14,7 +14,8 @@ import {
   getCachedGraph,
   setCachedGraph,
 } from './campusDataLoader';
-// Bug 11: single canonical distanceXY — returns Infinity on invalid input.
+// distanceXY returns Infinity on invalid/missing coordinates, which lets
+// callers use Number.isFinite() to safely detect unusable values.
 import { distanceXY } from './indoorLocation';
 
 function normalize(value) {
@@ -123,13 +124,18 @@ export function buildGraph(options = {}) {
 
     const weight = estimateEdgeWeight(fromWp, toWp, edge);
 
-    addDirectedEdge(graph, fromId, toId, weight + transitPenalty(fromWp), {
+    // Penalize entering a room-like destination so A* avoids routing through
+    // classrooms, offices, etc. as transit nodes. The cost is on toWp (the
+    // destination of each directed edge) so the penalty fires on entry, not
+    // departure — this way a path that starts from a room node doesn't
+    // incorrectly inherit a 10,000-unit departure penalty.
+    addDirectedEdge(graph, fromId, toId, weight + transitPenalty(toWp), {
       accessible: isAccessibleEdge(edge, fromWp, toWp),
       type: edge.type || null,
     });
 
     if (isBidirectional(edge)) {
-      addDirectedEdge(graph, toId, fromId, weight + transitPenalty(toWp), {
+      addDirectedEdge(graph, toId, fromId, weight + transitPenalty(fromWp), {
         accessible: isAccessibleEdge(edge, fromWp, toWp),
         type: edge.type || null,
       });
