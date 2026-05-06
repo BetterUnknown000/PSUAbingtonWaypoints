@@ -96,16 +96,15 @@ async function fetchOrsMatrix({ userGps, candidates, apiBaseUrl, timeoutMs }) {
         [Number(userGps.longitude), Number(userGps.latitude)],
         ...candidates.map((e) => [e._routeLng, e._routeLat]),
       ],
-      sources: ["0"],
-      destinations: candidates.map((_, i) => String(i + 1)),
+      sources: [0],
+      destinations: candidates.map((_, i) => i + 1),
       metrics: ["distance", "duration"],
     };
 
-    const response = await fetch(`${ORS_BASE}/matrix/foot-walking`, {
+    const response = await fetch(`${apiBaseUrl}/ors/matrix`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        "Authorization": ORS_KEY,
       },
       body: JSON.stringify(body),
       signal: controller.signal,
