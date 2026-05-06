@@ -6,8 +6,8 @@
  * Falls back to haversine if the proxy is unavailable.
  */
 
-const ORS_BASE = "https://api.heigit.org/openrouteservice/v2";
-const ORS_KEY  = process.env.EXPO_PUBLIC_ORS_API_KEY || "";
+// ORS calls are proxied through the app's own backend (apiBaseUrl/ors/matrix).
+// No direct ORS key or base URL is needed here.
 
 export async function rankEntrances({
   userGps,
