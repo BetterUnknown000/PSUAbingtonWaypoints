@@ -213,7 +213,7 @@ export function navReducer(state, event) {
           };
         }
  
-        // Scanning a vertical waypoint — start floor transfer
+        // Scanning a vertical waypoint — start floor transfer, preserving type
         if (isVertical) {
           return {
             ...state,
@@ -221,7 +221,7 @@ export function navReducer(state, event) {
             currentWaypointId: qr.waypointId || qr.waypoint_id,
             currentFloor: qr.floor,
             anchorPose: buildAnchorPose(qr),
-            expectedQrRole: null,
+            expectedQrRole: isStairs ? "stairs" : "elevator",
             nextRequiredAnchorId: null,
           };
         }
@@ -293,7 +293,7 @@ export function navReducer(state, event) {
       return {
         ...state,
         mode: NavMode.AWAIT_SCAN_ANCHOR,
-        expectedQrRole: "stairs",
+        expectedQrRole: state.expectedQrRole || "stairs",
         pendingFloorTarget: event.targetFloor || null,
       };
     }
