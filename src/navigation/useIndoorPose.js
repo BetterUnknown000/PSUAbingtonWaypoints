@@ -28,7 +28,7 @@ import { writeLog } from "../utils/logger";
 // The old value of 3.5 was ~4.4× too low, causing livePose to lag far behind
 // the user's real position and making proximity-based waypoint detection fire
 // 3+ steps too late.
-const MAP_PIXELS_PER_METER = 100;
+const MAP_PIXELS_PER_METER = 15.4;
  
 // Step detection — vertical acceleration spike threshold (m/s²)
 // Step detection threshold — works on both iOS (G-force units ~0-2) and Android (m/s² ~0-20).
