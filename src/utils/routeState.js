@@ -48,7 +48,12 @@ export function getNextWaypointId(pathIds = [], currentWaypointId) {
       if (i < pathIds.length - 1) {
         const prev = getWaypointById(pathIds[i - 1]);
         const next = getWaypointById(pathIds[i + 1]);
-        if (prev && wp && next) {
+        if (
+          prev && wp && next &&
+          prev.x != null && prev.y != null &&
+          wp.x   != null && wp.y   != null &&
+          next.x != null && next.y != null
+        ) {
           const dx1 = Number(wp.x) - Number(prev.x);
           const dy1 = Number(wp.y) - Number(prev.y);
           const dx2 = Number(next.x) - Number(wp.x);
