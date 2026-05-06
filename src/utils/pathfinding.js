@@ -7,18 +7,22 @@ import {
   getAllRooms,
 } from './campusDataLoader';
 import { findRoom } from "./findRoom";
-// Bug 9: use the single canonical buildGraph and buildSameFloorGraph from buildGraph.js
-// instead of a local duplicate that can drift.
+
 import { buildGraph, buildSameFloorGraph as buildSameFloorGraphFromModule } from "./buildGraph";
 import { aStar } from "./astar";
 import {
   getBuildingById,
 } from "./qrWaypointLookup";
 import { isNearDestinationBuilding } from "./location";
-// Bug 11: consolidated distanceXY — returns Infinity on invalid input
+
 import { distanceXY } from "./indoorLocation";
-// Bug 7: getNextWaypointId and isAtDestination come from routeState.js (no circular dep)
+
 import { getNextWaypointId, isAtDestination } from "./routeState";
+// buildStepInstructions is imported at the top level to replace the
+// dynamic require() calls that mixed CJS and ESM in the same file.
+// routeSteps imports only pure utilities from pathfinding (no callbacks
+// back into buildStepInstructions), so the circular reference is safe.
+import { buildStepInstructions } from "./routeSteps";
 
 function normalize(value) {
   return String(value || "").trim().toLowerCase();
@@ -112,8 +116,6 @@ export function estimateTotalDistance(pathIds = []) {
 
   return total;
 }
-
-// Bug 9: private buildSameFloorGraph removed — delegate to the canonical
 // buildSameFloorGraphFromModule imported from buildGraph.js so both code paths
 // stay in sync.
 function buildSameFloorGraph({ buildingId, floor, accessibleOnly = false, stairsOnly = false }) {
@@ -166,9 +168,7 @@ function rerouteSameFloorFromWaypoint(
   const result = aStar(graph, startWaypointId, destinationWaypointId);
   const path = result.path || [];
 
-  // Bug 7: getNextWaypointId and isAtDestination are now top-level ES imports.
-  const { buildStepInstructions } = require("./routeSteps");
-
+  
   const steps = buildStepInstructions(path);
   const nextWaypointId =
     path.length > 1 ? path[1] : null;
@@ -471,8 +471,6 @@ export function rerouteFromWaypoint(startWaypointId, destinationWaypointId, opti
     };
   }
 
-  // Bug 7: getNextWaypointId and isAtDestination are now top-level ES imports.
-  const { buildStepInstructions } = require("./routeSteps");
 
   const buildingId =
     options.buildingId ||
@@ -810,8 +808,6 @@ export function findNearestExitRoute(currentWaypointId, currentBuildingId, optio
   const entrances = getBuildingEntrances(currentBuildingId);
   const entranceIds = entrances.map((w) => w.id);
 
-  // Bug 7: getNextWaypointId and isAtDestination are now top-level ES imports.
-  const { buildStepInstructions } = require("./routeSteps");
 
   if (!currentWaypointId || !currentBuildingId || entranceIds.length === 0) {
     return {
