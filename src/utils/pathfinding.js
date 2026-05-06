@@ -11,7 +11,6 @@ import { buildGraph } from "./buildGraph";
 import { aStar } from "./astar";
 import {
   getBuildingById,
-  isAtBuildingEntrance,
 } from "./qrWaypointLookup";
 import { isNearDestinationBuilding } from "./location";
 
@@ -60,8 +59,15 @@ export function getRoomFloor(buildingId, roomNumber) {
 }
 
 export function getEdgeDistance(fromId, toId, buildingId) {
-  if (!buildingId) return 0;
-  const graph = buildGraph({ buildingId });
+  // Auto-detect buildingId from the waypoints if the caller didn't supply it.
+  // routeSteps.js calls this without buildingId, which previously caused
+  // buildGraph() to bail out early and always return 0 for every step distance.
+  const effectiveBuildingId =
+    buildingId ||
+    getWaypointById(fromId)?.building ||
+    getWaypointById(toId)?.building;
+  if (!effectiveBuildingId) return 0;
+  const graph = buildGraph({ buildingId: effectiveBuildingId });
   const edge = (graph[fromId] || []).find((n) => n.id === toId);
   return edge ? Number(edge.weight || 0) : 0;
 }
@@ -222,7 +228,7 @@ function rerouteSameFloorFromWaypoint(
 
   return {
     path,
-    steps: [],
+    steps,
     distance: estimateTotalDistance(path),
     nextWaypoint: nextWaypointId ? getWaypointById(nextWaypointId) : null,
     arrived: path.length === 1 && path[0] === startWaypointId,
