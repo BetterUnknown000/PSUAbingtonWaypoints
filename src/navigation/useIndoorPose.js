@@ -244,8 +244,7 @@ export function computeMapBearing(fromPose, toWaypoint) {
     !toWaypoint ||
     toWaypoint.x == null ||
     toWaypoint.y == null ||
-    Number(toWaypoint.x) === 0 ||
-    Number(toWaypoint.y) === 0
+    (Number(toWaypoint.x) === 0 && Number(toWaypoint.y) === 0)
   ) {
     return null;
   }
