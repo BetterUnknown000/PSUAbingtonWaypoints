@@ -162,7 +162,7 @@ export function navReducer(state, event) {
  
       const scannedBuildingId = qr.building || qr.buildingId || null;
       const scannedType = String(qr.type || "").toLowerCase();
-      const scannedRole = qr.role || scannedType;
+      const scannedRole = String(qr.role || scannedType).toLowerCase();
       const isEntrance = scannedRole === "entrance" ||
         scannedType === "entrance";
       const isStairs = scannedRole === "stairs" ||
@@ -303,7 +303,7 @@ export function navReducer(state, event) {
         mode: NavMode.AWAIT_SCAN_ANCHOR,
         nextRequiredAnchorId: event.anchorWaypointId,
         expectedQrRole: event.anchorType || null,
-        pendingFloorTarget: event.targetFloor || null,
+        pendingFloorTarget: event.targetFloor != null ? event.targetFloor : null,
       };
     }
  
@@ -318,7 +318,7 @@ export function navReducer(state, event) {
         ...state,
         mode: NavMode.AWAIT_SCAN_ANCHOR,
         expectedQrRole: state.expectedQrRole || "stairs",
-        pendingFloorTarget: event.targetFloor || null,
+        pendingFloorTarget: event.targetFloor != null ? event.targetFloor : null,
         currentFloor: arrivedFloor,
         anchorPose: state.anchorPose
           ? { ...state.anchorPose, floor: arrivedFloor }
