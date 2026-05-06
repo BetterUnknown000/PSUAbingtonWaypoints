@@ -161,25 +161,25 @@ export async function loadReferenceImageDatabase() {
     for (const wp of getBuildingWaypoints(building.id)) {
       if (!wp.photo || !imageMap[wp.photo]) continue;
 
-    try {
-      const asset = Asset.fromModule(imageMap[wp.photo]);
-      await asset.downloadAsync();
+      try {
+        const asset = Asset.fromModule(imageMap[wp.photo]);
+        await asset.downloadAsync();
 
-      const uri = asset.localUri || asset.uri;
-      const fingerprint = await uriToFingerprint(uri);
+        const uri = asset.localUri || asset.uri;
+        const fingerprint = await uriToFingerprint(uri);
 
-      refs.push({
-        waypoint_id: wp.id,
-        label: wp.label,
-        building: wp.building,
-        floor: wp.floor,
-        photo: wp.photo,
-        fingerprint,
-      });
-    } catch (err) {
-      console.warn(`Reference load failed for ${wp.id}:`, err.message);
-    }
-  }   // end waypoint loop
+        refs.push({
+          waypoint_id: wp.id,
+          label: wp.label,
+          building: wp.building,
+          floor: wp.floor,
+          photo: wp.photo,
+          fingerprint,
+        });
+      } catch (err) {
+        console.warn(`Reference load failed for ${wp.id}:`, err.message);
+      }
+    }   // end waypoint loop
   }   // end building loop
 
   referenceDb = refs;
