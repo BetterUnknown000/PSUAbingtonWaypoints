@@ -446,9 +446,15 @@ export function getScanPromptMessage(navState) {
           ? `🛗 Take the elevator to floor ${target} and scan the QR code when you arrive.`
           : `🛗 Take the elevator and scan the QR code at your destination floor.`;
       }
+      const currentFloorNum = Number(navState.currentFloor);
+      const targetFloorNum  = Number(target);
+      const isDescending =
+        Number.isFinite(currentFloorNum) &&
+        Number.isFinite(targetFloorNum) &&
+        targetFloorNum < currentFloorNum;
       return target
-        ? `🪜 Climb to floor ${target} — scan the QR code at each staircase landing on the way up.`
-        : `🪜 Climb the stairs and scan the QR code at each landing to continue.`;
+        ? `🪜 ${isDescending ? 'Descend' : 'Climb'} to floor ${target} — scan the QR code at each staircase landing on the way ${isDescending ? 'down' : 'up'}.`
+        : `🪜 Use the stairs and scan the QR code at each landing to continue.`;
     }
     default:
       return null;
