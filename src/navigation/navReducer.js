@@ -197,8 +197,8 @@ export function navReducer(state, event) {
         state.mode === NavMode.AWAIT_SCAN_ANCHOR
       ) {
         // Scanning an exit — go back outdoors.
-        // Bug 1: guard against null destinationBuildingId; without this check
-        // any entrance scan while destination is unset triggers OUTDOOR_ROUTE.
+        // Guard against null destinationBuildingId: an entrance scan while
+        // destination is unset should not trigger OUTDOOR_ROUTE.
         if (
           isEntrance &&
           state.destinationBuildingId != null &&
@@ -244,9 +244,9 @@ export function navReducer(state, event) {
  
       // ── Vertical transfer — waiting for floor QR ──
       if (state.mode === NavMode.VERTICAL_TRANSFER) {
-        // Bug 5: entrance QRs must be from the correct building; otherwise an
-        // accidental scan of a nearby building's entrance would resume indoor
-        // navigation with a mismatched anchor.
+        // Entrance QRs must be from the correct building; an accidental scan of
+        // a nearby building's entrance would otherwise resume indoor navigation
+        // with a mismatched anchor.
         if (isVertical || (isEntrance && isCorrectBuilding)) {
           return {
             ...state,
@@ -278,7 +278,7 @@ export function navReducer(state, event) {
         return state;
       }
 
-      // ── Bug 2: Emergency idle — any QR scan starts emergency routing ──
+      // ── Emergency idle — any QR scan starts emergency routing ──
       if (state.mode === NavMode.EMERGENCY_IDLE) {
         return {
           ...state,
@@ -309,8 +309,8 @@ export function navReducer(state, event) {
  
     case NavEvent.VERTICAL_TRANSFER_COMPLETE: {
       if (state.mode !== NavMode.VERTICAL_TRANSFER) return state;
-      // Bug 6: update currentFloor and anchorPose so the app's floor model
-      // doesn't remain on the old floor until the user scans a QR.
+      // Update currentFloor and anchorPose immediately so the app's floor model
+      // reflects the new floor before the user scans the landing QR.
       const arrivedFloor = event.targetFloor != null
         ? String(event.targetFloor)
         : state.currentFloor;
@@ -438,7 +438,7 @@ export function getScanPromptMessage(navState) {
       return "📷 Scan the QR code here to continue.";
     }
     case NavMode.VERTICAL_TRANSFER: {
-      // Bug 3: use the correct emoji and verb for elevator vs stairs.
+      // Use the correct emoji and verb for elevator vs stairs.
       const target = navState.pendingFloorTarget;
       const isElevatorMode = navState.expectedQrRole === "elevator";
       if (isElevatorMode) {
