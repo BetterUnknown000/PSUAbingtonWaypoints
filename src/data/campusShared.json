@@ -18,7 +18,8 @@
         "wp_suth_entrance_B",
         "wp_suth_entrance_c",
         "wp_suth_entrance_back_left",
-        "wp_suth_f1_back_entrance"
+        "wp_suth_f1_back_entrance",
+        "wp_suth_room_008_second_entrance"
       ]
     },
     {
@@ -35,7 +36,10 @@
         "wp_wood_library_entrance",
         "wp_wood_f1_entrance_side_1",
         "wp_wood_f1_entrance_side_2",
-        "wp_wood_f1_entrance_side_3"
+        "wp_wood_f1_entrance_side_3",
+        "wp_wood_f3_outside",
+        "wp_wood_f1_entrance_side_4",
+        "wp_wood_front_entrance"
       ]
     },
     {
@@ -49,7 +53,12 @@
       ],
       "entrances": [
         "wp_lares_main_entrance",
-        "wp_lares_side_entrance"
+        "wp_lares_side_entrance",
+        "wp_lares_ground_entrance",
+        "wp_lares_north_entrance",
+        "wp_lares_side_entrance_2",
+        "wp_lares_front_entrance",
+        "wp_lares_back_entrance"
       ]
     },
     {
@@ -62,7 +71,9 @@
         "1"
       ],
       "entrances": [
-        "wp_rydal_main_entrance"
+        "wp_rydal_main_entrance",
+        "wp_rydal_f1_main_entrance",
+        "wp_rydal_f1_other_entrance"
       ]
     },
     {
@@ -74,7 +85,9 @@
         "1"
       ],
       "entrances": [
-        "wp_spring_entrance"
+        "wp_spring_entrance",
+        "wp_spring_100_outside",
+        "wp_spring_100_inside"
       ]
     },
     {
@@ -347,7 +360,9 @@
       "label": "Woodland Side Entrance 4",
       "type": "entrance",
       "x": 294.7,
-      "y": 757.5
+      "y": 757.5,
+      "latitude": 40.11661,
+      "longitude": -75.11115
     },
     {
       "id": "wp_wood_front_entrance",
@@ -356,7 +371,9 @@
       "label": "Front Entrance",
       "type": "entrance",
       "x": 490.1,
-      "y": 227.7
+      "y": 227.7,
+      "latitude": 40.11714,
+      "longitude": -75.11104
     },
     {
       "id": "wp_lares_ground_entrance",
@@ -429,7 +446,9 @@
       "label": "Main Entrance",
       "type": "entrance",
       "x": 281.5,
-      "y": 476.2
+      "y": 476.2,
+      "latitude": 40.11588,
+      "longitude": -75.11226
     },
     {
       "id": "wp_rydal_f1_other_entrance",
