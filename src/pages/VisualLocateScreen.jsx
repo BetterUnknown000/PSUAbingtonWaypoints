@@ -15,7 +15,7 @@ import {
   loadReferenceImageDatabase,
   identifyLocationFromFrame,
 } from "../utils/imageRecognition";
-import campusData from "../data/campusData.json";
+import { getWaypointById } from "../utils/campusDataLoader";
 
 const PSU = {
   blue: "#001E44",
@@ -90,9 +90,7 @@ export default function VisualLocateScreen({ route, navigation }) {
         return;
       }
 
-      const matchedWaypoint = (campusData.waypoints || []).find(
-        (waypoint) => waypoint.id === waypointId
-      );
+      const matchedWaypoint = getWaypointById(waypointId);
 
       if (!matchedWaypoint) {
         setLastResult(null);
