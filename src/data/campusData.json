@@ -606,8 +606,8 @@
       "type": "entrance",
       "latitude": 40.1159,
       "longitude": -75.11217,
-      "x": 279.18,
-      "y": 475.74,
+      "x": 279.2,
+      "y": 475.7,
       "qr_code": "QR_RYDAL_GND_MAIN_ENTRANCE",
       "requires_scan": true,
       "stop_radius_m": 5
@@ -1741,10 +1741,10 @@
       "stop_radius_m": 3
     },
     {
-      "id": "wp_wood_f2_staircase",
+      "id": "wp_wood_f2_staircase_a",
       "building": "woodland",
       "floor": "2",
-      "label": "F2 Large Staircase",
+      "label": "Woodland F2 Staircase A",
       "type": "stairs",
       "latitude": 40.117073,
       "longitude": -75.110918,
@@ -4468,10 +4468,12 @@
       "id": "wp_wood_front_entrance",
       "building": "woodland",
       "floor": "2",
-      "label": "Front Entrance",
+      "label": "Woodland Front Entrance",
       "type": "entrance",
       "x": 490.1,
-      "y": 227.7
+      "y": 227.7,
+      "latitude": 40.11714,
+      "longitude": -75.11104
     },
     {
       "id": "wp_wood_219a",
@@ -5614,7 +5616,9 @@
       "label": "Main Entrance",
       "type": "entrance",
       "x": 281.5,
-      "y": 476.2
+      "y": 476.2,
+      "latitude": 40.11588,
+      "longitude": -75.11226
     },
     {
       "id": "wp_rydal_105A",
@@ -6503,8 +6507,8 @@
       "floor": "ground",
       "label": "Room 012",
       "type": "classroom",
-      "x": 407,
-      "y": 600.6
+      "x": 394,
+      "y": 576.6
     },
     {
       "id": "wp_suth_008",
@@ -6516,22 +6520,15 @@
       "y": 604.6
     },
     {
-      "id": "wp_suth_b_entrance_a",
-      "building": "sutherland",
-      "floor": "ground",
-      "label": "Sutherland B Entrance A",
-      "type": "entrance",
-      "x": 137,
-      "y": 942
-    },
-    {
       "id": "wp_suth_b_entrance_b",
       "building": "sutherland",
       "floor": "ground",
       "label": "Sutherland B Entrance B",
       "type": "entrance",
       "x": 198,
-      "y": 703
+      "y": 703,
+      "latitude": 40.11559,
+      "longitude": -75.10899
     },
     {
       "id": "wp_suth_b_entrance_c",
@@ -6540,16 +6537,9 @@
       "label": "Sutherland B Entrance C",
       "type": "entrance",
       "x": 351,
-      "y": 833
-    },
-    {
-      "id": "wp_suth_b_entrance_d",
-      "building": "sutherland",
-      "floor": "ground",
-      "label": "Sutherland B Entrance D",
-      "type": "entrance",
-      "x": 480,
-      "y": 653
+      "y": 833,
+      "latitude": 40.11533,
+      "longitude": -75.10874
     },
     {
       "id": "wp_suth_auditorium",
@@ -6557,8 +6547,8 @@
       "floor": "ground",
       "label": "Sutherland Auditorium",
       "type": "hall",
-      "x": 275,
-      "y": 770
+      "x": 235,
+      "y": 728
     },
     {
       "id": "wp_suth_010",
@@ -6770,7 +6760,7 @@
     },
     {
       "from": "wp_wood_f1_staircase_a",
-      "to": "wp_wood_f2_staircase",
+      "to": "wp_wood_f2_staircase_a",
       "accessible": false
     },
     {
@@ -7089,7 +7079,7 @@
       "accessible": true
     },
     {
-      "from": "wp_wood_f2_staircase",
+      "from": "wp_wood_f2_staircase_a",
       "to": "wp_wood_f3_outside",
       "accessible": false
     },
@@ -8174,12 +8164,12 @@
       "accessible": true
     },
     {
-      "from": "wp_wood_f2_staircase",
+      "from": "wp_wood_f2_staircase_a",
       "to": "wp_wood_front_entrance",
       "accessible": true
     },
     {
-      "from": "wp_wood_f2_staircase",
+      "from": "wp_wood_f2_staircase_a",
       "to": "wp_wood_f2_hall_11",
       "accessible": true
     },
@@ -11525,16 +11515,6 @@
       "accessible": true
     },
     {
-      "from": "wp_suth_b_entrance_a",
-      "to": "wp_suth_010",
-      "accessible": true
-    },
-    {
-      "from": "wp_suth_b_entrance_a",
-      "to": "wp_suth_011",
-      "accessible": true
-    },
-    {
       "from": "wp_suth_011",
       "to": "wp_suth_auditorium",
       "accessible": true
@@ -11560,11 +11540,6 @@
       "accessible": true
     },
     {
-      "from": "wp_suth_b_entrance_b",
-      "to": "wp_suth_009",
-      "accessible": true
-    },
-    {
       "from": "wp_suth_009",
       "to": "wp_suth_012",
       "accessible": true
@@ -11572,11 +11547,6 @@
     {
       "from": "wp_suth_008",
       "to": "wp_suth_012",
-      "accessible": true
-    },
-    {
-      "from": "wp_suth_012",
-      "to": "wp_suth_b_entrance_d",
       "accessible": true
     },
     {
@@ -14305,7 +14275,7 @@
     },
     {
       "qr_id": "QR_WOOD_F2_STAIRCASE",
-      "waypoint_id": "wp_wood_f2_staircase",
+      "waypoint_id": "wp_wood_f2_staircase_a",
       "building": "woodland",
       "floor": "2"
     },
