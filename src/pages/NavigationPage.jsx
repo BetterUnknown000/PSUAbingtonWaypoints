@@ -30,6 +30,7 @@ import {
 import {
   getAllBuildings,
   getAllRooms,
+  getAllEntrances,
   getWaypointById,
   getWaypointById as _getWpById,
   preloadBuilding,
@@ -305,13 +306,24 @@ export default function NavigationPage({ route, navigation }) {
 
     if (!startWaypointId && !startQrId) return null;
 
-    return (
-      (getAllRooms() || []).find((waypoint) => {
-        return (
-          waypoint.id === startWaypointId || waypoint.qr_code === startQrId
-        );
-      }) || null
-    );
+    // Fast path: direct ID lookup searches all loaded building waypoints
+    // and falls back to shared entrances. getAllRooms() only contains
+    // destination rooms — entrance/hallway/stairs waypoints are never there.
+    if (startWaypointId) {
+      const byId = getWaypointById(startWaypointId);
+      if (byId) return byId;
+    }
+
+    // Fallback: scan shared entrances by qr_code for legacy QR codes that
+    // carry only a qr_id (no waypoint_id).
+    if (startQrId) {
+      const byQrCode = getAllEntrances().find(
+        (wp) => wp.qr_code === startQrId
+      );
+      if (byQrCode) return byQrCode;
+    }
+
+    return null;
   }, [route.params]);
 
   const [permission, requestPermission] = useCameraPermissions();
@@ -1522,6 +1534,7 @@ export default function NavigationPage({ route, navigation }) {
     accessibilityMode,
     emergencyMode,
     preferencesReady,
+    navState.mode,
   ]);
 
   useEffect(() => {
@@ -2567,17 +2580,7 @@ export default function NavigationPage({ route, navigation }) {
                 style={s.outdoorPrimaryBtn}
                 onPress={() =>
                   navigation.navigate("VisualLocateScreen", {
-                    returnScreen: route.name || "NavigationPage",
-                    returnRouteKey: route.key,
-                    returnParams: {
-                      destination,
-                      accessibilityMode: route.params?.accessibilityMode,
-                      emergencyMode: route.params?.emergencyMode,
-                    },
-                  })
-                }
-              >
-                <Text style={s.outdoorPrimaryBtnText}>Locate</Text>
+                    returnScreen: route.name || "Navigation",
               </Pressable>
 
               <Pressable
@@ -2844,7 +2847,7 @@ export default function NavigationPage({ route, navigation }) {
                       return;
                     }
                     navigation.navigate("VisualLocateScreen", {
-                      returnScreen: route.name || "NavigationPage",
+                      returnScreen: route.name || "Navigation",
                       returnRouteKey: route.key,
                       returnParams: {
                         destination,
