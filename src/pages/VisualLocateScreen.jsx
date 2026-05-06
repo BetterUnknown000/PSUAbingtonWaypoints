@@ -112,6 +112,10 @@ export default function VisualLocateScreen({ route, navigation }) {
       const returnKey = route.params?.returnRouteKey;
       const returnParams = route.params?.returnParams || {};
 
+      // Bug 4: `pop: true` is not a recognised option for navigation.navigate()
+      // and is silently ignored, leaving VisualLocateScreen in the history.
+      // Navigating to an existing screen by key focuses it and implicitly pops
+      // everything above it — no extra pop() call is needed.
       navigation.navigate({
         key: returnKey,
         name: route.params?.returnScreen || "Navigation",
@@ -120,7 +124,6 @@ export default function VisualLocateScreen({ route, navigation }) {
           visualLocateResult: payload,
         },
         merge: true,
-        pop: true,
       });
     } catch (error) {
       setStatus(`Visual locate failed: ${error?.message || "unknown error"}`);
