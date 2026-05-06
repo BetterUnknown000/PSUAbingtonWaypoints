@@ -1,6 +1,6 @@
 import { getWaypointById } from "./qrWaypointLookup";
-// Bug 11: use the single canonical distanceXY (returns Infinity on invalid input).
-// The heuristic guards with Number.isFinite() so Infinity is handled correctly.
+// distanceXY returns Infinity on missing/invalid coordinates; the heuristic
+// guards with Number.isFinite() so Infinity propagates cleanly without NaN.
 import { distanceXY } from "./indoorLocation";
 
 function normalize(value) {
