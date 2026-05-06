@@ -715,9 +715,11 @@ export default function NavigationPage({ route, navigation }) {
       !destinationBuildingId ||
       normalize(currentBuildingId) === normalize(destinationBuildingId)
     ) {
-      if (pendingTransitionType === "exit") {
-        setPendingTransitionType(null);
-      }
+      // Use functional form so we only update state when it actually changes.
+      // Calling setPendingTransitionType(null) unconditionally here would still
+      // cause a re-render if the dep array is wrong; the functional form prevents
+      // unnecessary renders when the value is already null.
+      setPendingTransitionType((prev) => (prev === "exit" ? null : prev));
       return;
     }
 
@@ -742,7 +744,10 @@ export default function NavigationPage({ route, navigation }) {
     destinationBuilding,
     destinationRoom,
     currentBuildingEntranceWaypoints,
-    pendingTransitionType,
+    // NOTE: pendingTransitionType intentionally omitted — including it caused an
+    // infinite loop: setPendingTransitionType(null) → re-render → effect fires
+    // again → setPendingTransitionType(null) → ... ("Maximum update depth exceeded").
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   ]);
   
   // ─── Ranked entrance selection using real walking distance ───────────────
@@ -1543,6 +1548,15 @@ export default function NavigationPage({ route, navigation }) {
     if (!livePose || !currentWaypointId || pathIds.length === 0 || arrived) return;
     if (!nextWaypoint) return;
 
+    // ── VERTICAL_TRANSFER guard ───────────────────────────────────────────────
+    // While climbing stairs or riding the elevator, never auto-advance via
+    // step-count or proximity. The next floor's staircase/elevator landing
+    // often shares the same map x,y as the current one, so the proximity check
+    // would fire immediately and send the app into an oscillation loop between
+    // "scanned staircase" → "approaching staircase" → rescan → repeat.
+    // The ONLY valid advancement trigger during vertical transfer is a QR scan.
+    if (navState.mode === NavMode.VERTICAL_TRANSFER) return;
+
     // Only block advancement if the NEXT waypoint explicitly requires a QR scan
     // AND the user is already within its stop radius (i.e. physically there).
     // Stairs/elevator vertical transitions still require QR scan.
@@ -1654,6 +1668,7 @@ export default function NavigationPage({ route, navigation }) {
     getMetersPerPx,
     pdrStepCount,
     pdrStepAtLastAdvance,
+    navState.mode, // needed for the VERTICAL_TRANSFER guard
   ]);
 
   function showScanBadge(label) {
