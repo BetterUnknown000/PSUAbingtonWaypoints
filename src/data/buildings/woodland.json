@@ -2047,7 +2047,9 @@
       "label": "Woodland Side Entrance 4",
       "type": "entrance",
       "x": 294.7,
-      "y": 757.5
+      "y": 757.5,
+      "latitude": 40.11661,
+      "longitude": -75.11115
     },
     {
       "id": "wp_wood_188a",
@@ -2128,7 +2130,9 @@
       "label": "Front Entrance",
       "type": "entrance",
       "x": 490.1,
-      "y": 227.7
+      "y": 227.7,
+      "latitude": 40.11714,
+      "longitude": -75.11104
     },
     {
       "id": "wp_wood_219a",
