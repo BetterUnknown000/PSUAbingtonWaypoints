@@ -1595,18 +1595,26 @@ export default function NavigationPage({ route, navigation }) {
     }
 
     // ── Step-count-based advancement ──────────────────────────────────────────
-    // Compute pixel distance from current waypoint to next, convert to steps.
-    // This doesn't depend on PDR position — just step count since last advance.
+    // IMPORTANT: nextWaypoint is the skip-ahead *turn point* returned by
+    // getNextWaypointId (it skips straight hallway nodes for display purposes).
+    // Using it for distance would require the user to walk the entire segment to
+    // the turn before any intermediate node advances — causing severe lag.
+    // Always compute distance against the IMMEDIATE next node in pathIds instead.
     const currentWp = getWaypointById(currentWaypointId);
-    const metersPerPx = getMetersPerPx(nextWaypoint.building, nextWaypoint.floor, nextWaypoint);
+    const currentIndex = pathIds.indexOf(currentWaypointId);
+    const nextImmediateId = currentIndex >= 0 ? pathIds[currentIndex + 1] : null;
+    const nextImmediateWp = nextImmediateId ? getWaypointById(nextImmediateId) : null;
+    // Fall back to nextWaypoint only if the path lookup fails
+    const targetWp = nextImmediateWp ?? nextWaypoint;
+    const metersPerPx = getMetersPerPx(targetWp.building, targetWp.floor, targetWp);
     const STRIDE_M = 0.75;
 
     if (
       currentWp?.x != null && currentWp?.y != null &&
-      nextWaypoint?.x != null && nextWaypoint?.y != null
+      targetWp?.x != null && targetWp?.y != null
     ) {
-      const dx = Number(nextWaypoint.x) - Number(currentWp.x);
-      const dy = Number(nextWaypoint.y) - Number(currentWp.y);
+      const dx = Number(targetWp.x) - Number(currentWp.x);
+      const dy = Number(targetWp.y) - Number(currentWp.y);
       const distPx = Math.sqrt(dx * dx + dy * dy);
       const distM = distPx * metersPerPx;
       // Minimum of 1 (not 3) — a floor of 3 forced 2-3 extra steps of overshoot
@@ -1616,7 +1624,7 @@ export default function NavigationPage({ route, navigation }) {
 
       writeLog('ADVANCE_CHECK', {
         currentWaypointId,
-        nextWpId: nextWaypoint.id,
+        nextWpId: targetWp.id,
         distM: distM.toFixed(1),
         stepsNeeded,
         stepsSince: stepsSinceAnchor,
@@ -1624,9 +1632,7 @@ export default function NavigationPage({ route, navigation }) {
       });
 
       if (stepsSinceAnchor >= stepsNeeded) {
-        const currentIndex = pathIds.indexOf(currentWaypointId);
-        const nextPathWaypointId = currentIndex >= 0 ? pathIds[currentIndex + 1] : null;
-        const advanceTo = nextPathWaypointId || nextWaypoint.id;
+        const advanceTo = nextImmediateId || nextWaypoint.id;
         const next = getWaypointById(advanceTo);
 
         writeLog('ADVANCE', { from: currentWaypointId, to: advanceTo, steps: stepsSinceAnchor });
@@ -1643,25 +1649,23 @@ export default function NavigationPage({ route, navigation }) {
     // ── Position-based advancement (proximity) for non-scan waypoints ────────
     // When the next waypoint does NOT require a QR scan, advance automatically
     // once the PDR-estimated position is within the waypoint's stop radius.
-    // This fires in addition to step-count advancement above so the arrow
-    // updates promptly when the user physically reaches a node.
+    // Also uses the immediate next path node (not the skip-ahead turn point) so
+    // proximity fires when the user reaches each individual node, not the turn.
     if (
       nextWaypoint.requires_scan !== true &&
       livePose?.x != null && livePose?.y != null &&
-      nextWaypoint?.x != null && nextWaypoint?.y != null
+      targetWp?.x != null && targetWp?.y != null
     ) {
-      const dx = Number(nextWaypoint.x) - Number(livePose.x);
-      const dy = Number(nextWaypoint.y) - Number(livePose.y);
+      const dx = Number(targetWp.x) - Number(livePose.x);
+      const dy = Number(targetWp.y) - Number(livePose.y);
       const distPx = Math.sqrt(dx * dx + dy * dy);
-      const metersPerPxPos = getMetersPerPx(nextWaypoint.building, nextWaypoint.floor, nextWaypoint);
+      const metersPerPxPos = getMetersPerPx(targetWp.building, targetWp.floor, targetWp);
       const distMPos = distPx * metersPerPxPos;
       // Use stop_radius_m from the waypoint (default 5 m for passive nodes)
-      const stopRPos = Number(nextWaypoint.stop_radius_m ?? 5);
+      const stopRPos = Number(targetWp.stop_radius_m ?? 5);
 
       if (distMPos <= stopRPos) {
-        const currentIndexPos = pathIds.indexOf(currentWaypointId);
-        const nextPathWpId = currentIndexPos >= 0 ? pathIds[currentIndexPos + 1] : null;
-        const advanceTo = nextPathWpId || nextWaypoint.id;
+        const advanceTo = nextImmediateId || nextWaypoint.id;
         const next = getWaypointById(advanceTo);
 
         writeLog('ADVANCE_PROXIMITY', { from: currentWaypointId, to: advanceTo, distM: distMPos.toFixed(1) });
