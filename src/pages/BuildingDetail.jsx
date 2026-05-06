@@ -10,7 +10,7 @@ import {
   Dimensions,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import campusData from "../data/campusData.json";
+import { getAllBuildings } from "../utils/campusDataLoader";
 import { findRoomsByBuilding } from "../utils/findRoom";
 import BottomMenu, { BOTTOM_MENU_HEIGHT } from "../components/BottomMenu";
 
@@ -102,7 +102,7 @@ export default function BuildingDetail({ route, navigation }) {
   const { buildingId } = route.params || {};
 
   const building = useMemo(() => {
-    const all = Array.isArray(campusData?.buildings) ? campusData.buildings : [];
+    const all = getAllBuildings();
     return (
       all.find(
         (b) => String(b.id).toLowerCase() === String(buildingId || "").toLowerCase()
