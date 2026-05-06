@@ -2581,6 +2581,12 @@ export default function NavigationPage({ route, navigation }) {
                 onPress={() =>
                   navigation.navigate("VisualLocateScreen", {
                     returnScreen: route.name || "Navigation",
+                    returnRouteKey: route.key,
+                    returnParams: route.params || {},
+                  })
+                }
+              >
+                <Text style={s.outdoorPrimaryBtnText}>Locate Me Visually</Text>
               </Pressable>
 
               <Pressable
