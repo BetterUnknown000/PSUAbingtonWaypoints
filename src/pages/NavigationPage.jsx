@@ -1609,7 +1609,9 @@ export default function NavigationPage({ route, navigation }) {
       const dy = Number(nextWaypoint.y) - Number(currentWp.y);
       const distPx = Math.sqrt(dx * dx + dy * dy);
       const distM = distPx * metersPerPx;
-      const stepsNeeded = Math.max(3, Math.round(distM / STRIDE_M));
+      // Minimum of 1 (not 3) — a floor of 3 forced 2-3 extra steps of overshoot
+      // on short waypoint segments where the real distance is < 2.25 m.
+      const stepsNeeded = Math.max(1, Math.round(distM / STRIDE_M));
       const stepsSinceAnchor = pdrStepCount - pdrStepAtLastAdvance;
 
       writeLog('ADVANCE_CHECK', {
