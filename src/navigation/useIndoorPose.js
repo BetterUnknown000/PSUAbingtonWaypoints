@@ -28,7 +28,8 @@ import { writeLog } from "../utils/logger";
 // The old value of 3.5 was ~4.4× too low, causing livePose to lag far behind
 // the user's real position and making proximity-based waypoint detection fire
 // 3+ steps too late.
-const MAP_PIXELS_PER_METER = 15.4;
+export const INDOOR_METERS_PER_PIXEL = 0.065;
+export const MAP_PIXELS_PER_METER = 1 / INDOOR_METERS_PER_PIXEL;
  
 // Step detection — vertical acceleration spike threshold (m/s²)
 // Step detection threshold — works on both iOS (G-force units ~0-2) and Android (m/s² ~0-20).
@@ -42,7 +43,7 @@ const STEP_THRESHOLD_ANDROID = 3.0; // fallback for Android if needed
 const STEP_COOLDOWN_MS = 300;
  
 // Average stride length in meters
-const STRIDE_LENGTH_M = 0.75;
+export const INDOOR_STRIDE_LENGTH_M = 0.75;
  
 // How much weight to give magnetometer vs gyroscope heading (0–1)
 // Lower = trust gyroscope more (better indoors where mag is noisy)
@@ -175,7 +176,7 @@ export function useIndoorPose({ anchorPose, isActive }) {
  
         // Move pose forward in current heading direction
         const headingRad = (headingDegRef.current * Math.PI) / 180;
-        const stridePixels = STRIDE_LENGTH_M * MAP_PIXELS_PER_METER;
+        const stridePixels = INDOOR_STRIDE_LENGTH_M * MAP_PIXELS_PER_METER;
  
         const dx = Math.sin(headingRad) * stridePixels;
         const dy = -Math.cos(headingRad) * stridePixels;

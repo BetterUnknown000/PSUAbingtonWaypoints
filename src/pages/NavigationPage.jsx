@@ -46,7 +46,6 @@ import { calculateBearingDegrees } from "../utils/location";
 import {
   advanceRouteIfNeeded,
   getNextWaypointId,
-  advanceRouteIfNeededIndoor,
 } from "../utils/routeSteps";
 import { fetchOrsRoute } from "../utils/orsRouting";
 import {
@@ -59,8 +58,21 @@ import {
   shouldShowScanPrompt,
   getScanPromptMessage,
 } from "../navigation/navReducer";
-import { useIndoorPose, computeMapBearing, computeMapDistance } from "../navigation/useIndoorPose";
+import {
+  useIndoorPose,
+  computeMapBearing,
+  computeMapDistance,
+  INDOOR_METERS_PER_PIXEL,
+  INDOOR_STRIDE_LENGTH_M,
+} from "../navigation/useIndoorPose";
 import { rankEntrances } from "../navigation/rankEntrances";
+import { getIndoorTargetAdvance } from "../utils/indoorRouteAdvance";
+import {
+  getIndoorTriggerRadiusM,
+  INDOOR_PASSIVE_FALLBACK_RADIUS_M,
+  INDOOR_SCAN_FALLBACK_RADIUS_M,
+  INDOOR_VERTICAL_TRIGGER_MIN_M,
+} from "../utils/indoorTriggerRadius";
 import { validateQrAnchor, getValidationMessage } from "../utils/qrPayloadValidation";
 import {
   parseQrPayload,
@@ -69,7 +81,7 @@ import {
   GRAPH_REV,
 } from "../utils/qrPayload";
 
-const DEFAULT_METERS_PER_PX = 0.065; // GPS-calibrated from Woodland entrance pairs (~0.056–0.068 range)
+const DEFAULT_METERS_PER_PX = INDOOR_METERS_PER_PIXEL;
 
 const PSU = {
   blue: "#001E44",
@@ -546,16 +558,13 @@ export default function NavigationPage({ route, navigation }) {
       );
       const distMeters = Number.isFinite(distPx) ? distPx * metersPerPx : Infinity;
 
-      // Use a generous trigger radius for vertical transitions (stairs/elevator).
-      // The user needs to SEE the "scan QR" prompt in time to stop and scan,
-      // so fire earlier than the physical stop_radius_m. Default 3m is too tight
-      // given PDR lag — use 10m for stairs/elevator, fallback to stop_radius_m
-      // for other required-scan nodes (e.g. mandatory hallway anchors).
       const type = String(nextWaypoint.type || "").toLowerCase();
       const isVertical = type === "stairs" || type === "elevator";
-      const triggerRadiusM = isVertical
-        ? Math.max(10, Number(nextWaypoint.stop_radius_m ?? 3))
-        : Number(nextWaypoint.stop_radius_m ?? 3);
+      const triggerRadiusM = getIndoorTriggerRadiusM(
+        nextWaypoint.stop_radius_m,
+        INDOOR_SCAN_FALLBACK_RADIUS_M,
+        isVertical ? INDOOR_VERTICAL_TRIGGER_MIN_M : 0
+      );
 
       return distMeters <= triggerRadiusM;
     }
@@ -622,7 +631,7 @@ export default function NavigationPage({ route, navigation }) {
       const totalDistPx = Math.sqrt(dx * dx + dy * dy);
       const totalDistM = totalDistPx * metersPerPx;
       const stepsSince = Math.max(0, pdrStepCount - pdrStepAtLastAdvance);
-      distM = Math.max(0, totalDistM - stepsSince * 0.75);
+      distM = Math.max(0, totalDistM - stepsSince * INDOOR_STRIDE_LENGTH_M);
     }
 
     // Estimate remaining path distance after the next waypoint
@@ -646,7 +655,10 @@ export default function NavigationPage({ route, navigation }) {
     // Dynamic instruction based on estimated distance to next waypoint
     let instruction = currentStep?.text || stageMessage || "";
     if (distM != null) {
-      const stopRadiusM = Number(nextWp.stop_radius_m ?? 3);
+      const stopRadiusM = getIndoorTriggerRadiusM(
+        nextWp.stop_radius_m,
+        INDOOR_SCAN_FALLBACK_RADIUS_M
+      );
       if (nextWp.requires_scan === true && distM <= stopRadiusM) {
         instruction = `Scan the QR code at ${nextWp.label || "the next anchor"} to continue.`;
       } else if (distM <= Math.max(8, stopRadiusM * 2)) {
@@ -1581,12 +1593,14 @@ export default function NavigationPage({ route, navigation }) {
         const distPxCheck = Math.sqrt(dx * dx + dy * dy);
         const metersPerPxCheck = getMetersPerPx(nextWaypoint.building, nextWaypoint.floor, nextWaypoint);
         const distMCheck = distPxCheck * metersPerPxCheck;
-        const stopR = Number(nextWaypoint.stop_radius_m ?? 3);
-        // Use the same generous trigger radius as nearNextWaypoint so step-count
-        // advancement stops at the same time the "scan QR" prompt appears.
         const typeCheck = String(nextWaypoint.type || "").toLowerCase();
         const isVerticalCheck = typeCheck === "stairs" || typeCheck === "elevator";
-        const blockRadiusM = isVerticalCheck ? Math.max(10, stopR) : stopR * 2;
+        const stopR = getIndoorTriggerRadiusM(
+          nextWaypoint.stop_radius_m,
+          INDOOR_SCAN_FALLBACK_RADIUS_M,
+          isVerticalCheck ? INDOOR_VERTICAL_TRIGGER_MIN_M : 0
+        );
+        const blockRadiusM = isVerticalCheck ? stopR : stopR * 2;
         if (distMCheck <= blockRadiusM) {
           return; // close enough — wait for QR scan
         }
@@ -1607,7 +1621,7 @@ export default function NavigationPage({ route, navigation }) {
     // Fall back to nextWaypoint only if the path lookup fails
     const targetWp = nextImmediateWp ?? nextWaypoint;
     const metersPerPx = getMetersPerPx(targetWp.building, targetWp.floor, targetWp);
-    const STRIDE_M = 0.75;
+    const STRIDE_M = INDOOR_STRIDE_LENGTH_M;
 
     if (
       currentWp?.x != null && currentWp?.y != null &&
@@ -1619,7 +1633,7 @@ export default function NavigationPage({ route, navigation }) {
       const distM = distPx * metersPerPx;
       // Minimum of 1 (not 3) — a floor of 3 forced 2-3 extra steps of overshoot
       // on short waypoint segments where the real distance is < 2.25 m.
-      const stepsNeeded = Math.max(1, Math.round(distM / STRIDE_M));
+      const stepsNeeded = Math.max(1, Math.floor(distM / STRIDE_M));
       const stepsSinceAnchor = pdrStepCount - pdrStepAtLastAdvance;
 
       writeLog('ADVANCE_CHECK', {
@@ -1651,24 +1665,29 @@ export default function NavigationPage({ route, navigation }) {
     // once the PDR-estimated position is within the waypoint's stop radius.
     // Also uses the immediate next path node (not the skip-ahead turn point) so
     // proximity fires when the user reaches each individual node, not the turn.
-    if (
-      nextWaypoint.requires_scan !== true &&
-      livePose?.x != null && livePose?.y != null &&
-      targetWp?.x != null && targetWp?.y != null
-    ) {
-      const dx = Number(targetWp.x) - Number(livePose.x);
-      const dy = Number(targetWp.y) - Number(livePose.y);
-      const distPx = Math.sqrt(dx * dx + dy * dy);
+    if (livePose?.x != null && livePose?.y != null && targetWp?.x != null && targetWp?.y != null) {
       const metersPerPxPos = getMetersPerPx(targetWp.building, targetWp.floor, targetWp);
-      const distMPos = distPx * metersPerPxPos;
-      // Use stop_radius_m from the waypoint (default 5 m for passive nodes)
-      const stopRPos = Number(targetWp.stop_radius_m ?? 5);
+      const advanceDecision = getIndoorTargetAdvance({
+        currentWaypoint: currentWp,
+        targetWaypoint: targetWp,
+        currentPose: livePose,
+        metersPerPx: metersPerPxPos,
+        stopRadiusM: getIndoorTriggerRadiusM(
+          targetWp.stop_radius_m,
+          INDOOR_PASSIVE_FALLBACK_RADIUS_M
+        ),
+      });
 
-      if (distMPos <= stopRPos) {
+      if (advanceDecision.advanced) {
         const advanceTo = nextImmediateId || nextWaypoint.id;
         const next = getWaypointById(advanceTo);
 
-        writeLog('ADVANCE_PROXIMITY', { from: currentWaypointId, to: advanceTo, distM: distMPos.toFixed(1) });
+        writeLog('ADVANCE_PROXIMITY', {
+          from: currentWaypointId,
+          to: advanceTo,
+          distM: advanceDecision.distanceM?.toFixed?.(1),
+          reason: advanceDecision.reason,
+        });
 
         setCurrentWaypointId(advanceTo);
         if (next?.building) setCurrentBuildingId(next.building);

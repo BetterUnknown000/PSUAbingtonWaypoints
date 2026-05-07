@@ -25,8 +25,8 @@
       "type": "hallway",
       "latitude": 40.117091,
       "longitude": -75.110669,
-      "x": 614.8,
-      "y": 242.2,
+      "x": 624.8,
+      "y": 245.2,
       "qr_code": "QR_WOOD_F1_HALL_01",
       "requires_scan": false,
       "stop_radius_m": 3
@@ -39,8 +39,8 @@
       "type": "hallway",
       "latitude": 40.117045,
       "longitude": -75.110636,
-      "x": 669.3,
-      "y": 244.9,
+      "x": 663.3,
+      "y": 246.9,
       "qr_code": "QR_WOOD_F1_HALL_02",
       "requires_scan": false,
       "stop_radius_m": 3
@@ -218,8 +218,8 @@
       "type": "stairs",
       "latitude": 40.116849,
       "longitude": -75.110941,
-      "x": 491.1,
-      "y": 431.7,
+      "x": 500.1,
+      "y": 426.7,
       "qr_code": "QR_WOOD_F1_STAIRS_A",
       "requires_scan": true,
       "stop_radius_m": 3
@@ -414,10 +414,10 @@
       "stop_radius_m": 3
     },
     {
-      "id": "wp_wood_f2_staircase",
+      "id": "wp_wood_f2_staircase_a",
       "building": "woodland",
       "floor": "2",
-      "label": "F2 Large Staircase",
+      "label": "Woodland F2 Staircase A",
       "type": "stairs",
       "latitude": 40.117073,
       "longitude": -75.110918,
@@ -866,8 +866,8 @@
       "type": "entrance",
       "latitude": 40.11672,
       "longitude": -75.11095,
-      "x": 692.1,
-      "y": 251.6,
+      "x": 682.1,
+      "y": 248.6,
       "qr_code": "QR_WOOD_F1_MAIN_ENTRANCE",
       "photo": "../assets/WoodlandImages/Level1_Entry.jpg",
       "approach_latitude": 40.11665,
@@ -2046,10 +2046,10 @@
       "floor": "1",
       "label": "Woodland Side Entrance 4",
       "type": "entrance",
-      "x": 294.7,
-      "y": 757.5,
       "latitude": 40.11661,
-      "longitude": -75.11115
+      "longitude": -75.11115,
+      "x": 294.7,
+      "y": 757.5
     },
     {
       "id": "wp_wood_188a",
@@ -2127,7 +2127,7 @@
       "id": "wp_wood_front_entrance",
       "building": "woodland",
       "floor": "2",
-      "label": "Front Entrance",
+      "label": "Woodland Front Entrance",
       "type": "entrance",
       "x": 490.1,
       "y": 227.7,
@@ -2641,7 +2641,7 @@
     },
     {
       "from": "wp_wood_f1_staircase_a",
-      "to": "wp_wood_f2_staircase",
+      "to": "wp_wood_f2_staircase_a",
       "accessible": false
     },
     {
@@ -2960,7 +2960,7 @@
       "accessible": true
     },
     {
-      "from": "wp_wood_f2_staircase",
+      "from": "wp_wood_f2_staircase_a",
       "to": "wp_wood_f3_outside",
       "accessible": false
     },
@@ -3600,12 +3600,12 @@
       "accessible": true
     },
     {
-      "from": "wp_wood_f2_staircase",
+      "from": "wp_wood_f2_staircase_a",
       "to": "wp_wood_front_entrance",
       "accessible": true
     },
     {
-      "from": "wp_wood_f2_staircase",
+      "from": "wp_wood_f2_staircase_a",
       "to": "wp_wood_f2_hall_11",
       "accessible": true
     },
@@ -5082,7 +5082,7 @@
     },
     {
       "qr_id": "QR_WOOD_F2_STAIRCASE",
-      "waypoint_id": "wp_wood_f2_staircase",
+      "waypoint_id": "wp_wood_f2_staircase_a",
       "building": "woodland",
       "floor": "2"
     },

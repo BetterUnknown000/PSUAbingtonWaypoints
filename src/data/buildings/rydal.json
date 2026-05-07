@@ -21,8 +21,8 @@
       "type": "entrance",
       "latitude": 40.1159,
       "longitude": -75.11217,
-      "x": 279.18,
-      "y": 475.74,
+      "x": 279.2,
+      "y": 475.7,
       "qr_code": "QR_RYDAL_GND_MAIN_ENTRANCE",
       "requires_scan": true,
       "stop_radius_m": 5

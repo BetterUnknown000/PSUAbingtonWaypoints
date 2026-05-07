@@ -83,16 +83,6 @@
       "accessible": true
     },
     {
-      "from": "wp_spring_100_inside",
-      "to": "wp_spring_entrance",
-      "accessible": true
-    },
-    {
-      "from": "wp_spring_entrance",
-      "to": "wp_spring_101",
-      "accessible": true
-    },
-    {
       "from": "wp_spring_entrance",
       "to": "wp_spring_hall",
       "accessible": true

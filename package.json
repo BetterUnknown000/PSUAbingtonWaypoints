@@ -5,6 +5,8 @@
   "main": "node_modules/expo/AppEntry.js",
   "scripts": {
     "start": "expo start",
+    "start:tunnel": "node scripts/startExpoTunnel.js",
+    "start:tunnel:clear": "node scripts/startExpoTunnel.js --clear",
     "android": "expo run:android",
     "ios": "expo run:ios",
     "web": "expo start --web",

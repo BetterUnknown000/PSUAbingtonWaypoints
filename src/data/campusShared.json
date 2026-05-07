@@ -17,9 +17,8 @@
         "wp_suth_ground_entrance",
         "wp_suth_entrance_B",
         "wp_suth_entrance_c",
-        "wp_suth_entrance_back_left",
-        "wp_suth_f1_back_entrance",
-        "wp_suth_room_008_second_entrance"
+        "wp_suth_f1_entrance_d",
+        "wp_suth_f1_entrance_e"
       ]
     },
     {
@@ -36,10 +35,7 @@
         "wp_wood_library_entrance",
         "wp_wood_f1_entrance_side_1",
         "wp_wood_f1_entrance_side_2",
-        "wp_wood_f1_entrance_side_3",
-        "wp_wood_f3_outside",
-        "wp_wood_f1_entrance_side_4",
-        "wp_wood_front_entrance"
+        "wp_wood_f1_entrance_side_3"
       ]
     },
     {
@@ -53,12 +49,7 @@
       ],
       "entrances": [
         "wp_lares_main_entrance",
-        "wp_lares_side_entrance",
-        "wp_lares_ground_entrance",
-        "wp_lares_north_entrance",
-        "wp_lares_side_entrance_2",
-        "wp_lares_front_entrance",
-        "wp_lares_back_entrance"
+        "wp_lares_side_entrance"
       ]
     },
     {
@@ -71,9 +62,7 @@
         "1"
       ],
       "entrances": [
-        "wp_rydal_main_entrance",
-        "wp_rydal_f1_main_entrance",
-        "wp_rydal_f1_other_entrance"
+        "wp_rydal_main_entrance"
       ]
     },
     {
@@ -85,9 +74,7 @@
         "1"
       ],
       "entrances": [
-        "wp_spring_entrance",
-        "wp_spring_100_outside",
-        "wp_spring_100_inside"
+        "wp_spring_entrance"
       ]
     },
     {
@@ -153,8 +140,8 @@
       "type": "entrance",
       "latitude": 40.1159,
       "longitude": -75.11217,
-      "x": 279.18,
-      "y": 475.74,
+      "x": 279.2,
+      "y": 475.7,
       "qr_code": "QR_RYDAL_GND_MAIN_ENTRANCE",
       "requires_scan": true,
       "stop_radius_m": 5
@@ -216,38 +203,10 @@
       "stop_radius_m": 5
     },
     {
-      "id": "wp_suth_room_008_second_entrance",
-      "building": "sutherland",
-      "floor": "ground",
-      "label": "Room 008 Second Entrance",
-      "type": "entrance",
-      "latitude": 40.115691,
-      "longitude": -75.108856,
-      "x": 65.4,
-      "y": 99.8,
-      "qr_code": "QR_SUTH_GND_008_SECOND_ENTRANCE",
-      "requires_scan": true,
-      "stop_radius_m": 5
-    },
-    {
-      "id": "wp_suth_ground_entrance",
-      "building": "sutherland",
-      "floor": "ground",
-      "label": "Sutherland Ground Floor Entrance",
-      "type": "entrance",
-      "latitude": 40.115603,
-      "longitude": -75.108727,
-      "x": 742.1,
-      "y": 889.2,
-      "qr_code": "QR_SUTH_GND_ENTRANCE",
-      "requires_scan": true,
-      "stop_radius_m": 5
-    },
-    {
-      "id": "wp_suth_f1_back_entrance",
+      "id": "wp_suth_f1_entrance_e",
       "building": "sutherland",
       "floor": "1",
-      "label": "Sutherland First Floor Back Entrance",
+      "label": "Sutherland F1 Entrance E",
       "type": "entrance",
       "latitude": 40.115906,
       "longitude": -75.108503,
@@ -296,8 +255,8 @@
       "type": "entrance",
       "latitude": 40.11672,
       "longitude": -75.11095,
-      "x": 692.1,
-      "y": 251.6,
+      "x": 682.1,
+      "y": 248.6,
       "qr_code": "QR_WOOD_F1_MAIN_ENTRANCE",
       "photo": "../assets/WoodlandImages/Level1_Entry.jpg",
       "approach_latitude": 40.11665,
@@ -359,16 +318,16 @@
       "floor": "1",
       "label": "Woodland Side Entrance 4",
       "type": "entrance",
-      "x": 294.7,
-      "y": 757.5,
       "latitude": 40.11661,
-      "longitude": -75.11115
+      "longitude": -75.11115,
+      "x": 294.7,
+      "y": 757.5
     },
     {
       "id": "wp_wood_front_entrance",
       "building": "woodland",
       "floor": "2",
-      "label": "Front Entrance",
+      "label": "Woodland Front Entrance",
       "type": "entrance",
       "x": 490.1,
       "y": 227.7,
@@ -482,15 +441,37 @@
       "y": 139.5
     },
     {
-      "id": "wp_suth_entrance_back_left",
+      "id": "wp_suth_f1_entrance_d",
       "building": "sutherland",
       "floor": "1",
-      "label": "Sutherland Back Left Entrance",
+      "label": "Sutherland F1 Entrance D",
       "type": "entrance",
       "latitude": 40.1158954656637,
       "longitude": -75.10854200847415,
       "x": 605.9,
       "y": 245.6
+    },
+    {
+      "id": "wp_suth_b_entrance_b",
+      "building": "sutherland",
+      "floor": "ground",
+      "label": "Sutherland B Entrance B",
+      "type": "entrance",
+      "x": 198,
+      "y": 703,
+      "latitude": 40.11559,
+      "longitude": -75.10899
+    },
+    {
+      "id": "wp_suth_b_entrance_c",
+      "building": "sutherland",
+      "floor": "ground",
+      "label": "Sutherland B Entrance C",
+      "type": "entrance",
+      "x": 351,
+      "y": 833,
+      "latitude": 40.11533,
+      "longitude": -75.10874
     }
   ],
   "rooms": [
