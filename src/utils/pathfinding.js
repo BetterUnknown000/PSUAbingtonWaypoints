@@ -1,35 +1,33 @@
-import campusData from "../data/campusData.json";
+import {
+  getWaypointById,
+  getBuildingWaypoints,
+  getBuildingEdges,
+  getAllBuildings,
+  getBuildingEntrances,
+  getAllRooms,
+} from './campusDataLoader';
 import { findRoom } from "./findRoom";
-import { buildGraph } from "./buildGraph";
+
+import { buildGraph, buildSameFloorGraph as buildSameFloorGraphFromModule } from "./buildGraph";
 import { aStar } from "./astar";
 import {
   getBuildingById,
-  getBuildingEntrances,
-  getWaypointById,
-  isAtBuildingEntrance,
 } from "./qrWaypointLookup";
 import { isNearDestinationBuilding } from "./location";
+
+import { distanceXY } from "./indoorLocation";
+
+import { getNextWaypointId, isAtDestination } from "./routeState";
+// buildStepInstructions is imported at the top level to replace the
+// dynamic require() calls that mixed CJS and ESM in the same file.
+// routeSteps imports only pure utilities from pathfinding (no callbacks
+// back into buildStepInstructions), so the circular reference is safe.
+import { buildStepInstructions } from "./routeSteps";
 
 function normalize(value) {
   return String(value || "").trim().toLowerCase();
 }
-
-function distanceXY(a, b) {
-  if (
-    !a ||
-    !b ||
-    a.x == null ||
-    a.y == null ||
-    b.x == null ||
-    b.y == null
-  ) {
-    return Infinity;
-  }
-
-  const dx = Number(b.x) - Number(a.x);
-  const dy = Number(b.y) - Number(a.y);
-  return Math.sqrt(dx * dx + dy * dy);
-}
+// distanceXY imported from indoorLocation.js (returns Infinity on invalid input)
 
 function sameFloor(a, b) {
   if (!a || !b) return false;
@@ -54,8 +52,16 @@ export function getRoomFloor(buildingId, roomNumber) {
   return result?.room?.floor || null;
 }
 
-export function getEdgeDistance(fromId, toId) {
-  const graph = buildGraph();
+export function getEdgeDistance(fromId, toId, buildingId) {
+  // Auto-detect buildingId from the waypoints if the caller didn't supply it.
+  // routeSteps.js calls this without buildingId, which previously caused
+  // buildGraph() to bail out early and always return 0 for every step distance.
+  const effectiveBuildingId =
+    buildingId ||
+    getWaypointById(fromId)?.building ||
+    getWaypointById(toId)?.building;
+  if (!effectiveBuildingId) return 0;
+  const graph = buildGraph({ buildingId: effectiveBuildingId });
   const edge = (graph[fromId] || []).find((n) => n.id === toId);
   return edge ? Number(edge.weight || 0) : 0;
 }
@@ -110,53 +116,10 @@ export function estimateTotalDistance(pathIds = []) {
 
   return total;
 }
-
+// buildSameFloorGraphFromModule imported from buildGraph.js so both code paths
+// stay in sync.
 function buildSameFloorGraph({ buildingId, floor, accessibleOnly = false, stairsOnly = false }) {
-  let graph = buildGraph({
-    buildingId,
-    accessibleOnly,
-  });
-
-  if (stairsOnly) {
-    const filtered = {};
-    for (const [fromId, neighbors] of Object.entries(graph)) {
-      const fromWp = getWaypointById(fromId);
-
-      if (fromWp?.type === "elevator") {
-        filtered[fromId] = [];
-        continue;
-      }
-
-      filtered[fromId] = (neighbors || []).filter((neighbor) => {
-        const toWp = getWaypointById(neighbor.id);
-        return toWp?.type !== "elevator";
-      });
-    }
-    graph = filtered;
-  }
-
-  const allowedIds = new Set(
-    (campusData.waypoints || [])
-      .filter((w) => {
-        return (
-          normalize(w.building) === normalize(buildingId) &&
-          String(w.floor || "") === String(floor || "")
-        );
-      })
-      .map((w) => w.id)
-  );
-
-  const filteredGraph = {};
-
-  for (const [fromId, neighbors] of Object.entries(graph)) {
-    if (!allowedIds.has(fromId)) continue;
-
-    filteredGraph[fromId] = (neighbors || []).filter((neighbor) =>
-      allowedIds.has(neighbor.id)
-    );
-  }
-
-  return filteredGraph;
+  return buildSameFloorGraphFromModule({ buildingId, floor, accessibleOnly, stairsOnly });
 }
 
 function rerouteSameFloorFromWaypoint(
@@ -205,19 +168,14 @@ function rerouteSameFloorFromWaypoint(
   const result = aStar(graph, startWaypointId, destinationWaypointId);
   const path = result.path || [];
 
-  const {
-    buildStepInstructions,
-    getNextWaypointId,
-    isAtDestination,
-  } = require("./routeSteps");
-
+  
   const steps = buildStepInstructions(path);
   const nextWaypointId =
     path.length > 1 ? path[1] : null;
 
   return {
     path,
-    steps: [],
+    steps,
     distance: estimateTotalDistance(path),
     nextWaypoint: nextWaypointId ? getWaypointById(nextWaypointId) : null,
     arrived: path.length === 1 && path[0] === startWaypointId,
@@ -292,8 +250,7 @@ function findNearestPathToAnyTarget(startWaypointId, targetWaypointIds = [], opt
 }
 
 function getVerticalCandidates(buildingId, floor, accessibleOnly = false, stairsOnly = false) {
-  return (campusData.waypoints || []).filter((w) => {
-    if (normalize(w.building) !== normalize(buildingId)) return false;
+  return getBuildingWaypoints(buildingId).filter((w) => {
     if (String(w.floor || "") !== String(floor || "")) return false;
 
     if (stairsOnly) {
@@ -347,11 +304,8 @@ function findNearestSameFloorVerticalTarget(
 }
 
 function buildUnknownIndoorAnchorInstructions(buildingId, destinationRoomNumber) {
-  const anchors = (campusData.waypoints || []).filter((w) => {
-    return (
-      normalize(w.building) === normalize(buildingId) &&
-      (w.type === "stairs" || w.type === "elevator" || w.type === "entrance")
-    );
+  const anchors = getBuildingWaypoints(buildingId).filter((w) => {
+    return w.type === "stairs" || w.type === "elevator" || w.type === "entrance";
   });
 
   const anchorLabels = anchors.slice(0, 4).map((a) => a.label).filter(Boolean);
@@ -517,11 +471,6 @@ export function rerouteFromWaypoint(startWaypointId, destinationWaypointId, opti
     };
   }
 
-  const {
-    buildStepInstructions,
-    getNextWaypointId,
-    isAtDestination,
-  } = require("./routeSteps");
 
   const buildingId =
     options.buildingId ||
@@ -541,14 +490,24 @@ export function rerouteFromWaypoint(startWaypointId, destinationWaypointId, opti
       stairsOnly,
     });
   } else if (sameBuilding(startWaypoint, destinationWaypoint)) {
-    const verticalChoice = chooseBestVerticalRoute({
-      currentWaypoint: startWaypoint,
-      destinationWaypoint,
-      accessibleOnly,
-      stairsOnly,
-    });
+    // If we're already AT a vertical waypoint (stairs/elevator),
+    // skip leg 1 and go straight to cross-floor path
+    if (isVerticalWaypoint(startWaypoint)) {
+      path = calculateShortestPath(startWaypointId, destinationWaypointId, {
+        buildingId,
+        accessibleOnly,
+        stairsOnly,
+      });
+    } else {
+      const verticalChoice = chooseBestVerticalRoute({
+        currentWaypoint: startWaypoint,
+        destinationWaypoint,
+        accessibleOnly,
+        stairsOnly,
+      });
 
-    path = verticalChoice?.path || [];
+      path = verticalChoice?.path || [];
+    }
   } else {
     path = calculateShortestPath(startWaypointId, destinationWaypointId, {
       buildingId,
@@ -849,11 +808,6 @@ export function findNearestExitRoute(currentWaypointId, currentBuildingId, optio
   const entrances = getBuildingEntrances(currentBuildingId);
   const entranceIds = entrances.map((w) => w.id);
 
-  const {
-    buildStepInstructions,
-    getNextWaypointId,
-    isAtDestination,
-  } = require("./routeSteps");
 
   if (!currentWaypointId || !currentBuildingId || entranceIds.length === 0) {
     return {

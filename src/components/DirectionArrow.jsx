@@ -35,12 +35,14 @@ export default function DirectionArrow({
   arrived = false,
   heading = 0,
   targetBearing = null,
-  mode = "arrow", // arrow | elevator | stairs
+  mode = "arrow",
 }) {
   const pulseAnim = useRef(new Animated.Value(1)).current;
   const appearAnim = useRef(new Animated.Value(1)).current;
   const compassAnim = useRef(new Animated.Value(0)).current;
   const arrowAnim = useRef(new Animated.Value(0)).current;
+  const lastArrowDeg = useRef(0);
+  const lastTargetBearing = useRef(null);
 
   const normalizedHeading = normalizeDegrees(heading);
 
@@ -95,24 +97,52 @@ export default function DirectionArrow({
       useNativeDriver: true,
     }).start();
   }, [normalizedHeading, compassAnim]);
-
+  
   useEffect(() => {
+    if (targetBearing == null) {
+      const target = getInstructionRotation(direction);
+      lastArrowDeg.current = target;
+      lastTargetBearing.current = null;
+      arrowAnim.setValue(target);
+      return;
+    }
+
+    // If targetBearing changed by more than 10° (new waypoint), snap the
+    // accumulator to the new relativeArrowDegrees so the arrow doesn't unwind.
+    const bearingJumped = lastTargetBearing.current != null &&
+      Math.abs(((targetBearing - lastTargetBearing.current) + 540) % 360 - 180) > 10;
+    if (bearingJumped) {
+      lastArrowDeg.current = relativeArrowDegrees;
+      arrowAnim.setValue(relativeArrowDegrees);
+    }
+
+    // Accumulator-based rotation — shortest path, no spinning through 360.
+    const current = lastArrowDeg.current;
+    let target = relativeArrowDegrees;
+    let diff = target - ((current % 360) + (current >= 0 ? 0 : 360));
+    if (diff > 180) diff -= 360;
+    if (diff < -180) diff += 360;
+    target = current + diff;
+    if (target > 3600)  { target -= 3600; lastArrowDeg.current = target; arrowAnim.setValue(target); }
+    if (target < -3600) { target += 3600; lastArrowDeg.current = target; arrowAnim.setValue(target); }
+    lastArrowDeg.current = target;
+    lastTargetBearing.current = targetBearing;
     Animated.timing(arrowAnim, {
-      toValue: relativeArrowDegrees,
-      duration: 120,
+      toValue: target,
+      duration: 150,
       easing: Easing.out(Easing.cubic),
       useNativeDriver: true,
     }).start();
-  }, [relativeArrowDegrees, arrowAnim]);
+  }, [targetBearing, heading, relativeArrowDegrees, arrowAnim]);
 
   const compassRotate = compassAnim.interpolate({
     inputRange: [0, 360],
     outputRange: ["0deg", "360deg"],
   });
-
+  
   const arrowRotate = arrowAnim.interpolate({
-    inputRange: [-180, 180],
-    outputRange: ["-180deg", "180deg"],
+    inputRange: [-3600, 3600],
+    outputRange: ["-3600deg", "3600deg"],
   });
 
   if (arrived) {

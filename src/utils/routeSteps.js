@@ -1,819 +1,214 @@
-import { getWaypointById } from "./qrWaypointLookup";
-import { isNearWaypoint, calculateBearingDegrees } from "./location";
-import {
-  distanceXY,
-  calculateBearingXY,
-  estimatePassedIndoorWaypoint,
-} from "./indoorLocation";
-import {
-  getEdgeDistance,
-  estimateTotalDistance,
-  getPathWaypointObjects,
-} from "./pathfinding";
+/**
+ * routeSteps.js
+ *
+ * Turn-by-turn step instruction builder for indoor and outdoor navigation.
+ * Also provides outdoor route-advancement helpers used by NavigationPage.jsx.
+ *
+ * Re-exports getNextWaypointId and isAtDestination from routeState.js for
+ * backward compatibility (callers that import from here still work).
+ */
 
-function normalizeAngleDegrees(angle) {
-  let value = Number(angle) % 360;
-  if (value < 0) value += 360;
-  return value;
+import { getWaypointById } from './campusDataLoader';
+import { haversineDistanceMeters } from './location';
+
+// Re-export for backward compatibility — pathfinding.js and NavigationPage.jsx
+// import these from routeSteps; the real implementations live in routeState.js
+// to break the circular dependency: pathfinding → routeSteps → pathfinding.
+export { getNextWaypointId, isAtDestination } from './routeState';
+
+// ─── Helpers ─────────────────────────────────────────────────────────────────
+
+function normalize(value) {
+  return String(value || '').trim().toLowerCase();
 }
 
-function smallestAngleDifferenceDegrees(a, b) {
-  const diff = Math.abs(
-    normalizeAngleDegrees(a) - normalizeAngleDegrees(b)
-  );
-  return Math.min(diff, 360 - diff);
-}
-
-function normalizeType(type = "") {
-  return String(type || "").trim().toLowerCase();
-}
-
-function isRoomLike(type = "") {
-  const t = normalizeType(type);
-  return (
-    t === "classroom" ||
-    t === "office" ||
-    t === "lab" ||
-    t === "dining" ||
-    t === "recreation" ||
-    t === "lounge" ||
-    t === "room"
-  );
-}
-
-function isMajorNavigationType(type = "") {
-  const t = normalizeType(type);
-  return t === "entrance" || t === "stairs" || t === "elevator";
-}
-
-function canUseIndoorXY(prev, current, next) {
-  if (!prev || !current) return false;
-
-  const sameLevelPrevCurrent =
-    String(prev.building || "").trim().toLowerCase() ===
-      String(current.building || "").trim().toLowerCase() &&
-    String(prev.floor || "") === String(current.floor || "");
-
-  if (!sameLevelPrevCurrent) return false;
-
-  if (next) {
-    const sameLevelCurrentNext =
-      String(current.building || "").trim().toLowerCase() ===
-        String(next.building || "").trim().toLowerCase() &&
-      String(current.floor || "") === String(next.floor || "");
-
-    if (!sameLevelCurrentNext) return false;
+/**
+ * Bearing from `from` to `to` using floor-map x/y coordinates (degrees).
+ * 0° = up on the map, 90° = right, 180° = down, 270° = left.
+ */
+function computeBearingDeg(from, to) {
+  if (!from || !to || from.x == null || from.y == null || to.x == null || to.y == null) {
+    return null;
   }
-
-  return (
-    prev.x != null &&
-    prev.y != null &&
-    current.x != null &&
-    current.y != null &&
-    (!next || (next.x != null && next.y != null))
-  );
+  const dx = Number(to.x) - Number(from.x);
+  const dy = Number(to.y) - Number(from.y);
+  return Math.atan2(dx, -dy) * (180 / Math.PI);
 }
 
-function getTurnMeta(prev, current, next) {
-  if (!prev || !current || !next) {
-    return { hint: "", kind: "straight", diff: 0 };
-  }
-
-  let bearingIn = null;
-  let bearingOut = null;
-
-  if (canUseIndoorXY(prev, current, next)) {
-    bearingIn = calculateBearingXY(prev, current);
-    bearingOut = calculateBearingXY(current, next);
-  } else if (
-    prev.latitude != null &&
-    prev.longitude != null &&
-    current.latitude != null &&
-    current.longitude != null &&
-    next.latitude != null &&
-    next.longitude != null
-  ) {
-    bearingIn = calculateBearingDegrees(
-      Number(prev.latitude),
-      Number(prev.longitude),
-      Number(current.latitude),
-      Number(current.longitude)
-    );
-
-    bearingOut = calculateBearingDegrees(
-      Number(current.latitude),
-      Number(current.longitude),
-      Number(next.latitude),
-      Number(next.longitude)
-    );
-  }
-
-  if (bearingIn == null || bearingOut == null) {
-    return { hint: "", kind: "straight", diff: 0 };
-  }
-
-  const diff = ((bearingOut - bearingIn + 540) % 360) - 180;
-  const absDiff = Math.abs(diff);
-
-  if (absDiff < 20) {
-    return { hint: "Continue straight.", kind: "straight", diff };
-  }
-
-  if (diff >= 20 && diff < 135) {
-    return { hint: "Turn right.", kind: "right", diff };
-  }
-
-  if (diff <= -20 && diff > -135) {
-    return { hint: "Turn left.", kind: "left", diff };
-  }
-
-  return { hint: "Turn around.", kind: "back", diff };
+/**
+ * Signed angular difference b − a, normalised to (−180, 180].
+ * Negative = left turn, positive = right turn.
+ */
+function angleDiff(a, b) {
+  let diff = ((b - a) % 360 + 360) % 360;
+  if (diff > 180) diff -= 360;
+  return diff;
 }
 
-function getTurnHint(prev, current, next) {
-  return getTurnMeta(prev, current, next).hint;
+/**
+ * Returns a human-readable turn label, or null when the path is straight.
+ */
+function turnLabel(diffDeg) {
+  const d = Math.abs(diffDeg);
+  if (d < 20)  return null;                                          // straight
+  if (d < 70)  return diffDeg < 0 ? 'slight left'  : 'slight right';
+  if (d < 120) return diffDeg < 0 ? 'left'         : 'right';
+  return               diffDeg < 0 ? 'sharp left'  : 'sharp right';
 }
 
+/**
+ * Build a single step instruction string for waypoint `wp`.
+ * Uses the previous and next waypoints (when available) to compute turn angle.
+ */
+function buildStepText(prevWp, wp, nextWp) {
+  if (!wp) return 'Continue to the next waypoint.';
 
-function canUseIndoorXYForSide(prev, current) {
-  return (
-    prev &&
-    current &&
-    prev.x != null &&
-    prev.y != null &&
-    current.x != null &&
-    current.y != null
-  );
-}
+  const type = normalize(wp.type);
+  const label = wp.label || 'the next waypoint';
 
-function getDestinationSideHint(prev, destination) {
-  if (!canUseIndoorXYForSide(prev, destination)) {
-    return "Your destination is ahead.";
-  }
+  if (type === 'stairs')   return `🪜 Use the stairs — ${label}.`;
+  if (type === 'elevator') return `🛗 Use the elevator — ${label}.`;
+  if (type === 'entrance' || type === 'exit') return `🚪 ${label}.`;
 
-  const dx = Number(destination.x) - Number(prev.x);
-  const dy = Number(destination.y) - Number(prev.y);
-
-  // If mostly horizontal movement
-  if (Math.abs(dx) >= Math.abs(dy)) {
-    return dx >= 0
-      ? `${destination.label || "Your destination"} will be on your right.`
-      : `${destination.label || "Your destination"} will be on your left.`;
-  }
-
-  // If mostly vertical movement, we cannot confidently say left/right
-  return `Continue straight to ${destination.label || "your destination"}.`;
-}
-
-
-function describeTransition(prev, current, next) {
-  if (!current) return "";
-
-  const type = normalizeType(current.type);
-  const parts = [];
-
-  if (type === "elevator") {
-    if (prev?.type !== "elevator") {
-      parts.push(`Go to ${current.label || "the elevator"} and scan its QR code.`);
-    } else if (next?.type === "elevator" && next.floor !== current.floor) {
-      parts.push(`Continue through the elevator to floor ${next.floor}.`);
-    } else {
-      parts.push(
-        `Exit the elevator on floor ${current.floor} and continue toward ${next?.label || "the next waypoint"}.`
-      );
+  // Compute turn angle from the incoming segment to the outgoing segment
+  if (prevWp && nextWp) {
+    const b1 = computeBearingDeg(prevWp, wp);
+    const b2 = computeBearingDeg(wp, nextWp);
+    if (b1 != null && b2 != null) {
+      const diff  = angleDiff(b1, b2);
+      const turn  = turnLabel(diff);
+      if (turn) return `Turn ${turn} at ${label}.`;
     }
-  } else if (type === "stairs") {
-    if (prev?.type !== "stairs") {
-      parts.push(`Go to ${current.label || "the stairs"} and scan its QR code.`);
-    } else if (next?.type === "stairs" && next.floor !== current.floor) {
-      parts.push(`Continue through the stairs to floor ${next.floor}.`);
-    } else {
-      parts.push(
-        `Exit the stairs on floor ${current.floor} and continue toward ${next?.label || "the next waypoint"}.`
-      );
-    }
-  } else if (type === "entrance") {
-    if (!next) {
-      parts.push("You have reached the entrance.");
-    } else {
-      parts.push(`Head toward ${current.label || "the entrance"}.`);
-    }
-  } else if (type === "hallway") {
-    const cameFromVertical =
-      prev?.type === "stairs" || prev?.type === "elevator";
-
-    const turnHint = cameFromVertical ? "" : getTurnHint(prev, current, next);
-
-    parts.push(`Continue through ${current.label || "the hallway"}.`);
-    if (turnHint) parts.push(turnHint);
-  } else if (isRoomLike(type)) {
-    if (!next) {
-      parts.push(getDestinationSideHint(prev, current));
-    } else {
-      parts.push(`Pass ${current.label || "this point"} and continue.`);
-    }
-  } else {
-    parts.push(`Pass ${current.label || "this point"} and continue.`);
   }
 
-  if (
-    prev &&
-    current.floor &&
-    prev.floor &&
-    String(current.floor) !== String(prev.floor)
-  ) {
-    parts.push(`You are now on floor ${current.floor}.`);
-  }
-
-  return parts.join(" ");
+  return `Continue to ${label}.`;
 }
 
-function buildRawStepInstructions(pathIds = []) {
-  const points = getPathWaypointObjects(pathIds);
+// ─── Public API ──────────────────────────────────────────────────────────────
 
-  if (points.length === 0) return [];
+/**
+ * Build turn-by-turn instructions for a path of waypoint IDs.
+ *
+ * @param {string[]} pathIds - ordered list of waypoint IDs
+ * @returns {Array<{id: string, text: string, waypointId: string}>}
+ */
+export function buildStepInstructions(pathIds = []) {
+  if (!Array.isArray(pathIds) || pathIds.length === 0) return [];
 
-  if (points.length === 1) {
-    return [
-      {
-        id: "step-0",
-        waypointId: points[0].id,
-        floor: points[0].floor || null,
-        text: `You are already at ${points[0].label || points[0].id}.`,
-        rawType: normalizeType(points[0].type),
-      },
-    ];
-  }
-
+  const waypoints = pathIds.map((id) => getWaypointById(id));
   const steps = [];
 
-  for (let i = 0; i < points.length; i++) {
-    const prev = i > 0 ? points[i - 1] : null;
-    const current = points[i];
-    const next = i < points.length - 1 ? points[i + 1] : null;
+  for (let i = 0; i < waypoints.length; i++) {
+    const wp = waypoints[i];
+    if (!wp) continue;
 
-    if (i === 0) {
+    const prevWp = i > 0 ? waypoints[i - 1] : null;
+    const nextWp = i < waypoints.length - 1 ? waypoints[i + 1] : null;
+
+    // Final destination
+    if (i === waypoints.length - 1) {
+      steps.push({
+        id: `step-${i}`,
+        text: `✅ Arrived at ${wp.label || 'your destination'}.`,
+        waypointId: wp.id,
+      });
       continue;
     }
 
-    const distance = getEdgeDistance(prev.id, current.id);
-    const detail = describeTransition(prev, current, next);
+    // Skip the starting waypoint (no instruction needed for where you already are)
+    if (i === 0) continue;
 
     steps.push({
       id: `step-${i}`,
-      waypointId: current.id,
-      floor: current.floor || null,
-      distance,
-      text: detail || `Go to ${current.label || current.id}.`,
-      rawType: normalizeType(current.type),
-      originalIndex: i,
-      prevWaypoint: prev,
-      currentWaypoint: current,
-      nextWaypoint: next,
-      turnMeta: getTurnMeta(prev, current, next),
+      text: buildStepText(prevWp, wp, nextWp),
+      waypointId: wp.id,
     });
   }
 
   return steps;
 }
 
-function isImportantStep(rawSteps, index) {
-  const step = rawSteps[index];
-  if (!step) return false;
-
-  const current = step.currentWaypoint || getWaypointById(step.waypointId);
-  const prev = step.prevWaypoint || (index > 0 ? rawSteps[index - 1]?.currentWaypoint : null);
-  const next = step.nextWaypoint || rawSteps[index + 1]?.currentWaypoint || null;
-
-  // Always keep first and last
-  if (index === 0 || index === rawSteps.length - 1) return true;
-
-  const type = normalizeType(current?.type);
-
-  // Always keep entrance / stairs / elevator
-  if (isMajorNavigationType(type)) return true;
-
-  // Keep destination room
-  if (isRoomLike(type) && index === rawSteps.length - 1) return true;
-
-  // Keep floor change points
-  if (prev && current?.floor && prev?.floor && String(current.floor) !== String(prev.floor)) {
-    return true;
-  }
-
-  // Keep meaningful turns
-  const turn = getTurnMeta(prev, current, next);
-  if (turn.kind !== "straight") return true;
-
-  // Hide hallway continuation points and passed room waypoints
-  if (type === "hallway") return false;
-  if (isRoomLike(type)) return false;
-
-  return false;
-}
-
-function createMergedHallwayStep(fromStep, toStep) {
-  const startLabel =
-    fromStep?.currentWaypoint?.label ||
-    fromStep?.prevWaypoint?.label ||
-    fromStep?.waypointId ||
-    "current location";
-
-  const endLabel =
-    toStep?.currentWaypoint?.label ||
-    toStep?.waypointId ||
-    "the next turn";
-
-  const endWp = toStep?.currentWaypoint;
-  const endType = normalizeType(endWp?.type);
-  const turnKind = toStep?.turnMeta?.kind || "straight";
-
-  let text = "Continue straight down the hallway.";
-
-  if (endType === "stairs") {
-    text = `Continue down the hallway to ${endWp?.label || "the stairs"}.`;
-  } else if (endType === "elevator") {
-    text = `Continue down the hallway to ${endWp?.label || "the elevator"}.`;
-  } else if (endType === "entrance") {
-    text = `Continue down the hallway to ${endWp?.label || "the entrance"}.`;
-  } else if (turnKind === "left") {
-    text = `Continue straight, then turn left near ${endLabel}.`;
-  } else if (turnKind === "right") {
-    text = `Continue straight, then turn right near ${endLabel}.`;
-  } else if (turnKind === "back") {
-    text = `Continue straight until ${endLabel}, then turn around.`;
-  } else if (endType && isRoomLike(endType) && !toStep?.nextWaypoint) {
-    text = `Continue straight until you reach ${endWp?.label || "your destination"}.`;
-  } else {
-    text = `Continue straight from ${startLabel} toward ${endLabel}.`;
-  }
-
-  return {
-    id: `merged-${fromStep?.id || "start"}-${toStep?.id || "end"}`,
-    waypointId: toStep?.waypointId || fromStep?.waypointId || null,
-    floor: toStep?.floor || fromStep?.floor || null,
-    text,
-    rawType: "hallway_summary",
-    distance: null,
-    compressed: true,
-  };
-}
-
-
-function summarizeHiddenSegment(hiddenSteps = [], fromStep, toStep) {
-  if (!Array.isArray(hiddenSteps) || hiddenSteps.length === 0) {
-    return [];
-  }
-
-  const result = [];
-  const lastHidden = hiddenSteps[hiddenSteps.length - 1];
-  const toWp = toStep?.currentWaypoint;
-  const toType = normalizeType(toWp?.type);
-
-  const cameFromVertical =
-    normalizeType(fromStep?.currentWaypoint?.type) === "stairs" ||
-    normalizeType(fromStep?.currentWaypoint?.type) === "elevator";
-
-  const hiddenRoomLabels = hiddenSteps
-    .map((step) => step?.currentWaypoint?.label)
-    .filter(Boolean)
-    .filter((label) => /\d/.test(label));
-
-  if (cameFromVertical) {
-    result.push({
-      id: `summary-exit-${fromStep?.id || "x"}-${toStep?.id || "y"}`,
-      waypointId: hiddenSteps[0]?.waypointId || toStep?.waypointId || null,
-      floor: hiddenSteps[0]?.floor || toStep?.floor || null,
-      text: "Exit and continue straight down the hallway.",
-      rawType: "hallway_summary",
-      compressed: true,
-    });
-  }
-
-  if (hiddenSteps.length >= 3) {
-    result.push({
-      id: `summary-mid-${fromStep?.id || "x"}-${toStep?.id || "y"}`,
-      waypointId: lastHidden?.waypointId || toStep?.waypointId || null,
-      floor: lastHidden?.floor || toStep?.floor || null,
-      text: "Continue straight through the hallway.",
-      rawType: "hallway_summary",
-      compressed: true,
-    });
-  }
-
-  if (toType === "stairs") {
-    result.push({
-      id: `summary-to-stairs-${fromStep?.id || "x"}-${toStep?.id || "y"}`,
-      waypointId: toStep?.waypointId || null,
-      floor: toStep?.floor || null,
-      text: `Continue straight to ${toWp?.label || "the stairs"}.`,
-      rawType: "hallway_summary",
-      compressed: true,
-    });
-    return result;
-  }
-
-  if (toType === "elevator") {
-    result.push({
-      id: `summary-to-elevator-${fromStep?.id || "x"}-${toStep?.id || "y"}`,
-      waypointId: toStep?.waypointId || null,
-      floor: toStep?.floor || null,
-      text: `Continue straight to ${toWp?.label || "the elevator"}.`,
-      rawType: "hallway_summary",
-      compressed: true,
-    });
-    return result;
-  }
-
-  if (toType === "entrance") {
-    result.push({
-      id: `summary-to-entrance-${fromStep?.id || "x"}-${toStep?.id || "y"}`,
-      waypointId: toStep?.waypointId || null,
-      floor: toStep?.floor || null,
-      text: `Continue straight to ${toWp?.label || "the entrance"}.`,
-      rawType: "hallway_summary",
-      compressed: true,
-    });
-    return result;
-  }
-
-  if (isRoomLike(toType) && !toStep?.nextWaypoint) {
-    result.push({
-      id: `summary-destination-approach-${fromStep?.id || "x"}-${toStep?.id || "y"}`,
-      waypointId: toStep?.waypointId || null,
-      floor: toStep?.floor || null,
-      text:
-        hiddenRoomLabels.length >= 2
-          ? `Continue past ${hiddenRoomLabels.slice(0, 2).join(" and ")}.`
-          : "Continue toward your destination.",
-      rawType: "hallway_summary",
-      compressed: true,
-    });
-    return result;
-  }
-
-  const turnKind = toStep?.turnMeta?.kind || "straight";
-  if (turnKind === "left") {
-    result.push({
-      id: `summary-turn-left-${fromStep?.id || "x"}-${toStep?.id || "y"}`,
-      waypointId: toStep?.waypointId || null,
-      floor: toStep?.floor || null,
-      text: "Continue straight until the next left turn.",
-      rawType: "hallway_summary",
-      compressed: true,
-    });
-    return result;
-  }
-
-  if (turnKind === "right") {
-    result.push({
-      id: `summary-turn-right-${fromStep?.id || "x"}-${toStep?.id || "y"}`,
-      waypointId: toStep?.waypointId || null,
-      floor: toStep?.floor || null,
-      text: "Continue straight until the next right turn.",
-      rawType: "hallway_summary",
-      compressed: true,
-    });
-    return result;
-  }
-
-  result.push({
-    id: `summary-generic-${fromStep?.id || "x"}-${toStep?.id || "y"}`,
-    waypointId: toStep?.waypointId || null,
-    floor: toStep?.floor || null,
-    text: "Continue straight.",
-    rawType: "hallway_summary",
-    compressed: true,
-  });
-
-  return result;
-}
-
-
-function compressStepInstructions(rawSteps = []) {
-  if (!Array.isArray(rawSteps) || rawSteps.length <= 2) {
-    return rawSteps.map((step) => ({
-      id: step.id,
-      waypointId: step.waypointId,
-      floor: step.floor ?? null,
-      distance: step.distance,
-      text: step.text,
-    }));
-  }
-
-  const importantIndexes = [];
-
-  for (let i = 0; i < rawSteps.length; i++) {
-    if (isImportantStep(rawSteps, i)) {
-      importantIndexes.push(i);
-    }
-  }
-
-  if (!importantIndexes.includes(0)) importantIndexes.unshift(0);
-  if (!importantIndexes.includes(rawSteps.length - 1)) {
-    importantIndexes.push(rawSteps.length - 1);
-  }
-
-  const uniqueImportant = [...new Set(importantIndexes)].sort((a, b) => a - b);
-
-  const compressed = [];
-  let lastKeptIndex = uniqueImportant[0];
-
-  compressed.push({
-    id: rawSteps[lastKeptIndex].id,
-    waypointId: rawSteps[lastKeptIndex].waypointId,
-    floor: rawSteps[lastKeptIndex].floor ?? null,
-    distance: rawSteps[lastKeptIndex].distance,
-    text: rawSteps[lastKeptIndex].text,
-  });
-
-  for (let i = 1; i < uniqueImportant.length; i++) {
-    const currentImportantIndex = uniqueImportant[i];
-    const prevImportantIndex = lastKeptIndex;
-
-    const hiddenSteps = rawSteps.slice(prevImportantIndex + 1, currentImportantIndex);
-
-    if (hiddenSteps.length > 0) {
-      const summaries = summarizeHiddenSegment(
-        hiddenSteps,
-        rawSteps[prevImportantIndex],
-        rawSteps[currentImportantIndex]
-      );
-
-      for (const summary of summaries) {
-        compressed.push(summary);
-      }
-    }
-
-    compressed.push({
-      id: rawSteps[currentImportantIndex].id,
-      waypointId: rawSteps[currentImportantIndex].waypointId,
-      floor: rawSteps[currentImportantIndex].floor ?? null,
-      distance: rawSteps[currentImportantIndex].distance,
-      text: rawSteps[currentImportantIndex].text,
-    });
-
-    lastKeptIndex = currentImportantIndex;
-  }
-
-  const deduped = [];
-  for (const step of compressed) {
-    const prev = deduped[deduped.length - 1];
-    if (prev && prev.text === step.text && prev.floor === step.floor) {
-      continue;
-    }
-    deduped.push(step);
-  }
-
-  return deduped;
-}
-
-export function buildStepInstructions(pathIds = []) {
-  const raw = buildRawStepInstructions(pathIds);
-  return compressStepInstructions(raw);
-}
-
-export function buildStepsFromPath(pathIds = []) {
-  return buildStepInstructions(pathIds);
-}
-
-export function getNextWaypointId(pathIds = [], currentWaypointId) {
-  if (!Array.isArray(pathIds) || pathIds.length === 0 || !currentWaypointId) {
-    return null;
-  }
-
-  const index = pathIds.indexOf(currentWaypointId);
-  if (index === -1) return pathIds[0] || null;
-  if (index >= pathIds.length - 1) return null;
-
-  return pathIds[index + 1];
-}
-
-export function getRemainingPath(pathIds = [], currentWaypointId) {
-  if (!Array.isArray(pathIds) || pathIds.length === 0) return [];
-
-  const index = pathIds.indexOf(currentWaypointId);
-  if (index === -1) return pathIds;
-
-  return pathIds.slice(index);
-}
-
-export function isAtDestination(pathIds = [], currentWaypointId) {
-  if (!Array.isArray(pathIds) || pathIds.length === 0) return false;
-  return pathIds[pathIds.length - 1] === currentWaypointId;
-}
-
-export function getCurrentLeg(pathIds = [], currentWaypointId) {
-  if (!Array.isArray(pathIds) || pathIds.length < 2 || !currentWaypointId) {
-    return null;
-  }
-
-  const index = pathIds.indexOf(currentWaypointId);
-
-  if (index === -1) {
-    return {
-      fromId: pathIds[0],
-      toId: pathIds[1],
-      fromWaypoint: getWaypointById(pathIds[0]),
-      toWaypoint: getWaypointById(pathIds[1]),
-      distance: getEdgeDistance(pathIds[0], pathIds[1]),
-    };
-  }
-
-  if (index >= pathIds.length - 1) return null;
-
-  const fromId = pathIds[index];
-  const toId = pathIds[index + 1];
-
-  return {
-    fromId,
-    toId,
-    fromWaypoint: getWaypointById(fromId),
-    toWaypoint: getWaypointById(toId),
-    distance: getEdgeDistance(fromId, toId),
-  };
-}
-
-export function getNavigationStateForCurrentWaypoint(pathIds = [], currentWaypointId) {
-  const remainingPath = getRemainingPath(pathIds, currentWaypointId);
-  const nextWaypointId = getNextWaypointId(pathIds, currentWaypointId);
-  const currentLeg = getCurrentLeg(pathIds, currentWaypointId);
-
-  return {
-    currentWaypoint: getWaypointById(currentWaypointId),
-    nextWaypoint: nextWaypointId ? getWaypointById(nextWaypointId) : null,
-    remainingPath,
-    remainingDistance: estimateTotalDistance(remainingPath),
-    arrived: isAtDestination(pathIds, currentWaypointId),
-    currentLeg,
-  };
-}
-
-// Keep this for outdoor / fallback compatibility
+/**
+ * Outdoor GPS-based route advancement.
+ * Checks whether the user is within `thresholdMeters` of the next waypoint in
+ * `pathIds` and returns the advanced waypoint ID if so.
+ *
+ * @param {object} opts
+ * @param {string}   opts.currentWaypointId
+ * @param {{latitude: number, longitude: number}} opts.currentPosition
+ * @param {string[]} opts.pathIds
+ * @param {number}   opts.thresholdMeters  default 8
+ * @returns {{ advanced: boolean, currentWaypointId: string }}
+ */
 export function advanceRouteIfNeeded({
   currentWaypointId,
   currentPosition,
   pathIds = [],
   thresholdMeters = 8,
 }) {
-  if (
-    !currentWaypointId ||
-    !currentPosition ||
-    !Array.isArray(pathIds) ||
-    pathIds.length === 0
-  ) {
-    return {
-      currentWaypointId,
-      advanced: false,
-    };
-  }
+  const fail = { advanced: false, currentWaypointId };
 
-  const nextWaypointId = getNextWaypointId(pathIds, currentWaypointId);
-  if (!nextWaypointId) {
-    return {
-      currentWaypointId,
-      advanced: false,
-    };
-  }
-
-  const nextWaypoint = getWaypointById(nextWaypointId);
-  if (!nextWaypoint) {
-    return {
-      currentWaypointId,
-      advanced: false,
-    };
-  }
-
-  if (isNearWaypoint(currentPosition, nextWaypoint, thresholdMeters)) {
-    return {
-      currentWaypointId: nextWaypointId,
-      advanced: true,
-    };
-  }
-
-  return {
-    currentWaypointId,
-    advanced: false,
-  };
-}
-
-export function advanceRouteIfNeededIndoor({
-  currentWaypointId,
-  currentIndoorPosition,
-  pathIds = [],
-  deviceHeading = null,
-  currentFloor = null,
-  currentBuildingId = "",
-  previousDistanceToNext = null,
-  closeThreshold = 20,
-  nearThreshold = 35,
-  headingToleranceDegrees = 60,
-}) {
-  if (
-    !currentWaypointId ||
-    !currentIndoorPosition ||
-    !Array.isArray(pathIds) ||
-    pathIds.length < 2
-  ) {
-    return {
-      advanced: false,
-      currentWaypointId,
-      nextWaypointId: null,
-      distanceToNext: null,
-      passedReason: null,
-    };
-  }
+  if (!currentWaypointId || !currentPosition || pathIds.length === 0) return fail;
 
   const currentIndex = pathIds.indexOf(currentWaypointId);
-  if (currentIndex < 0 || currentIndex >= pathIds.length - 1) {
-    return {
-      advanced: false,
-      currentWaypointId,
-      nextWaypointId: null,
-      distanceToNext: null,
-      passedReason: null,
-    };
+  if (currentIndex === -1 || currentIndex >= pathIds.length - 1) return fail;
+
+  const nextId = pathIds[currentIndex + 1];
+  const nextWp = getWaypointById(nextId);
+
+  if (!nextWp || nextWp.latitude == null || nextWp.longitude == null) return fail;
+
+  const dist = haversineDistanceMeters(
+    Number(currentPosition.latitude),
+    Number(currentPosition.longitude),
+    Number(nextWp.latitude),
+    Number(nextWp.longitude),
+  );
+
+  if (dist <= thresholdMeters) {
+    return { advanced: true, currentWaypointId: nextId };
   }
 
-  const nextWaypointId = pathIds[currentIndex + 1];
-  const nextWaypoint = getWaypointById(nextWaypointId);
-
-  if (!nextWaypoint) {
-    return {
-      advanced: false,
-      currentWaypointId,
-      nextWaypointId: null,
-      distanceToNext: null,
-      passedReason: null,
-    };
-  }
-
-  if (
-    currentBuildingId &&
-    nextWaypoint.building &&
-    String(currentBuildingId).trim().toLowerCase() !==
-      String(nextWaypoint.building).trim().toLowerCase()
-  ) {
-    return {
-      advanced: false,
-      currentWaypointId,
-      nextWaypointId,
-      distanceToNext: null,
-      passedReason: null,
-    };
-  }
-
-  if (
-    currentFloor != null &&
-    nextWaypoint.floor != null &&
-    String(currentFloor) !== String(nextWaypoint.floor)
-  ) {
-    return {
-      advanced: false,
-      currentWaypointId,
-      nextWaypointId,
-      distanceToNext: null,
-      passedReason: null,
-    };
-  }
-
-  const result = estimatePassedIndoorWaypoint({
-    currentPosition: currentIndoorPosition,
-    nextWaypoint,
-    previousDistanceToNext,
-    deviceHeading,
-    closeThreshold,
-    nearThreshold,
-    headingToleranceDegrees,
-  });
-
-  if (!result.passed) {
-    return {
-      advanced: false,
-      currentWaypointId,
-      nextWaypointId,
-      distanceToNext: result.distanceToNext,
-      passedReason: result.reason,
-    };
-  }
-
-  return {
-    advanced: true,
-    currentWaypointId: nextWaypointId,
-    nextWaypointId:
-      currentIndex + 2 < pathIds.length ? pathIds[currentIndex + 2] : null,
-    distanceToNext: result.distanceToNext,
-    passedReason: result.reason,
-  };
+  return fail;
 }
 
-export function getIndoorDistanceToNextWaypoint(currentIndoorPosition, pathIds = [], currentWaypointId) {
-  const nextWaypointId = getNextWaypointId(pathIds, currentWaypointId);
-  if (!nextWaypointId) return null;
+/**
+ * Indoor floor-map pose-based route advancement.
+ * Checks whether the PDR pose is within `thresholdPx` of the next waypoint.
+ *
+ * @param {object} opts
+ * @param {string}   opts.currentWaypointId
+ * @param {{x: number, y: number}} opts.currentPose
+ * @param {string[]} opts.pathIds
+ * @param {number}   opts.thresholdPx  default 20
+ * @returns {{ advanced: boolean, currentWaypointId: string }}
+ */
+export function advanceRouteIfNeededIndoor({
+  currentWaypointId,
+  currentPose,
+  pathIds = [],
+  thresholdPx = 20,
+}) {
+  const fail = { advanced: false, currentWaypointId };
 
-  const nextWaypoint = getWaypointById(nextWaypointId);
-  if (!nextWaypoint) return null;
+  if (!currentWaypointId || !currentPose || pathIds.length === 0) return fail;
 
-  const d = distanceXY(currentIndoorPosition, nextWaypoint);
-  return Number.isFinite(d) ? d : null;
+  const currentIndex = pathIds.indexOf(currentWaypointId);
+  if (currentIndex === -1 || currentIndex >= pathIds.length - 1) return fail;
+
+  const nextId = pathIds[currentIndex + 1];
+  const nextWp = getWaypointById(nextId);
+
+  if (!nextWp || nextWp.x == null || nextWp.y == null) return fail;
+  if (currentPose.x == null || currentPose.y == null) return fail;
+
+  const dx = Number(nextWp.x) - Number(currentPose.x);
+  const dy = Number(nextWp.y) - Number(currentPose.y);
+  const dist = Math.sqrt(dx * dx + dy * dy);
+
+  if (dist <= thresholdPx) {
+    return { advanced: true, currentWaypointId: nextId };
+  }
+
+  return fail;
 }

@@ -1,0 +1,386 @@
+{
+  "building": {
+    "id": "athletic",
+    "name": "Athletic Building",
+    "latitude": 40.114817,
+    "longitude": -75.111579,
+    "floors": [
+      "1",
+      "2"
+    ],
+    "entrances": [
+      "wp_ath_main_entrance"
+    ]
+  },
+  "waypoints": [
+    {
+      "id": "wp_ath_main_entrance",
+      "building": "athletic",
+      "floor": "1",
+      "label": "Athletic Building Main Entrance",
+      "type": "entrance",
+      "latitude": 40.114817,
+      "longitude": -75.111579,
+      "x": 685.8,
+      "y": 139.3,
+      "qr_code": "QR_ATH_F1_MAIN_ENTRANCE",
+      "requires_scan": true,
+      "stop_radius_m": 5
+    },
+    {
+      "id": "wp_ath_basketball_court",
+      "building": "athletic",
+      "floor": "1",
+      "label": "Basketball Court",
+      "type": "recreation",
+      "latitude": 40.114532,
+      "longitude": -75.111789,
+      "x": 554.7,
+      "y": 490.8,
+      "qr_code": "QR_ATH_F1_BASKETBALL_COURT"
+    },
+    {
+      "id": "wp_ath_f1_hall_01",
+      "building": "athletic",
+      "floor": "1",
+      "label": "Athletic First Floor Hall",
+      "type": "hallway",
+      "latitude": 40.114736,
+      "longitude": -75.111598,
+      "x": 637.9,
+      "y": 219.5,
+      "qr_code": "QR_ATH_F1_HALL_01",
+      "requires_scan": false,
+      "stop_radius_m": 3
+    },
+    {
+      "id": "wp_ath_f1_gym",
+      "building": "athletic",
+      "floor": "1",
+      "label": "Athletic First Floor Gym",
+      "type": "recreation",
+      "latitude": 40.114735,
+      "longitude": -75.111628,
+      "x": 850.8,
+      "y": 479.8,
+      "qr_code": "QR_ATH_F1_GYM"
+    },
+    {
+      "id": "wp_ath_elevator_f1",
+      "building": "athletic",
+      "floor": "1",
+      "label": "Athletic Elevator (Floor 1)",
+      "type": "elevator",
+      "latitude": 40.114734,
+      "longitude": -75.111664,
+      "x": 643.7,
+      "y": 277.2,
+      "qr_code": "QR_ATH_F1_ELEVATOR",
+      "requires_scan": true,
+      "stop_radius_m": 3
+    },
+    {
+      "id": "wp_ath_f1_stairs",
+      "building": "athletic",
+      "floor": "1",
+      "label": "Athletic Stairs (Floor 1)",
+      "type": "stairs",
+      "latitude": 40.1147985278,
+      "longitude": -75.1116287222,
+      "x": 697,
+      "y": 217,
+      "qr_code": "QR_ATH_F1_STAIRS",
+      "requires_scan": true,
+      "stop_radius_m": 3
+    },
+    {
+      "id": "wp_ath_f2_classroom",
+      "building": "athletic",
+      "floor": "2",
+      "label": "Athletic Second Floor Classroom",
+      "type": "classroom",
+      "latitude": 40.114745,
+      "longitude": -75.111528,
+      "x": 597.6,
+      "y": 294,
+      "qr_code": "QR_ATH_F2_CLASSROOM"
+    },
+    {
+      "id": "wp_ath_f2_landing",
+      "building": "athletic",
+      "floor": "2",
+      "label": "Athletic 2nd Floor Landing",
+      "type": "hall",
+      "latitude": 40.1148415833,
+      "longitude": -75.1115499444,
+      "x": 50,
+      "y": 950,
+      "qr_code": "QR_ATH_F2_LANDING"
+    },
+    {
+      "id": "wp_ath_f1_gym_1",
+      "building": "athletic",
+      "floor": "1",
+      "label": "Room 111 - Gym 1",
+      "type": "classroom",
+      "x": 623,
+      "y": 317
+    },
+    {
+      "id": "wp_ath_f1_gym_2",
+      "building": "athletic",
+      "floor": "1",
+      "label": "Room 101 - Gym 2",
+      "type": "classroom",
+      "x": 565.8,
+      "y": 283.6
+    },
+    {
+      "id": "wp_ath_f1_hall_02",
+      "building": "athletic",
+      "floor": "1",
+      "label": "Athletic First Floor hall",
+      "type": "hall",
+      "x": 545.7,
+      "y": 436.5
+    },
+    {
+      "id": "wp_ath_elevator_f2",
+      "building": "athletic",
+      "floor": "2",
+      "label": "Athletic Elevator (Floor 2)",
+      "type": "elevator",
+      "x": 645.2,
+      "y": 275.7
+    },
+    {
+      "id": "wp_ath_f2_stairs",
+      "building": "athletic",
+      "floor": "2",
+      "label": "Athletic Second Floor Stairs",
+      "type": "stairs",
+      "x": 674.3,
+      "y": 224.3
+    }
+  ],
+  "edges": [
+    {
+      "from": "wp_ath_main_entrance",
+      "to": "wp_rydal_main_entrance",
+      "accessible": true
+    },
+    {
+      "from": "wp_rydal_main_entrance",
+      "to": "wp_ath_main_entrance",
+      "accessible": true
+    },
+    {
+      "from": "wp_ath_main_entrance",
+      "to": "wp_ath_basketball_court",
+      "accessible": true
+    },
+    {
+      "from": "wp_ath_basketball_court",
+      "to": "wp_ath_main_entrance",
+      "accessible": true
+    },
+    {
+      "from": "wp_ath_main_entrance",
+      "to": "wp_ath_f1_hall_01",
+      "accessible": true
+    },
+    {
+      "from": "wp_ath_f1_hall_01",
+      "to": "wp_ath_f1_gym",
+      "accessible": true
+    },
+    {
+      "from": "wp_ath_f1_gym",
+      "to": "wp_ath_basketball_court",
+      "accessible": true
+    },
+    {
+      "from": "wp_ath_f1_hall_01",
+      "to": "wp_ath_elevator_f1",
+      "accessible": true
+    },
+    {
+      "from": "wp_ath_f1_hall_01",
+      "to": "wp_ath_f1_stairs",
+      "accessible": true
+    },
+    {
+      "from": "wp_ath_f1_stairs",
+      "to": "wp_ath_f2_classroom",
+      "accessible": false
+    },
+    {
+      "from": "wp_ath_elevator_f1",
+      "to": "wp_ath_f2_classroom",
+      "accessible": true
+    },
+    {
+      "from": "wp_ath_main_entrance",
+      "to": "wp_ath_f1_stairs",
+      "accessible": false
+    },
+    {
+      "from": "wp_ath_f1_stairs",
+      "to": "wp_ath_main_entrance",
+      "accessible": false
+    },
+    {
+      "from": "wp_ath_f2_classroom",
+      "to": "wp_ath_f1_stairs",
+      "accessible": false
+    },
+    {
+      "from": "wp_ath_f1_stairs",
+      "to": "wp_ath_f2_landing",
+      "accessible": false
+    },
+    {
+      "from": "wp_ath_f2_landing",
+      "to": "wp_ath_f1_stairs",
+      "accessible": false
+    },
+    {
+      "from": "wp_ath_f1_hall_01",
+      "to": "wp_ath_f1_gym_1",
+      "accessible": true
+    },
+    {
+      "from": "wp_ath_f1_hall_01",
+      "to": "wp_ath_f1_gym_2",
+      "accessible": true
+    },
+    {
+      "from": "wp_ath_f1_hall_01",
+      "to": "wp_ath_f1_hall_02",
+      "accessible": true
+    },
+    {
+      "from": "wp_ath_f1_hall_02",
+      "to": "wp_ath_basketball_court",
+      "accessible": true
+    },
+    {
+      "from": "wp_ath_elevator_f2",
+      "to": "wp_ath_f2_classroom",
+      "accessible": true
+    },
+    {
+      "from": "wp_ath_f2_stairs",
+      "to": "wp_ath_f2_classroom",
+      "accessible": true
+    },
+    {
+      "from": "wp_ath_f2_stairs",
+      "to": "wp_ath_f1_stairs",
+      "accessible": true
+    },
+    {
+      "from": "wp_ath_elevator_f2",
+      "to": "wp_ath_elevator_f1",
+      "accessible": true
+    }
+  ],
+  "rooms": [
+    {
+      "building": "athletic",
+      "room_number": "gym",
+      "floor": "1",
+      "waypoint_id": "wp_ath_f1_gym",
+      "room_name": "Gym",
+      "type": "recreation"
+    },
+    {
+      "building": "athletic",
+      "room_number": "classroom_f2",
+      "floor": "2",
+      "waypoint_id": "wp_ath_f2_classroom",
+      "room_name": "Second Floor Classroom",
+      "type": "classroom"
+    },
+    {
+      "building": "athletic",
+      "room_number": "court",
+      "floor": "1",
+      "waypoint_id": "wp_ath_basketball_court",
+      "room_name": "Basketball Court",
+      "type": "recreation"
+    },
+    {
+      "building": "athletic",
+      "room_number": "STAIRS",
+      "floor": "1",
+      "waypoint_id": "wp_ath_f1_stairs",
+      "room_name": "Athletic Stairs",
+      "type": "stairs"
+    },
+    {
+      "building": "athletic",
+      "room_number": "LANDING",
+      "floor": "2",
+      "waypoint_id": "wp_ath_f2_landing",
+      "room_name": "Athletic 2nd Floor Landing",
+      "type": "hall"
+    }
+  ],
+  "qrAnchors": [
+    {
+      "qr_id": "QR_ATH_F1_HALL_01",
+      "waypoint_id": "wp_ath_f1_hall_01",
+      "building": "athletic",
+      "floor": "1"
+    },
+    {
+      "qr_id": "QR_ATH_F1_GYM",
+      "waypoint_id": "wp_ath_f1_gym",
+      "building": "athletic",
+      "floor": "1"
+    },
+    {
+      "qr_id": "QR_ATH_F1_ELEVATOR",
+      "waypoint_id": "wp_ath_elevator_f1",
+      "building": "athletic",
+      "floor": "1"
+    },
+    {
+      "qr_id": "QR_ATH_F1_STAIRS",
+      "waypoint_id": "wp_ath_f1_stairs",
+      "building": "athletic",
+      "floor": "1"
+    },
+    {
+      "qr_id": "QR_ATH_F2_CLASSROOM",
+      "waypoint_id": "wp_ath_f2_classroom",
+      "building": "athletic",
+      "floor": "2"
+    },
+    {
+      "qr_id": "QR_ATH_F1_MAIN_ENTRANCE",
+      "waypoint_id": "wp_ath_main_entrance",
+      "building": "athletic",
+      "floor": "1"
+    },
+    {
+      "qr_id": "QR_ATH_F1_BASKETBALL_COURT",
+      "waypoint_id": "wp_ath_basketball_court",
+      "building": "athletic",
+      "floor": "1"
+    },
+    {
+      "qr_id": "QR_ATH_F1_STAIRS",
+      "waypoint_id": "wp_ath_f1_stairs",
+      "building": "athletic",
+      "floor": "1"
+    },
+    {
+      "qr_id": "QR_ATH_F2_LANDING",
+      "waypoint_id": "wp_ath_f2_landing",
+      "building": "athletic",
+      "floor": "2"
+    }
+  ]
+}

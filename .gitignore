@@ -1,7 +1,11 @@
 node_modules/
-
 .vs/
-
 .expo/
-
 .DS_Store
+
+# Environment variables — never commit the real .env
+.env
+server/.env
+
+# Keep the example tracked so others know what vars are needed
+!.env.example

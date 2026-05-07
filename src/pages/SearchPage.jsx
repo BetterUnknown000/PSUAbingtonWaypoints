@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import {
   View,
   Text,
@@ -88,6 +88,7 @@ export default function SearchPage({ navigation }) {
 
   const [result, setResult] = useState(null);
   const [status, setStatus] = useState("");
+  const scrollRef = useRef(null);
 
   const [buildingModalOpen, setBuildingModalOpen] = useState(false);
   const [pendingBuildingId, setPendingBuildingId] = useState(
@@ -152,6 +153,8 @@ export default function SearchPage({ navigation }) {
       searchType: "room",
     });
     setStatus("Room found.");
+    // Scroll so the result card is visible — it sits below the search form
+    setTimeout(() => scrollRef.current?.scrollToEnd({ animated: true }), 120);
   };
 
   const searchByCourse = () => {
@@ -183,6 +186,8 @@ export default function SearchPage({ navigation }) {
     });
 
     setStatus("Course classroom found.");
+    // Scroll so the result card is visible — it sits below the search form
+    setTimeout(() => scrollRef.current?.scrollToEnd({ animated: true }), 120);
   };
 
   const runSearch = () => {
@@ -197,6 +202,7 @@ export default function SearchPage({ navigation }) {
     <SafeAreaView style={s.safe} edges={["top"]}>
       <View style={s.page}>
         <ScrollView
+          ref={scrollRef}
           style={{ flex: 1 }}
           contentContainerStyle={[s.scrollContent, { paddingBottom: bottomMenuSpace }]}
           keyboardShouldPersistTaps="handled"
@@ -524,6 +530,9 @@ const s = StyleSheet.create({
     flexDirection: "row",
     gap: 10,
     marginBottom: 4,
+  },
+  featureSquareWrap: {
+    flex: 1,
   },
   featureBtn: {
     paddingHorizontal: 14,

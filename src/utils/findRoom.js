@@ -1,12 +1,12 @@
 // src/utils/findRoom.js
-import campusData from "../data/campusData.json";
+import { getAllBuildings as _getAllBuildings, getAllRooms as _getAllRooms, getWaypointById } from './campusDataLoader';
 
 /*
 // ---- CONNECTION CHECK ----
 console.log("campusData loaded:", {
-  buildings: campusData.buildings?.length ?? "NOT FOUND",
-  rooms: campusData.rooms?.length ?? "NOT FOUND",
-  waypoints: campusData.waypoints?.length ?? "NOT FOUND",
+  buildings: getAllBuildings()?.length ?? "NOT FOUND",
+  rooms: _getAllRooms()?.length ?? "NOT FOUND",
+  waypoints: _getAllRooms()?.length ?? "NOT FOUND",
 });
 // ---- END CONNECTION CHECK ----
 */
@@ -46,7 +46,7 @@ export function findRoom(buildingId, roomNumber) {
   const rnum = normalizeRoomNumber(roomNumber);
 
   // 1. Match room
-  const room = (campusData.rooms || []).find(
+  const room = (_getAllRooms() || []).find(
     (r) =>
       normalizeBuildingId(r.building) === bid &&
       normalizeRoomNumber(r.room_number) === rnum
@@ -54,13 +54,19 @@ export function findRoom(buildingId, roomNumber) {
 
   if (!room) return null;
 
-  // 2. Match waypoint
-  const waypoint = (campusData.waypoints || []).find(
-    (w) => w.id === room.waypoint_id
-  );
+  // 2. Match waypoint — look it up by ID from the loaded building cache.
+  // If the building hasn't been loaded yet (before QR scan), the cache will
+  // be empty, so fall back to the room record itself which has x/y/floor.
+  const waypoint = getWaypointById(room.waypoint_id) || (room.waypoint_id ? {
+    id: room.waypoint_id,
+    building: room.building,
+    floor: room.floor,
+    label: room.room_name || `Room ${room.room_number}`,
+    type: room.type || 'classroom',
+  } : null);
 
   // 3. Match building metadata
-  const building = (campusData.buildings || []).find(
+  const building = (_getAllBuildings() || []).find(
     (b) => normalizeBuildingId(b.id) === bid
   );
 
@@ -82,7 +88,7 @@ export function findRoomsByBuilding(buildingId) {
 
   const bid = normalizeBuildingId(buildingId);
 
-  return (campusData.rooms || []).filter(
+  return (_getAllRooms() || []).filter(
     (r) => normalizeBuildingId(r.building) === bid
   );
 }
@@ -93,7 +99,7 @@ export function findRoomsByBuilding(buildingId) {
  * @returns {Array}
  */
 export function getAllBuildings() {
-  return [...(campusData.buildings || [])].sort((a, b) =>
+  return [...(_getAllBuildings() || [])].sort((a, b) =>
     String(a.name).localeCompare(String(b.name))
   );
 }

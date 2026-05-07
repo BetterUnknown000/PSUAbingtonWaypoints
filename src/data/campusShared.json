@@ -1,0 +1,2063 @@
+{
+  "buildings": [
+    {
+      "id": "sutherland",
+      "name": "Sutherland Hall",
+      "latitude": 40.11572,
+      "longitude": -75.10874,
+      "floors": [
+        "ground",
+        "1",
+        "2",
+        "3",
+        "4"
+      ],
+      "entrances": [
+        "wp_suth_main_entrance",
+        "wp_suth_ground_entrance",
+        "wp_suth_entrance_B",
+        "wp_suth_entrance_c",
+        "wp_suth_f1_entrance_d",
+        "wp_suth_f1_entrance_e"
+      ]
+    },
+    {
+      "id": "woodland",
+      "name": "Woodland Building",
+      "latitude": 40.11672,
+      "longitude": -75.11095,
+      "floors": [
+        "1",
+        "2",
+        "3"
+      ],
+      "entrances": [
+        "wp_wood_library_entrance",
+        "wp_wood_f1_entrance_side_1",
+        "wp_wood_f1_entrance_side_2",
+        "wp_wood_f1_entrance_side_3"
+      ]
+    },
+    {
+      "id": "lares",
+      "name": "Lares Building",
+      "latitude": 40.11677,
+      "longitude": -75.10921,
+      "floors": [
+        "ground",
+        "1"
+      ],
+      "entrances": [
+        "wp_lares_main_entrance",
+        "wp_lares_side_entrance"
+      ]
+    },
+    {
+      "id": "rydal",
+      "name": "Rydal Building",
+      "latitude": 40.1159,
+      "longitude": -75.11217,
+      "floors": [
+        "ground",
+        "1"
+      ],
+      "entrances": [
+        "wp_rydal_main_entrance"
+      ]
+    },
+    {
+      "id": "springhouse",
+      "name": "Springhouse",
+      "latitude": 40.117489,
+      "longitude": -75.109782,
+      "floors": [
+        "1"
+      ],
+      "entrances": [
+        "wp_spring_entrance"
+      ]
+    },
+    {
+      "id": "athletic",
+      "name": "Athletic Building",
+      "latitude": 40.114817,
+      "longitude": -75.111579,
+      "floors": [
+        "1",
+        "2"
+      ],
+      "entrances": [
+        "wp_ath_main_entrance"
+      ]
+    },
+    {
+      "id": "cloverly",
+      "name": "Cloverly Building",
+      "latitude": 40.1151998611,
+      "longitude": -75.1132563333,
+      "floors": [
+        "1"
+      ],
+      "entrances": [
+        "wp_cloverly_main_entrance"
+      ]
+    }
+  ],
+  "entrances": [
+    {
+      "id": "wp_suth_main_entrance",
+      "building": "sutherland",
+      "floor": "1",
+      "label": "Sutherland Main Entrance",
+      "type": "entrance",
+      "latitude": 40.115879,
+      "longitude": -75.108886,
+      "x": 385.3,
+      "y": 287.5,
+      "qr_code": "QR_SUTH_F1_MAIN_ENTRANCE",
+      "requires_scan": true,
+      "stop_radius_m": 5
+    },
+    {
+      "id": "wp_lares_main_entrance",
+      "building": "lares",
+      "floor": "ground",
+      "label": "Lares Main Entrance",
+      "type": "entrance",
+      "latitude": 40.116752,
+      "longitude": -75.108928,
+      "x": 587.4,
+      "y": 797.2,
+      "qr_code": "QR_LARES_GND_MAIN_ENTRANCE",
+      "requires_scan": true,
+      "stop_radius_m": 5
+    },
+    {
+      "id": "wp_rydal_main_entrance",
+      "building": "rydal",
+      "floor": "ground",
+      "label": "Rydal Main Entrance",
+      "type": "entrance",
+      "latitude": 40.1159,
+      "longitude": -75.11217,
+      "x": 279.2,
+      "y": 475.7,
+      "qr_code": "QR_RYDAL_GND_MAIN_ENTRANCE",
+      "requires_scan": true,
+      "stop_radius_m": 5
+    },
+    {
+      "id": "wp_spring_entrance",
+      "building": "springhouse",
+      "floor": "1",
+      "label": "Springhouse Main Entrance",
+      "type": "entrance",
+      "latitude": 40.117489,
+      "longitude": -75.109782,
+      "x": 462,
+      "y": 292,
+      "qr_code": "QR_SPRING_ENTRANCE",
+      "requires_scan": true,
+      "stop_radius_m": 5
+    },
+    {
+      "id": "wp_spring_100_outside",
+      "building": "springhouse",
+      "floor": "1",
+      "label": "Room 100 - Outside Entrance",
+      "type": "entrance",
+      "latitude": 40.11747,
+      "longitude": -75.109735,
+      "x": 945,
+      "y": 600,
+      "qr_code": "QR_SPRING_100_OUTSIDE",
+      "requires_scan": true,
+      "stop_radius_m": 5
+    },
+    {
+      "id": "wp_spring_100_inside",
+      "building": "springhouse",
+      "floor": "1",
+      "label": "Room 100 - Inside Entrance",
+      "type": "entrance",
+      "latitude": 40.11748,
+      "longitude": -75.109748,
+      "x": 548,
+      "y": 487,
+      "qr_code": "QR_SPRING_100_INSIDE",
+      "requires_scan": true,
+      "stop_radius_m": 5
+    },
+    {
+      "id": "wp_ath_main_entrance",
+      "building": "athletic",
+      "floor": "1",
+      "label": "Athletic Building Main Entrance",
+      "type": "entrance",
+      "latitude": 40.114817,
+      "longitude": -75.111579,
+      "x": 685.8,
+      "y": 139.3,
+      "qr_code": "QR_ATH_F1_MAIN_ENTRANCE",
+      "requires_scan": true,
+      "stop_radius_m": 5
+    },
+    {
+      "id": "wp_suth_f1_entrance_e",
+      "building": "sutherland",
+      "floor": "1",
+      "label": "Sutherland F1 Entrance E",
+      "type": "entrance",
+      "latitude": 40.115906,
+      "longitude": -75.108503,
+      "x": 560.1,
+      "y": 434,
+      "qr_code": "QR_SUTH_F1_BACK_ENTRANCE",
+      "requires_scan": true,
+      "stop_radius_m": 5
+    },
+    {
+      "id": "wp_wood_f3_outside",
+      "building": "woodland",
+      "floor": "3",
+      "label": "F3 Outside Entrance",
+      "type": "entrance",
+      "latitude": 40.117068,
+      "longitude": -75.110863,
+      "x": 488.4,
+      "y": 229.9,
+      "qr_code": "QR_WOOD_F3_OUTSIDE",
+      "photo": "../assets/WoodlandImages/Level3_3_1.jpg",
+      "approach_latitude": 40.11701,
+      "approach_longitude": -75.1109,
+      "requires_scan": true,
+      "stop_radius_m": 5
+    },
+    {
+      "id": "wp_cloverly_main_entrance",
+      "building": "cloverly",
+      "floor": "1",
+      "label": "Cloverly Main Entrance",
+      "type": "entrance",
+      "latitude": 40.1151998611,
+      "longitude": -75.1132563333,
+      "x": 880,
+      "y": 500,
+      "qr_code": "QR_CLOVERLY_F1_MAIN_ENTRANCE",
+      "requires_scan": true,
+      "stop_radius_m": 5
+    },
+    {
+      "id": "wp_wood_library_entrance",
+      "building": "woodland",
+      "floor": "1",
+      "label": "Woodland Library Entrance",
+      "type": "entrance",
+      "latitude": 40.11672,
+      "longitude": -75.11095,
+      "x": 682.1,
+      "y": 248.6,
+      "qr_code": "QR_WOOD_F1_MAIN_ENTRANCE",
+      "photo": "../assets/WoodlandImages/Level1_Entry.jpg",
+      "approach_latitude": 40.11665,
+      "approach_longitude": -75.11098,
+      "requires_scan": true,
+      "stop_radius_m": 5
+    },
+    {
+      "id": "wp_wood_f1_entrance_side_1",
+      "building": "woodland",
+      "floor": "1",
+      "label": "Woodland Side Entrance 1",
+      "type": "entrance",
+      "latitude": 40.11686,
+      "longitude": -75.11095,
+      "x": 496.7,
+      "y": 445.6,
+      "qr_code": "QR_WOOD_F1_ENTRANCE_SIDE_1",
+      "approach_latitude": 40.11679,
+      "approach_longitude": -75.11098,
+      "requires_scan": true,
+      "stop_radius_m": 5
+    },
+    {
+      "id": "wp_wood_f1_entrance_side_2",
+      "building": "woodland",
+      "floor": "1",
+      "label": "Woodland Side Entrance 2",
+      "type": "entrance",
+      "latitude": 40.11683,
+      "longitude": -75.1109,
+      "x": 434.2,
+      "y": 529.5,
+      "qr_code": "QR_WOOD_F1_ENTRANCE_SIDE_2",
+      "approach_latitude": 40.11676,
+      "approach_longitude": -75.11093,
+      "requires_scan": true,
+      "stop_radius_m": 5
+    },
+    {
+      "id": "wp_wood_f1_entrance_side_3",
+      "building": "woodland",
+      "floor": "1",
+      "label": "Woodland Side Entrance 3",
+      "type": "entrance",
+      "latitude": 40.11642,
+      "longitude": -75.11112,
+      "x": 263.9,
+      "y": 790.3,
+      "qr_code": "QR_WOOD_F1_ENTRANCE_SIDE_3",
+      "approach_latitude": 40.11635,
+      "approach_longitude": -75.11116,
+      "requires_scan": true,
+      "stop_radius_m": 5
+    },
+    {
+      "id": "wp_wood_f1_entrance_side_4",
+      "building": "woodland",
+      "floor": "1",
+      "label": "Woodland Side Entrance 4",
+      "type": "entrance",
+      "latitude": 40.11661,
+      "longitude": -75.11115,
+      "x": 294.7,
+      "y": 757.5
+    },
+    {
+      "id": "wp_wood_front_entrance",
+      "building": "woodland",
+      "floor": "2",
+      "label": "Woodland Front Entrance",
+      "type": "entrance",
+      "x": 490.1,
+      "y": 227.7,
+      "latitude": 40.11714,
+      "longitude": -75.11104
+    },
+    {
+      "id": "wp_lares_ground_entrance",
+      "building": "lares",
+      "floor": "ground",
+      "label": "Lares Ground Floor Entrance",
+      "type": "entrance",
+      "latitude": 40.116752,
+      "longitude": -75.108928,
+      "x": 143.94,
+      "y": 282.66,
+      "qr_code": "QR_LARES_GND_ENTRANCE",
+      "requires_scan": true,
+      "stop_radius_m": 5
+    },
+    {
+      "id": "wp_lares_north_entrance",
+      "building": "lares",
+      "floor": "1",
+      "label": "Lares North Entrance",
+      "type": "entrance",
+      "latitude": 40.116709,
+      "longitude": -75.108877,
+      "x": 384.2,
+      "y": 169.3,
+      "qr_code": "QR_LARES_F1_SIDE_ENTRANCE",
+      "requires_scan": true,
+      "stop_radius_m": 5
+    },
+    {
+      "id": "wp_lares_side_entrance_2",
+      "building": "lares",
+      "floor": "1",
+      "label": "Lares Side Entrance",
+      "type": "entrance",
+      "x": 884.3,
+      "y": 787.3
+    },
+    {
+      "id": "wp_lares_side_entrance",
+      "building": "lares",
+      "floor": "1",
+      "label": "Lares Side Entrance",
+      "type": "entrance",
+      "x": 82.5,
+      "y": 425.7
+    },
+    {
+      "id": "wp_lares_front_entrance",
+      "building": "lares",
+      "floor": "1",
+      "label": "Lares Front Entrance",
+      "type": "entrance",
+      "x": 586.4,
+      "y": 798.2
+    },
+    {
+      "id": "wp_lares_back_entrance",
+      "building": "lares",
+      "floor": "1",
+      "label": "Lares Back Entrance",
+      "type": "entrance",
+      "x": 868.8,
+      "y": 514.4
+    },
+    {
+      "id": "wp_rydal_f1_main_entrance",
+      "building": "rydal",
+      "floor": "1",
+      "label": "Main Entrance",
+      "type": "entrance",
+      "x": 281.5,
+      "y": 476.2,
+      "latitude": 40.11588,
+      "longitude": -75.11226
+    },
+    {
+      "id": "wp_rydal_f1_other_entrance",
+      "building": "rydal",
+      "floor": "1",
+      "label": "Other Entrance",
+      "type": "entrance",
+      "x": 159,
+      "y": 751
+    },
+    {
+      "id": "wp_suth_entrance_c",
+      "building": "sutherland",
+      "floor": "1",
+      "label": "Sutherland Entrance C",
+      "type": "entrance",
+      "latitude": 40.11604884396653,
+      "longitude": -75.10852537874551,
+      "x": 627.6,
+      "y": 93.3
+    },
+    {
+      "id": "wp_suth_entrance_B",
+      "building": "sutherland",
+      "floor": "1",
+      "label": "Sutherland Entrance B",
+      "type": "entrance",
+      "latitude": 40.116000384497134,
+      "longitude": -75.10867933744474,
+      "x": 495.6,
+      "y": 139.5
+    },
+    {
+      "id": "wp_suth_f1_entrance_d",
+      "building": "sutherland",
+      "floor": "1",
+      "label": "Sutherland F1 Entrance D",
+      "type": "entrance",
+      "latitude": 40.1158954656637,
+      "longitude": -75.10854200847415,
+      "x": 605.9,
+      "y": 245.6
+    },
+    {
+      "id": "wp_suth_b_entrance_b",
+      "building": "sutherland",
+      "floor": "ground",
+      "label": "Sutherland B Entrance B",
+      "type": "entrance",
+      "x": 198,
+      "y": 703,
+      "latitude": 40.11559,
+      "longitude": -75.10899
+    },
+    {
+      "id": "wp_suth_b_entrance_c",
+      "building": "sutherland",
+      "floor": "ground",
+      "label": "Sutherland B Entrance C",
+      "type": "entrance",
+      "x": 351,
+      "y": 833,
+      "latitude": 40.11533,
+      "longitude": -75.10874
+    }
+  ],
+  "rooms": [
+    {
+      "building": "sutherland",
+      "room_number": "106",
+      "floor": "1",
+      "waypoint_id": "wp_suth_106",
+      "room_name": "Financial Aid Office",
+      "type": "office"
+    },
+    {
+      "building": "sutherland",
+      "room_number": "115A",
+      "floor": "1",
+      "waypoint_id": "wp_suth_115a",
+      "room_name": "Deans Office",
+      "type": "office"
+    },
+    {
+      "building": "sutherland",
+      "room_number": "119",
+      "floor": "1",
+      "waypoint_id": "wp_suth_119",
+      "room_name": "Academic Office",
+      "type": "office"
+    },
+    {
+      "building": "sutherland",
+      "room_number": "121",
+      "floor": "1",
+      "waypoint_id": "wp_suth_121",
+      "room_name": "Lounge",
+      "type": "lounge"
+    },
+    {
+      "building": "sutherland",
+      "room_number": "122",
+      "floor": "1",
+      "waypoint_id": "wp_suth_122",
+      "room_name": "Room 122",
+      "type": "classroom"
+    },
+    {
+      "building": "sutherland",
+      "room_number": "123",
+      "floor": "1",
+      "waypoint_id": "wp_suth_123",
+      "room_name": "ID, Parking & Transportation",
+      "type": "office"
+    },
+    {
+      "building": "sutherland",
+      "room_number": "201",
+      "floor": "2",
+      "waypoint_id": "wp_suth_201",
+      "room_name": "Room 201",
+      "type": "classroom"
+    },
+    {
+      "building": "sutherland",
+      "room_number": "204",
+      "floor": "2",
+      "waypoint_id": "wp_suth_204",
+      "room_name": "Room 204",
+      "type": "classroom"
+    },
+    {
+      "building": "sutherland",
+      "room_number": "206",
+      "floor": "2",
+      "waypoint_id": "wp_suth_206",
+      "room_name": "Room 206",
+      "type": "classroom"
+    },
+    {
+      "building": "sutherland",
+      "room_number": "208",
+      "floor": "2",
+      "waypoint_id": "wp_suth_208",
+      "room_name": "Room 208",
+      "type": "classroom"
+    },
+    {
+      "building": "sutherland",
+      "room_number": "209",
+      "floor": "2",
+      "waypoint_id": "wp_suth_209",
+      "room_name": "Room 209",
+      "type": "classroom"
+    },
+    {
+      "building": "sutherland",
+      "room_number": "210",
+      "floor": "2",
+      "waypoint_id": "wp_suth_210",
+      "room_name": "Room 210",
+      "type": "classroom"
+    },
+    {
+      "building": "sutherland",
+      "room_number": "211",
+      "floor": "2",
+      "waypoint_id": "wp_suth_211",
+      "room_name": "Active Learning Lab",
+      "type": "lab"
+    },
+    {
+      "building": "sutherland",
+      "room_number": "213",
+      "floor": "2",
+      "waypoint_id": "wp_suth_213",
+      "room_name": "Room 213",
+      "type": "classroom"
+    },
+    {
+      "building": "sutherland",
+      "room_number": "215",
+      "floor": "2",
+      "waypoint_id": "wp_suth_215",
+      "room_name": "Room 215",
+      "type": "classroom"
+    },
+    {
+      "building": "sutherland",
+      "room_number": "216",
+      "floor": "2",
+      "waypoint_id": "wp_suth_216",
+      "room_name": "Room 216",
+      "type": "classroom"
+    },
+    {
+      "building": "sutherland",
+      "room_number": "217",
+      "floor": "2",
+      "waypoint_id": "wp_suth_217",
+      "room_name": "Room 217",
+      "type": "classroom"
+    },
+    {
+      "building": "sutherland",
+      "room_number": "218",
+      "floor": "2",
+      "waypoint_id": "wp_suth_218",
+      "room_name": "Tech Support",
+      "type": "office"
+    },
+    {
+      "building": "sutherland",
+      "room_number": "220",
+      "floor": "2",
+      "waypoint_id": "wp_suth_220",
+      "room_name": "Academic Advisor",
+      "type": "office"
+    },
+    {
+      "building": "sutherland",
+      "room_number": "222",
+      "floor": "2",
+      "waypoint_id": "wp_suth_222",
+      "room_name": "Room 222",
+      "type": "classroom"
+    },
+    {
+      "building": "sutherland",
+      "room_number": "226",
+      "floor": "2",
+      "waypoint_id": "wp_suth_226",
+      "room_name": "Room 226",
+      "type": "classroom"
+    },
+    {
+      "building": "sutherland",
+      "room_number": "227",
+      "floor": "2",
+      "waypoint_id": "wp_suth_227",
+      "room_name": "Room 227",
+      "type": "classroom"
+    },
+    {
+      "building": "sutherland",
+      "room_number": "305",
+      "floor": "3",
+      "waypoint_id": "wp_suth_305",
+      "room_name": "Room 305",
+      "type": "classroom"
+    },
+    {
+      "building": "sutherland",
+      "room_number": "306",
+      "floor": "3",
+      "waypoint_id": "wp_suth_306",
+      "room_name": "Room 306",
+      "type": "classroom"
+    },
+    {
+      "building": "sutherland",
+      "room_number": "307",
+      "floor": "3",
+      "waypoint_id": "wp_suth_307_entrance",
+      "room_name": "C.A.L.C Lab",
+      "type": "lab"
+    },
+    {
+      "building": "sutherland",
+      "room_number": "308",
+      "floor": "3",
+      "waypoint_id": "wp_suth_308",
+      "room_name": "Room 308",
+      "type": "classroom"
+    },
+    {
+      "building": "sutherland",
+      "room_number": "309",
+      "floor": "3",
+      "waypoint_id": "wp_suth_309",
+      "room_name": "Room 309",
+      "type": "classroom"
+    },
+    {
+      "building": "sutherland",
+      "room_number": "311",
+      "floor": "3",
+      "waypoint_id": "wp_suth_311",
+      "room_name": "Room 311",
+      "type": "classroom"
+    },
+    {
+      "building": "sutherland",
+      "room_number": "315",
+      "floor": "3",
+      "waypoint_id": "wp_suth_315",
+      "room_name": "Chaiken Center",
+      "type": "office"
+    },
+    {
+      "building": "sutherland",
+      "room_number": "320",
+      "floor": "3",
+      "waypoint_id": "wp_suth_320",
+      "room_name": "Room 320",
+      "type": "classroom"
+    },
+    {
+      "building": "sutherland",
+      "room_number": "331",
+      "floor": "3",
+      "waypoint_id": "wp_suth_331",
+      "room_name": "Math Lecture Room",
+      "type": "classroom"
+    },
+    {
+      "building": "sutherland",
+      "room_number": "ELEV",
+      "floor": "1",
+      "waypoint_id": "wp_suth_elevator_f1",
+      "room_name": "Elevator",
+      "type": "elevator"
+    },
+    {
+      "building": "sutherland",
+      "room_number": "ELEV",
+      "floor": "2",
+      "waypoint_id": "wp_suth_elevator_f2",
+      "room_name": "Elevator",
+      "type": "elevator"
+    },
+    {
+      "building": "sutherland",
+      "room_number": "ELEV",
+      "floor": "3",
+      "waypoint_id": "wp_suth_elevator_f3",
+      "room_name": "Elevator",
+      "type": "elevator"
+    },
+    {
+      "building": "woodland",
+      "room_number": "112",
+      "floor": "1",
+      "waypoint_id": "wp_wood_112",
+      "room_name": "Room 112",
+      "type": "classroom"
+    },
+    {
+      "building": "woodland",
+      "room_number": "119",
+      "floor": "1",
+      "waypoint_id": "wp_wood_119",
+      "room_name": "Room 119",
+      "type": "classroom"
+    },
+    {
+      "building": "woodland",
+      "room_number": "121",
+      "floor": "1",
+      "waypoint_id": "wp_wood_121",
+      "room_name": "Room 121",
+      "type": "classroom"
+    },
+    {
+      "building": "woodland",
+      "room_number": "123A",
+      "floor": "1",
+      "waypoint_id": "wp_wood_123a",
+      "room_name": "Room 123A",
+      "type": "classroom"
+    },
+    {
+      "building": "woodland",
+      "room_number": "124",
+      "floor": "1",
+      "waypoint_id": "wp_wood_124",
+      "room_name": "Room 124",
+      "type": "classroom"
+    },
+    {
+      "building": "woodland",
+      "room_number": "132B",
+      "floor": "1",
+      "waypoint_id": "wp_wood_132b",
+      "room_name": "Room 132B",
+      "type": "classroom"
+    },
+    {
+      "building": "woodland",
+      "room_number": "133A",
+      "floor": "1",
+      "waypoint_id": "wp_wood_133a",
+      "room_name": "Room 133A",
+      "type": "classroom"
+    },
+    {
+      "building": "woodland",
+      "room_number": "133B",
+      "floor": "1",
+      "waypoint_id": "wp_wood_133b",
+      "room_name": "Room 133B",
+      "type": "classroom"
+    },
+    {
+      "building": "woodland",
+      "room_number": "134",
+      "floor": "1",
+      "waypoint_id": "wp_wood_134",
+      "room_name": "Room 134",
+      "type": "classroom"
+    },
+    {
+      "building": "woodland",
+      "room_number": "135",
+      "floor": "1",
+      "waypoint_id": "wp_wood_135",
+      "room_name": "Room 135",
+      "type": "classroom"
+    },
+    {
+      "building": "woodland",
+      "room_number": "136",
+      "floor": "1",
+      "waypoint_id": "wp_wood_136a",
+      "room_name": "Room 136",
+      "type": "classroom"
+    },
+    {
+      "building": "woodland",
+      "room_number": "220",
+      "floor": "2",
+      "waypoint_id": "wp_wood_220",
+      "room_name": "Room 220",
+      "type": "classroom"
+    },
+    {
+      "building": "woodland",
+      "room_number": "222",
+      "floor": "2",
+      "waypoint_id": "wp_wood_222",
+      "room_name": "Room 222",
+      "type": "classroom"
+    },
+    {
+      "building": "woodland",
+      "room_number": "224",
+      "floor": "2",
+      "waypoint_id": "wp_wood_224",
+      "room_name": "Room 224",
+      "type": "classroom"
+    },
+    {
+      "building": "woodland",
+      "room_number": "236",
+      "floor": "2",
+      "waypoint_id": "wp_wood_236",
+      "room_name": "Room 236",
+      "type": "classroom"
+    },
+    {
+      "building": "woodland",
+      "room_number": "238",
+      "floor": "2",
+      "waypoint_id": "wp_wood_238",
+      "room_name": "Room 238",
+      "type": "classroom"
+    },
+    {
+      "building": "woodland",
+      "room_number": "240",
+      "floor": "2",
+      "waypoint_id": "wp_wood_240",
+      "room_name": "Room 240",
+      "type": "classroom"
+    },
+    {
+      "building": "woodland",
+      "room_number": "241",
+      "floor": "2",
+      "waypoint_id": "wp_wood_241",
+      "room_name": "Room 241",
+      "type": "classroom"
+    },
+    {
+      "building": "woodland",
+      "room_number": "242",
+      "floor": "2",
+      "waypoint_id": "wp_wood_242",
+      "room_name": "Room 242",
+      "type": "classroom"
+    },
+    {
+      "building": "woodland",
+      "room_number": "243",
+      "floor": "2",
+      "waypoint_id": "wp_wood_243",
+      "room_name": "Room 243",
+      "type": "classroom"
+    },
+    {
+      "building": "woodland",
+      "room_number": "244",
+      "floor": "2",
+      "waypoint_id": "wp_wood_244",
+      "room_name": "Room 244",
+      "type": "classroom"
+    },
+    {
+      "building": "woodland",
+      "room_number": "313",
+      "floor": "3",
+      "waypoint_id": "wp_wood_313",
+      "room_name": "Room 313",
+      "type": "classroom"
+    },
+    {
+      "building": "woodland",
+      "room_number": "319",
+      "floor": "3",
+      "waypoint_id": "wp_wood_319",
+      "room_name": "Room 319",
+      "type": "classroom"
+    },
+    {
+      "building": "woodland",
+      "room_number": "321",
+      "floor": "3",
+      "waypoint_id": "wp_wood_321",
+      "room_name": "Room 321",
+      "type": "classroom"
+    },
+    {
+      "building": "woodland",
+      "room_number": "321A",
+      "floor": "3",
+      "waypoint_id": "wp_wood_321a",
+      "room_name": "Room 321A",
+      "type": "classroom"
+    },
+    {
+      "building": "woodland",
+      "room_number": "321B",
+      "floor": "3",
+      "waypoint_id": "wp_wood_321b",
+      "room_name": "Room 321B",
+      "type": "classroom"
+    },
+    {
+      "building": "woodland",
+      "room_number": "337",
+      "floor": "3",
+      "waypoint_id": "wp_wood_337",
+      "room_name": "Room 337",
+      "type": "classroom"
+    },
+    {
+      "building": "woodland",
+      "room_number": "338",
+      "floor": "3",
+      "waypoint_id": "wp_wood_338",
+      "room_name": "Room 338",
+      "type": "classroom"
+    },
+    {
+      "building": "woodland",
+      "room_number": "340",
+      "floor": "3",
+      "waypoint_id": "wp_wood_340",
+      "room_name": "Room 340",
+      "type": "classroom"
+    },
+    {
+      "building": "woodland",
+      "room_number": "341",
+      "floor": "3",
+      "waypoint_id": "wp_wood_341",
+      "room_name": "Room 341",
+      "type": "classroom"
+    },
+    {
+      "building": "woodland",
+      "room_number": "342",
+      "floor": "3",
+      "waypoint_id": "wp_wood_342",
+      "room_name": "Room 342",
+      "type": "classroom"
+    },
+    {
+      "building": "woodland",
+      "room_number": "343",
+      "floor": "3",
+      "waypoint_id": "wp_wood_343",
+      "room_name": "Room 343",
+      "type": "classroom"
+    },
+    {
+      "building": "woodland",
+      "room_number": "345",
+      "floor": "3",
+      "waypoint_id": "wp_wood_345",
+      "room_name": "Room 345",
+      "type": "classroom"
+    },
+    {
+      "building": "woodland",
+      "room_number": "346",
+      "floor": "3",
+      "waypoint_id": "wp_wood_346",
+      "room_name": "Room 346",
+      "type": "classroom"
+    },
+    {
+      "building": "woodland",
+      "room_number": "ELEV",
+      "floor": "1",
+      "waypoint_id": "wp_wood_f1_elevator",
+      "room_name": "Elevator",
+      "type": "elevator"
+    },
+    {
+      "building": "woodland",
+      "room_number": "ELEV",
+      "floor": "2",
+      "waypoint_id": "wp_wood_elevator_f2",
+      "room_name": "Elevator",
+      "type": "elevator"
+    },
+    {
+      "building": "woodland",
+      "room_number": "ELEV",
+      "floor": "3",
+      "waypoint_id": "wp_wood_elevator_f3",
+      "room_name": "Elevator",
+      "type": "elevator"
+    },
+    {
+      "building": "lares",
+      "room_number": "G04",
+      "floor": "ground",
+      "waypoint_id": "wp_lares_g04",
+      "room_name": "Student Computer Lab",
+      "type": "lab"
+    },
+    {
+      "building": "lares",
+      "room_number": "108",
+      "floor": "1",
+      "waypoint_id": "wp_lares_108",
+      "room_name": "Lubert Commons",
+      "type": "lounge"
+    },
+    {
+      "building": "lares",
+      "room_number": "111",
+      "floor": "1",
+      "waypoint_id": "wp_lares_111",
+      "room_name": "Cafeteria",
+      "type": "dining"
+    },
+    {
+      "building": "lares",
+      "room_number": "112",
+      "floor": "1",
+      "waypoint_id": "wp_lares_112",
+      "room_name": "Dining Room",
+      "type": "dining"
+    },
+    {
+      "building": "lares",
+      "room_number": "banquet",
+      "floor": "1",
+      "waypoint_id": "wp_lares_116",
+      "room_name": "Banquet Room",
+      "type": "dining"
+    },
+    {
+      "building": "lares",
+      "room_number": "ELEV",
+      "floor": "ground",
+      "waypoint_id": "wp_lares_elevator_ground",
+      "room_name": "Elevator",
+      "type": "elevator"
+    },
+    {
+      "building": "lares",
+      "room_number": "ELEV",
+      "floor": "1",
+      "waypoint_id": "wp_lares_elevator_f1",
+      "room_name": "Elevator",
+      "type": "elevator"
+    },
+    {
+      "building": "rydal",
+      "room_number": "001",
+      "floor": "ground",
+      "waypoint_id": "wp_rydal_001",
+      "room_name": "Room 001",
+      "type": "classroom"
+    },
+    {
+      "building": "rydal",
+      "room_number": "EE2",
+      "floor": "ground",
+      "waypoint_id": "wp_rydal_ee2",
+      "room_name": "Room EE2",
+      "type": "classroom"
+    },
+    {
+      "building": "rydal",
+      "room_number": "101",
+      "floor": "1",
+      "waypoint_id": "wp_rydal_101",
+      "room_name": "Room 101",
+      "type": "classroom"
+    },
+    {
+      "building": "springhouse",
+      "room_number": "100",
+      "floor": "1",
+      "waypoint_id": "wp_spring_100_inside",
+      "room_name": "Room 100",
+      "type": "classroom"
+    },
+    {
+      "building": "springhouse",
+      "room_number": "101",
+      "floor": "1",
+      "waypoint_id": "wp_spring_101",
+      "room_name": "Room 101",
+      "type": "classroom"
+    },
+    {
+      "building": "athletic",
+      "room_number": "gym",
+      "floor": "1",
+      "waypoint_id": "wp_ath_f1_gym",
+      "room_name": "Gym",
+      "type": "recreation"
+    },
+    {
+      "building": "athletic",
+      "room_number": "classroom_f2",
+      "floor": "2",
+      "waypoint_id": "wp_ath_f2_classroom",
+      "room_name": "Second Floor Classroom",
+      "type": "classroom"
+    },
+    {
+      "building": "athletic",
+      "room_number": "court",
+      "floor": "1",
+      "waypoint_id": "wp_ath_basketball_court",
+      "room_name": "Basketball Court",
+      "type": "recreation"
+    },
+    {
+      "building": "woodland",
+      "room_number": "102",
+      "floor": "1",
+      "waypoint_id": "wp_wood_102",
+      "room_name": "Katie Odhner, Research and Instruction Librarian",
+      "type": "office"
+    },
+    {
+      "building": "woodland",
+      "room_number": "103",
+      "floor": "1",
+      "waypoint_id": "wp_wood_103",
+      "room_name": "Brendan Johnson, Head Librarian",
+      "type": "office"
+    },
+    {
+      "building": "woodland",
+      "room_number": "118",
+      "floor": "1",
+      "waypoint_id": "wp_wood_118",
+      "room_name": "Spencer Butterwick",
+      "type": "office"
+    },
+    {
+      "building": "woodland",
+      "room_number": "203",
+      "floor": "2",
+      "waypoint_id": "wp_wood_203",
+      "room_name": "Nicole Stokes, Sociology",
+      "type": "office"
+    },
+    {
+      "building": "woodland",
+      "room_number": "213",
+      "floor": "2",
+      "waypoint_id": "wp_wood_213",
+      "room_name": "Dr. Vivian Hsu, Dr. Julie Liebman, Psychology",
+      "type": "office"
+    },
+    {
+      "building": "woodland",
+      "room_number": "214",
+      "floor": "2",
+      "waypoint_id": "wp_wood_214",
+      "room_name": "William Cromar, H. John Thompson",
+      "type": "office"
+    },
+    {
+      "building": "woodland",
+      "room_number": "217",
+      "floor": "2",
+      "waypoint_id": "wp_wood_217",
+      "room_name": "Ann Schmiedekamp, Carl Schmiedekamp",
+      "type": "office"
+    },
+    {
+      "building": "woodland",
+      "room_number": "218",
+      "floor": "2",
+      "waypoint_id": "wp_wood_218",
+      "room_name": "Shelly Grinar-Boyd, Biology",
+      "type": "office"
+    },
+    {
+      "building": "woodland",
+      "room_number": "219",
+      "floor": "2",
+      "waypoint_id": "wp_wood_219",
+      "room_name": "STEM Tutoring Center",
+      "type": "office"
+    },
+    {
+      "building": "woodland",
+      "room_number": "226",
+      "floor": "2",
+      "waypoint_id": "wp_wood_226",
+      "room_name": "Frank Ganther, Dr. Ahmed Nurye, Chemistry and IST/Computer Science",
+      "type": "office"
+    },
+    {
+      "building": "woodland",
+      "room_number": "227",
+      "floor": "2",
+      "waypoint_id": "wp_wood_227",
+      "room_name": "Dr. Stacy Conway, BioBehavior Health, Dr. Shana B. Wagner, Biochemistry",
+      "type": "office"
+    },
+    {
+      "building": "woodland",
+      "room_number": "228",
+      "floor": "2",
+      "waypoint_id": "wp_wood_228",
+      "room_name": "Dr. Les Murray, Biology",
+      "type": "office"
+    },
+    {
+      "building": "woodland",
+      "room_number": "229",
+      "floor": "2",
+      "waypoint_id": "wp_wood_229",
+      "room_name": "Yvonne Love, Art",
+      "type": "office"
+    },
+    {
+      "building": "woodland",
+      "room_number": "230",
+      "floor": "2",
+      "waypoint_id": "wp_wood_230",
+      "room_name": "Dr. Eric Ingersoll, Dr. Thomas McGuire, Biology",
+      "type": "office"
+    },
+    {
+      "building": "woodland",
+      "room_number": "235",
+      "floor": "2",
+      "waypoint_id": "wp_wood_235",
+      "room_name": "Room 235",
+      "type": "office"
+    },
+    {
+      "building": "woodland",
+      "room_number": "314",
+      "floor": "3",
+      "waypoint_id": "wp_wood_314",
+      "room_name": "Kevin Cannon, Chemistry",
+      "type": "office"
+    },
+    {
+      "building": "woodland",
+      "room_number": "315",
+      "floor": "3",
+      "waypoint_id": "wp_wood_315",
+      "room_name": "Hae-Won Kim, Chemistry",
+      "type": "office"
+    },
+    {
+      "building": "woodland",
+      "room_number": "316",
+      "floor": "3",
+      "waypoint_id": "wp_wood_316",
+      "room_name": "Yi Yang, Engineering, Austin Dayghton, Mathematics",
+      "type": "office"
+    },
+    {
+      "building": "woodland",
+      "room_number": "317",
+      "floor": "3",
+      "waypoint_id": "wp_wood_317",
+      "room_name": "Andrei Blinkowski, Physics, Adeel Aiaib, Information Technology",
+      "type": "office"
+    },
+    {
+      "building": "woodland",
+      "room_number": "324",
+      "floor": "3",
+      "waypoint_id": "wp_wood_324",
+      "room_name": "Ola El-Rashiedy, Chemistry",
+      "type": "office"
+    },
+    {
+      "building": "woodland",
+      "room_number": "326",
+      "floor": "3",
+      "waypoint_id": "wp_wood_326",
+      "room_name": "Julia I. Otulak, Academic Adviser, Engineering and Sciences",
+      "type": "office"
+    },
+    {
+      "building": "woodland",
+      "room_number": "327",
+      "floor": "3",
+      "waypoint_id": "wp_wood_327a",
+      "room_name": "Dr. Judy Ozment, Chemistry",
+      "type": "office"
+    },
+    {
+      "building": "woodland",
+      "room_number": "327",
+      "floor": "3",
+      "waypoint_id": "wp_wood_327b",
+      "room_name": "Dr. Michael Kagan, Associate Professor of Physics",
+      "type": "office"
+    },
+    {
+      "building": "woodland",
+      "room_number": "329",
+      "floor": "3",
+      "waypoint_id": "wp_wood_329",
+      "room_name": "Dr. Christine Krewson, Pre-Health Advising and Chemistry",
+      "type": "office"
+    },
+    {
+      "building": "woodland",
+      "room_number": "330",
+      "floor": "3",
+      "waypoint_id": "wp_wood_330",
+      "room_name": "Dr. Maryam Toshaneal, Cybersecurity, Mary Murphy, Biology",
+      "type": "office"
+    },
+    {
+      "building": "woodland",
+      "room_number": "335",
+      "floor": "3",
+      "waypoint_id": "wp_wood_335",
+      "room_name": "Dr. Yibai Chen, Chemistry, Rita Mejias, Spanish and English, Stephen Vallette, Statistics and Math, Dr. Daniel Pearson, Math/Physics",
+      "type": "office"
+    },
+    {
+      "building": "lares",
+      "room_number": "102A",
+      "floor": "1",
+      "waypoint_id": "wp_lares_102a",
+      "room_name": "Mary Ellen Glick, Student Affairs",
+      "type": "office"
+    },
+    {
+      "building": "lares",
+      "room_number": "102B",
+      "floor": "1",
+      "waypoint_id": "wp_lares_102b",
+      "room_name": "Gina D'Amato-Kaufman, Student Affairs",
+      "type": "office"
+    },
+    {
+      "building": "lares",
+      "room_number": "103",
+      "floor": "1",
+      "waypoint_id": "wp_lares_103",
+      "room_name": "Michele Leigh Scott, Health and Wellness",
+      "type": "office"
+    },
+    {
+      "building": "lares",
+      "room_number": "203",
+      "floor": "2",
+      "waypoint_id": "wp_lares_203",
+      "room_name": "Huijiao Xu, Counseling and Psychological Services",
+      "type": "office"
+    },
+    {
+      "building": "lares",
+      "room_number": "204",
+      "floor": "2",
+      "waypoint_id": "wp_lares_204",
+      "room_name": "Sierra Rios, Counseling and Psychological Services",
+      "type": "office"
+    },
+    {
+      "building": "lares",
+      "room_number": "206",
+      "floor": "2",
+      "waypoint_id": "wp_lares_206",
+      "room_name": "Keisha L Johnson, Lions Gate Residence Life",
+      "type": "office"
+    },
+    {
+      "building": "lares",
+      "room_number": "208",
+      "floor": "2",
+      "waypoint_id": "wp_lares_208",
+      "room_name": "Jennifer Lynn Rae, Career & Professional Development",
+      "type": "office"
+    },
+    {
+      "building": "lares",
+      "room_number": "209",
+      "floor": "2",
+      "waypoint_id": "wp_lares_209",
+      "room_name": "Krissie Deck, Career & Professional Development",
+      "type": "office"
+    },
+    {
+      "building": "lares",
+      "room_number": "210",
+      "floor": "2",
+      "waypoint_id": "wp_lares_210",
+      "room_name": "Meredith Tarditi, Career & Professional Development",
+      "type": "office"
+    },
+    {
+      "building": "lares",
+      "room_number": "211",
+      "floor": "2",
+      "waypoint_id": "wp_lares_211",
+      "room_name": "Elizabeth So, Sharon George, Career & Professional Development",
+      "type": "office"
+    },
+    {
+      "building": "sutherland",
+      "room_number": "409",
+      "floor": "4",
+      "waypoint_id": "wp_suth_409",
+      "room_name": "Room 409",
+      "type": "office"
+    },
+    {
+      "building": "sutherland",
+      "room_number": "408",
+      "floor": "4",
+      "waypoint_id": "wp_suth_408",
+      "room_name": "Room 408",
+      "type": "office"
+    },
+    {
+      "building": "sutherland",
+      "room_number": "407",
+      "floor": "4",
+      "waypoint_id": "wp_suth_407",
+      "room_name": "Room 407",
+      "type": "office"
+    },
+    {
+      "building": "sutherland",
+      "room_number": "406",
+      "floor": "4",
+      "waypoint_id": "wp_suth_406",
+      "room_name": "Room 406",
+      "type": "office"
+    },
+    {
+      "building": "sutherland",
+      "room_number": "405",
+      "floor": "4",
+      "waypoint_id": "wp_suth_405",
+      "room_name": "Room 405",
+      "type": "office"
+    },
+    {
+      "building": "sutherland",
+      "room_number": "404",
+      "floor": "4",
+      "waypoint_id": "wp_suth_404",
+      "room_name": "Room 404",
+      "type": "office"
+    },
+    {
+      "building": "sutherland",
+      "room_number": "403B",
+      "floor": "4",
+      "waypoint_id": "wp_suth_403b",
+      "room_name": "Room 403B",
+      "type": "office"
+    },
+    {
+      "building": "sutherland",
+      "room_number": "403A",
+      "floor": "4",
+      "waypoint_id": "wp_suth_403a",
+      "room_name": "Room 403A",
+      "type": "office"
+    },
+    {
+      "building": "sutherland",
+      "room_number": "403",
+      "floor": "4",
+      "waypoint_id": "wp_suth_403",
+      "room_name": "Room 403",
+      "type": "office"
+    },
+    {
+      "building": "sutherland",
+      "room_number": "410",
+      "floor": "4",
+      "waypoint_id": "wp_suth_410",
+      "room_name": "Room 410",
+      "type": "office"
+    },
+    {
+      "building": "sutherland",
+      "room_number": "411",
+      "floor": "4",
+      "waypoint_id": "wp_suth_411",
+      "room_name": "Room 411",
+      "type": "office"
+    },
+    {
+      "building": "sutherland",
+      "room_number": "412",
+      "floor": "4",
+      "waypoint_id": "wp_suth_412",
+      "room_name": "Room 412",
+      "type": "office"
+    },
+    {
+      "building": "sutherland",
+      "room_number": "413",
+      "floor": "4",
+      "waypoint_id": "wp_suth_413",
+      "room_name": "Room 413",
+      "type": "office"
+    },
+    {
+      "building": "sutherland",
+      "room_number": "414",
+      "floor": "4",
+      "waypoint_id": "wp_suth_414",
+      "room_name": "Room 414",
+      "type": "office"
+    },
+    {
+      "building": "sutherland",
+      "room_number": "415",
+      "floor": "4",
+      "waypoint_id": "wp_suth_415",
+      "room_name": "Room 415",
+      "type": "office"
+    },
+    {
+      "building": "sutherland",
+      "room_number": "416",
+      "floor": "4",
+      "waypoint_id": "wp_suth_416",
+      "room_name": "Room 416",
+      "type": "office"
+    },
+    {
+      "building": "sutherland",
+      "room_number": "417S",
+      "floor": "4",
+      "waypoint_id": "wp_suth_417s",
+      "room_name": "Room 417S",
+      "type": "office"
+    },
+    {
+      "building": "sutherland",
+      "room_number": "418",
+      "floor": "4",
+      "waypoint_id": "wp_suth_418",
+      "room_name": "Room 418",
+      "type": "office"
+    },
+    {
+      "building": "sutherland",
+      "room_number": "320A",
+      "floor": "3",
+      "waypoint_id": "wp_suth_320a",
+      "room_name": "Room 320A",
+      "type": "office"
+    },
+    {
+      "building": "sutherland",
+      "room_number": "321",
+      "floor": "3",
+      "waypoint_id": "wp_suth_321",
+      "room_name": "Room 321",
+      "type": "office"
+    },
+    {
+      "building": "sutherland",
+      "room_number": "322",
+      "floor": "3",
+      "waypoint_id": "wp_suth_322",
+      "room_name": "Room 322",
+      "type": "office"
+    },
+    {
+      "building": "sutherland",
+      "room_number": "323",
+      "floor": "3",
+      "waypoint_id": "wp_suth_323",
+      "room_name": "Room 323",
+      "type": "office"
+    },
+    {
+      "building": "sutherland",
+      "room_number": "325",
+      "floor": "3",
+      "waypoint_id": "wp_suth_325",
+      "room_name": "Room 325",
+      "type": "office"
+    },
+    {
+      "building": "sutherland",
+      "room_number": "324",
+      "floor": "3",
+      "waypoint_id": "wp_suth_324",
+      "room_name": "Room 324",
+      "type": "office"
+    },
+    {
+      "building": "sutherland",
+      "room_number": "326",
+      "floor": "3",
+      "waypoint_id": "wp_suth_326",
+      "room_name": "Room 326",
+      "type": "office"
+    },
+    {
+      "building": "sutherland",
+      "room_number": "327",
+      "floor": "3",
+      "waypoint_id": "wp_suth_327",
+      "room_name": "Room 327",
+      "type": "office"
+    },
+    {
+      "building": "sutherland",
+      "room_number": "328",
+      "floor": "3",
+      "waypoint_id": "wp_suth_328",
+      "room_name": "Room 328",
+      "type": "office"
+    },
+    {
+      "building": "sutherland",
+      "room_number": "329",
+      "floor": "3",
+      "waypoint_id": "wp_suth_329",
+      "room_name": "Room 329",
+      "type": "office"
+    },
+    {
+      "building": "sutherland",
+      "room_number": "330",
+      "floor": "3",
+      "waypoint_id": "wp_suth_330",
+      "room_name": "Room 330",
+      "type": "office"
+    },
+    {
+      "building": "sutherland",
+      "room_number": "317",
+      "floor": "3",
+      "waypoint_id": "wp_suth_317",
+      "room_name": "Room 317",
+      "type": "office"
+    },
+    {
+      "building": "sutherland",
+      "room_number": "332",
+      "floor": "3",
+      "waypoint_id": "wp_suth_332",
+      "room_name": "Room 332",
+      "type": "office"
+    },
+    {
+      "building": "sutherland",
+      "room_number": "333",
+      "floor": "3",
+      "waypoint_id": "wp_suth_333",
+      "room_name": "Room 333",
+      "type": "office"
+    },
+    {
+      "building": "sutherland",
+      "room_number": "316",
+      "floor": "3",
+      "waypoint_id": "wp_suth_316",
+      "room_name": "Room 316",
+      "type": "office"
+    },
+    {
+      "building": "sutherland",
+      "room_number": "334",
+      "floor": "3",
+      "waypoint_id": "wp_suth_334",
+      "room_name": "Room 334",
+      "type": "office"
+    },
+    {
+      "building": "sutherland",
+      "room_number": "335",
+      "floor": "3",
+      "waypoint_id": "wp_suth_335",
+      "room_name": "Room 335",
+      "type": "office"
+    },
+    {
+      "building": "sutherland",
+      "room_number": "301",
+      "floor": "3",
+      "waypoint_id": "wp_suth_301",
+      "room_name": "Room 301",
+      "type": "office"
+    },
+    {
+      "building": "sutherland",
+      "room_number": "315",
+      "floor": "3",
+      "waypoint_id": "wp_suth_315",
+      "room_name": "Chaiken Center",
+      "type": "office"
+    },
+    {
+      "building": "sutherland",
+      "room_number": "302",
+      "floor": "3",
+      "waypoint_id": "wp_suth_302",
+      "room_name": "Room 302",
+      "type": "office"
+    },
+    {
+      "building": "sutherland",
+      "room_number": "314",
+      "floor": "3",
+      "waypoint_id": "wp_suth_314",
+      "room_name": "Room 314",
+      "type": "office"
+    },
+    {
+      "building": "sutherland",
+      "room_number": "303",
+      "floor": "3",
+      "waypoint_id": "wp_suth_303",
+      "room_name": "Room 303",
+      "type": "office"
+    },
+    {
+      "building": "sutherland",
+      "room_number": "313",
+      "floor": "3",
+      "waypoint_id": "wp_suth_313",
+      "room_name": "Room 313",
+      "type": "office"
+    },
+    {
+      "building": "sutherland",
+      "room_number": "305A",
+      "floor": "3",
+      "waypoint_id": "wp_suth_305a",
+      "room_name": "Room 305A",
+      "type": "office"
+    },
+    {
+      "building": "sutherland",
+      "room_number": "312",
+      "floor": "3",
+      "waypoint_id": "wp_suth_312",
+      "room_name": "Room 312",
+      "type": "office"
+    },
+    {
+      "building": "sutherland",
+      "room_number": "310A",
+      "floor": "3",
+      "waypoint_id": "wp_suth_310a",
+      "room_name": "Room 310A",
+      "type": "office"
+    },
+    {
+      "building": "sutherland",
+      "room_number": "310B",
+      "floor": "3",
+      "waypoint_id": "wp_suth_310b",
+      "room_name": "Room 310B",
+      "type": "office"
+    },
+    {
+      "building": "sutherland",
+      "room_number": "310C/D",
+      "floor": "3",
+      "waypoint_id": "wp_suth_310cd",
+      "room_name": "Room 310C/D",
+      "type": "office"
+    },
+    {
+      "building": "sutherland",
+      "room_number": "221",
+      "floor": "2",
+      "waypoint_id": "wp_suth_221",
+      "room_name": "Room 221",
+      "type": "office"
+    },
+    {
+      "building": "sutherland",
+      "room_number": "223",
+      "floor": "2",
+      "waypoint_id": "wp_suth_223",
+      "room_name": "Room 223",
+      "type": "office"
+    },
+    {
+      "building": "sutherland",
+      "room_number": "224B",
+      "floor": "2",
+      "waypoint_id": "wp_suth_224",
+      "room_name": "Room 224B",
+      "type": "office"
+    },
+    {
+      "building": "sutherland",
+      "room_number": "220B",
+      "floor": "2",
+      "waypoint_id": "wp_suth_220b",
+      "room_name": "Room 220B",
+      "type": "office"
+    },
+    {
+      "building": "sutherland",
+      "room_number": "220",
+      "floor": "2",
+      "waypoint_id": "wp_suth_220",
+      "room_name": "Room 220",
+      "type": "office"
+    },
+    {
+      "building": "sutherland",
+      "room_number": "219",
+      "floor": "2",
+      "waypoint_id": "wp_suth_219",
+      "room_name": "Room 219",
+      "type": "office"
+    },
+    {
+      "building": "sutherland",
+      "room_number": "Lindsay Wood",
+      "floor": "3",
+      "waypoint_id": "wp_suth_lindsay_wood",
+      "room_name": "Lindsay Wood",
+      "type": "office"
+    },
+    {
+      "building": "sutherland",
+      "room_number": "225",
+      "floor": "2",
+      "waypoint_id": "wp_suth_225",
+      "room_name": "Sherese Burnam",
+      "type": "office"
+    },
+    {
+      "building": "sutherland",
+      "room_number": "218",
+      "floor": "2",
+      "waypoint_id": "wp_suth_218",
+      "room_name": "Room 218",
+      "type": "office"
+    },
+    {
+      "building": "sutherland",
+      "room_number": "205",
+      "floor": "2",
+      "waypoint_id": "wp_suth_205",
+      "room_name": "Room 205",
+      "type": "office"
+    },
+    {
+      "building": "sutherland",
+      "room_number": "214",
+      "floor": "2",
+      "waypoint_id": "wp_suth_214",
+      "room_name": "Room 214",
+      "type": "office"
+    },
+    {
+      "building": "sutherland",
+      "room_number": "207",
+      "floor": "2",
+      "waypoint_id": "wp_suth_207",
+      "room_name": "Room 207",
+      "type": "office"
+    },
+    {
+      "building": "sutherland",
+      "room_number": "212",
+      "floor": "2",
+      "waypoint_id": "wp_suth_212",
+      "room_name": "Room 212",
+      "type": "office"
+    },
+    {
+      "building": "sutherland",
+      "room_number": "122",
+      "floor": "1",
+      "waypoint_id": "wp_suth_122",
+      "room_name": "Registrar",
+      "type": "office"
+    },
+    {
+      "building": "sutherland",
+      "room_number": "119",
+      "floor": "1",
+      "waypoint_id": "wp_suth_119",
+      "room_name": "Academic Office",
+      "type": "office"
+    },
+    {
+      "building": "sutherland",
+      "room_number": "Dr. Boni Fernandes Wozolek",
+      "floor": "1",
+      "waypoint_id": "wp_suth_boni_fernandes_wozolek",
+      "room_name": "Dr. Boni Fernandes Wozolek",
+      "type": "office"
+    },
+    {
+      "building": "sutherland",
+      "room_number": "121",
+      "floor": "1",
+      "waypoint_id": "wp_suth_121",
+      "room_name": "Room 121",
+      "type": "office"
+    },
+    {
+      "building": "sutherland",
+      "room_number": "123",
+      "floor": "1",
+      "waypoint_id": "wp_suth_123",
+      "room_name": "Room 123",
+      "type": "office"
+    },
+    {
+      "building": "sutherland",
+      "room_number": "117A",
+      "floor": "1",
+      "waypoint_id": "wp_suth_117a",
+      "room_name": "Room 117A",
+      "type": "office"
+    },
+    {
+      "building": "sutherland",
+      "room_number": "117",
+      "floor": "1",
+      "waypoint_id": "wp_suth_117",
+      "room_name": "Room 117",
+      "type": "office"
+    },
+    {
+      "building": "sutherland",
+      "room_number": "124",
+      "floor": "1",
+      "waypoint_id": "wp_suth_124",
+      "room_name": "Room 124",
+      "type": "office"
+    },
+    {
+      "building": "sutherland",
+      "room_number": "125",
+      "floor": "1",
+      "waypoint_id": "wp_suth_125",
+      "room_name": "Room 125",
+      "type": "office"
+    },
+    {
+      "building": "sutherland",
+      "room_number": "125",
+      "floor": "1",
+      "waypoint_id": "wp_suth_125",
+      "room_name": "Room 125",
+      "type": "office"
+    },
+    {
+      "building": "sutherland",
+      "room_number": "115",
+      "floor": "1",
+      "waypoint_id": "wp_suth_115",
+      "room_name": "Room 115",
+      "type": "office"
+    },
+    {
+      "building": "sutherland",
+      "room_number": "101A",
+      "floor": "1",
+      "waypoint_id": "wp_suth_101a",
+      "room_name": "Room 101A",
+      "type": "office"
+    },
+    {
+      "building": "sutherland",
+      "room_number": "101",
+      "floor": "1",
+      "waypoint_id": "wp_suth_101",
+      "room_name": "Room 101",
+      "type": "office"
+    },
+    {
+      "building": "sutherland",
+      "room_number": "102",
+      "floor": "1",
+      "waypoint_id": "wp_suth_102",
+      "room_name": "Student Disability Resource",
+      "type": "office"
+    },
+    {
+      "building": "sutherland",
+      "room_number": "106",
+      "floor": "1",
+      "waypoint_id": "wp_suth_106",
+      "room_name": "Student Affairs",
+      "type": "office"
+    },
+    {
+      "building": "athletic",
+      "room_number": "STAIRS",
+      "floor": "1",
+      "waypoint_id": "wp_ath_f1_stairs",
+      "room_name": "Athletic Stairs",
+      "type": "stairs"
+    },
+    {
+      "building": "athletic",
+      "room_number": "LANDING",
+      "floor": "2",
+      "waypoint_id": "wp_ath_f2_landing",
+      "room_name": "Athletic 2nd Floor Landing",
+      "type": "hall"
+    }
+  ]
+}

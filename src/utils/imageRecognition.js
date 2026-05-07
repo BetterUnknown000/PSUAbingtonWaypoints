@@ -2,7 +2,7 @@ import * as ImageManipulator from "expo-image-manipulator";
 import { Asset } from "expo-asset";
 import jpeg from "jpeg-js";
 
-import campusData from "../data/campusData.json";
+import { getAllBuildings, getBuildingData, getBuildingWaypoints } from "./campusDataLoader";
 import { imageMap } from "./imageMap";
 
 // ------------------------------------------------------------
@@ -154,28 +154,33 @@ async function uriToFingerprint(uri) {
 export async function loadReferenceImageDatabase() {
   const refs = [];
 
-  for (const wp of campusData.waypoints || []) {
-    if (!wp.photo || !imageMap[wp.photo]) continue;
+  // Iterate every building, loading its data on-demand.
+  // Only waypoints that have a matching entry in imageMap produce fingerprints.
+  for (const building of getAllBuildings()) {
+    await getBuildingData(building.id); // no-op if already cached
+    for (const wp of getBuildingWaypoints(building.id)) {
+      if (!wp.photo || !imageMap[wp.photo]) continue;
 
-    try {
-      const asset = Asset.fromModule(imageMap[wp.photo]);
-      await asset.downloadAsync();
+      try {
+        const asset = Asset.fromModule(imageMap[wp.photo]);
+        await asset.downloadAsync();
 
-      const uri = asset.localUri || asset.uri;
-      const fingerprint = await uriToFingerprint(uri);
+        const uri = asset.localUri || asset.uri;
+        const fingerprint = await uriToFingerprint(uri);
 
-      refs.push({
-        waypoint_id: wp.id,
-        label: wp.label,
-        building: wp.building,
-        floor: wp.floor,
-        photo: wp.photo,
-        fingerprint,
-      });
-    } catch (err) {
-      console.warn(`Reference load failed for ${wp.id}:`, err.message);
-    }
-  }
+        refs.push({
+          waypoint_id: wp.id,
+          label: wp.label,
+          building: wp.building,
+          floor: wp.floor,
+          photo: wp.photo,
+          fingerprint,
+        });
+      } catch (err) {
+        console.warn(`Reference load failed for ${wp.id}:`, err.message);
+      }
+    }   // end waypoint loop
+  }   // end building loop
 
   referenceDb = refs;
   console.log(`[VPR] Loaded ${referenceDb.length} reference fingerprints`);

@@ -9,7 +9,7 @@ import {
 } from "react-native";
 import { SafeAreaView, useSafeAreaInsets } from "react-native-safe-area-context";
 import { getAllBuildings } from "../utils/findRoom";
-import campusData from "../data/campusData.json";
+import { getAllRooms, getWaypointById, getAllEntrances } from '../utils/campusDataLoader';
 import BottomMenu, { BOTTOM_MENU_HEIGHT } from "../components/BottomMenu";
 
 const PSU = {
@@ -45,7 +45,7 @@ function getImage(id) {
 
 function countEntrancesForBuilding(buildingId) {
   const bid = String(buildingId || "").toLowerCase();
-  const waypoints = Array.isArray(campusData?.waypoints) ? campusData.waypoints : [];
+  const waypoints = getAllEntrances();
 
   return waypoints.filter(
     (w) =>
@@ -56,7 +56,7 @@ function countEntrancesForBuilding(buildingId) {
 
 function countRoomsForBuilding(buildingId) {
   const bid = String(buildingId || "").toLowerCase();
-  const rooms = Array.isArray(campusData?.rooms) ? campusData.rooms : [];
+  const rooms = getAllRooms();
   return rooms.filter((r) => String(r.building || "").toLowerCase() === bid).length;
 }
 

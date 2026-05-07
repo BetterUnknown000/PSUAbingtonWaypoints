@@ -2,33 +2,6 @@
   "expo": {
     "name": "PSU Abington Waypoints",
     "slug": "psu-abington-waypoints",
-    "scheme": "psuabingtonwaypoints",
-    "android": {
-      "permissions": [
-        "ACCESS_FINE_LOCATION",
-        "ACCESS_COARSE_LOCATION",
-        "CAMERA",
-        "BODY_SENSORS",
-        "READ_EXTERNAL_STORAGE",
-        "WRITE_EXTERNAL_STORAGE"
-      ],
-      "intentFilters": [
-        {
-          "action": "VIEW",
-          "autoVerify": true,
-          "data": [{ "scheme": "psuabingtonwaypoints" }],
-          "category": ["BROWSABLE", "DEFAULT"]
-        }
-      ]
-    },
-    "plugins": [
-      ["expo-location", {
-        "locationAlwaysAndWhenInUsePermission": "This app uses location to navigate you around campus."
-      }],
-      ["expo-camera", {
-        "cameraPermission": "This app uses the camera to scan QR codes for navigation."
-      }],
-      "expo-sensors"
-    ]
+    "scheme": "psuabingtonwaypoints"
   }
 }

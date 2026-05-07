@@ -5,9 +5,13 @@
   "main": "node_modules/expo/AppEntry.js",
   "scripts": {
     "start": "expo start",
+    "start:tunnel": "node scripts/startExpoTunnel.js",
+    "start:tunnel:clear": "node scripts/startExpoTunnel.js --clear",
     "android": "expo run:android",
     "ios": "expo run:ios",
-    "web": "expo start --web"
+    "web": "expo start --web",
+    "test": "jest",
+    "test:watch": "jest --watch"
   },
   "keywords": [],
   "author": "",
@@ -16,28 +20,53 @@
   "dependencies": {
     "@infinitered/react-native-mlkit-text-recognition": "^5.0.1",
     "@react-native-async-storage/async-storage": "2.2.0",
-    "@react-native-picker/picker": "^2.11.4",
+    "@react-native-picker/picker": "2.11.1",
     "@react-navigation/native": "^7.1.33",
     "@react-navigation/native-stack": "^7.14.5",
-    "expo": "~54.0.0",
-    "expo-asset": "~12.0.12",
+    "expo": "~54.0.34",
+    "expo-asset": "~12.0.13",
     "expo-calendar": "~15.0.8",
     "expo-camera": "~17.0.10",
     "expo-document-picker": "~14.0.8",
-    "expo-file-system": "~19.0.21",
+    "expo-file-system": "~19.0.22",
     "expo-image-manipulator": "~14.0.8",
     "expo-location": "~19.0.8",
-    "expo-mlkit-ocr": "^2.0.1",
     "expo-sensors": "~15.0.8",
+    "expo-sharing": "~14.0.8",
     "jpeg-js": "^0.4.4",
     "react": "19.1.0",
     "react-native": "0.81.5",
     "react-native-gesture-handler": "~2.28.0",
     "react-native-maps": "1.20.1",
+    "react-native-mlkit-ocr": "^0.3.0",
     "react-native-reanimated": "~4.1.1",
     "react-native-safe-area-context": "~5.6.0",
     "react-native-screens": "~4.16.0",
     "react-native-svg": "15.12.1",
     "react-native-svg-transformer": "^1.5.3"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.25.0",
+    "@babel/preset-env": "^7.25.0",
+    "@babel/preset-react": "^7.24.0",
+    "babel-jest": "^29.7.0",
+    "babel-preset-expo": "~54.0.10",
+    "jest": "^29.7.0",
+    "qrcode": "^1.5.4"
+  },
+  "jest": {
+    "testEnvironment": "node",
+    "testMatch": [
+      "**/__tests__/**/*.test.js"
+    ],
+    "transform": {
+      "^.+\\.(js|jsx)$": "babel-jest"
+    },
+    "moduleNameMapper": {
+      "\\.(png|jpg|jpeg|gif|svg)$": "<rootDir>/__mocks__/fileMock.js"
+    },
+    "transformIgnorePatterns": [
+      "node_modules/(?!(expo-sensors|expo-camera|expo-location)/)"
+    ]
   }
 }

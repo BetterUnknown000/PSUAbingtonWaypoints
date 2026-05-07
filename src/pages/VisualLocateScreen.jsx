@@ -15,7 +15,7 @@ import {
   loadReferenceImageDatabase,
   identifyLocationFromFrame,
 } from "../utils/imageRecognition";
-import campusData from "../data/campusData.json";
+import { getWaypointById } from "../utils/campusDataLoader";
 
 const PSU = {
   blue: "#001E44",
@@ -90,9 +90,7 @@ export default function VisualLocateScreen({ route, navigation }) {
         return;
       }
 
-      const matchedWaypoint = (campusData.waypoints || []).find(
-        (waypoint) => waypoint.id === waypointId
-      );
+      const matchedWaypoint = getWaypointById(waypointId);
 
       if (!matchedWaypoint) {
         setLastResult(null);
@@ -111,9 +109,18 @@ export default function VisualLocateScreen({ route, navigation }) {
       setLastResult(payload);
       setStatus(`Matched ${payload.label}. Returning to navigation…`);
 
+      const returnKey = route.params?.returnRouteKey;
+      const returnParams = route.params?.returnParams || {};
+
+      // Navigating to an existing screen by key focuses it and implicitly pops
+      // everything above it in the stack, so no extra pop() call is needed.
       navigation.navigate({
+        key: returnKey,
         name: route.params?.returnScreen || "Navigation",
-        params: { visualLocateResult: payload },
+        params: {
+          ...returnParams,
+          visualLocateResult: payload,
+        },
         merge: true,
       });
     } catch (error) {

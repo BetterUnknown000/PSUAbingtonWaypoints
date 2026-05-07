@@ -16,7 +16,7 @@ import { useNavigation } from "@react-navigation/native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import BottomMenu from "../components/BottomMenu";
 import { useBottomMenuSpacing } from "../utils/useBottomMenuSpacing";
-import campusData from "../data/campusData.json";
+import { getAllBuildings } from "../utils/campusDataLoader";
 
 const PSU = {
   blue: "#001E44",
@@ -28,11 +28,8 @@ const PSU = {
   white: "#FFFFFF",
 };
 
-const buildings = campusData.buildings.filter((b) =>
-  ["woodland", "rydal", "sutherland", "lares", "springhouse", "athletic"].includes(
-    b.id
-  )
-);
+const ALLOWED_BUILDING_IDS = new Set(["woodland", "rydal", "sutherland", "lares", "springhouse", "athletic"]);
+const buildings = getAllBuildings().filter((b) => ALLOWED_BUILDING_IDS.has(b.id));
 
 const MAP_W = 1481.3333;
 const MAP_H = 1194.6667;

@@ -1,24 +1,10 @@
 import { getWaypointById } from "./qrWaypointLookup";
+// distanceXY returns Infinity on missing/invalid coordinates; the heuristic
+// guards with Number.isFinite() so Infinity propagates cleanly without NaN.
+import { distanceXY } from "./indoorLocation";
 
 function normalize(value) {
   return String(value || "").trim().toLowerCase();
-}
-
-function distanceXY(a, b) {
-  if (
-    !a ||
-    !b ||
-    a.x == null ||
-    a.y == null ||
-    b.x == null ||
-    b.y == null
-  ) {
-    return null;
-  }
-
-  const dx = Number(b.x) - Number(a.x);
-  const dy = Number(b.y) - Number(a.y);
-  return Math.sqrt(dx * dx + dy * dy);
 }
 
 function haversineMeters(a, b) {

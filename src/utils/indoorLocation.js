@@ -34,7 +34,10 @@ export function calculateBearingXY(from, to) {
   const dx = Number(to.x) - Number(from.x);
   const dy = Number(to.y) - Number(from.y);
 
-  let angle = Math.atan2(dy, dx) * (180 / Math.PI);
+  // Convert floor-map x/y movement into compass-style degrees.
+  // On the map: x goes right, y goes down.
+  // Compass: 0 = north/up, 90 = east/right, 180 = south/down, 270 = west/left.
+  let angle = Math.atan2(dx, -dy) * (180 / Math.PI);
   angle = (angle + 360) % 360;
 
   return angle;

@@ -20,10 +20,16 @@ export function findCourse(courseQuery) {
   }
 
   const courses = Array.isArray(courseData?.courses) ? courseData.courses : [];
-
+  
   const matchedCourse =
-    courses.find((c) => normalizeCourse(c.course) === query) ||
-    null;
+    courses.find((c) => {
+      return (
+        normalizeCourse(c.course) === query ||
+        normalizeCourse(c.course_code) === query ||
+        normalizeCourse(c.code) === query ||
+        normalizeCourse(c.id) === query
+      );
+    }) || null;
 
   if (!matchedCourse) {
     return {
