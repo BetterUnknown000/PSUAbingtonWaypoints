@@ -27,18 +27,7 @@
       "stop_radius_m": 5
     }
   ],
-  "edges": [
-    {
-      "from": "wp_rydal_main_entrance",
-      "to": "wp_cloverly_main_entrance",
-      "accessible": true
-    },
-    {
-      "from": "wp_cloverly_main_entrance",
-      "to": "wp_rydal_main_entrance",
-      "accessible": true
-    }
-  ],
+  "edges": [],
   "rooms": [],
   "qrAnchors": [
     {

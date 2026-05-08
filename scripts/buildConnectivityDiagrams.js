@@ -1,21 +1,27 @@
 /**
  * scripts/buildConnectivityDiagrams.js
  * Usage: node scripts/buildConnectivityDiagrams.js
- * Opens: diagrams/index.html  (no server needed)
+ *        node scripts/buildConnectivityDiagrams.js --serve
+ * Opens: diagrams/index.html  (static fallback) or http://localhost:5177
  *
  * Modes: View | Move nodes | Edit edges | Add waypoint
- * Save downloads updated campusData.json
+ * Static save downloads updated campusData.json.
+ * Server save writes campusData.json, splits data, validates, and rebuilds.
  */
 
 'use strict';
 
 const fs   = require('fs');
+const http = require('http');
 const path = require('path');
+const { spawnSync } = require('child_process');
 
 const DATA_PATH     = path.join(__dirname, '..', 'src', 'data', 'campusData.json');
 const FLOORPLAN_DIR = path.join(__dirname, '..', 'src', 'assets', 'floorplans');
 const OUTPUT_DIR    = path.join(__dirname, '..', 'diagrams');
 const OUTPUT_FILE   = path.join(OUTPUT_DIR, 'index.html');
+const PROJECT_ROOT  = path.join(__dirname, '..');
+const SERVER_PORT   = Number(process.env.CAMPUS_EDITOR_PORT || 5177);
 
 // ── Load data ─────────────────────────────────────────────────────────────────
 const campus   = JSON.parse(fs.readFileSync(DATA_PATH, 'utf8'));
@@ -180,6 +186,9 @@ w('.stat b{color:#2c2c2a}\n');
 w('#save-btn{margin-left:auto;padding:5px 14px;background:#185FA5;color:#fff;border:none;border-radius:6px;font-size:12px;cursor:pointer;font-weight:500;white-space:nowrap}\n');
 w('#save-btn:hover{background:#0d4a8a}\n');
 w('#save-btn.dirty{background:#854F0B}\n');
+w('#save-status{font-size:11px;color:#5f5e5a;min-width:150px}\n');
+w('#save-status.ok{color:#3B6D11}\n');
+w('#save-status.err{color:#A32D2D}\n');
 w('#changes-lbl{font-size:11px;color:#854F0B;display:none}\n');
 w('#floor-bar{padding:5px 14px;background:#fafaf8;border-bottom:.5px solid #d3d1c7;display:flex;gap:3px;flex-wrap:wrap;flex-shrink:0}\n');
 w('.floor-btn{font-size:11px;padding:3px 8px;border:.5px solid #d3d1c7;border-radius:5px;background:#fff;cursor:pointer;white-space:nowrap}\n');
@@ -243,7 +252,8 @@ w('<div class="stat">Waypoints: <b id="s-wps">' + allWps.length + '</b></div>');
 w('<div class="stat">Edges: <b id="s-edges">' + allEdges.length + '</b></div>');
 w('<div class="stat">Disconnected: <b id="s-dc">\u2014</b></div>');
 w('<span id="changes-lbl">\u25cf unsaved changes</span>');
-w('<button id="save-btn" onclick="saveData()">Download campusData.json</button>');
+w('<button id="save-btn" onclick="saveData()">Save + sync project</button>');
+w('<span id="save-status"></span>');
 w('</div>\n');
 
 w('<div id="floor-bar">\n');
@@ -284,6 +294,9 @@ for (const t of Object.keys(TYPE_COLOR)) {
   w('<option value="' + t + '">' + t + '</option>');
 }
 w('</select></div>');
+w('<div class="field"><label>QR code (optional)</label><input id="m-qr-code" placeholder="QR_SUTH_F1_205"/></div>');
+w('<div class="field"><label>Search room number / keyword (optional)</label><input id="m-room-number" placeholder="106, Library, Cafe"/></div>');
+w('<div class="field"><label>Search display name (optional)</label><input id="m-room-name" placeholder="Dining Room"/></div>');
 w('<div class="field"><label>Building</label><input id="m-building" readonly/></div>');
 w('<div class="field"><label>Floor</label><input id="m-floor" readonly/></div>');
 w('<div id="modal-coords">Click on the map to set position</div>');
@@ -294,6 +307,7 @@ w('</div></div>\n');
 w('<script>\n');
 w('var FLOOR_DATA = '  + safeJson(floorData)   + ';\n');
 w('var TYPE_COLOR = '  + safeJson(TYPE_COLOR)  + ';\n');
+w('var EDITOR_SAVE_ENDPOINT = "/api/save-campus-data";\n');
 w('var FULL_CAMPUS = ' + safeJson(campus)       + ';\n');
 
 // ── Browser-side JavaScript ───────────────────────────────────────────────────
@@ -311,3 +325,122 @@ console.log('Floors    : ' + sortedKeys.length);
 console.log('Output    : ' + OUTPUT_FILE + ' (' + kb + ' KB)');
 console.log('\nModes: View | Move | Edges | Add waypoint');
 console.log('Open diagrams/index.html in any browser.\n');
+
+if (process.argv.includes('--serve') || process.argv.includes('--server')) {
+  startServer();
+}
+
+function sendJson(res, statusCode, payload) {
+  const json = JSON.stringify(payload, null, 2);
+  res.writeHead(statusCode, {
+    'Content-Type': 'application/json; charset=utf-8',
+    'Cache-Control': 'no-store',
+  });
+  res.end(json);
+}
+
+function runNodeScript(scriptName) {
+  const result = spawnSync(process.execPath, [path.join(__dirname, scriptName)], {
+    cwd: PROJECT_ROOT,
+    encoding: 'utf8',
+  });
+  return {
+    ok: result.status === 0,
+    status: result.status,
+    stdout: result.stdout || '',
+    stderr: result.stderr || '',
+  };
+}
+
+function runRebuild() {
+  const result = spawnSync(process.execPath, [__filename], {
+    cwd: PROJECT_ROOT,
+    encoding: 'utf8',
+  });
+  return {
+    ok: result.status === 0,
+    status: result.status,
+    stdout: result.stdout || '',
+    stderr: result.stderr || '',
+  };
+}
+
+function collectBody(req, maxBytes, onDone) {
+  let body = '';
+  let size = 0;
+  req.on('data', function(chunk) {
+    size += chunk.length;
+    if (size > maxBytes) {
+      req.destroy(new Error('Request body is too large.'));
+      return;
+    }
+    body += chunk;
+  });
+  req.on('end', function() { onDone(null, body); });
+  req.on('error', function(err) { onDone(err); });
+}
+
+function startServer() {
+  const server = http.createServer(function(req, res) {
+    const url = new URL(req.url, 'http://localhost:' + SERVER_PORT);
+
+    if (req.method === 'GET' && (url.pathname === '/' || url.pathname === '/index.html' || url.pathname === '/diagrams/index.html')) {
+      res.writeHead(200, {
+        'Content-Type': 'text/html; charset=utf-8',
+        'Cache-Control': 'no-store',
+      });
+      res.end(fs.readFileSync(OUTPUT_FILE, 'utf8'));
+      return;
+    }
+
+    if (req.method === 'GET' && url.pathname === '/api/health') {
+      sendJson(res, 200, { ok: true });
+      return;
+    }
+
+    if (req.method === 'POST' && url.pathname === '/api/save-campus-data') {
+      collectBody(req, 25 * 1024 * 1024, function(err, body) {
+        if (err) {
+          sendJson(res, 413, { ok: false, message: err.message });
+          return;
+        }
+
+        let nextCampus;
+        try {
+          nextCampus = JSON.parse(body);
+        } catch (parseErr) {
+          sendJson(res, 400, { ok: false, message: 'Invalid JSON: ' + parseErr.message });
+          return;
+        }
+
+        try {
+          fs.writeFileSync(DATA_PATH, JSON.stringify(nextCampus, null, 2) + '\n');
+          const split = runNodeScript('splitCampusData.js');
+          const validate = runNodeScript('validateCampusData.js');
+          const rebuild = runRebuild();
+          const ok = split.ok && validate.ok && rebuild.ok;
+
+          sendJson(res, ok ? 200 : 422, {
+            ok: ok,
+            message: ok
+              ? 'Saved campusData.json, regenerated split data, validated, and rebuilt diagrams.'
+              : 'Saved, but one or more sync steps reported a problem.',
+            split: split,
+            validate: validate,
+            rebuild: rebuild,
+          });
+        } catch (saveErr) {
+          sendJson(res, 500, { ok: false, message: saveErr.message });
+        }
+      });
+      return;
+    }
+
+    sendJson(res, 404, { ok: false, message: 'Not found' });
+  });
+
+  server.listen(SERVER_PORT, function() {
+    console.log('Editor server: http://localhost:' + SERVER_PORT);
+    console.log('Saving from this URL updates src/data/campusData.json, split data, validation, and diagrams/index.html.\n');
+  });
+}

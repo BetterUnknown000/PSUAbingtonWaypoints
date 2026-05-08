@@ -12,7 +12,7 @@
 export async function rankEntrances({
   userGps,
   entrances = [],
-  apiBaseUrl = process.env.EXPO_PUBLIC_API_BASE_URL || "",
+  apiBaseUrl = getDefaultApiBaseUrl(),
   accessibilityMode = false,
   timeoutMs = 8000,
 }) {
@@ -162,6 +162,11 @@ function haversineMeters(lat1, lon1, lat2, lon2) {
 
 function normalizeLabel(value) {
   return String(value || "").trim().toLowerCase();
+}
+
+function getDefaultApiBaseUrl() {
+  const env = globalThis?.process?.env || {};
+  return env.EXPO_PUBLIC_API_BASE_URL || "";
 }
 
 export function isNearAnyEntrance(userGps, entrances, thresholdMeters = 20) {

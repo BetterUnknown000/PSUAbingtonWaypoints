@@ -19,7 +19,7 @@ async function main() {
     process.stdout.write("=".repeat(72) + "\n");
     process.stdout.write(`${category}: ${waypoint.label}\n`);
     process.stdout.write(
-      `Building: ${waypoint.building} | Floor: ${waypoint.floor} | QR ID: ${waypoint.qr_code}\n`
+      `Building: ${waypoint.building} | Floor: ${waypoint.floor} | QR ID: ${payload.qr_id}\n`
     );
     process.stdout.write(
       `Coordinates: ${waypoint.latitude}, ${waypoint.longitude}\n`

@@ -125,6 +125,76 @@ describe("navReducer — outdoor to indoor transition", () => {
     });
     expect(state.mode).toBe(NavMode.AWAIT_ENTRY_QR);
   });
+
+  test("non-entrance QR scan from outdoor route does not trigger indoor mode", () => {
+    let state = navReducer(initialNavState, {
+      type: NavEvent.SET_DESTINATION,
+      destinationBuildingId: "woodland",
+    });
+    state = navReducer(state, {
+      type: NavEvent.SCAN_QR,
+      qr: {
+        role: "hallway",
+        type: "hallway",
+        building: "woodland",
+        buildingId: "woodland",
+        floor: "1",
+        waypointId: "wp_wood_f1_hall_a",
+        x: 120,
+        y: 220,
+      },
+    });
+    expect(state.mode).toBe(NavMode.OUTDOOR_ROUTE);
+  });
+
+  test("visual locate can anchor indoors from outdoor route", () => {
+    let state = navReducer(initialNavState, {
+      type: NavEvent.SET_DESTINATION,
+      destinationBuildingId: "woodland",
+    });
+    state = navReducer(state, {
+      type: NavEvent.SCAN_QR,
+      qr: {
+        source: "vision",
+        role: "hallway",
+        type: "hallway",
+        building: "woodland",
+        buildingId: "woodland",
+        floor: "1",
+        waypointId: "wp_wood_f1_hall_a",
+        x: 120,
+        y: 220,
+        confidence: 0.93,
+      },
+    });
+    expect(state.mode).toBe(NavMode.INDOOR_ANCHORED);
+    expect(state.currentWaypointId).toBe("wp_wood_f1_hall_a");
+    expect(state.anchorPose.source).toBe("vision");
+    expect(state.anchorPose.confidence).toBe(0.93);
+  });
+
+  test("visual locate can anchor indoors even when it is not the destination building", () => {
+    let state = navReducer(initialNavState, {
+      type: NavEvent.SET_DESTINATION,
+      destinationBuildingId: "woodland",
+    });
+    state = navReducer(state, {
+      type: NavEvent.SCAN_QR,
+      qr: {
+        source: "vision",
+        role: "hallway",
+        type: "hallway",
+        building: "sutherland",
+        buildingId: "sutherland",
+        floor: "1",
+        waypointId: "wp_suth_f1_hall_a",
+        x: 140,
+        y: 240,
+      },
+    });
+    expect(state.mode).toBe(NavMode.INDOOR_ANCHORED);
+    expect(state.currentBuildingId).toBe("sutherland");
+  });
 });
 
 describe("navReducer — indoor progression", () => {

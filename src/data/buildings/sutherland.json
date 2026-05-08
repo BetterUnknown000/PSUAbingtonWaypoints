@@ -17,7 +17,10 @@
       "wp_suth_entrance_B",
       "wp_suth_entrance_c",
       "wp_suth_f1_entrance_d",
-      "wp_suth_f1_entrance_e"
+      "wp_suth_f1_entrance_e",
+      "wp_suth_b_entrance_b",
+      "wp_suth_b_entrance_c",
+      "wp_suth_b_entrance_d"
     ]
   },
   "waypoints": [
@@ -25,7 +28,7 @@
       "id": "wp_suth_main_entrance",
       "building": "sutherland",
       "floor": "1",
-      "label": "Sutherland Main Entrance",
+      "label": "Sutherland F1 Main Entrance",
       "type": "entrance",
       "latitude": 40.115879,
       "longitude": -75.108886,
@@ -564,10 +567,10 @@
       "stop_radius_m": 5
     },
     {
-      "id": "wp_suth_f1_staircase_a",
+      "id": "wp_suth_f1_main_staircase",
       "building": "sutherland",
       "floor": "1",
-      "label": "Sutherland F1 Staircase A",
+      "label": "Sutherland F1 Main Staircase",
       "type": "stairs",
       "latitude": 40.115974,
       "longitude": -75.108622,
@@ -718,10 +721,10 @@
       "stop_radius_m": 3
     },
     {
-      "id": "wp_suth_f2_staircase_a",
+      "id": "wp_suth_f2_main_staircase",
       "building": "sutherland",
       "floor": "2",
-      "label": "Sutherland F2 Staircase A",
+      "label": "Sutherland F2 Main Staircase",
       "type": "stairs",
       "latitude": 40.115825,
       "longitude": -75.108749,
@@ -735,7 +738,7 @@
       "id": "wp_suth_f3_hall_01",
       "building": "sutherland",
       "floor": "3",
-      "label": "Sutherland Third Floor Hall 1",
+      "label": "Sutherland F3 Hall A",
       "type": "hallway",
       "latitude": 40.115933,
       "longitude": -75.108702,
@@ -749,7 +752,7 @@
       "id": "wp_suth_f3_hall_02",
       "building": "sutherland",
       "floor": "3",
-      "label": "Sutherland Third Floor Hall 2",
+      "label": "Sutherland F3 Hall B",
       "type": "hallway",
       "latitude": 40.115921,
       "longitude": -75.108611,
@@ -763,7 +766,7 @@
       "id": "wp_suth_f3_hall_03",
       "building": "sutherland",
       "floor": "3",
-      "label": "Sutherland Third Floor Hall 3",
+      "label": "Sutherland F3 Junction B",
       "type": "hallway",
       "latitude": 40.115829,
       "longitude": -75.108307,
@@ -777,7 +780,7 @@
       "id": "wp_suth_f3_hall_04",
       "building": "sutherland",
       "floor": "3",
-      "label": "Sutherland Third Floor Hall 4",
+      "label": "Sutherland F3 Hall C",
       "type": "hallway",
       "latitude": 40.115639,
       "longitude": -75.108854,
@@ -791,7 +794,7 @@
       "id": "wp_suth_f3_hall_05",
       "building": "sutherland",
       "floor": "3",
-      "label": "Sutherland Third Floor Hall 5",
+      "label": "Sutherland F3 Hall Ext C",
       "type": "hallway",
       "latitude": 40.115632,
       "longitude": -75.108904,
@@ -805,7 +808,7 @@
       "id": "wp_suth_f3_hall_06",
       "building": "sutherland",
       "floor": "3",
-      "label": "Sutherland Third Floor Hall 6",
+      "label": "Sutherland F3 Hall End C",
       "type": "hallway",
       "latitude": 40.115642,
       "longitude": -75.108852,
@@ -819,7 +822,7 @@
       "id": "wp_suth_f3_hall_07",
       "building": "sutherland",
       "floor": "3",
-      "label": "Sutherland Third Floor Hall 7",
+      "label": "Sutherland F3 Hall D",
       "type": "hallway",
       "latitude": 40.115575,
       "longitude": -75.108811,
@@ -833,7 +836,7 @@
       "id": "wp_suth_f3_hall_08",
       "building": "sutherland",
       "floor": "3",
-      "label": "Sutherland Third Floor Hall 8",
+      "label": "Sutherland F3 Junction D",
       "type": "hallway",
       "latitude": 40.115517,
       "longitude": -75.108864,
@@ -847,7 +850,7 @@
       "id": "wp_suth_f3_hall_09",
       "building": "sutherland",
       "floor": "3",
-      "label": "Sutherland Third Floor Hall 9",
+      "label": "Sutherland F3 Hall Ext D",
       "type": "hallway",
       "latitude": 40.115478,
       "longitude": -75.108924,
@@ -861,7 +864,7 @@
       "id": "wp_suth_f3_hall_10",
       "building": "sutherland",
       "floor": "3",
-      "label": "Sutherland Third Floor Hall 10",
+      "label": "Sutherland F3 Corner D",
       "type": "hallway",
       "latitude": 40.115543,
       "longitude": -75.108893,
@@ -872,10 +875,10 @@
       "stop_radius_m": 3
     },
     {
-      "id": "wp_suth_f3_main_stairs",
+      "id": "wp_suth_f3_main_staircase",
       "building": "sutherland",
       "floor": "3",
-      "label": "Sutherland Main Stairs (Floor 3)",
+      "label": "Sutherland F3 Main Staircase",
       "type": "stairs",
       "latitude": 40.115815,
       "longitude": -75.108824,
@@ -889,7 +892,7 @@
       "id": "wp_suth_f4_hall_01",
       "building": "sutherland",
       "floor": "4",
-      "label": "Sutherland Fourth Floor Hall 1",
+      "label": "Sutherland F4 Hall D",
       "type": "hallway",
       "latitude": 40.115856,
       "longitude": -75.108392,
@@ -903,7 +906,7 @@
       "id": "wp_suth_f4_hall_02",
       "building": "sutherland",
       "floor": "4",
-      "label": "Sutherland Fourth Floor Hall 2",
+      "label": "Sutherland F4 Junction C",
       "type": "hallway",
       "latitude": 40.115941,
       "longitude": -75.108479,
@@ -917,7 +920,7 @@
       "id": "wp_suth_f4_hall_03",
       "building": "sutherland",
       "floor": "4",
-      "label": "Sutherland Fourth Floor Hall 3",
+      "label": "Sutherland F4 Hall C",
       "type": "hallway",
       "latitude": 40.115798,
       "longitude": -75.108812,
@@ -931,7 +934,7 @@
       "id": "wp_suth_f4_hall_04",
       "building": "sutherland",
       "floor": "4",
-      "label": "Sutherland Fourth Floor Hall 4",
+      "label": "Sutherland F4 Hall A",
       "type": "hallway",
       "latitude": 40.115642,
       "longitude": -75.10885,
@@ -945,7 +948,7 @@
       "id": "wp_suth_f4_hall_05",
       "building": "sutherland",
       "floor": "4",
-      "label": "Sutherland Fourth Floor Hall 5",
+      "label": "Sutherland F4 Hall B",
       "type": "hallway",
       "latitude": 40.11557,
       "longitude": -75.108861,
@@ -1807,13 +1810,16 @@
       "label": "Sutherland F2 Staircase C",
       "type": "stairs",
       "x": 729,
-      "y": 251.7
+      "y": 251.7,
+      "qr_code": "QR_SUTH_F2_STAIRCASE_C",
+      "requires_scan": true,
+      "stop_radius_m": 3
     },
     {
       "id": "wp_suth_f3_hall_11",
       "building": "sutherland",
       "floor": "3",
-      "label": "Sutherland Third Floor Hall 11",
+      "label": "Sutherland F3 Hall E",
       "type": "hallway",
       "x": 387.6,
       "y": 623.8
@@ -1822,7 +1828,7 @@
       "id": "wp_suth_f3_hall_12",
       "building": "sutherland",
       "floor": "3",
-      "label": "Sutherland Third Floor Hall 12",
+      "label": "Sutherland F3 Hall End E",
       "type": "hallway",
       "x": 273.8,
       "y": 758
@@ -1837,22 +1843,28 @@
       "y": 659.7
     },
     {
-      "id": "wp_suth_f3_stairsb",
+      "id": "wp_suth_f3_staircase_c",
       "building": "sutherland",
       "floor": "3",
-      "label": "Sutherland Stairs Hall4/5 (Floor 3)",
+      "label": "Sutherland F3 Staircase C",
       "type": "stairs",
       "x": 725,
-      "y": 250.6
+      "y": 250.6,
+      "qr_code": "QR_SUTH_F3_STAIRCASE_C",
+      "requires_scan": true,
+      "stop_radius_m": 3
     },
     {
-      "id": "wp_suth_f3_stairsa",
+      "id": "wp_suth_f3_staircase_b",
       "building": "sutherland",
       "floor": "3",
-      "label": "Sutherland Stairs Hall2/3 (Floor 3)",
+      "label": "Sutherland F3 Staircase B",
       "type": "stairs",
       "x": 537.9,
-      "y": 168.1
+      "y": 168.1,
+      "qr_code": "QR_SUTH_F3_STAIRCASE_B",
+      "requires_scan": true,
+      "stop_radius_m": 3
     },
     {
       "id": "wp_suth_f1_staircase",
@@ -1861,7 +1873,10 @@
       "label": "Sutherland F1 Staircase C",
       "type": "stairs",
       "x": 720.5,
-      "y": 264.2
+      "y": 264.2,
+      "qr_code": "QR_SUTH_F1_STAIRCASE",
+      "requires_scan": true,
+      "stop_radius_m": 3
     },
     {
       "id": "wp_suth_f1_staircase_b",
@@ -1870,31 +1885,25 @@
       "label": "Sutherland F1 Staircase B",
       "type": "stairs",
       "x": 543.4,
-      "y": 174.1
-    },
-    {
-      "id": "wp_suth_f4_stairsb",
-      "building": "sutherland",
-      "floor": "4",
-      "label": "Sutherland Stairs Hall5/6 (Floor 4)",
-      "type": "stairs",
-      "x": 662.8,
-      "y": 193.3
+      "y": 174.1,
+      "qr_code": "QR_SUTH_F1_STAIRCASE_B",
+      "requires_scan": true,
+      "stop_radius_m": 3
     },
     {
       "id": "wp_suth_f4_hall_06",
       "building": "sutherland",
       "floor": "4",
-      "label": "Sutherland_Fourth_Floor_Hall_6",
+      "label": "Sutherland F4 Hall B",
       "type": "hallway",
       "x": 699.2,
       "y": 231.9
     },
     {
-      "id": "wp_suth_f2_staircase_d",
+      "id": "wp_suth_f2_staircase_e",
       "building": "sutherland",
       "floor": "2",
-      "label": "Sutherland F2 Staircase D",
+      "label": "Sutherland F2 Staircase E",
       "type": "stairs",
       "latitude": 40.115957,
       "longitude": -75.108602,
@@ -1905,8 +1914,8 @@
       "stop_radius_m": 3
     },
     {
-      "id": "wp_suth_f4_stairsa",
-      "label": "Sutherland Side Stairs (Floor 4)",
+      "id": "wp_suth_f4_staircase_b",
+      "label": "Sutherland F4 Staircase B",
       "type": "stairs",
       "building": "sutherland",
       "floor": "4",
@@ -1926,16 +1935,22 @@
       "label": "Sutherland F1 Staircase E",
       "type": "stairs",
       "x": 346.1,
-      "y": 570.7
+      "y": 570.7,
+      "qr_code": "QR_SUTH_F1_STAIRCASE_E",
+      "requires_scan": true,
+      "stop_radius_m": 3
     },
     {
-      "id": "wp_suth_f3_stairsc",
+      "id": "wp_suth_f3_staircase_e",
       "building": "sutherland",
       "floor": "3",
-      "label": "Sutherland Stairs (Floor 3)",
+      "label": "Sutherland F3 Staircase E",
       "type": "stairs",
       "x": 340.8,
-      "y": 545.4
+      "y": 545.4,
+      "qr_code": "QR_SUTH_F3_STAIRCASE_E",
+      "requires_scan": true,
+      "stop_radius_m": 3
     },
     {
       "id": "wp_suth_108",
@@ -2010,19 +2025,22 @@
       "y": 279.8
     },
     {
-      "id": "wp_suth_f4_stairsc",
+      "id": "wp_suth_f4_staircase_e",
       "building": "sutherland",
       "floor": "4",
-      "label": "Sutherland Stairs (Floor 4)",
+      "label": "Sutherland F4 Staircase E",
       "type": "stairs",
       "x": 334.5,
-      "y": 552.7
+      "y": 552.7,
+      "qr_code": "QR_SUTH_F4_STAIRCASE_E",
+      "requires_scan": true,
+      "stop_radius_m": 3
     },
     {
       "id": "wp_suth_entrance_c",
       "building": "sutherland",
       "floor": "1",
-      "label": "Sutherland Entrance C",
+      "label": "Sutherland F1 Entrance C",
       "type": "entrance",
       "latitude": 40.11604884396653,
       "longitude": -75.10852537874551,
@@ -2033,7 +2051,7 @@
       "id": "wp_suth_entrance_B",
       "building": "sutherland",
       "floor": "1",
-      "label": "Sutherland Entrance B",
+      "label": "Sutherland F1 Entrance B",
       "type": "entrance",
       "latitude": 40.116000384497134,
       "longitude": -75.10867933744474,
@@ -2157,7 +2175,10 @@
       "label": "Sutherland F1 Staircase D",
       "type": "stairs",
       "x": 324.2,
-      "y": 481.7
+      "y": 481.7,
+      "qr_code": "QR_SUTH_F1_STAIRCASE_D",
+      "requires_scan": true,
+      "stop_radius_m": 3
     },
     {
       "id": "wp_suth_103",
@@ -2489,8 +2510,8 @@
       "floor": "ground",
       "label": "Room 012",
       "type": "classroom",
-      "x": 394,
-      "y": 576.6
+      "x": 407,
+      "y": 600.6
     },
     {
       "id": "wp_suth_008",
@@ -2509,8 +2530,8 @@
       "type": "entrance",
       "x": 198,
       "y": 703,
-      "latitude": 40.11559,
-      "longitude": -75.10899
+      "latitude": 40.11551,
+      "longitude": -75.10898
     },
     {
       "id": "wp_suth_b_entrance_c",
@@ -2520,8 +2541,19 @@
       "type": "entrance",
       "x": 351,
       "y": 833,
-      "latitude": 40.11533,
-      "longitude": -75.10874
+      "latitude": 40.1154,
+      "longitude": -75.10879
+    },
+    {
+      "id": "wp_suth_b_entrance_d",
+      "building": "sutherland",
+      "floor": "ground",
+      "label": "Sutherland B Entrance D",
+      "type": "entrance",
+      "x": 480,
+      "y": 653,
+      "latitude": 40.11555,
+      "longitude": -75.10868
     },
     {
       "id": "wp_suth_auditorium",
@@ -2529,8 +2561,8 @@
       "floor": "ground",
       "label": "Sutherland Auditorium",
       "type": "hall",
-      "x": 235,
-      "y": 728
+      "x": 236,
+      "y": 727
     },
     {
       "id": "wp_suth_010",
@@ -2567,6 +2599,22 @@
       "type": "hall",
       "x": 366,
       "y": 422
+    },
+    {
+      "id": "wp_suth_ground_entrance",
+      "building": "sutherland",
+      "floor": "ground",
+      "label": "Sutherland Ground Floor Entrance",
+      "type": "entrance",
+      "latitude": 40.115603,
+      "longitude": -75.108727,
+      "x": 742.1,
+      "y": 889.2,
+      "qr_code": "QR_SUTH_GND_ENTRANCE",
+      "requires_scan": true,
+      "stop_radius_m": 5,
+      "approach_latitude": null,
+      "approach_longitude": null
     }
   ],
   "edges": [
@@ -2691,23 +2739,13 @@
       "accessible": true
     },
     {
-      "from": "wp_suth_f3_hall_06",
-      "to": "wp_suth_f3_hall_04",
-      "accessible": true
-    },
-    {
-      "from": "wp_suth_f3_hall_04",
-      "to": "wp_suth_f3_hall_06",
-      "accessible": true
-    },
-    {
-      "from": "wp_suth_f3_main_stairs",
+      "from": "wp_suth_f3_main_staircase",
       "to": "wp_suth_elevator_f3",
       "accessible": true
     },
     {
       "from": "wp_suth_elevator_f3",
-      "to": "wp_suth_f3_main_stairs",
+      "to": "wp_suth_f3_main_staircase",
       "accessible": true
     },
     {
@@ -2836,7 +2874,7 @@
       "accessible": true
     },
     {
-      "from": "wp_suth_f1_staircase_a",
+      "from": "wp_suth_f1_main_staircase",
       "to": "wp_suth_f1_main_hall",
       "accessible": true
     },
@@ -3461,7 +3499,7 @@
       "accessible": true
     },
     {
-      "from": "wp_suth_f3_main_stairs",
+      "from": "wp_suth_f3_main_staircase",
       "to": "wp_suth_f3_hall_01",
       "accessible": true
     },
@@ -3471,12 +3509,12 @@
       "accessible": true
     },
     {
-      "from": "wp_suth_f3_main_stairs",
+      "from": "wp_suth_f3_main_staircase",
       "to": "wp_suth_301",
       "accessible": true
     },
     {
-      "from": "wp_suth_f3_main_stairs",
+      "from": "wp_suth_f3_main_staircase",
       "to": "wp_suth_315",
       "accessible": true
     },
@@ -3501,7 +3539,7 @@
       "accessible": true
     },
     {
-      "from": "wp_suth_f3_main_stairs",
+      "from": "wp_suth_f3_main_staircase",
       "to": "wp_suth_f3_hall_07",
       "accessible": true
     },
@@ -3661,68 +3699,68 @@
       "accessible": true
     },
     {
-      "from": "wp_suth_f3_stairsb",
+      "from": "wp_suth_f3_staircase_c",
       "to": "wp_suth_328",
       "accessible": true
     },
     {
-      "from": "wp_suth_f3_stairsb",
+      "from": "wp_suth_f3_staircase_c",
       "to": "wp_suth_327",
       "accessible": true
     },
     {
-      "from": "wp_suth_f3_stairsb",
+      "from": "wp_suth_f3_staircase_c",
       "to": "wp_suth_320a",
       "accessible": true
     },
     {
-      "from": "wp_suth_f3_stairsb",
+      "from": "wp_suth_f3_staircase_c",
       "to": "wp_suth_f3_hall_05",
       "accessible": true
     },
     {
-      "from": "wp_suth_f3_stairsb",
+      "from": "wp_suth_f3_staircase_c",
       "to": "wp_suth_f3_hall_04",
       "accessible": true
     },
     {
-      "from": "wp_suth_f3_stairsb",
+      "from": "wp_suth_f3_staircase_c",
       "to": "wp_suth_f2_staircase_c",
       "accessible": true
     },
     {
       "from": "wp_suth_f3_hall_02",
-      "to": "wp_suth_f3_stairsa",
+      "to": "wp_suth_f3_staircase_b",
       "accessible": true
     },
     {
       "from": "wp_suth_317",
-      "to": "wp_suth_f3_stairsa",
+      "to": "wp_suth_f3_staircase_b",
       "accessible": true
     },
     {
-      "from": "wp_suth_f3_stairsa",
+      "from": "wp_suth_f3_staircase_b",
       "to": "wp_suth_f3_hall_03",
       "accessible": true
     },
     {
-      "from": "wp_suth_f3_stairsa",
+      "from": "wp_suth_f3_staircase_b",
       "to": "wp_suth_f2_staircase_b",
       "accessible": true
     },
     {
-      "from": "wp_suth_f3_main_stairs",
-      "to": "wp_suth_f2_staircase_a",
+      "from": "wp_suth_f3_main_staircase",
+      "to": "wp_suth_f2_main_staircase",
       "accessible": true
     },
     {
-      "from": "wp_suth_f1_staircase_a",
-      "to": "wp_suth_f2_staircase_a",
+      "from": "wp_suth_f1_main_staircase",
+      "to": "wp_suth_f2_main_staircase",
       "accessible": true
     },
     {
-      "from": "wp_suth_f1_staircase_a",
-      "to": "wp_suth_f3_main_stairs",
+      "from": "wp_suth_f1_main_staircase",
+      "to": "wp_suth_f3_main_staircase",
       "accessible": true
     },
     {
@@ -3752,12 +3790,12 @@
     },
     {
       "from": "wp_suth_f1_staircase",
-      "to": "wp_suth_f3_stairsb",
+      "to": "wp_suth_f3_staircase_c",
       "accessible": true
     },
     {
       "from": "wp_suth_f1_staircase_b",
-      "to": "wp_suth_f3_stairsa",
+      "to": "wp_suth_f3_staircase_b",
       "accessible": true
     },
     {
@@ -3847,76 +3885,41 @@
     },
     {
       "from": "wp_suth_f4_hall_05",
-      "to": "Sutherland_Fourth_Floor_Hall_6",
-      "accessible": true
-    },
-    {
-      "from": "wp_suth_f4_hall_05",
-      "to": "wp_suth_f4_stairsb",
+      "to": "wp_suth_f4_hall_06",
       "accessible": true
     },
     {
       "from": "wp_suth_416",
-      "to": "Sutherland_Fourth_Floor_Hall_6",
+      "to": "wp_suth_f4_hall_06",
       "accessible": true
     },
     {
-      "from": "wp_suth_416",
-      "to": "wp_suth_f4_stairsb",
-      "accessible": true
-    },
-    {
-      "from": "wp_suth_417s",
-      "to": "wp_suth_f4_stairsb",
-      "accessible": true
-    },
-    {
-      "from": "wp_suth_f4_stairsb",
-      "to": "Sutherland_Fourth_Floor_Hall_6",
-      "accessible": true
-    },
-    {
-      "from": "Sutherland_Fourth_Floor_Hall_6",
+      "from": "wp_suth_f4_hall_06",
       "to": "wp_suth_418",
       "accessible": true
     },
     {
-      "from": "Sutherland_Fourth_Floor_Hall_6",
+      "from": "wp_suth_f4_hall_06",
       "to": "wp_suth_417s",
       "accessible": true
     },
     {
-      "from": "wp_suth_f4_stairsb",
-      "to": "wp_suth_f1_staircase",
-      "accessible": true
-    },
-    {
-      "from": "wp_suth_f4_stairsb",
-      "to": "wp_suth_f3_stairsb",
-      "accessible": true
-    },
-    {
-      "from": "wp_suth_f4_stairsb",
-      "to": "wp_suth_f2_staircase_c",
-      "accessible": true
-    },
-    {
       "from": "wp_suth_f2_staircase_b",
-      "to": "wp_suth_f4_stairsa",
+      "to": "wp_suth_f4_staircase_b",
       "accessible": false
     },
     {
-      "from": "wp_suth_f4_stairsa",
-      "to": "wp_suth_f3_stairsa",
+      "from": "wp_suth_f4_staircase_b",
+      "to": "wp_suth_f3_staircase_b",
       "accessible": true
     },
     {
-      "from": "wp_suth_f4_stairsa",
+      "from": "wp_suth_f4_staircase_b",
       "to": "wp_suth_f1_staircase_b",
       "accessible": true
     },
     {
-      "from": "wp_suth_f4_stairsa",
+      "from": "wp_suth_f4_staircase_b",
       "to": "wp_suth_f4_hall_05",
       "accessible": true
     },
@@ -3932,52 +3935,52 @@
     },
     {
       "from": "wp_suth_f1_staircase_e",
-      "to": "wp_suth_f2_staircase_d",
+      "to": "wp_suth_f2_staircase_e",
       "accessible": true
     },
     {
-      "from": "wp_suth_f3_stairsc",
-      "to": "wp_suth_f2_staircase_d",
+      "from": "wp_suth_f3_staircase_e",
+      "to": "wp_suth_f2_staircase_e",
       "accessible": true
     },
     {
-      "from": "wp_suth_f3_stairsc",
+      "from": "wp_suth_f3_staircase_e",
       "to": "wp_suth_f1_staircase_e",
       "accessible": true
     },
     {
-      "from": "wp_suth_f3_stairsc",
+      "from": "wp_suth_f3_staircase_e",
       "to": "wp_suth_306",
       "accessible": true
     },
     {
-      "from": "wp_suth_f3_stairsc",
+      "from": "wp_suth_f3_staircase_e",
       "to": "wp_suth_f3_hall_09",
       "accessible": true
     },
     {
-      "from": "wp_suth_f3_stairsc",
+      "from": "wp_suth_f3_staircase_e",
       "to": "wp_suth_f3_hall_08",
       "accessible": true
     },
     {
       "from": "wp_suth_415",
-      "to": "wp_suth_f4_stairsa",
+      "to": "wp_suth_f4_staircase_b",
       "accessible": true
     },
     {
       "from": "wp_suth_414",
-      "to": "wp_suth_f4_stairsa",
+      "to": "wp_suth_f4_staircase_b",
       "accessible": true
     },
     {
       "from": "wp_suth_413",
-      "to": "wp_suth_f4_stairsa",
+      "to": "wp_suth_f4_staircase_b",
       "accessible": true
     },
     {
       "from": "wp_suth_f4_hall_04",
-      "to": "wp_suth_f4_stairsa",
+      "to": "wp_suth_f4_staircase_b",
       "accessible": true
     },
     {
@@ -4041,17 +4044,17 @@
       "accessible": true
     },
     {
-      "from": "wp_suth_f2_staircase_d",
+      "from": "wp_suth_f2_staircase_e",
       "to": "wp_suth_206",
       "accessible": true
     },
     {
-      "from": "wp_suth_f2_staircase_d",
+      "from": "wp_suth_f2_staircase_e",
       "to": "wp_suth_f2_junction_c",
       "accessible": true
     },
     {
-      "from": "wp_suth_f2_staircase_d",
+      "from": "wp_suth_f2_staircase_e",
       "to": "wp_suth_f2_hall_end_C",
       "accessible": true
     },
@@ -4107,37 +4110,37 @@
     },
     {
       "from": "wp_suth_f4_hall_03",
-      "to": "wp_suth_f4_stairsc",
+      "to": "wp_suth_f4_staircase_e",
       "accessible": true
     },
     {
-      "from": "wp_suth_f4_stairsc",
+      "from": "wp_suth_f4_staircase_e",
       "to": "wp_suth_403b",
       "accessible": true
     },
     {
-      "from": "wp_suth_f4_stairsc",
+      "from": "wp_suth_f4_staircase_e",
       "to": "wp_suth_403",
       "accessible": true
     },
     {
       "from": "wp_suth_f4_hall_02",
-      "to": "wp_suth_f4_stairsc",
+      "to": "wp_suth_f4_staircase_e",
       "accessible": true
     },
     {
-      "from": "wp_suth_f4_stairsc",
-      "to": "wp_suth_f2_staircase_d",
+      "from": "wp_suth_f4_staircase_e",
+      "to": "wp_suth_f2_staircase_e",
       "accessible": true
     },
     {
-      "from": "wp_suth_f4_stairsc",
+      "from": "wp_suth_f4_staircase_e",
       "to": "wp_suth_f1_staircase_e",
       "accessible": true
     },
     {
-      "from": "wp_suth_f4_stairsc",
-      "to": "wp_suth_f3_stairsc",
+      "from": "wp_suth_f4_staircase_e",
+      "to": "wp_suth_f3_staircase_e",
       "accessible": true
     },
     {
@@ -4431,17 +4434,17 @@
       "accessible": true
     },
     {
-      "from": "wp_suth_f2_staircase_a",
+      "from": "wp_suth_f2_main_staircase",
       "to": "wp_suth_f2_hall_04",
       "accessible": true
     },
     {
-      "from": "wp_suth_f2_staircase_a",
+      "from": "wp_suth_f2_main_staircase",
       "to": "wp_suth_f2_hall_c",
       "accessible": true
     },
     {
-      "from": "wp_suth_f2_staircase_a",
+      "from": "wp_suth_f2_main_staircase",
       "to": "wp_suth_216",
       "accessible": true
     },
@@ -4506,7 +4509,7 @@
       "accessible": true
     },
     {
-      "from": "wp_suth_f2_staircase_d",
+      "from": "wp_suth_f2_staircase_e",
       "to": "wp_suth_215c",
       "accessible": true
     },
@@ -4647,6 +4650,11 @@
     },
     {
       "from": "wp_suth_012",
+      "to": "wp_suth_b_entrance_d",
+      "accessible": true
+    },
+    {
+      "from": "wp_suth_012",
       "to": "wp_suth_b_staircase_d",
       "accessible": true
     },
@@ -4663,6 +4671,11 @@
     {
       "from": "wp_suth_b_hall_end_a",
       "to": "wp_suth_b_staircase_d",
+      "accessible": true
+    },
+    {
+      "from": "wp_suth_f4_hall_06",
+      "to": "wp_suth_f4_hall_05",
       "accessible": true
     }
   ],
@@ -4863,7 +4876,7 @@
       "building": "sutherland",
       "room_number": "307",
       "floor": "3",
-      "waypoint_id": "wp_suth_307_entrance",
+      "waypoint_id": "wp_suth_307_calc",
       "room_name": "C.A.L.C Lab",
       "type": "lab"
     },
@@ -5303,7 +5316,7 @@
       "building": "sutherland",
       "room_number": "310C/D",
       "floor": "3",
-      "waypoint_id": "wp_suth_310cd",
+      "waypoint_id": "wp_suth_310c",
       "room_name": "Room 310C/D",
       "type": "office"
     },
@@ -5353,14 +5366,6 @@
       "floor": "2",
       "waypoint_id": "wp_suth_219",
       "room_name": "Room 219",
-      "type": "office"
-    },
-    {
-      "building": "sutherland",
-      "room_number": "Lindsay Wood",
-      "floor": "3",
-      "waypoint_id": "wp_suth_lindsay_wood",
-      "room_name": "Lindsay Wood",
       "type": "office"
     },
     {
@@ -5425,14 +5430,6 @@
       "floor": "1",
       "waypoint_id": "wp_suth_119",
       "room_name": "Academic Office",
-      "type": "office"
-    },
-    {
-      "building": "sutherland",
-      "room_number": "Dr. Boni Fernandes Wozolek",
-      "floor": "1",
-      "waypoint_id": "wp_suth_boni_fernandes_wozolek",
-      "room_name": "Dr. Boni Fernandes Wozolek",
       "type": "office"
     },
     {
@@ -5691,7 +5688,7 @@
     },
     {
       "qr_id": "QR_SUTH_F3_307_ENTRANCE",
-      "waypoint_id": "wp_suth_307_entrance",
+      "waypoint_id": "wp_suth_307_calc",
       "building": "sutherland",
       "floor": "3"
     },
@@ -5750,32 +5747,8 @@
       "floor": "3"
     },
     {
-      "qr_id": "QR_SUTH_GND_008_SECOND_ENTRANCE",
-      "waypoint_id": "wp_suth_room_008_second_entrance",
-      "building": "sutherland",
-      "floor": "ground"
-    },
-    {
       "qr_id": "QR_SUTH_GND_STAIRS",
       "waypoint_id": "wp_suth_b_staircase_d",
-      "building": "sutherland",
-      "floor": "ground"
-    },
-    {
-      "qr_id": "QR_SUTH_GND_HALL_01",
-      "waypoint_id": "wp_suth_ground_hall_01",
-      "building": "sutherland",
-      "floor": "ground"
-    },
-    {
-      "qr_id": "QR_SUTH_GND_HALL_02",
-      "waypoint_id": "wp_suth_ground_hall_02",
-      "building": "sutherland",
-      "floor": "ground"
-    },
-    {
-      "qr_id": "QR_SUTH_GND_HALL_03",
-      "waypoint_id": "wp_suth_ground_hall_03",
       "building": "sutherland",
       "floor": "ground"
     },
@@ -5834,14 +5807,8 @@
       "floor": "1"
     },
     {
-      "qr_id": "QR_SUTH_F1_HALL_07",
-      "waypoint_id": "wp_suth_f1_hall_07",
-      "building": "sutherland",
-      "floor": "1"
-    },
-    {
       "qr_id": "QR_SUTH_F1_STAIRS",
-      "waypoint_id": "wp_suth_f1_staircase_a",
+      "waypoint_id": "wp_suth_f1_main_staircase",
       "building": "sutherland",
       "floor": "1"
     },
@@ -5860,12 +5827,6 @@
     {
       "qr_id": "QR_SUTH_F2_HALL_03",
       "waypoint_id": "wp_suth_f2_hall_a",
-      "building": "sutherland",
-      "floor": "2"
-    },
-    {
-      "qr_id": "QR_SUTH_F2_TESTING_CENTER",
-      "waypoint_id": "wp_suth_testing_center",
       "building": "sutherland",
       "floor": "2"
     },
@@ -5894,12 +5855,6 @@
       "floor": "2"
     },
     {
-      "qr_id": "QR_SUTH_F2_HALL_08",
-      "waypoint_id": "wp_suth_f2_hall_08",
-      "building": "sutherland",
-      "floor": "2"
-    },
-    {
       "qr_id": "QR_SUTH_F2_HALL_09",
       "waypoint_id": "wp_suth_f2_junction_d",
       "building": "sutherland",
@@ -5918,14 +5873,8 @@
       "floor": "2"
     },
     {
-      "qr_id": "QR_SUTH_F2_STAIRS",
-      "waypoint_id": "wp_suth_f2_stairs",
-      "building": "sutherland",
-      "floor": "2"
-    },
-    {
       "qr_id": "QR_SUTH_F2_MAIN_STAIRS",
-      "waypoint_id": "wp_suth_f2_staircase_a",
+      "waypoint_id": "wp_suth_f2_main_staircase",
       "building": "sutherland",
       "floor": "2"
     },
@@ -5991,7 +5940,7 @@
     },
     {
       "qr_id": "QR_SUTH_F3_MAIN_STAIRS",
-      "waypoint_id": "wp_suth_f3_main_stairs",
+      "waypoint_id": "wp_suth_f3_main_staircase",
       "building": "sutherland",
       "floor": "3"
     },
@@ -6004,12 +5953,6 @@
     {
       "qr_id": "QR_SUTH_F4_HALL_02",
       "waypoint_id": "wp_suth_f4_hall_02",
-      "building": "sutherland",
-      "floor": "4"
-    },
-    {
-      "qr_id": "QR_SUTH_F4_CHAIR",
-      "waypoint_id": "wp_suth_f4_chair",
       "building": "sutherland",
       "floor": "4"
     },
@@ -6303,7 +6246,7 @@
     },
     {
       "qr_id": "QR_SUTH_F3_310CD",
-      "waypoint_id": "wp_suth_310cd",
+      "waypoint_id": "wp_suth_310c",
       "building": "sutherland",
       "floor": "3"
     },
@@ -6342,12 +6285,6 @@
       "waypoint_id": "wp_suth_219",
       "building": "sutherland",
       "floor": "2"
-    },
-    {
-      "qr_id": "QR_SUTH_F3_LINDSAY_WOOD",
-      "waypoint_id": "wp_suth_lindsay_wood",
-      "building": "sutherland",
-      "floor": "3"
     },
     {
       "qr_id": "QR_SUTH_F2_225",
@@ -6394,12 +6331,6 @@
     {
       "qr_id": "QR_SUTH_F1_119",
       "waypoint_id": "wp_suth_119",
-      "building": "sutherland",
-      "floor": "1"
-    },
-    {
-      "qr_id": "QR_SUTH_F1_BONI_FERNANDES_WOZOLEK",
-      "waypoint_id": "wp_suth_boni_fernandes_wozolek",
       "building": "sutherland",
       "floor": "1"
     },
@@ -6472,6 +6403,78 @@
     {
       "qr_id": "QR_SUTH_F1_106",
       "waypoint_id": "wp_suth_106",
+      "building": "sutherland",
+      "floor": "1"
+    },
+    {
+      "qr_id": "QR_SUTH_F2_STAIRS",
+      "waypoint_id": "wp_suth_f2_staircase_b",
+      "building": "sutherland",
+      "floor": "2"
+    },
+    {
+      "qr_id": "QR_SUTH_F2_STAIRCASE_C",
+      "waypoint_id": "wp_suth_f2_staircase_c",
+      "building": "sutherland",
+      "floor": "2"
+    },
+    {
+      "qr_id": "QR_SUTH_F3_STAIRCASE_C",
+      "waypoint_id": "wp_suth_f3_staircase_c",
+      "building": "sutherland",
+      "floor": "3"
+    },
+    {
+      "qr_id": "QR_SUTH_F3_STAIRCASE_B",
+      "waypoint_id": "wp_suth_f3_staircase_b",
+      "building": "sutherland",
+      "floor": "3"
+    },
+    {
+      "qr_id": "QR_SUTH_F1_STAIRCASE",
+      "waypoint_id": "wp_suth_f1_staircase",
+      "building": "sutherland",
+      "floor": "1"
+    },
+    {
+      "qr_id": "QR_SUTH_F1_STAIRCASE_B",
+      "waypoint_id": "wp_suth_f1_staircase_b",
+      "building": "sutherland",
+      "floor": "1"
+    },
+    {
+      "qr_id": "QR_SUTH_F2_STAIRS",
+      "waypoint_id": "wp_suth_f2_staircase_e",
+      "building": "sutherland",
+      "floor": "2"
+    },
+    {
+      "qr_id": "QR_SUTH_F4_SIDE_STAIRS",
+      "waypoint_id": "wp_suth_f4_staircase_b",
+      "building": "sutherland",
+      "floor": "4"
+    },
+    {
+      "qr_id": "QR_SUTH_F1_STAIRCASE_E",
+      "waypoint_id": "wp_suth_f1_staircase_e",
+      "building": "sutherland",
+      "floor": "1"
+    },
+    {
+      "qr_id": "QR_SUTH_F3_STAIRCASE_E",
+      "waypoint_id": "wp_suth_f3_staircase_e",
+      "building": "sutherland",
+      "floor": "3"
+    },
+    {
+      "qr_id": "QR_SUTH_F4_STAIRCASE_E",
+      "waypoint_id": "wp_suth_f4_staircase_e",
+      "building": "sutherland",
+      "floor": "4"
+    },
+    {
+      "qr_id": "QR_SUTH_F1_STAIRCASE_D",
+      "waypoint_id": "wp_suth_f1_staircase_d",
       "building": "sutherland",
       "floor": "1"
     }

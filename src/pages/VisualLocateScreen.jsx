@@ -27,6 +27,15 @@ const PSU = {
   white: "#FFFFFF",
 };
 
+function visualRoleFor(waypoint) {
+  const type = String(waypoint?.type || "").toLowerCase();
+  if (type === "entrance") return "entrance";
+  if (type === "stairs") return "stairs";
+  if (type === "elevator") return "elevator";
+  if (type === "hall" || type === "hallway") return "hallway";
+  return "anchor";
+}
+
 export default function VisualLocateScreen({ route, navigation }) {
   const insets = useSafeAreaInsets();
   const cameraRef = useRef(null);
@@ -99,10 +108,20 @@ export default function VisualLocateScreen({ route, navigation }) {
       }
 
       const payload = {
+        source: "vision",
         waypointId: matchedWaypoint.id,
+        waypoint_id: matchedWaypoint.id,
         label: matchedWaypoint.label || matchedWaypoint.id,
         building: matchedWaypoint.building || "",
         floor: matchedWaypoint.floor || "",
+        type: matchedWaypoint.type || result?.location?.type || "",
+        role: visualRoleFor(matchedWaypoint),
+        x: matchedWaypoint.x ?? result?.location?.x ?? null,
+        y: matchedWaypoint.y ?? result?.location?.y ?? null,
+        bearing_hint_deg:
+          matchedWaypoint.bearing_hint_deg ??
+          result?.location?.bearing_hint_deg ??
+          null,
         confidence: result?.confidence ?? null,
       };
 

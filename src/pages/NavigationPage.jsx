@@ -454,13 +454,15 @@ export default function NavigationPage({ route, navigation }) {
 
   const synthesizeQrPayloadFromWaypoint = useCallback((waypoint) => {
     if (!waypoint) return null;
+    const type = String(waypoint.type || "").toLowerCase();
+    const role = waypoint.role ?? (type === "hall" ? "hallway" : type);
     return {
       version: QR_PAYLOAD_VERSION,
       qr_id: waypoint.qr_code ?? waypoint.id,
       waypoint_id: waypoint.id,
       building: waypoint.building ?? "",
       floor: waypoint.floor ?? "",
-      role: waypoint.role ?? waypoint.type ?? "",
+      role,
       x: waypoint.x,
       y: waypoint.y,
       bearing_hint_deg: waypoint.bearing_hint_deg ?? null,
@@ -1172,27 +1174,80 @@ export default function NavigationPage({ route, navigation }) {
 
   useEffect(() => {
     const result = route.params?.visualLocateResult;
-    if (!result?.waypointId) return;
+    const visualWaypointId = result?.waypointId || result?.waypoint_id;
+    if (!visualWaypointId) return;
 
-    const matchedWaypoint = _getWpById(result.waypointId);
+    let cancelled = false;
 
-    if (!matchedWaypoint) return;
+    async function applyVisualLocateResult() {
+      if (result?.building) {
+        await getBuildingData(result.building);
+      }
+      if (cancelled) return;
+
+      const matchedWaypoint =
+        _getWpById(visualWaypointId) ||
+        {
+          id: visualWaypointId,
+          label: result.label || visualWaypointId,
+          building: result.building || "",
+          floor: result.floor || "",
+          type: result.type || "hallway",
+          x: result.x,
+          y: result.y,
+          bearing_hint_deg: result.bearing_hint_deg ?? null,
+        };
 
     // Route through the same authoritative pipeline as QR scans —
     // this updates reducer, IMU pose, and all state in one place
-    applyScannedWaypoint(matchedWaypoint, "vision", {
-      role: matchedWaypoint.role || matchedWaypoint.type || "vision_anchor",
-      bearing_hint_deg: matchedWaypoint.bearing_hint_deg ?? null,
-      graph_rev: matchedWaypoint.graph_rev ?? GRAPH_REV,
-      qr_deployed: true,
-      requires_scan: matchedWaypoint.requires_scan ?? false,
-      stop_radius_m: matchedWaypoint.stop_radius_m ?? 3,
-    });
+      const synthesized = synthesizeQrPayloadFromWaypoint(matchedWaypoint) || {};
+      const visualPayload = {
+        ...synthesized,
+        ...result,
+        source: "vision",
+        visual: true,
+        qr_id: result.qr_id || visualWaypointId,
+        waypoint_id: visualWaypointId,
+        role:
+          result.role ||
+          synthesized.role ||
+          (String(matchedWaypoint.type || "").toLowerCase() === "hall"
+            ? "hallway"
+            : matchedWaypoint.type || "anchor"),
+        x: result.x ?? matchedWaypoint.x,
+        y: result.y ?? matchedWaypoint.y,
+        graph_rev: result.graph_rev ?? synthesized.graph_rev ?? GRAPH_REV,
+        qr_deployed: result.qr_deployed ?? true,
+        requires_scan: result.requires_scan ?? matchedWaypoint.requires_scan ?? false,
+        stop_radius_m: result.stop_radius_m ?? matchedWaypoint.stop_radius_m ?? 3,
+      };
 
-    if (navigation?.setParams) {
-      navigation.setParams({ visualLocateResult: undefined });
+      const validation = validateQrAnchor(visualPayload);
+      if (!validation.ok) {
+        showScanBadge(getValidationMessage(validation.reason));
+      } else {
+        await applyScannedWaypoint(
+          {
+            ...matchedWaypoint,
+            ...visualPayload,
+            id: visualWaypointId,
+          },
+          "vision",
+          visualPayload
+        );
+      }
+
+      if (!cancelled && navigation?.setParams) {
+        navigation.setParams({ visualLocateResult: undefined });
+      }
     }
-  }, [route.params?.visualLocateResult, navigation]);
+
+    applyVisualLocateResult();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [route.params?.visualLocateResult, navigation, synthesizeQrPayloadFromWaypoint]);
 
   useEffect(() => {
     if (currentBuildingId) return;
@@ -1784,6 +1839,9 @@ export default function NavigationPage({ route, navigation }) {
         floor: scannedWaypoint.floor || "",
         type: scannedWaypoint.type || "",
         role: scanMeta.role || scannedWaypoint.role || scannedWaypoint.type || "",
+        source,
+        visual: source === "vision",
+        confidence: scanMeta.confidence ?? scannedWaypoint.confidence ?? null,
         x: scannedWaypoint.x,
         y: scannedWaypoint.y,
         bearing_hint_deg:
@@ -1819,7 +1877,7 @@ export default function NavigationPage({ route, navigation }) {
         scanMeta.bearing_hint_deg ??
         scannedWaypoint.bearing_hint_deg ??
         null,
-      source: "qr",
+      source,
       timestamp: Date.now(),
     });
 
@@ -2871,15 +2929,8 @@ export default function NavigationPage({ route, navigation }) {
                 </Pressable>
 
                 <Pressable
-                  style={[
-                    s.primaryBottomBtn,
-                    currentBuildingId !== "woodland" && { opacity: 0.45 },
-                  ]}
+                  style={s.primaryBottomBtn}
                   onPress={() => {
-                    if (currentBuildingId !== "woodland") {
-                      showScanBadge("Visual locate is available in Woodland Building only.");
-                      return;
-                    }
                     navigation.navigate("VisualLocateScreen", {
                       returnScreen: route.name || "Navigation",
                       returnRouteKey: route.key,
@@ -2892,7 +2943,7 @@ export default function NavigationPage({ route, navigation }) {
                   }}
                 >
                   <Text style={s.primaryBottomBtnText}>
-                    Locate Me Visually{currentBuildingId !== "woodland" ? " (Woodland only)" : ""}
+                    Locate Me Visually
                   </Text>
                 </Pressable>
               </View>

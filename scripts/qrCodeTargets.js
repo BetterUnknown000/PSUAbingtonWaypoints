@@ -5,46 +5,49 @@ const QR_NAVIGATION_ROUTE = "navigation";
 const QR_PAYLOAD_VERSION = 3;
 const GRAPH_REV = "2026-04-28";
 
+const TARGET_TYPES = new Set(["entrance", "stairs", "hallway", "hall"]);
+const CATEGORY_BY_TYPE = {
+  entrance: "entrance",
+  stairs: "stairs",
+  hallway: "hall",
+  hall: "hall",
+};
+
 function normalize(value) {
   return String(value || "").trim().toLowerCase();
 }
 
-function hasQrCode(waypoint) {
-  return Boolean(waypoint && waypoint.id && waypoint.qr_code);
+function targetCategoryFor(waypoint) {
+  return CATEGORY_BY_TYPE[normalize(waypoint && waypoint.type)] || null;
+}
+
+function isQrTarget(waypoint) {
+  if (!waypoint || !waypoint.id || !waypoint.building) return false;
+  if (waypoint.qr_deployed === false) return false;
+  return TARGET_TYPES.has(normalize(waypoint.type));
+}
+
+function getWaypointQrId(waypoint) {
+  return waypoint.id;
+}
+
+function getQrFilename(waypoint) {
+  return `${waypoint.id}.png`;
 }
 
 function deriveRole(waypoint) {
-  const type = String(waypoint?.type || "").toLowerCase();
+  const type = normalize(waypoint && waypoint.type);
   if (type === "entrance") return "entrance";
   if (type === "stairs") return "stairs";
-  if (type === "elevator") return "elevator";
-  if (type === "exit") return "exit";
+  if (type === "hallway" || type === "hall") return "hallway";
   return "anchor";
-}
-
-function isPublicEntrance(waypoint) {
-  if (!hasQrCode(waypoint) || waypoint.type !== "entrance") return false;
-  const label = normalize(waypoint.label);
-  return !label.startsWith("room ");
-}
-
-function isElevator(waypoint) {
-  return hasQrCode(waypoint) && waypoint.type === "elevator";
-}
-
-function isStairs(waypoint) {
-  return hasQrCode(waypoint) && waypoint.type === "stairs";
-}
-
-function isHallwayAnchor(waypoint) {
-  return hasQrCode(waypoint) && waypoint.type === "hallway";
 }
 
 function buildAppUrl(waypoint) {
   const role = deriveRole(waypoint);
   const params = [
     ["v", QR_PAYLOAD_VERSION],
-    ["qr_id", waypoint.qr_code],
+    ["qr_id", getWaypointQrId(waypoint)],
     ["waypoint_id", waypoint.id],
     ["building", waypoint.building],
     ["floor", waypoint.floor],
@@ -73,7 +76,7 @@ function buildAppUrl(waypoint) {
 function buildPayload(waypoint) {
   return {
     version: QR_PAYLOAD_VERSION,
-    qr_id: waypoint.qr_code,
+    qr_id: getWaypointQrId(waypoint),
     waypoint_id: waypoint.id,
     building: waypoint.building,
     floor: waypoint.floor,
@@ -96,14 +99,27 @@ function buildPayload(waypoint) {
 }
 
 function getQrTargets() {
-  const targets = [
-    ...(campusData.waypoints || []).filter(isPublicEntrance).map((waypoint) => ({ waypoint, category: "entrance" })),
-    ...(campusData.waypoints || []).filter(isElevator).map((waypoint) => ({ waypoint, category: "elevator" })),
-    ...(campusData.waypoints || []).filter(isStairs).map((waypoint) => ({ waypoint, category: "stairs" })),
-    ...(campusData.waypoints || []).filter(isHallwayAnchor).map((waypoint) => ({ waypoint, category: "hallway" })),
-  ];
+  const targets = (campusData.waypoints || [])
+    .filter(isQrTarget)
+    .map((waypoint) => ({
+      waypoint,
+      category: targetCategoryFor(waypoint),
+    }));
 
   return Array.from(new Map(targets.map((item) => [item.waypoint.id, item])).values());
 }
 
-module.exports = { buildAppUrl, buildPayload, getQrTargets };
+module.exports = {
+  APP_SCHEME,
+  QR_NAVIGATION_ROUTE,
+  QR_PAYLOAD_VERSION,
+  GRAPH_REV,
+  TARGET_TYPES,
+  buildAppUrl,
+  buildPayload,
+  deriveRole,
+  getQrFilename,
+  getQrTargets,
+  getWaypointQrId,
+  isQrTarget,
+};

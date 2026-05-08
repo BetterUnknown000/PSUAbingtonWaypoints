@@ -2,6 +2,13 @@
 
 var allWps   = FULL_CAMPUS.waypoints.map(function(w) { return Object.assign({}, w); });
 var allEdges = FULL_CAMPUS.edges.map(function(e)     { return Object.assign({}, e); });
+var allRooms = (FULL_CAMPUS.rooms || []).map(function(r) { return Object.assign({}, r); });
+var allQrAnchors = (FULL_CAMPUS.qrAnchors || []).map(function(q) { return Object.assign({}, q); });
+
+FULL_CAMPUS.waypoints = allWps;
+FULL_CAMPUS.edges = allEdges;
+FULL_CAMPUS.rooms = allRooms;
+FULL_CAMPUS.qrAnchors = allQrAnchors;
 
 var wpById = {};
 allWps.forEach(function(w) { wpById[w.id] = w; });
@@ -145,20 +152,110 @@ function removeEdge(from, to) {
   });
 }
 
-function syncEntranceArrays(id, building, oldType, newType) {
+function escHtml(value) {
+  return String(value == null ? '' : value)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+}
+
+function getBuildingObj(building) {
+  var buildings = FULL_CAMPUS.buildings;
+  if (!Array.isArray(buildings)) return null;
+  for (var i = 0; i < buildings.length; i++) {
+    if (buildings[i].id === building || buildings[i].name === building) return buildings[i];
+  }
+  return null;
+}
+
+function syncEntranceArrays() {
   var buildings = FULL_CAMPUS.buildings;
   if (!Array.isArray(buildings)) return;
-  var bObj = null;
-  for (var i = 0; i < buildings.length; i++) {
-    if (buildings[i].id === building || buildings[i].name === building) { bObj = buildings[i]; break; }
+  var byBuilding = {};
+  allWps.forEach(function(w) {
+    if (w.type !== 'entrance') return;
+    if (!byBuilding[w.building]) byBuilding[w.building] = [];
+    if (byBuilding[w.building].indexOf(w.id) === -1) byBuilding[w.building].push(w.id);
+  });
+  buildings.forEach(function(b) {
+    b.entrances = byBuilding[b.id] ? byBuilding[b.id].slice() : [];
+  });
+}
+
+function getRoomsForWaypoint(id) {
+  return allRooms.filter(function(r) { return r.waypoint_id === id; });
+}
+
+function waypointNeedsQr(w) {
+  if (!w) return false;
+  if (w.qr_code) return true;
+  return w.type === 'stairs' || w.type === 'elevator';
+}
+
+function makeQrId(id) {
+  return 'QR_' + String(id || '')
+    .replace(/^wp_/i, '')
+    .replace(/[^a-z0-9]+/gi, '_')
+    .replace(/^_+|_+$/g, '')
+    .toUpperCase();
+}
+
+function ensureQrForWaypoint(w) {
+  if (!waypointNeedsQr(w)) return;
+  if (!w.qr_code) w.qr_code = makeQrId(w.id);
+  if (w.type === 'entrance') {
+    if (w.requires_scan == null) w.requires_scan = true;
+    if (w.stop_radius_m == null) w.stop_radius_m = 5;
   }
-  if (!bObj || !Array.isArray(bObj.entrances)) return;
-  if (oldType !== 'entrance' && newType === 'entrance') {
-    if (bObj.entrances.indexOf(id) === -1) bObj.entrances.push(id);
-  } else if (oldType === 'entrance' && newType !== 'entrance') {
-    var idx = bObj.entrances.indexOf(id);
-    if (idx !== -1) bObj.entrances.splice(idx, 1);
+  var existing = null;
+  for (var i = 0; i < allQrAnchors.length; i++) {
+    if (allQrAnchors[i].waypoint_id === w.id || allQrAnchors[i].qr_id === w.qr_code) {
+      existing = allQrAnchors[i];
+      break;
+    }
   }
+  if (!existing) {
+    existing = {};
+    allQrAnchors.push(existing);
+  }
+  existing.qr_id = w.qr_code;
+  existing.waypoint_id = w.id;
+  existing.building = w.building;
+  existing.floor = w.floor;
+}
+
+function syncQrAnchors() {
+  var validIds = {};
+  allWps.forEach(function(w) {
+    validIds[w.id] = true;
+    ensureQrForWaypoint(w);
+  });
+  var seen = {};
+  allQrAnchors = allQrAnchors.filter(function(q) {
+    if (!q || !q.waypoint_id || !validIds[q.waypoint_id]) return false;
+    var wp = wpById[q.waypoint_id];
+    if (!wp) return false;
+    if (!waypointNeedsQr(wp)) return false;
+    q.building = wp.building;
+    q.floor = wp.floor;
+    if (!q.qr_id && wp.qr_code) q.qr_id = wp.qr_code;
+    var key = q.qr_id || q.waypoint_id;
+    if (seen[key]) return false;
+    seen[key] = true;
+    return true;
+  });
+  FULL_CAMPUS.qrAnchors = allQrAnchors;
+}
+
+function removeWaypointReferences(id) {
+  allRooms = allRooms.filter(function(r) { return r.waypoint_id !== id; });
+  allQrAnchors = allQrAnchors.filter(function(q) { return q.waypoint_id !== id; });
+  FULL_CAMPUS.rooms = allRooms;
+  FULL_CAMPUS.qrAnchors = allQrAnchors;
+  delete positions[id];
+  syncEntranceArrays();
 }
 
 function closest(el, sel) {
@@ -571,16 +668,31 @@ function showInfo(id, adj, nodeSet) {
       (vRows || '<div style="font-size:11px;color:#888780;margin-top:4px">No other ' + w.type + ' in ' + w.building + '</div>') + '</div>';
   }
 
+  var roomRecords = getRoomsForWaypoint(id);
+  var room = roomRecords[0] || null;
+  var roomPanel =
+    '<div style="margin-top:10px;padding-top:8px;border-top:.5px solid #f1efe8">' +
+      '<div class="lbl" style="display:flex;justify-content:space-between"><span>Search room record</span><span style="color:#888780;font-size:10px">' + roomRecords.length + '</span></div>' +
+      '<input id="edit-room-number" placeholder="Room number or keyword" style="width:100%;padding:4px 6px;border:.5px solid #d3d1c7;border-radius:4px;font-size:12px;font-family:inherit;margin-bottom:4px" value="' + escHtml(room ? room.room_number : '') + '"/>' +
+      '<input id="edit-room-name" placeholder="Display name" style="width:100%;padding:4px 6px;border:.5px solid #d3d1c7;border-radius:4px;font-size:12px;font-family:inherit;margin-bottom:4px" value="' + escHtml(room ? room.room_name : '') + '"/>' +
+      '<input id="edit-room-type" placeholder="Search type" style="width:100%;padding:4px 6px;border:.5px solid #d3d1c7;border-radius:4px;font-size:12px;font-family:inherit;margin-bottom:5px" value="' + escHtml(room ? room.type : w.type) + '"/>' +
+      '<button onclick="applyRoomEdit(\'' + id + '\')" style="width:100%;padding:4px;background:#185FA5;color:#fff;border:none;border-radius:5px;font-size:11px;cursor:pointer;margin-bottom:4px">' + (room ? 'Save room record' : 'Create room record') + '</button>' +
+      (roomRecords.length
+        ? '<button onclick="deleteRoomRecord(\'' + id + '\')" style="width:100%;padding:4px;background:#FCEBEB;color:#791F1F;border:none;border-radius:5px;font-size:11px;cursor:pointer">Remove room record(s)</button>'
+        : '<div style="font-size:10px;color:#888780">Used by destination search.</div>') +
+    '</div>';
+
   document.getElementById('node-info').innerHTML =
     '<h3>Node info</h3>' +
-    '<div class="lbl">Label</div><input id="edit-label" style="width:100%;padding:4px 6px;border:.5px solid #d3d1c7;border-radius:4px;font-size:12px;font-family:inherit;margin-bottom:6px" value="' + (w.label || '').replace(/"/g, '&quot;') + '"/>' +
-    '<div class="lbl">ID</div><input id="edit-id" style="width:100%;padding:4px 6px;border:.5px solid #d3d1c7;border-radius:4px;font-size:12px;font-family:monospace;margin-bottom:2px" value="' + id.replace(/"/g, '&quot;') + '"/>' +
+    '<div class="lbl">Label</div><input id="edit-label" style="width:100%;padding:4px 6px;border:.5px solid #d3d1c7;border-radius:4px;font-size:12px;font-family:inherit;margin-bottom:6px" value="' + escHtml(w.label || '') + '"/>' +
+    '<div class="lbl">ID</div><input id="edit-id" style="width:100%;padding:4px 6px;border:.5px solid #d3d1c7;border-radius:4px;font-size:12px;font-family:monospace;margin-bottom:2px" value="' + escHtml(id) + '"/>' +
     '<div style="font-size:10px;color:#888780;margin-bottom:6px">Renaming updates edges, rooms, entrances and QR anchors.</div>' +
     '<div class="lbl">Type</div><select id="edit-type" style="width:100%;padding:4px 6px;border:.5px solid #d3d1c7;border-radius:4px;font-size:12px;font-family:inherit;margin-bottom:6px">' + typeOptions + '</select>' +
+    '<div class="lbl">QR code</div><input id="edit-qr-code" placeholder="QR_SUTH_F1_106" style="width:100%;padding:4px 6px;border:.5px solid #d3d1c7;border-radius:4px;font-size:12px;font-family:monospace;margin-bottom:6px" value="' + escHtml(w.qr_code || '') + '"/>' +
     '<button onclick="applyWaypointEdit(\'' + id + '\')" style="width:100%;padding:5px;background:#185FA5;color:#fff;border:none;border-radius:5px;font-size:12px;cursor:pointer;margin-bottom:8px">Apply changes</button>' +
     '<div class="lbl">Position</div>' + xyRow + latLngSection +
     '<div style="margin-bottom:6px;margin-top:4px"><span class="badge ' + (nbs.length ? 'bg' : 'br') + '">' + nbs.length + ' connections</span> <button class="badge br" style="cursor:pointer;border:none;font-size:10px" onclick="deleteWaypoint(\'' + id + '\')">delete</button></div>' +
-    '<div class="lbl">Connections</div><div>' + (rows || '<div style="color:#888780;font-size:11px">none on this floor</div>') + '</div>' + verticalPanel;
+    '<div class="lbl">Connections</div><div>' + (rows || '<div style="color:#888780;font-size:11px">none on this floor</div>') + '</div>' + verticalPanel + roomPanel;
 }
 
 // ── Edit / rename ─────────────────────────────────────────────────────────────
@@ -613,12 +725,54 @@ function applyLatLng(id) {
   alert('\u2713 Lat/long saved: ' + lat.toFixed(7) + ', ' + lng.toFixed(7));
 }
 
+function applyRoomEdit(id) {
+  var w = wpById[id];
+  if (!w) return;
+  var numberEl = document.getElementById('edit-room-number');
+  var nameEl = document.getElementById('edit-room-name');
+  var typeEl = document.getElementById('edit-room-type');
+  var roomNumber = numberEl ? numberEl.value.trim() : '';
+  var roomName = nameEl ? nameEl.value.trim() : '';
+  var roomType = typeEl ? typeEl.value.trim() : '';
+  if (!roomNumber && !roomName) {
+    alert('Add a room number, keyword, or display name first.');
+    return;
+  }
+  var records = getRoomsForWaypoint(id);
+  var room = records[0];
+  if (!room) {
+    room = {};
+    allRooms.push(room);
+  }
+  room.building = w.building;
+  room.room_number = roomNumber || roomName || w.label || id;
+  room.floor = w.floor;
+  room.waypoint_id = id;
+  room.room_name = roomName || w.label || room.room_number;
+  room.type = roomType || w.type || 'room';
+  FULL_CAMPUS.rooms = allRooms;
+  ensureQrForWaypoint(w);
+  syncQrAnchors();
+  invalidateCache(); markDirty();
+  showInfo(id, getAdj(), getNodeSet());
+}
+
+function deleteRoomRecord(id) {
+  if (!confirm('Remove all room/search records for ' + id + '?')) return;
+  allRooms = allRooms.filter(function(r) { return r.waypoint_id !== id; });
+  FULL_CAMPUS.rooms = allRooms;
+  syncQrAnchors();
+  invalidateCache(); markDirty();
+  showInfo(id, getAdj(), getNodeSet());
+}
+
 function applyWaypointEdit(oldId) {
   var w = wpById[oldId];
   if (!w) return;
   var newLabel = (document.getElementById('edit-label').value || '').trim();
   var newType  = document.getElementById('edit-type').value;
   var newId    = (document.getElementById('edit-id').value || '').trim().replace(/\s+/g, '_');
+  var nextQrCode = (document.getElementById('edit-qr-code').value || '').trim();
   if (!newLabel) { alert('Label cannot be empty.'); return; }
   if (!newId)    { alert('ID cannot be empty.');    return; }
   if (newId !== oldId) {
@@ -626,7 +780,12 @@ function applyWaypointEdit(oldId) {
     renameWaypointId(oldId, newId); w = wpById[newId];
   }
   var oldType = w.type; w.label = newLabel; w.type = newType;
-  if (oldType !== newType) syncEntranceArrays(newId, w.building, oldType, newType);
+  if (nextQrCode) w.qr_code = nextQrCode;
+  else if (newType === 'stairs' || newType === 'elevator') w.qr_code = makeQrId(newId);
+  else delete w.qr_code;
+  if (oldType !== newType) syncEntranceArrays();
+  ensureQrForWaypoint(w);
+  syncQrAnchors();
   invalidateCache(); markDirty();
   showInfo(newId, getAdj(), getNodeSet()); fullRender();
 }
@@ -647,10 +806,12 @@ function renameWaypointId(oldId, newId) {
       if (idx !== -1) b.entrances[idx] = newId;
     });
   }
-  if (Array.isArray(FULL_CAMPUS.rooms))
-    FULL_CAMPUS.rooms.forEach(function(r) { if (r.waypoint_id === oldId) r.waypoint_id = newId; });
-  if (Array.isArray(FULL_CAMPUS.qrAnchors))
-    FULL_CAMPUS.qrAnchors.forEach(function(q) { if (q.waypoint_id === oldId) q.waypoint_id = newId; });
+  allRooms.forEach(function(r) { if (r.waypoint_id === oldId) r.waypoint_id = newId; });
+  allQrAnchors.forEach(function(q) { if (q.waypoint_id === oldId) q.waypoint_id = newId; });
+  FULL_CAMPUS.rooms = allRooms;
+  FULL_CAMPUS.qrAnchors = allQrAnchors;
+  syncEntranceArrays();
+  syncQrAnchors();
 }
 
 function delEdge(from, to) {
@@ -670,10 +831,16 @@ function toggleVertical(idA, idB, connect) {
 }
 
 function deleteWaypoint(id) {
-  if (!confirm('Delete waypoint ' + id + ' and all its edges?')) return;
+  var roomCount = getRoomsForWaypoint(id).length;
+  var qrCount = allQrAnchors.filter(function(q) { return q.waypoint_id === id; }).length;
+  var extra = [];
+  if (roomCount) extra.push(roomCount + ' room/search record(s)');
+  if (qrCount) extra.push(qrCount + ' QR anchor(s)');
+  if (!confirm('Delete waypoint ' + id + ', all its edges' + (extra.length ? ', and ' + extra.join(' + ') : '') + '?')) return;
   allWps = allWps.filter(function(w) { return w.id !== id; });
   delete wpById[id];
   allEdges = allEdges.filter(function(e) { return e.from !== id && e.to !== id; });
+  removeWaypointReferences(id);
   invalidateCache(); markDirty();
   document.getElementById('node-info').innerHTML = '<h3>Node info</h3><div style="color:#888780;font-size:11px">Deleted.</div>';
   fullRender();
@@ -711,6 +878,9 @@ function openModal() {
   document.getElementById('m-building').value = parts[0];
   document.getElementById('m-floor').value    = parts[1];
   document.getElementById('m-id').value = ''; document.getElementById('m-label').value = '';
+  document.getElementById('m-qr-code').value = '';
+  document.getElementById('m-room-number').value = '';
+  document.getElementById('m-room-name').value = '';
   document.getElementById('m-type').value = 'classroom';
   document.getElementById('modal-coords').textContent = pendingPos
     ? 'Position: x=' + pendingPos.x.toFixed(1) + ', y=' + pendingPos.y.toFixed(1)
@@ -727,11 +897,30 @@ function confirmAdd() {
   var type = document.getElementById('m-type').value;
   var building = document.getElementById('m-building').value;
   var floor = document.getElementById('m-floor').value;
+  var qrCode = document.getElementById('m-qr-code').value.trim();
+  var roomNumber = document.getElementById('m-room-number').value.trim();
+  var roomName = document.getElementById('m-room-name').value.trim();
   if (!id || !label) { alert('ID and Label are required.'); return; }
   if (wpById[id]) { alert('ID "' + id + '" already exists.'); return; }
   var pos = pendingPos || { x: 500, y: 500 };
   var wp = { id: id, building: building, floor: floor, label: label, type: type, x: pos.x, y: pos.y };
+  if (qrCode) wp.qr_code = qrCode;
+  else if (type === 'stairs' || type === 'elevator') wp.qr_code = makeQrId(id);
   allWps.push(wp); wpById[id] = wp; positions[id] = { x: pos.x, y: pos.y };
+  if (roomNumber || roomName) {
+    allRooms.push({
+      building: building,
+      room_number: roomNumber || roomName,
+      floor: floor,
+      waypoint_id: id,
+      room_name: roomName || label,
+      type: type
+    });
+    FULL_CAMPUS.rooms = allRooms;
+  }
+  syncEntranceArrays();
+  ensureQrForWaypoint(wp);
+  syncQrAnchors();
   closeModal(); invalidateCache(); markDirty(); fullRender();
   showInfo(id, getAdj(), getNodeSet());
 }
@@ -782,20 +971,123 @@ function markDirty() {
   dirty = true;
   document.getElementById('changes-lbl').style.display = 'inline';
   document.getElementById('save-btn').classList.add('dirty');
-  document.getElementById('save-btn').textContent = 'Save changes';
+  document.getElementById('save-btn').textContent = 'Save + sync project';
+  setSaveStatus('', '');
 }
 
-function saveData() {
-  var updatedWps = allWps.map(function(w) {
-    var p = positions[w.id];
-    return p ? Object.assign({}, w, { x: p.x, y: p.y }) : Object.assign({}, w);
-  });
-  var out = Object.assign({}, FULL_CAMPUS, { waypoints: updatedWps, edges: allEdges });
-  var blob = new Blob([JSON.stringify(out, null, 2) + '\n'], { type: 'application/json' });
-  var a = document.createElement('a');
-  a.href = URL.createObjectURL(blob); a.download = 'campusData.json'; a.click();
+function markClean(message, cls) {
   dirty = false;
   document.getElementById('changes-lbl').style.display = 'none';
   document.getElementById('save-btn').classList.remove('dirty');
-  document.getElementById('save-btn').textContent = 'Download campusData.json';
+  document.getElementById('save-btn').textContent = 'Save + sync project';
+  setSaveStatus(message || '', cls || 'ok');
+}
+
+function setSaveStatus(message, cls) {
+  var el = document.getElementById('save-status');
+  if (!el) return;
+  el.textContent = message || '';
+  el.className = cls || '';
+}
+
+function cleanEdges() {
+  var valid = {};
+  allWps.forEach(function(w) { valid[w.id] = true; });
+  var seen = {};
+  var clean = [];
+  allEdges.forEach(function(e) {
+    if (!valid[e.from] || !valid[e.to] || e.from === e.to) return;
+    var key = [e.from, e.to].sort().join('__');
+    if (seen[key]) return;
+    seen[key] = true;
+    clean.push(Object.assign({}, e));
+  });
+  allEdges = clean;
+  FULL_CAMPUS.edges = allEdges;
+  return clean;
+}
+
+function cleanRooms() {
+  var valid = {};
+  var updatedWps = allWps.map(function(w) {
+    var p = positions[w.id];
+    if (p) { w.x = Math.round(p.x * 10) / 10; w.y = Math.round(p.y * 10) / 10; }
+    valid[w.id] = true;
+    return w;
+  });
+  allRooms = allRooms.filter(function(r) {
+    if (!r || !r.waypoint_id || !valid[r.waypoint_id]) return false;
+    var wp = wpById[r.waypoint_id];
+    r.building = wp.building;
+    r.floor = wp.floor;
+    if (!r.room_number && r.room_name) r.room_number = r.room_name;
+    if (!r.room_name && r.room_number) r.room_name = wp.label || r.room_number;
+    if (!r.type) r.type = wp.type || 'room';
+    return true;
+  });
+  FULL_CAMPUS.rooms = allRooms;
+  FULL_CAMPUS.waypoints = updatedWps;
+  return updatedWps;
+}
+
+function buildSavedCampus() {
+  syncEntranceArrays();
+  var updatedWps = cleanRooms();
+  syncQrAnchors();
+  var updatedEdges = cleanEdges();
+  return Object.assign({}, FULL_CAMPUS, {
+    waypoints: updatedWps.map(function(w) { return Object.assign({}, w); }),
+    edges: updatedEdges.map(function(e) { return Object.assign({}, e); }),
+    rooms: allRooms.map(function(r) { return Object.assign({}, r); }),
+    qrAnchors: allQrAnchors.map(function(q) { return Object.assign({}, q); })
+  });
+}
+
+function canUseServerSave() {
+  return typeof fetch === 'function' &&
+    typeof EDITOR_SAVE_ENDPOINT === 'string' &&
+    /^https?:$/.test(window.location.protocol);
+}
+
+function downloadCampusData(out) {
+  var blob = new Blob([JSON.stringify(out, null, 2) + '\n'], { type: 'application/json' });
+  var a = document.createElement('a');
+  a.href = URL.createObjectURL(blob); a.download = 'campusData.json'; a.click();
+}
+
+async function saveData() {
+  var btn = document.getElementById('save-btn');
+  var out = buildSavedCampus();
+  btn.disabled = true;
+  btn.textContent = 'Saving...';
+  setSaveStatus('Saving...', '');
+
+  try {
+    if (canUseServerSave()) {
+      var res = await fetch(EDITOR_SAVE_ENDPOINT, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(out)
+      });
+      var payload = await res.json().catch(function() { return null; });
+      if (!res.ok || !payload || !payload.ok) {
+        console.error('Campus editor save failed', payload);
+        setSaveStatus((payload && payload.message) || 'Save failed. See console.', 'err');
+        btn.textContent = 'Save + sync project';
+        return;
+      }
+      markClean('Saved, split, validated, rebuilt.', 'ok');
+      return;
+    }
+
+    downloadCampusData(out);
+    markClean('Downloaded only. Project files were not changed.', 'err');
+  } catch (err) {
+    console.error('Campus editor server save unavailable', err);
+    downloadCampusData(out);
+    markClean('Server unavailable. Downloaded JSON only.', 'err');
+  } finally {
+    btn.disabled = false;
+    if (dirty) btn.textContent = 'Save + sync project';
+  }
 }

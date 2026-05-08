@@ -67,11 +67,11 @@ export const initialNavState = {
   destinationRoomNumber: null,
   destinationWaypointId: null,
  
-  // Current indoor position anchor (set only from QR scans)
+  // Current indoor position anchor (set from QR scans or visual locate)
   currentWaypointId: null,
   currentBuildingId: null,
   currentFloor: null,
-  anchorPose: null, // { x, y, floor, building, source: "qr" }
+  anchorPose: null, // { x, y, floor, building, source: "qr" | "vision" }
  
   // Route
   pathIds: [],
@@ -170,13 +170,20 @@ export function navReducer(state, event) {
       const isElevator = scannedRole === "elevator" ||
         scannedType === "elevator";
       const isVertical = isStairs || isElevator;
+      const isVisualAnchor = qr.source === "vision" || qr.visual === true;
+      const hasIndoorAnchor =
+        Boolean(qr.waypointId || qr.waypoint_id) &&
+        Boolean(scannedBuildingId) &&
+        Boolean(qr.floor) &&
+        qr.x != null &&
+        qr.y != null;
       const isCorrectBuilding =
         !state.destinationBuildingId ||
         scannedBuildingId === state.destinationBuildingId;
  
       // ── Awaiting entry QR ──
       if (state.mode === NavMode.AWAIT_ENTRY_QR) {
-        if (isEntrance && isCorrectBuilding) {
+        if ((isEntrance && isCorrectBuilding) || (isVisualAnchor && hasIndoorAnchor)) {
           return {
             ...state,
             mode: NavMode.INDOOR_ANCHORED,
@@ -217,7 +224,7 @@ export function navReducer(state, event) {
         }
  
         // Scanning a vertical waypoint — start floor transfer, preserving type
-        if (isVertical) {
+        if (isVertical && !isVisualAnchor) {
           return {
             ...state,
             mode: NavMode.VERTICAL_TRANSFER,
@@ -264,7 +271,7 @@ export function navReducer(state, event) {
  
       // ── Outdoor scanner ──
       if (state.mode === NavMode.OUTDOOR_ROUTE) {
-        if (isEntrance && isCorrectBuilding) {
+        if ((isEntrance && isCorrectBuilding) || (isVisualAnchor && hasIndoorAnchor)) {
           return {
             ...state,
             mode: NavMode.INDOOR_ANCHORED,
@@ -279,6 +286,20 @@ export function navReducer(state, event) {
       }
 
       // ── Emergency idle — any QR scan starts emergency routing ──
+      // Visual locate can establish an indoor anchor before a destination exists.
+      if (state.mode === NavMode.IDLE && isVisualAnchor && hasIndoorAnchor) {
+        return {
+          ...state,
+          mode: NavMode.INDOOR_ANCHORED,
+          currentWaypointId: qr.waypointId || qr.waypoint_id,
+          currentBuildingId: scannedBuildingId,
+          currentFloor: qr.floor,
+          anchorPose: buildAnchorPose(qr),
+          expectedQrRole: null,
+        };
+      }
+
+      // Emergency idle: any QR or visual anchor starts emergency routing.
       if (state.mode === NavMode.EMERGENCY_IDLE) {
         return {
           ...state,
@@ -386,8 +407,9 @@ function buildAnchorPose(qr) {
     headingDeg: qr.bearing_hint_deg != null
       ? Number(qr.bearing_hint_deg)
       : null,
-    source: "qr",
-    accuracyM: 0.5,
+    source: qr.source || "qr",
+    accuracyM: qr.source === "vision" ? 2 : 0.5,
+    confidence: qr.confidence ?? null,
     timestamp: Date.now(),
   };
 }

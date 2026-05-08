@@ -15,7 +15,9 @@ import { imageMap } from "./imageMap";
 const TARGET_WIDTH = 96;   // resize width; height auto-scales
 const GRID_X = 12;
 const GRID_Y = 24;
-const MIN_SCORE = 0.92;    // minimum cosine similarity to accept a match
+const MIN_SCORE = 0.86;    // minimum cosine similarity to accept a match
+const STRONG_SCORE = 0.92; // accept immediately above this score
+const MIN_SCORE_GAP = 0.01; // weak matches need separation from runner-up
 
 let referenceDb = [];
 let initialized = false;
@@ -68,6 +70,34 @@ function cosineSimilarity(a, b) {
   }
   const denom = Math.sqrt(magA) * Math.sqrt(magB);
   return denom ? dot / denom : 0;
+}
+
+function unique(values) {
+  return Array.from(new Set(values.filter(Boolean)));
+}
+
+function getPhotoRefs(photo) {
+  if (Array.isArray(photo)) return photo.flatMap(getPhotoRefs);
+  if (!photo) return [];
+  const raw = String(photo).trim();
+  if (!raw) return [];
+  const hasExtension = /\.(jpe?g|png)$/i.test(raw);
+  return hasExtension
+    ? [raw]
+    : [`${raw}.jpg`, `${raw}.jpeg`, `${raw}.png`, raw];
+}
+
+function resolvePhotoModule(photoRef) {
+  const candidates = unique(getPhotoRefs(photoRef));
+  for (const candidate of candidates) {
+    if (imageMap[candidate]) {
+      return {
+        key: candidate,
+        module: imageMap[candidate],
+      };
+    }
+  }
+  return null;
 }
 
 // Grid-based fingerprint: mean luminance + mean horizontal edge energy
@@ -159,25 +189,35 @@ export async function loadReferenceImageDatabase() {
   for (const building of getAllBuildings()) {
     await getBuildingData(building.id); // no-op if already cached
     for (const wp of getBuildingWaypoints(building.id)) {
-      if (!wp.photo || !imageMap[wp.photo]) continue;
+      const photoRefs = unique(getPhotoRefs(wp.photo));
+      if (photoRefs.length === 0) continue;
 
-      try {
-        const asset = Asset.fromModule(imageMap[wp.photo]);
-        await asset.downloadAsync();
+      for (const photoRef of photoRefs) {
+        const resolved = resolvePhotoModule(photoRef);
+        if (!resolved) continue;
 
-        const uri = asset.localUri || asset.uri;
-        const fingerprint = await uriToFingerprint(uri);
+        try {
+          const asset = Asset.fromModule(resolved.module);
+          await asset.downloadAsync();
 
-        refs.push({
-          waypoint_id: wp.id,
-          label: wp.label,
-          building: wp.building,
-          floor: wp.floor,
-          photo: wp.photo,
-          fingerprint,
-        });
-      } catch (err) {
-        console.warn(`Reference load failed for ${wp.id}:`, err.message);
+          const uri = asset.localUri || asset.uri;
+          const fingerprint = await uriToFingerprint(uri);
+
+          refs.push({
+            waypoint_id: wp.id,
+            label: wp.label,
+            building: wp.building,
+            floor: wp.floor,
+            type: wp.type,
+            x: wp.x ?? null,
+            y: wp.y ?? null,
+            bearing_hint_deg: wp.bearing_hint_deg ?? null,
+            photo: resolved.key,
+            fingerprint,
+          });
+        } catch (err) {
+          console.warn(`Reference load failed for ${wp.id}:`, err.message);
+        }
       }
     }   // end waypoint loop
   }   // end building loop
@@ -198,15 +238,24 @@ export async function identifyLocationFromFrame(frameUri) {
   try {
     const frameFingerprint = await uriToFingerprint(frameUri);
 
-    let best = null;
-    for (const ref of referenceDb) {
-      const score = cosineSimilarity(frameFingerprint, ref.fingerprint);
-      if (!best || score > best.score) {
-        best = { ...ref, score };
-      }
-    }
+    const matches = referenceDb
+      .map((ref) => ({
+        ...ref,
+        score: cosineSimilarity(frameFingerprint, ref.fingerprint),
+      }))
+      .sort((a, b) => b.score - a.score);
+
+    const best = matches[0] || null;
+    const runnerUp = matches.find((match) => match.waypoint_id !== best?.waypoint_id) || null;
 
     if (!best || best.score < MIN_SCORE) return null;
+    if (
+      best.score < STRONG_SCORE &&
+      runnerUp &&
+      best.score - runnerUp.score < MIN_SCORE_GAP
+    ) {
+      return null;
+    }
 
     return {
       matchedImage: {
@@ -215,11 +264,16 @@ export async function identifyLocationFromFrame(frameUri) {
         photo: best.photo,
       },
       confidence: best.score,
+      runnerUpConfidence: runnerUp?.score ?? null,
       location: {
         waypoint_id: best.waypoint_id,
         label: best.label,
         building: best.building,
         floor: best.floor,
+        type: best.type,
+        x: best.x,
+        y: best.y,
+        bearing_hint_deg: best.bearing_hint_deg,
       },
     };
   } catch (error) {

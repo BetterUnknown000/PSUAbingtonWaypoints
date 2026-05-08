@@ -9,24 +9,11 @@
       "1"
     ],
     "entrances": [
-      "wp_rydal_main_entrance"
+      "wp_rydal_main_entrance",
+      "wp_rydal_f1_main_entrance"
     ]
   },
   "waypoints": [
-    {
-      "id": "wp_rydal_main_entrance",
-      "building": "rydal",
-      "floor": "ground",
-      "label": "Rydal Main Entrance",
-      "type": "entrance",
-      "latitude": 40.1159,
-      "longitude": -75.11217,
-      "x": 279.2,
-      "y": 475.7,
-      "qr_code": "QR_RYDAL_GND_MAIN_ENTRANCE",
-      "requires_scan": true,
-      "stop_radius_m": 5
-    },
     {
       "id": "wp_rydal_001",
       "building": "rydal",
@@ -38,18 +25,6 @@
       "x": 651.56,
       "y": 429.1,
       "qr_code": "QR_RYDAL_GND_001"
-    },
-    {
-      "id": "wp_rydal_ee2",
-      "building": "rydal",
-      "floor": "ground",
-      "label": "Room EE2",
-      "type": "classroom",
-      "latitude": 40.115893,
-      "longitude": -75.112129,
-      "x": 500,
-      "y": 500,
-      "qr_code": "QR_RYDAL_GND_EE2"
     },
     {
       "id": "wp_rydal_101",
@@ -92,15 +67,15 @@
       "stop_radius_m": 3
     },
     {
-      "id": "wp_rydal_gnd_stairs",
+      "id": "wp_rydal_g_staircase_a",
       "building": "rydal",
       "floor": "ground",
-      "label": "Rydal Ground Floor Stairs",
+      "label": "Rydal G Staircase A",
       "type": "stairs",
       "latitude": 40.115913,
       "longitude": -75.112167,
-      "x": 581.85,
-      "y": 489.66,
+      "x": 595.9,
+      "y": 474.7,
       "qr_code": "QR_RYDAL_GND_STAIRS",
       "requires_scan": true,
       "stop_radius_m": 3
@@ -113,8 +88,8 @@
       "type": "hallway",
       "latitude": 40.115922,
       "longitude": -75.112115,
-      "x": 601.86,
-      "y": 450.69,
+      "x": 601.9,
+      "y": 450.7,
       "qr_code": "QR_RYDAL_GND_HALL_01",
       "requires_scan": false,
       "stop_radius_m": 3
@@ -228,10 +203,10 @@
       "qr_code": "QR_RYDAL_F2_217"
     },
     {
-      "id": "wp_rydal_f2_stairs_main",
+      "id": "wp_rydal_f2_staircase_b",
       "building": "rydal",
       "floor": "2",
-      "label": "Rydal Second Floor Main Stairs",
+      "label": "Rydal F2 Staircase B",
       "type": "stairs",
       "latitude": 40.115913061577416,
       "longitude": -75.11222391953302,
@@ -298,13 +273,16 @@
       "stop_radius_m": 3
     },
     {
-      "id": "wp_rydal_f1_stairs_side",
+      "id": "wp_rydal_f1_staircase_b",
       "building": "rydal",
       "floor": "1",
-      "label": "Rydal First Floor Side Stairs",
+      "label": "Rydal F1 Staircase B",
       "type": "stairs",
       "x": 326.5,
-      "y": 467
+      "y": 467,
+      "qr_code": "QR_RYDAL_F1_STAIRCASE_B",
+      "requires_scan": true,
+      "stop_radius_m": 3
     },
     {
       "id": "wp_rydal_f2_hall_05",
@@ -319,12 +297,12 @@
       "id": "wp_rydal_f1_main_entrance",
       "building": "rydal",
       "floor": "1",
-      "label": "Main Entrance",
+      "label": "Rydal F1 Main Entrance",
       "type": "entrance",
       "x": 281.5,
       "y": 476.2,
-      "latitude": 40.11588,
-      "longitude": -75.11226
+      "latitude": 40.11591,
+      "longitude": -75.1123
     },
     {
       "id": "wp_rydal_105A",
@@ -516,15 +494,6 @@
       "y": 285
     },
     {
-      "id": "wp_rydal_f1_other_entrance",
-      "building": "rydal",
-      "floor": "1",
-      "label": "Other Entrance",
-      "type": "entrance",
-      "x": 159,
-      "y": 751
-    },
-    {
       "id": "wp_rydal_210A",
       "building": "rydal",
       "floor": "2",
@@ -597,36 +566,114 @@
       "y": 662
     },
     {
-      "id": "wp_rydal_stairs_1",
+      "id": "wp_rydal_f1_staircase_a",
       "building": "rydal",
       "floor": "1",
-      "label": "Rydal Stairs 1",
+      "label": "Rydal F1 Staircase A",
       "type": "stairs",
       "x": 522.2,
-      "y": 440
+      "y": 440,
+      "qr_code": "QR_RYDAL_F1_STAIRCASE_A",
+      "requires_scan": true,
+      "stop_radius_m": 3
+    },
+    {
+      "id": "wp_rydal_003",
+      "building": "rydal",
+      "floor": "ground",
+      "label": "Room 003",
+      "type": "office",
+      "x": 523,
+      "y": 386
+    },
+    {
+      "id": "wp_rydal_005",
+      "building": "rydal",
+      "floor": "ground",
+      "label": "Room 005",
+      "type": "office",
+      "x": 373,
+      "y": 531
+    },
+    {
+      "id": "wp_rydal_006",
+      "building": "rydal",
+      "floor": "ground",
+      "label": "Room 006",
+      "type": "office",
+      "x": 371,
+      "y": 557
+    },
+    {
+      "id": "wp_rydal_007",
+      "building": "rydal",
+      "floor": "ground",
+      "label": "Room 007",
+      "type": "office",
+      "x": 299,
+      "y": 659
+    },
+    {
+      "id": "wp_rydal_010",
+      "building": "rydal",
+      "floor": "ground",
+      "label": "Room 010",
+      "type": "office",
+      "x": 356,
+      "y": 646
+    },
+    {
+      "id": "wp_rydal_008",
+      "building": "rydal",
+      "floor": "ground",
+      "label": "Room 008",
+      "type": "office",
+      "x": 274,
+      "y": 687
+    },
+    {
+      "id": "wp_rydal_009",
+      "building": "rydal",
+      "floor": "ground",
+      "label": "Room 009",
+      "type": "office",
+      "x": 249,
+      "y": 744
+    },
+    {
+      "id": "wp_rydal_hall_01",
+      "building": "rydal",
+      "floor": "ground",
+      "label": "Rydal G Hall A",
+      "type": "hall",
+      "x": 524.4,
+      "y": 417.3
+    },
+    {
+      "id": "wp_rydal_g_hall_02",
+      "building": "rydal",
+      "floor": "ground",
+      "label": "Rydal G Hall A Ext",
+      "type": "hall",
+      "x": 402.3,
+      "y": 565
+    },
+    {
+      "id": "wp_rydal_main_entrance",
+      "building": "rydal",
+      "floor": "ground",
+      "label": "Rydal Main Entrance",
+      "type": "entrance",
+      "latitude": 40.1159,
+      "longitude": -75.11217,
+      "x": 279.18,
+      "y": 475.74,
+      "qr_code": "QR_RYDAL_GND_MAIN_ENTRANCE",
+      "requires_scan": true,
+      "stop_radius_m": 5
     }
   ],
   "edges": [
-    {
-      "from": "wp_rydal_main_entrance",
-      "to": "wp_rydal_001",
-      "accessible": true
-    },
-    {
-      "from": "wp_rydal_001",
-      "to": "wp_rydal_ee2",
-      "accessible": true
-    },
-    {
-      "from": "wp_rydal_main_entrance",
-      "to": "wp_rydal_101",
-      "accessible": false
-    },
-    {
-      "from": "wp_rydal_main_entrance",
-      "to": "wp_rydal_f1_hall_01",
-      "accessible": true
-    },
     {
       "from": "wp_rydal_f1_hall_01",
       "to": "wp_rydal_f1_hall_top_stairs",
@@ -634,37 +681,17 @@
     },
     {
       "from": "wp_rydal_f1_hall_top_stairs",
-      "to": "wp_rydal_gnd_stairs",
+      "to": "wp_rydal_g_staircase_a",
       "accessible": false
     },
     {
-      "from": "wp_rydal_gnd_stairs",
+      "from": "wp_rydal_g_staircase_a",
       "to": "wp_rydal_gnd_hall_01",
       "accessible": true
     },
     {
       "from": "wp_rydal_gnd_hall_01",
       "to": "wp_rydal_001",
-      "accessible": true
-    },
-    {
-      "from": "wp_ath_main_entrance",
-      "to": "wp_rydal_main_entrance",
-      "accessible": true
-    },
-    {
-      "from": "wp_rydal_main_entrance",
-      "to": "wp_ath_main_entrance",
-      "accessible": true
-    },
-    {
-      "from": "wp_rydal_main_entrance",
-      "to": "wp_cloverly_main_entrance",
-      "accessible": true
-    },
-    {
-      "from": "wp_cloverly_main_entrance",
-      "to": "wp_rydal_main_entrance",
       "accessible": true
     },
     {
@@ -678,22 +705,17 @@
       "accessible": true
     },
     {
-      "from": "wp_rydal_main_entrance",
-      "to": "wp_rydal_f1_stairs_side",
-      "accessible": true
-    },
-    {
-      "from": "wp_rydal_f1_stairs_side",
+      "from": "wp_rydal_f1_staircase_b",
       "to": "wp_rydal_101",
       "accessible": true
     },
     {
-      "from": "wp_rydal_f1_stairs_side",
-      "to": "wp_rydal_f2_stairs_main",
+      "from": "wp_rydal_f1_staircase_b",
+      "to": "wp_rydal_f2_staircase_b",
       "accessible": true
     },
     {
-      "from": "wp_rydal_f2_stairs_main",
+      "from": "wp_rydal_f2_staircase_b",
       "to": "wp_rydal_209",
       "accessible": true
     },
@@ -728,12 +750,12 @@
       "accessible": true
     },
     {
-      "from": "wp_rydal_f2_stairs_main",
+      "from": "wp_rydal_f2_staircase_b",
       "to": "wp_rydal_f2_hall_01",
       "accessible": true
     },
     {
-      "from": "wp_rydal_f2_stairs_main",
+      "from": "wp_rydal_f2_staircase_b",
       "to": "wp_rydal_f2_hall_05",
       "accessible": true
     },
@@ -758,7 +780,7 @@
       "accessible": true
     },
     {
-      "from": "wp_rydal_f1_stairs_side",
+      "from": "wp_rydal_f1_staircase_b",
       "to": "wp_rydal_f1_main_entrance",
       "accessible": true
     },
@@ -923,11 +945,6 @@
       "accessible": true
     },
     {
-      "from": "wp_rydal_f1_other_entrance",
-      "to": "wp_rydal_101",
-      "accessible": true
-    },
-    {
       "from": "wp_rydal_210",
       "to": "wp_rydal_210A",
       "accessible": true
@@ -1013,7 +1030,7 @@
       "accessible": true
     },
     {
-      "from": "wp_rydal_f1_stairs_side",
+      "from": "wp_rydal_f1_staircase_b",
       "to": "wp_rydal_f1_hall_01",
       "accessible": true
     },
@@ -1024,21 +1041,21 @@
     },
     {
       "from": "wp_rydal_f1_hall_top_stairs",
-      "to": "wp_rydal_stairs_1",
+      "to": "wp_rydal_f1_staircase_a",
       "accessible": true
     },
     {
-      "from": "wp_rydal_stairs_1",
+      "from": "wp_rydal_f1_staircase_a",
       "to": "wp_rydal_f1_hall_01",
       "accessible": true
     },
     {
-      "from": "wp_rydal_stairs_1",
+      "from": "wp_rydal_f1_staircase_a",
       "to": "wp_ryda_108",
       "accessible": true
     },
     {
-      "from": "wp_rydal_stairs_1",
+      "from": "wp_rydal_f1_staircase_a",
       "to": "wp_rydal_109",
       "accessible": true
     },
@@ -1076,6 +1093,71 @@
       "from": "wp_rydal_f2_hall_06",
       "to": "wp_rydal_201",
       "accessible": true
+    },
+    {
+      "from": "wp_rydal_g_staircase_a",
+      "to": "wp_rydal_f1_staircase_a",
+      "accessible": true
+    },
+    {
+      "from": "wp_rydal_gnd_hall_01",
+      "to": "wp_rydal_003",
+      "accessible": true
+    },
+    {
+      "from": "wp_rydal_gnd_hall_01",
+      "to": "wp_rydal_hall_01",
+      "accessible": true
+    },
+    {
+      "from": "wp_rydal_hall_01",
+      "to": "wp_rydal_003",
+      "accessible": true
+    },
+    {
+      "from": "wp_rydal_hall_01",
+      "to": "wp_rydal_002",
+      "accessible": true
+    },
+    {
+      "from": "wp_rydal_hall_01",
+      "to": "wp_rydal_001",
+      "accessible": true
+    },
+    {
+      "from": "wp_rydal_hall_01",
+      "to": "wp_rydal_g_hall_02",
+      "accessible": true
+    },
+    {
+      "from": "wp_rydal_g_hall_02",
+      "to": "wp_rydal_005",
+      "accessible": true
+    },
+    {
+      "from": "wp_rydal_g_hall_02",
+      "to": "wp_rydal_006",
+      "accessible": true
+    },
+    {
+      "from": "wp_rydal_g_hall_02",
+      "to": "wp_rydal_010",
+      "accessible": true
+    },
+    {
+      "from": "wp_rydal_g_hall_02",
+      "to": "wp_rydal_007",
+      "accessible": true
+    },
+    {
+      "from": "wp_rydal_g_hall_02",
+      "to": "wp_rydal_008",
+      "accessible": true
+    },
+    {
+      "from": "wp_rydal_009",
+      "to": "wp_rydal_g_hall_02",
+      "accessible": true
     }
   ],
   "rooms": [
@@ -1085,14 +1167,6 @@
       "floor": "ground",
       "waypoint_id": "wp_rydal_001",
       "room_name": "Room 001",
-      "type": "classroom"
-    },
-    {
-      "building": "rydal",
-      "room_number": "EE2",
-      "floor": "ground",
-      "waypoint_id": "wp_rydal_ee2",
-      "room_name": "Room EE2",
       "type": "classroom"
     },
     {
@@ -1118,12 +1192,6 @@
       "floor": "ground"
     },
     {
-      "qr_id": "QR_RYDAL_GND_EE2",
-      "waypoint_id": "wp_rydal_ee2",
-      "building": "rydal",
-      "floor": "ground"
-    },
-    {
       "qr_id": "QR_RYDAL_F1_101",
       "waypoint_id": "wp_rydal_101",
       "building": "rydal",
@@ -1143,7 +1211,7 @@
     },
     {
       "qr_id": "QR_RYDAL_GND_STAIRS",
-      "waypoint_id": "wp_rydal_gnd_stairs",
+      "waypoint_id": "wp_rydal_g_staircase_a",
       "building": "rydal",
       "floor": "ground"
     },
@@ -1152,6 +1220,24 @@
       "waypoint_id": "wp_rydal_gnd_hall_01",
       "building": "rydal",
       "floor": "ground"
+    },
+    {
+      "qr_id": "QR_RYDAL_F2_STAIRS_MAIN",
+      "waypoint_id": "wp_rydal_f2_staircase_b",
+      "building": "rydal",
+      "floor": "2"
+    },
+    {
+      "qr_id": "QR_RYDAL_F1_STAIRCASE_B",
+      "waypoint_id": "wp_rydal_f1_staircase_b",
+      "building": "rydal",
+      "floor": "1"
+    },
+    {
+      "qr_id": "QR_RYDAL_F1_STAIRCASE_A",
+      "waypoint_id": "wp_rydal_f1_staircase_a",
+      "building": "rydal",
+      "floor": "1"
     }
   ]
 }

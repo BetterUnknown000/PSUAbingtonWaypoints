@@ -10,10 +10,13 @@
       "3"
     ],
     "entrances": [
-      "wp_wood_library_entrance",
+      "wp_wood_f1_library_entrance",
       "wp_wood_f1_entrance_side_1",
       "wp_wood_f1_entrance_side_2",
-      "wp_wood_f1_entrance_side_3"
+      "wp_wood_f1_entrance_side_3",
+      "wp_wood_f3_outside",
+      "wp_wood_f1_entrance_side_4",
+      "wp_wood_f2_front_entrance"
     ]
   },
   "waypoints": [
@@ -25,8 +28,8 @@
       "type": "hallway",
       "latitude": 40.117091,
       "longitude": -75.110669,
-      "x": 624.8,
-      "y": 245.2,
+      "x": 614.8,
+      "y": 242.2,
       "qr_code": "QR_WOOD_F1_HALL_01",
       "requires_scan": false,
       "stop_radius_m": 3
@@ -39,8 +42,8 @@
       "type": "hallway",
       "latitude": 40.117045,
       "longitude": -75.110636,
-      "x": 663.3,
-      "y": 246.9,
+      "x": 669.3,
+      "y": 244.9,
       "qr_code": "QR_WOOD_F1_HALL_02",
       "requires_scan": false,
       "stop_radius_m": 3
@@ -123,7 +126,7 @@
       "id": "wp_wood_f1_hall_07",
       "building": "woodland",
       "floor": "1",
-      "label": "F1 Hall - North Corridor",
+      "label": "Woodland F1 North Corridor",
       "type": "hallway",
       "latitude": 40.116899,
       "longitude": -75.110857,
@@ -137,7 +140,7 @@
       "id": "wp_wood_f1_hall_10",
       "building": "woodland",
       "floor": "1",
-      "label": "F1 Hall - West Wing A",
+      "label": "Woodland F1 Junction B",
       "type": "hallway",
       "latitude": 40.116745,
       "longitude": -75.111013,
@@ -155,7 +158,7 @@
       "id": "wp_wood_f1_hall_11",
       "building": "woodland",
       "floor": "1",
-      "label": "F1 Hall - West Wing B",
+      "label": "Woodland F1 Hall End B",
       "type": "hallway",
       "latitude": 40.116614,
       "longitude": -75.111033,
@@ -170,7 +173,7 @@
       "id": "wp_wood_f1_hall_12",
       "building": "woodland",
       "floor": "1",
-      "label": "F1 Hall - West Wing C",
+      "label": "Woodland F1 Hall B",
       "type": "hallway",
       "latitude": 40.116532,
       "longitude": -75.111085,
@@ -185,7 +188,7 @@
       "id": "wp_wood_f1_hall_13",
       "building": "woodland",
       "floor": "1",
-      "label": "F1 Hall - West Wing to Stairs",
+      "label": "Woodland F1 Hall Ext B",
       "type": "hallway",
       "latitude": 40.116443,
       "longitude": -75.111195,
@@ -199,7 +202,7 @@
       "id": "wp_wood_f1_hall_14",
       "building": "woodland",
       "floor": "1",
-      "label": "F1 Hall - South End",
+      "label": "Woodland F1 Hall Ext End B",
       "type": "hallway",
       "latitude": 40.116385,
       "longitude": -75.111261,
@@ -211,24 +214,24 @@
       "stop_radius_m": 3
     },
     {
-      "id": "wp_wood_f1_stairs_a",
+      "id": "wp_wood_f1_staircase_b",
       "building": "woodland",
       "floor": "1",
-      "label": "F1 Stairs - Main",
+      "label": "Woodland F1 Staircase B",
       "type": "stairs",
       "latitude": 40.116849,
       "longitude": -75.110941,
-      "x": 500.1,
-      "y": 426.7,
+      "x": 491.1,
+      "y": 431.7,
       "qr_code": "QR_WOOD_F1_STAIRS_A",
       "requires_scan": true,
       "stop_radius_m": 3
     },
     {
-      "id": "wp_wood_f1_stairs_b",
+      "id": "wp_wood_f1_staircase_c",
       "building": "woodland",
       "floor": "1",
-      "label": "F1 Stairs - West End",
+      "label": "Woodland F1 Staircase C",
       "type": "stairs",
       "latitude": 40.116458,
       "longitude": -75.111184,
@@ -242,7 +245,7 @@
       "id": "wp_wood_f2_hall_01",
       "building": "woodland",
       "floor": "2",
-      "label": "F2 Hall - South End",
+      "label": "Woodland F2 Hall End C",
       "type": "hallway",
       "latitude": 40.11636,
       "longitude": -75.111294,
@@ -257,7 +260,7 @@
       "id": "wp_wood_f2_hall_02",
       "building": "woodland",
       "floor": "2",
-      "label": "F2 Hall - South Corridor A",
+      "label": "Woodland F2 Hall C",
       "type": "hallway",
       "latitude": 40.11641,
       "longitude": -75.111233,
@@ -271,7 +274,7 @@
       "id": "wp_wood_f2_hall_03",
       "building": "woodland",
       "floor": "2",
-      "label": "F2 Hall - West Wing A",
+      "label": "Woodland F2 Hall Ext C",
       "type": "hallway",
       "latitude": 40.116458,
       "longitude": -75.111116,
@@ -286,7 +289,7 @@
       "id": "wp_wood_f2_hall_04",
       "building": "woodland",
       "floor": "2",
-      "label": "F2 Hall - West Wing B",
+      "label": "Woodland F2 Hall Ext End C",
       "type": "hallway",
       "latitude": 40.116501,
       "longitude": -75.111165,
@@ -300,7 +303,7 @@
       "id": "wp_wood_f2_hall_05",
       "building": "woodland",
       "floor": "2",
-      "label": "F2 Hall - Center A",
+      "label": "Woodland F2 Corner B",
       "type": "hallway",
       "latitude": 40.116667,
       "longitude": -75.111043,
@@ -318,7 +321,7 @@
       "id": "wp_wood_f2_hall_06",
       "building": "woodland",
       "floor": "2",
-      "label": "F2 Hall - Center B",
+      "label": "Woodland F2 Hall End B",
       "type": "hallway",
       "latitude": 40.116668,
       "longitude": -75.111056,
@@ -332,7 +335,7 @@
       "id": "wp_wood_f2_hall_07",
       "building": "woodland",
       "floor": "2",
-      "label": "F2 Hall - Staircase Junction",
+      "label": "Woodland F2 Hall B",
       "type": "hallway",
       "latitude": 40.116847,
       "longitude": -75.110945,
@@ -347,7 +350,7 @@
       "id": "wp_wood_f2_hall_08",
       "building": "woodland",
       "floor": "2",
-      "label": "F2 Hall - Main Corridor A",
+      "label": "Woodland F2 Hall A",
       "type": "hallway",
       "latitude": 40.116934,
       "longitude": -75.110867,
@@ -375,7 +378,7 @@
       "id": "wp_wood_f2_hall_10",
       "building": "woodland",
       "floor": "2",
-      "label": "F2 Hall - North End A",
+      "label": "Woodland F2 Junction A",
       "type": "hallway",
       "latitude": 40.117118,
       "longitude": -75.110811,
@@ -389,7 +392,7 @@
       "id": "wp_wood_f2_hall_11",
       "building": "woodland",
       "floor": "2",
-      "label": "F2 Hall - North End B",
+      "label": "Woodland F2 Entrance Hall",
       "type": "hallway",
       "latitude": 40.117089,
       "longitude": -75.110805,
@@ -403,7 +406,7 @@
       "id": "wp_wood_f2_hall_13",
       "building": "woodland",
       "floor": "2",
-      "label": "F2 Hall - North Corridor B",
+      "label": "Woodland F2 Hall End A",
       "type": "hallway",
       "latitude": 40.117075,
       "longitude": -75.110913,
@@ -428,10 +431,10 @@
       "stop_radius_m": 3
     },
     {
-      "id": "wp_wood_f2_stairs_a",
+      "id": "wp_wood_f2_stairs_b",
       "building": "woodland",
       "floor": "2",
-      "label": "F2 Stairs - Main",
+      "label": "Woodland F2 Staircase B",
       "type": "stairs",
       "latitude": 40.116903,
       "longitude": -75.110889,
@@ -442,10 +445,10 @@
       "stop_radius_m": 3
     },
     {
-      "id": "wp_wood_f2_stairs_b",
+      "id": "wp_wood_f2_staircase_c",
       "building": "woodland",
       "floor": "2",
-      "label": "F2 Stairs - West End",
+      "label": "Woodland F2 Staircase C",
       "type": "stairs",
       "latitude": 40.116407,
       "longitude": -75.111226,
@@ -459,7 +462,7 @@
       "id": "wp_wood_f3_hall_01",
       "building": "woodland",
       "floor": "3",
-      "label": "F3 Hall - Elevator Area",
+      "label": "Woodland F3 Hall Ext End A",
       "type": "hallway",
       "latitude": 40.117084,
       "longitude": -75.110847,
@@ -474,7 +477,7 @@
       "id": "wp_wood_f3_hall_02",
       "building": "woodland",
       "floor": "3",
-      "label": "F3 Hall - North A",
+      "label": "Woodland F3 Junction A",
       "type": "hallway",
       "latitude": 40.117057,
       "longitude": -75.110842,
@@ -488,7 +491,7 @@
       "id": "wp_wood_f3_outside",
       "building": "woodland",
       "floor": "3",
-      "label": "F3 Outside Entrance",
+      "label": "Woodland F3 Outside Entrance",
       "type": "entrance",
       "latitude": 40.117068,
       "longitude": -75.110863,
@@ -505,7 +508,7 @@
       "id": "wp_wood_f3_hall_03",
       "building": "woodland",
       "floor": "3",
-      "label": "F3 Hall - North B",
+      "label": "Woodland F3 Hall Ext A",
       "type": "hallway",
       "latitude": 40.117048,
       "longitude": -75.110845,
@@ -520,7 +523,7 @@
       "id": "wp_wood_f3_hall_04",
       "building": "woodland",
       "floor": "3",
-      "label": "F3 Hall - Main Corridor A",
+      "label": "Woodland F3 Hall End A",
       "type": "hallway",
       "latitude": 40.116988,
       "longitude": -75.11086,
@@ -535,7 +538,7 @@
       "id": "wp_wood_f3_hall_05",
       "building": "woodland",
       "floor": "3",
-      "label": "F3 Hall - Main Corridor B",
+      "label": "Woodland F3 Hall A",
       "type": "hallway",
       "latitude": 40.117029,
       "longitude": -75.110855,
@@ -550,7 +553,7 @@
       "id": "wp_wood_f3_hall_06",
       "building": "woodland",
       "floor": "3",
-      "label": "F3 Hall - Center",
+      "label": "Woodland F3 Hall B",
       "type": "hallway",
       "latitude": 40.116788,
       "longitude": -75.111043,
@@ -564,7 +567,7 @@
       "id": "wp_wood_f3_hall_07",
       "building": "woodland",
       "floor": "3",
-      "label": "F3 Hall - West Wing A",
+      "label": "Woodland F3 Hall End B",
       "type": "hallway",
       "latitude": 40.116639,
       "longitude": -75.111061,
@@ -579,7 +582,7 @@
       "id": "wp_wood_f3_hall_08",
       "building": "woodland",
       "floor": "3",
-      "label": "F3 Hall - West Wing Junction",
+      "label": "Woodland F3 Junction C",
       "type": "hallway",
       "latitude": 40.11659,
       "longitude": -75.111037,
@@ -608,7 +611,7 @@
       "id": "wp_wood_f3_hall_10",
       "building": "woodland",
       "floor": "3",
-      "label": "F3 Hall - West Wing C",
+      "label": "Woodland F3 Hall Ext C",
       "type": "hallway",
       "latitude": 40.116566,
       "longitude": -75.111027,
@@ -623,7 +626,7 @@
       "id": "wp_wood_f3_hall_11",
       "building": "woodland",
       "floor": "3",
-      "label": "F3 Hall - South A",
+      "label": "Woodland F3 Hall C",
       "type": "hallway",
       "latitude": 40.116518,
       "longitude": -75.111172,
@@ -637,7 +640,7 @@
       "id": "wp_wood_f3_hall_12",
       "building": "woodland",
       "floor": "3",
-      "label": "F3 Hall - South B",
+      "label": "Woodland F3 Hall End C",
       "type": "hallway",
       "latitude": 40.116483,
       "longitude": -75.111137,
@@ -649,10 +652,10 @@
       "stop_radius_m": 3
     },
     {
-      "id": "wp_wood_f3_stairs_a",
+      "id": "wp_wood_f3_staircase_c",
       "building": "woodland",
       "floor": "3",
-      "label": "F3 Stairs - West End",
+      "label": "Woodland F3 Staircase C",
       "type": "stairs",
       "latitude": 40.116387,
       "longitude": -75.111156,
@@ -663,10 +666,10 @@
       "stop_radius_m": 3
     },
     {
-      "id": "wp_wood_f3_stairs_b",
+      "id": "wp_wood_f3_staircase_b",
       "building": "woodland",
       "floor": "3",
-      "label": "F3 Stairs - Middle",
+      "label": "Woodland F3 Staircase B",
       "type": "stairs",
       "latitude": 40.116823,
       "longitude": -75.110967,
@@ -859,15 +862,15 @@
       "stop_radius_m": 3
     },
     {
-      "id": "wp_wood_library_entrance",
+      "id": "wp_wood_f1_library_entrance",
       "building": "woodland",
       "floor": "1",
-      "label": "Woodland Library Entrance",
+      "label": "Woodland F1 Library Entrance",
       "type": "entrance",
       "latitude": 40.11672,
       "longitude": -75.11095,
-      "x": 682.1,
-      "y": 248.6,
+      "x": 692.1,
+      "y": 251.6,
       "qr_code": "QR_WOOD_F1_MAIN_ENTRANCE",
       "photo": "../assets/WoodlandImages/Level1_Entry.jpg",
       "approach_latitude": 40.11665,
@@ -1143,7 +1146,7 @@
       "id": "wp_wood_elevator_f2",
       "building": "woodland",
       "floor": "2",
-      "label": "Woodland Elevator (Floor 2)",
+      "label": "Woodland F2 Elevator",
       "type": "elevator",
       "latitude": 40.1170630556,
       "longitude": -75.1107448889,
@@ -1209,8 +1212,8 @@
       "type": "office",
       "latitude": 40.117028,
       "longitude": -75.110871,
-      "x": 540.88,
-      "y": 276.44,
+      "x": 540.9,
+      "y": 276.4,
       "qr_code": "QR_WOOD_F3_317"
     },
     {
@@ -1421,7 +1424,7 @@
       "id": "wp_wood_elevator_f3",
       "building": "woodland",
       "floor": "3",
-      "label": "Woodland Elevator (Floor 3)",
+      "label": "Woodland F3 Elevator",
       "type": "elevator",
       "latitude": 40.1170361389,
       "longitude": -75.1107876389,
@@ -2067,16 +2070,22 @@
       "label": "Woodland F1 Library Staircase",
       "type": "stairs",
       "x": 726.7,
-      "y": 199.2
+      "y": 199.2,
+      "qr_code": "QR_WOOD_F1_LIBRARY_STAIRCASE",
+      "requires_scan": true,
+      "stop_radius_m": 3
     },
     {
-      "id": "wp_wood_library_staircase_f2",
+      "id": "wp_wood_f2_library_staircase",
       "building": "woodland",
       "floor": "2",
-      "label": "Library Staircase F2",
+      "label": "Woodland F2 Library Staircase",
       "type": "stairs",
       "x": 708.8,
-      "y": 198.8
+      "y": 198.8,
+      "qr_code": "QR_WOOD_F2_LIBRARY_STAIRCASE",
+      "requires_scan": true,
+      "stop_radius_m": 3
     },
     {
       "id": "wp_wood_211b",
@@ -2124,15 +2133,15 @@
       "y": 143.1
     },
     {
-      "id": "wp_wood_front_entrance",
+      "id": "wp_wood_f2_front_entrance",
       "building": "woodland",
       "floor": "2",
-      "label": "Woodland Front Entrance",
+      "label": "Woodland F2 Front Entrance",
       "type": "entrance",
       "x": 490.1,
       "y": 227.7,
-      "latitude": 40.11714,
-      "longitude": -75.11104
+      "latitude": 40.11711,
+      "longitude": -75.11093
     },
     {
       "id": "wp_wood_219a",
@@ -2561,7 +2570,7 @@
     },
     {
       "from": "wp_wood_f1_entrance_side_1",
-      "to": "wp_wood_f1_stairs_a",
+      "to": "wp_wood_f1_staircase_b",
       "accessible": true
     },
     {
@@ -2611,7 +2620,7 @@
     },
     {
       "from": "wp_wood_f1_hall_07",
-      "to": "wp_wood_f1_stairs_a",
+      "to": "wp_wood_f1_staircase_b",
       "accessible": true
     },
     {
@@ -2636,7 +2645,7 @@
     },
     {
       "from": "wp_wood_f1_hall_13",
-      "to": "wp_wood_f1_stairs_b",
+      "to": "wp_wood_f1_staircase_c",
       "accessible": true
     },
     {
@@ -2645,13 +2654,13 @@
       "accessible": false
     },
     {
-      "from": "wp_wood_f1_stairs_a",
-      "to": "wp_wood_f2_stairs_a",
+      "from": "wp_wood_f1_staircase_b",
+      "to": "wp_wood_f2_stairs_b",
       "accessible": false
     },
     {
-      "from": "wp_wood_f1_stairs_b",
-      "to": "wp_wood_f2_stairs_b",
+      "from": "wp_wood_f1_staircase_c",
+      "to": "wp_wood_f2_staircase_c",
       "accessible": false
     },
     {
@@ -2891,7 +2900,7 @@
     },
     {
       "from": "wp_wood_f2_hall_01",
-      "to": "wp_wood_f2_stairs_b",
+      "to": "wp_wood_f2_staircase_c",
       "accessible": true
     },
     {
@@ -2901,7 +2910,7 @@
     },
     {
       "from": "wp_wood_f2_hall_02",
-      "to": "wp_wood_f2_stairs_b",
+      "to": "wp_wood_f2_staircase_c",
       "accessible": true
     },
     {
@@ -2931,7 +2940,7 @@
     },
     {
       "from": "wp_wood_f2_hall_07",
-      "to": "wp_wood_f2_stairs_a",
+      "to": "wp_wood_f2_stairs_b",
       "accessible": true
     },
     {
@@ -2941,7 +2950,7 @@
     },
     {
       "from": "wp_wood_f2_hall_08",
-      "to": "wp_wood_f2_stairs_a",
+      "to": "wp_wood_f2_stairs_b",
       "accessible": true
     },
     {
@@ -2965,13 +2974,13 @@
       "accessible": false
     },
     {
-      "from": "wp_wood_f2_stairs_a",
-      "to": "wp_wood_f3_stairs_b",
+      "from": "wp_wood_f2_stairs_b",
+      "to": "wp_wood_f3_staircase_b",
       "accessible": false
     },
     {
-      "from": "wp_wood_f2_stairs_b",
-      "to": "wp_wood_f3_stairs_a",
+      "from": "wp_wood_f2_staircase_c",
+      "to": "wp_wood_f3_staircase_c",
       "accessible": false
     },
     {
@@ -3206,7 +3215,7 @@
     },
     {
       "from": "wp_wood_f3_hall_04",
-      "to": "wp_wood_f3_stairs_b",
+      "to": "wp_wood_f3_staircase_b",
       "accessible": true
     },
     {
@@ -3216,7 +3225,7 @@
     },
     {
       "from": "wp_wood_f3_hall_06",
-      "to": "wp_wood_f3_stairs_b",
+      "to": "wp_wood_f3_staircase_b",
       "accessible": true
     },
     {
@@ -3246,12 +3255,12 @@
     },
     {
       "from": "wp_wood_f3_hall_11",
-      "to": "wp_wood_f3_stairs_a",
+      "to": "wp_wood_f3_staircase_c",
       "accessible": true
     },
     {
       "from": "wp_wood_f3_hall_12",
-      "to": "wp_wood_f3_stairs_a",
+      "to": "wp_wood_f3_staircase_c",
       "accessible": true
     },
     {
@@ -3281,7 +3290,7 @@
     },
     {
       "from": "wp_wood_f1_library_hall",
-      "to": "wp_wood_library_entrance",
+      "to": "wp_wood_f1_library_entrance",
       "accessible": true
     },
     {
@@ -3380,7 +3389,7 @@
       "accessible": true
     },
     {
-      "from": "wp_wood_f1_stairs_a",
+      "from": "wp_wood_f1_staircase_b",
       "to": "wp_wood_124",
       "accessible": true
     },
@@ -3416,7 +3425,7 @@
     },
     {
       "from": "wp_wood_f1_entrance_side_3",
-      "to": "wp_wood_f1_stairs_b",
+      "to": "wp_wood_f1_staircase_c",
       "accessible": true
     },
     {
@@ -3440,7 +3449,7 @@
       "accessible": true
     },
     {
-      "from": "wp_wood_f1_stairs_b",
+      "from": "wp_wood_f1_staircase_c",
       "to": "wp_wood_f1_hall_14",
       "accessible": true
     },
@@ -3451,7 +3460,7 @@
     },
     {
       "from": "wp_wood_f1_entrance_side_4",
-      "to": "wp_wood_f1_stairs_b",
+      "to": "wp_wood_f1_staircase_c",
       "accessible": true
     },
     {
@@ -3475,12 +3484,12 @@
       "accessible": true
     },
     {
-      "from": "wp_wood_library_staircase_f2",
+      "from": "wp_wood_f2_library_staircase",
       "to": "wp_wood_f1_library_staircase",
       "accessible": true
     },
     {
-      "from": "wp_wood_library_staircase_f2",
+      "from": "wp_wood_f2_library_staircase",
       "to": "wp_wood_201",
       "accessible": true
     },
@@ -3496,22 +3505,22 @@
     },
     {
       "from": "wp_wood_203",
-      "to": "wp_wood_library_staircase_f2",
+      "to": "wp_wood_f2_library_staircase",
       "accessible": true
     },
     {
       "from": "wp_wood_202",
-      "to": "wp_wood_library_staircase_f2",
+      "to": "wp_wood_f2_library_staircase",
       "accessible": true
     },
     {
-      "from": "wp_wood_library_staircase_f2",
+      "from": "wp_wood_f2_library_staircase",
       "to": "wp_wood_206",
       "accessible": true
     },
     {
       "from": "wp_wood_204",
-      "to": "wp_wood_library_staircase_f2",
+      "to": "wp_wood_f2_library_staircase",
       "accessible": true
     },
     {
@@ -3525,12 +3534,12 @@
       "accessible": true
     },
     {
-      "from": "wp_wood_f1_stairs_b",
+      "from": "wp_wood_f1_staircase_c",
       "to": "wp_wood_134",
       "accessible": true
     },
     {
-      "from": "wp_wood_f1_stairs_b",
+      "from": "wp_wood_f1_staircase_c",
       "to": "wp_wood_133b",
       "accessible": true
     },
@@ -3596,12 +3605,12 @@
     },
     {
       "from": "wp_wood_f2_hall_11",
-      "to": "wp_wood_front_entrance",
+      "to": "wp_wood_f2_front_entrance",
       "accessible": true
     },
     {
       "from": "wp_wood_f2_staircase_a",
-      "to": "wp_wood_front_entrance",
+      "to": "wp_wood_f2_front_entrance",
       "accessible": true
     },
     {
@@ -3655,17 +3664,17 @@
       "accessible": true
     },
     {
-      "from": "wp_wood_f2_stairs_a",
+      "from": "wp_wood_f2_stairs_b",
       "to": "wp_wood_224",
       "accessible": true
     },
     {
-      "from": "wp_wood_f2_stairs_a",
+      "from": "wp_wood_f2_stairs_b",
       "to": "wp_wood_225",
       "accessible": true
     },
     {
-      "from": "wp_wood_f2_stairs_a",
+      "from": "wp_wood_f2_stairs_b",
       "to": "wp_wood_223",
       "accessible": true
     },
@@ -3785,12 +3794,12 @@
       "accessible": true
     },
     {
-      "from": "wp_wood_f2_stairs_b",
+      "from": "wp_wood_f2_staircase_c",
       "to": "wp_wood_242",
       "accessible": true
     },
     {
-      "from": "wp_wood_f2_stairs_b",
+      "from": "wp_wood_f2_staircase_c",
       "to": "wp_wood_241",
       "accessible": true
     },
@@ -3861,7 +3870,7 @@
     },
     {
       "from": "wp_wood_116a",
-      "to": "wp_wood_library_entrance",
+      "to": "wp_wood_f1_library_entrance",
       "accessible": true
     },
     {
@@ -4030,13 +4039,13 @@
       "accessible": true
     },
     {
-      "from": "wp_wood_f3_stairs_b",
+      "from": "wp_wood_f3_staircase_b",
       "to": "wp_wood_324",
       "accessible": true
     },
     {
       "from": "wp_wood_323",
-      "to": "wp_wood_f3_stairs_b",
+      "to": "wp_wood_f3_staircase_b",
       "accessible": true
     },
     {
@@ -4055,13 +4064,13 @@
       "accessible": true
     },
     {
-      "from": "wp_wood_f3_stairs_b",
+      "from": "wp_wood_f3_staircase_b",
       "to": "wp_wood_322",
       "accessible": true
     },
     {
       "from": "wp_wood_325",
-      "to": "wp_wood_f3_stairs_b",
+      "to": "wp_wood_f3_staircase_b",
       "accessible": true
     },
     {
@@ -4100,12 +4109,12 @@
       "accessible": true
     },
     {
-      "from": "wp_wood_f3_stairs_a",
+      "from": "wp_wood_f3_staircase_c",
       "to": "wp_wood_344",
       "accessible": true
     },
     {
-      "from": "wp_wood_f3_stairs_a",
+      "from": "wp_wood_f3_staircase_c",
       "to": "wp_wood_345",
       "accessible": true
     },
@@ -4155,13 +4164,18 @@
       "accessible": true
     },
     {
-      "from": "wp_wood_f3_stairs_a",
+      "from": "wp_wood_f3_staircase_c",
       "to": "wp_wood_346",
       "accessible": true
     },
     {
       "from": "wp_wood_346",
       "to": "wp_wood_f3_hall_11",
+      "accessible": true
+    },
+    {
+      "from": "wp_wood_elevator_f3",
+      "to": "wp_wood_m315",
       "accessible": true
     }
   ],
@@ -4634,7 +4648,7 @@
       "building": "woodland",
       "room_number": "327",
       "floor": "3",
-      "waypoint_id": "wp_wood_327a",
+      "waypoint_id": "wp_wood_327",
       "room_name": "Dr. Judy Ozment, Chemistry",
       "type": "office"
     },
@@ -4642,7 +4656,7 @@
       "building": "woodland",
       "room_number": "327",
       "floor": "3",
-      "waypoint_id": "wp_wood_327b",
+      "waypoint_id": "wp_wood_327",
       "room_name": "Dr. Michael Kagan, Associate Professor of Physics",
       "type": "office"
     },
@@ -4674,7 +4688,7 @@
   "qrAnchors": [
     {
       "qr_id": "QR_WOOD_F1_MAIN_ENTRANCE",
-      "waypoint_id": "wp_wood_library_entrance",
+      "waypoint_id": "wp_wood_f1_library_entrance",
       "building": "woodland",
       "floor": "1"
     },
@@ -4949,18 +4963,6 @@
       "floor": "1"
     },
     {
-      "qr_id": "QR_WOOD_F1_HALL_08",
-      "waypoint_id": "wp_wood_f1_hall_08",
-      "building": "woodland",
-      "floor": "1"
-    },
-    {
-      "qr_id": "QR_WOOD_F1_HALL_09",
-      "waypoint_id": "wp_wood_f1_hall_09",
-      "building": "woodland",
-      "floor": "1"
-    },
-    {
       "qr_id": "QR_WOOD_F1_HALL_10",
       "waypoint_id": "wp_wood_f1_hall_10",
       "building": "woodland",
@@ -4992,13 +4994,13 @@
     },
     {
       "qr_id": "QR_WOOD_F1_STAIRS_A",
-      "waypoint_id": "wp_wood_f1_stairs_a",
+      "waypoint_id": "wp_wood_f1_staircase_b",
       "building": "woodland",
       "floor": "1"
     },
     {
       "qr_id": "QR_WOOD_F1_STAIRS_B",
-      "waypoint_id": "wp_wood_f1_stairs_b",
+      "waypoint_id": "wp_wood_f1_staircase_c",
       "building": "woodland",
       "floor": "1"
     },
@@ -5069,12 +5071,6 @@
       "floor": "2"
     },
     {
-      "qr_id": "QR_WOOD_F2_HALL_12",
-      "waypoint_id": "wp_wood_f2_hall_12",
-      "building": "woodland",
-      "floor": "2"
-    },
-    {
       "qr_id": "QR_WOOD_F2_HALL_13",
       "waypoint_id": "wp_wood_f2_hall_13",
       "building": "woodland",
@@ -5088,13 +5084,13 @@
     },
     {
       "qr_id": "QR_WOOD_F2_STAIRS_A",
-      "waypoint_id": "wp_wood_f2_stairs_a",
+      "waypoint_id": "wp_wood_f2_stairs_b",
       "building": "woodland",
       "floor": "2"
     },
     {
       "qr_id": "QR_WOOD_F2_STAIRS_B",
-      "waypoint_id": "wp_wood_f2_stairs_b",
+      "waypoint_id": "wp_wood_f2_staircase_c",
       "building": "woodland",
       "floor": "2"
     },
@@ -5178,15 +5174,27 @@
     },
     {
       "qr_id": "QR_WOOD_F3_STAIRS_A",
-      "waypoint_id": "wp_wood_f3_stairs_a",
+      "waypoint_id": "wp_wood_f3_staircase_c",
       "building": "woodland",
       "floor": "3"
     },
     {
       "qr_id": "QR_WOOD_F3_STAIRS_B",
-      "waypoint_id": "wp_wood_f3_stairs_b",
+      "waypoint_id": "wp_wood_f3_staircase_b",
       "building": "woodland",
       "floor": "3"
+    },
+    {
+      "qr_id": "QR_WOOD_F1_LIBRARY_STAIRCASE",
+      "waypoint_id": "wp_wood_f1_library_staircase",
+      "building": "woodland",
+      "floor": "1"
+    },
+    {
+      "qr_id": "QR_WOOD_F2_LIBRARY_STAIRCASE",
+      "waypoint_id": "wp_wood_f2_library_staircase",
+      "building": "woodland",
+      "floor": "2"
     }
   ]
 }

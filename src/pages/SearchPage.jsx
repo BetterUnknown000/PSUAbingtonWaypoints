@@ -18,7 +18,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { useBottomMenuSpacing } from "../utils/useBottomMenuSpacing";
 import { Picker } from "@react-native-picker/picker";
 
-import { findRoom, getAllBuildings } from "../utils/findRoom";
+import { findRoomByQuery, getAllBuildings } from "../utils/findRoom";
 import { findCourse } from "../utils/findCourse";
 import BottomMenu from "../components/BottomMenu";
 
@@ -135,15 +135,15 @@ export default function SearchPage({ navigation }) {
 
     const r = String(roomNumber || "").trim();
     if (!r) {
-      setStatus("Please enter a room number.");
+      setStatus("Please enter a room number or keyword.");
       return;
     }
 
-    const found = findRoom(selectedBuildingId, r);
+    const found = findRoomByQuery(r, { buildingId: selectedBuildingId });
 
     if (!found) {
       setStatus(
-        `No results for room ${r} in ${selectedBuilding?.name || selectedBuildingId}.`
+        `No results for "${r}". Try a room number or a keyword like Cafe, Library, or Lost and Found.`
       );
       return;
     }
@@ -211,12 +211,12 @@ export default function SearchPage({ navigation }) {
             <Text style={s.brand}>PENN STATE ABINGTON</Text>
             <Text style={s.title}>Where are you{"\n"}heading today?</Text>
             <Text style={s.subtitle}>
-              Search by room number or type a course to find its classroom.
+              Search by room number, keyword, or type a course to find its classroom.
             </Text>
           </View>
 
           <View style={s.panel}>
-            <Text style={s.panelTitle}>Search Classroom</Text>
+            <Text style={s.panelTitle}>Search Destination</Text>
 
             <View style={s.modeRow}>
               <Pressable
@@ -332,12 +332,12 @@ export default function SearchPage({ navigation }) {
                   </View>
                 </Modal>
 
-                <Text style={s.label}>Room number</Text>
+                <Text style={s.label}>Room or keyword</Text>
                 <TextInput
                   style={s.input}
                   value={roomNumber}
                   onChangeText={setRoomNumber}
-                  placeholder="e.g. 218, 132B, G04"
+                  placeholder="e.g. 218, G04, Cafe, Library"
                   placeholderTextColor="#8B97A7"
                   autoCapitalize="characters"
                 />

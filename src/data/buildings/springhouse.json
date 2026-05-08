@@ -8,7 +8,9 @@
       "1"
     ],
     "entrances": [
-      "wp_spring_entrance"
+      "wp_spring_entrance",
+      "wp_spring_100_outside",
+      "wp_spring_100_inside"
     ]
   },
   "waypoints": [
@@ -74,6 +76,15 @@
       "type": "hall",
       "x": 449,
       "y": 451
+    },
+    {
+      "id": "wp_spring_102",
+      "building": "springhouse",
+      "floor": "1",
+      "label": "Room 102",
+      "type": "classroom",
+      "x": 155,
+      "y": 422
     }
   ],
   "edges": [
@@ -94,6 +105,11 @@
     },
     {
       "from": "wp_spring_hall",
+      "to": "wp_spring_101",
+      "accessible": true
+    },
+    {
+      "from": "wp_spring_102",
       "to": "wp_spring_101",
       "accessible": true
     }
