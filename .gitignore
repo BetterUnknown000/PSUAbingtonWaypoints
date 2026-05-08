@@ -1,6 +1,7 @@
 node_modules/
 .vs/
 .expo/
+.expo-android-smoke/
 .DS_Store
 
 # Environment variables — never commit the real .env
