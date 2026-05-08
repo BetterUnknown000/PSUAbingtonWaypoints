@@ -38,24 +38,6 @@ npm start
 | `npm run ios` | Builds/runs the iOS app locally. Usually requires macOS/Xcode. |
 | `npm run web` | Starts Expo web mode. |
 
-## Android Expo Testing
-
-For a quick Android sanity check before asking someone to scan the Expo QR code:
-
-```powershell
-npm run android:check
-npm run android:export
-npm test -- --runInBand
-```
-
-If an Android tester is not on the same Wi-Fi network, use tunnel mode instead of plain `npm start`:
-
-```powershell
-npm run start:tunnel:clear
-```
-
-For campus QR codes that open `psuabingtonwaypoints://...` links from the Android camera app, use an installed development or production build. Expo Go can load the development-server QR code, but it does not install this app's custom URL scheme as a standalone Android app.
-
 ## Testing And Validation
 
 | Command | What it does |
