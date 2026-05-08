@@ -1,105 +1,269 @@
 # PSU Abington Waypoints
 
-PSU Abington Waypoints is a mobile navigation app built to help users find their way around the Penn State Abington campus. The app combines QR code scanning, indoor pathfinding, GPS-based outdoor guidance, and a camera overlay interface to guide users to rooms and buildings.
+PSU Abington Waypoints is a React Native and Expo mobile navigation app for Penn State Abington. It supports room search, QR-based indoor anchoring, visual location matching, indoor graph routing, and GPS-based outdoor guidance.
 
-## Project Purpose
+## Core Features
 
-The goal of this project is to make campus navigation easier for students and visitors. Users can search for a room or course, scan QR codes placed around campus, and receive directions to their destination.
+- Search for rooms by room number, room name, or common keywords.
+- Search examples include `Cafe`, `Lost and Found`, and `Library`.
+- Outdoor navigation uses GPS to guide users toward the correct building.
+- Indoor navigation uses waypoints, QR codes, and camera-based visual location matching.
+- Visual locate recognizes a known hallway or landmark image and starts indoor navigation from the matched waypoint.
+- The waypoint editor can update `campusData.json`, split building data, validate data, and rebuild the editor page.
 
-This project focuses on both indoor and outdoor navigation:
-- **Outdoor navigation** uses GPS to guide the user toward the correct building
-- **Indoor navigation** uses QR codes and image recognition to guide the user through waypoint routes inside buildings
+## Setup
 
-## Features
+Install dependencies:
 
-- Search for rooms by building and room number
-- Search for courses and find the room location
-- QR code scanning to determine indoor position
-- Indoor pathfinding using graph-based routing & image recognition
-- Outdoor guidance using GPS
-- Camera-based navigation screen with directional overlay
-- Step-by-step navigation instructions
-- Route recalculation when the user scans a different waypoint
-- Arrival detection when the destination waypoint is reached
+```powershell
+npm install
+```
 
-## Navigation Logic
+Start the Expo app:
 
-The main navigation system is split into a few parts:
+```powershell
+npm start
+```
 
-- `buildGraph.js`  
-  Builds the graph of waypoints and edges from campus data
+## App Commands
 
-- `dijkstra.js`  
-  Finds the shortest path between two waypoint nodes
+| Command | What it does |
+| --- | --- |
+| `npm start` | Starts Expo normally. |
+| `npm run start:tunnel` | Starts Expo using the tunnel helper. |
+| `npm run start:tunnel:clear` | Starts Expo tunnel mode after clearing Expo state. |
+| `npm run android` | Builds/runs the Android app locally. |
+| `npm run ios` | Builds/runs the iOS app locally. Usually requires macOS/Xcode. |
+| `npm run web` | Starts Expo web mode. |
 
-- `pathfinding.js`  
-  Connects room lookup, graph building, and Dijkstra shortest path logic
+## Testing And Validation
 
-- `qrWaypointLookup.js`  
-  Handles QR-based waypoint lookup
+| Command | What it does |
+| --- | --- |
+| `npm test` | Runs the Jest test suite. |
+| `npm test -- --runInBand` | Runs Jest serially. Useful for reliable local checks. |
+| `npm run test:watch` | Runs Jest in watch mode. |
+| `node scripts\validateCampusData.js` | Validates waypoint, edge, room, entrance, and QR anchor references. |
 
-- `location.js`  
-  Handles GPS permission requests, current location, location watching, and distance calculations
+Before pushing navigation/data changes, run:
 
-- `routeSteps.js`  
-  Converts route waypoint IDs into readable step-by-step directions
+```powershell
+node scripts\validateCampusData.js
+npm test -- --runInBand
+```
 
-- `imageRecognition.js`
-  Determines the indoor location of the user using image recognition provided by a database of photos from imageMap.js
+## Waypoint Editor
 
-- `imageMap.js`
-  Provides the location of the jpg's of the indoor hallways for image recognition
+Use the editor when changing waypoints, edges, entrance metadata, room/search records, or QR anchor records.
 
-## Technologies Used
+Start the local editor server:
 
-- React Native
-- Expo
-- Expo Camera
-- Expo Location
-- JavaScript
-- JSON for campus and course data
+```powershell
+npm run editor
+```
+
+Open:
+
+```text
+http://localhost:5177
+```
+
+When opened through `npm run editor`, the `Save + sync project` button automatically:
+
+- writes `src/data/campusData.json`
+- regenerates `src/data/buildings/*.json`
+- regenerates `src/data/campusShared.json`
+- runs campus data validation
+- rebuilds `diagrams/index.html`
+
+Static editor build only:
+
+```powershell
+npm run build:diagrams
+```
+
+This rebuilds `diagrams/index.html`. If you open `diagrams/index.html` directly as a file, browser security prevents it from writing back into the project. In that mode, saving downloads a `campusData.json` file instead of updating the repo automatically.
+
+## Campus Data Splitting
+
+The app uses split building JSON files for lazy loading. If you manually edit `src/data/campusData.json` outside the editor, run:
+
+```powershell
+node scripts\splitCampusData.js
+node scripts\validateCampusData.js
+npm run build:diagrams
+```
+
+Files generated by splitting:
+
+- `src/data/buildings/athletic.json`
+- `src/data/buildings/cloverly.json`
+- `src/data/buildings/lares.json`
+- `src/data/buildings/rydal.json`
+- `src/data/buildings/springhouse.json`
+- `src/data/buildings/sutherland.json`
+- `src/data/buildings/woodland.json`
+- `src/data/campusShared.json`
+
+## QR Code Workflow
+
+QR codes are generated from current waypoint data.
+
+Current QR target rules:
+
+- include only `entrance`, `stairs`, `hallway`, and `hall` waypoints
+- do not include elevators
+- do not include deleted/stale waypoint IDs
+- PNG filenames use the waypoint ID, for example `wp_wood_f1_hall_01.png`
+- QR payload `qr_id` also uses the waypoint ID
+
+Preview what will happen without writing files:
+
+```powershell
+npm run qrs:plan
+```
+
+Generate QR PNGs and a fresh manifest:
+
+```powershell
+npm run qrs:generate
+```
+
+`npm run qrs:generate` writes QR images under `src/assets/qrcodes/`, updates `src/assets/qrcodes/manifest.json`, and removes stale PNG files that no longer match current QR targets.
+
+Print QR codes to the terminal:
+
+```powershell
+npm run qrs:print
+```
+
+Useful direct script equivalents:
+
+```powershell
+node scripts\generateQrCodes.js --dry-run
+node scripts\generateQrCodes.js --clean
+node scripts\printQrCodes.js
+```
+
+## Recommended Data Workflow
+
+For normal waypoint/data edits:
+
+```powershell
+npm run editor
+```
+
+Then edit in the browser and click `Save + sync project`.
+
+For QR regeneration:
+
+```powershell
+npm run qrs:plan
+npm run qrs:generate
+node scripts\validateCampusData.js
+npm test -- --runInBand
+```
+
+For a final check before Git:
+
+```powershell
+git status
+node scripts\validateCampusData.js
+npm test -- --runInBand
+```
+
+## Git Workflow
+
+Check changed files:
+
+```powershell
+git status
+```
+
+Stage everything:
+
+```powershell
+git add .
+```
+
+Commit:
+
+```powershell
+git commit -m "Update campus navigation data and tools"
+```
+
+Push:
+
+```powershell
+git push
+```
+
+If the branch has no upstream yet:
+
+```powershell
+git branch --show-current
+git push -u origin your-branch-name
+```
 
 ## Project Structure
 
 ```text
 App.js
-
 metro.config.js
+package.json
 
 scripts/
+  buildConnectivityDiagrams.js
+  editorRuntime.js
   generateQrCodes.js
   printQrCodes.js
+  qrCodeTargets.js
+  splitCampusData.js
+  startExpoTunnel.js
+  validateCampusData.js
+
+diagrams/
+  index.html
 
 src/
+  assets/
+    floorplans/
+    qrcodes/
+    WoodlandImages/
+
   components/
-    BottomMenu.jsx
     DirectionArrow.jsx
 
   data/
     campusData.json
-    courseData.json
+    campusShared.json
+    buildings/
+
+  navigation/
+    navReducer.js
+    rankEntrances.js
+    useIndoorPose.js
 
   pages/
-    BuildingDetail.jsx
-    Buildings.jsx
-    FloorMapScreen.jsx
-    MapView.jsx
-    MySchedule.jsx
     NavigationPage.jsx
     SearchPage.jsx
-    UserHelp.jsx
+    VisualLocateScreen.jsx
 
   utils/
-    buildGraph.js
-    dijkstra.js
-    findCourse.js
+    campusDataLoader.js
     findRoom.js
     imageMap.js
     imageRecognition.js
-    location.js
     pathfinding.js
     qrPayload.js
+    qrPayloadValidation.js
     qrWaypointLookup.js
     routeSteps.js
-    scheduleStorage.js
+```
 
+## Notes
+
+- `campusData.json` is the source of truth for full campus data.
+- `campusShared.json` and `src/data/buildings/*.json` are generated from `campusData.json`.
+- Prefer `npm run editor` for waypoint edits because it updates all generated data files automatically.
+- Prefer `npm run qrs:plan` before `npm run qrs:generate` so stale QR cleanup is visible before files are changed.
