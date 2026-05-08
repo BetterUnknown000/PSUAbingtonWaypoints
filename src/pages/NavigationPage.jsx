@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useMemo, useReducer, useRef, useState } from "react";
-import { ActivityIndicator } from "react-native";
+import { ActivityIndicator, Platform } from "react-native";
 import {
   View,
   Text,
@@ -13,6 +13,7 @@ import {
 } from "react-native";
 import { SafeAreaView, useSafeAreaInsets } from "react-native-safe-area-context";
 import { CameraView, useCameraPermissions } from "expo-camera";
+import Constants, { ExecutionEnvironment } from "expo-constants";
 import * as Location from "expo-location";
 import { Pedometer } from "expo-sensors";
 import MapView, { Polyline } from "react-native-maps";
@@ -22,11 +23,6 @@ import * as FileSystem from 'expo-file-system/legacy';
 import * as Sharing from 'expo-sharing';
 import { writeLog, clearLog, getLogPath } from '../utils/logger';
 import DirectionArrow from "../components/DirectionArrow";
-import {
-  initializeImageModel,
-  loadReferenceImageDatabase,
-  identifyLocationFromFrame,
-} from "../utils/imageRecognition";
 import {
   getAllBuildings,
   getAllRooms,
@@ -82,6 +78,14 @@ import {
 } from "../utils/qrPayload";
 
 const DEFAULT_METERS_PER_PX = INDOOR_METERS_PER_PIXEL;
+
+const USE_NATIVE_OUTDOOR_MAP = !(
+  Platform.OS === "android" &&
+  (
+    Constants.executionEnvironment === ExecutionEnvironment.StoreClient ||
+    Constants.appOwnership === "expo"
+  )
+);
 
 const PSU = {
   blue: "#001E44",
@@ -387,7 +391,6 @@ export default function NavigationPage({ route, navigation }) {
   const [batterySaverMode, setBatterySaverMode] = useState(false);
   const [outdoorScannerVisible, setOutdoorScannerVisible] = useState(false);
 
-  const [visionReady, setVisionReady] = useState(false);
   const [visionSource, setVisionSource] = useState(null); // "qr" | "vision" | null
 
   const [currentIndoorPosition, setCurrentIndoorPosition] = useState(null);
@@ -1081,6 +1084,7 @@ export default function NavigationPage({ route, navigation }) {
   ]);
 
   useEffect(() => {
+    if (!USE_NATIVE_OUTDOOR_MAP) return;
     if (!mapRef.current) return;
     if (!Array.isArray(orsCoords) || orsCoords.length < 2) return;
     if (didAutoFitRouteRef.current) return;
@@ -1097,25 +1101,6 @@ export default function NavigationPage({ route, navigation }) {
 
     didAutoFitRouteRef.current = true;
   }, [orsCoords]);
-
-  useEffect(() => {
-    let cancelled = false;
-
-    async function setupVision() {
-      try {
-        await initializeImageModel();
-        await loadReferenceImageDatabase();
-        if (!cancelled) setVisionReady(true);
-      } catch (error) {
-        console.log("Vision setup failed:", error);
-      }
-    }
-
-    setupVision();
-    return () => {
-      cancelled = true;
-    };
-  }, []);
 
   useEffect(() => {
     let mounted = true;
@@ -2462,6 +2447,12 @@ export default function NavigationPage({ route, navigation }) {
         }
       : null;
 
+    const showNativeOutdoorMap = Boolean(mapRegion && USE_NATIVE_OUTDOOR_MAP);
+    const fallbackTargetName =
+      selectedDestinationEntrance?.label ||
+      outdoorTargetBuilding?.name ||
+      destinationTitle;
+
     return (
       <SafeAreaView style={s.outdoorSafe} edges={["top"]}>
         <ScrollView
@@ -2501,7 +2492,7 @@ export default function NavigationPage({ route, navigation }) {
           </View>
 
           <View style={s.mapCard}>
-            {mapRegion ? (
+            {showNativeOutdoorMap ? (
               <MapView
                 ref={mapRef}
                 key={outdoorTargetBuilding?.id || destinationTitle}
@@ -2522,6 +2513,28 @@ export default function NavigationPage({ route, navigation }) {
                   />
                 ) : null}
               </MapView>
+            ) : mapRegion ? (
+              <View style={[s.mapPlaceholder, s.mapFallback]}>
+                <Text style={s.mapFallbackEyebrow}>Outdoor Guidance</Text>
+                <Text style={s.mapFallbackTitle} numberOfLines={2}>
+                  {fallbackTargetName}
+                </Text>
+                <Text style={s.mapFallbackBody}>
+                  {USE_NATIVE_OUTDOOR_MAP
+                    ? "Map loading."
+                    : "Map preview is off in Android Expo Go. Distance, route steps, and entrance scanning still work."}
+                </Text>
+                <View style={s.mapFallbackMetricRow}>
+                  <View style={s.mapFallbackMetric}>
+                    <Text style={s.mapFallbackMetricLabel}>Distance</Text>
+                    <Text style={s.mapFallbackMetricValue}>{formattedDistance.feetText}</Text>
+                  </View>
+                  <View style={s.mapFallbackMetric}>
+                    <Text style={s.mapFallbackMetricLabel}>Meters</Text>
+                    <Text style={s.mapFallbackMetricValue}>{formattedDistance.metersText}</Text>
+                  </View>
+                </View>
+              </View>
             ) : (
               <View style={s.mapPlaceholder}>
                 <Text style={s.mapPlaceholderText}>
@@ -2785,12 +2798,6 @@ export default function NavigationPage({ route, navigation }) {
               />
             )}
           </View>
-
-          {!visionReady ? (
-            <View style={s.visionLoadingBadge}>
-              <Text style={s.visionLoadingText}>📷 Loading vision…</Text>
-            </View>
-          ) : null}
 
           {scanFlashVisible ? (
             <Animated.View
@@ -3140,9 +3147,7 @@ export default function NavigationPage({ route, navigation }) {
                 <SectionTitle icon="🧠" text="Vision Status" />
                 <View style={s.detailInfoCard}>
                   <Text style={s.detailBody}>
-                    {visionReady
-                      ? "Ready — visual recognition loaded"
-                      : "Loading reference fingerprints…"}
+                    Visual recognition loads when Locate Me Visually opens.
                   </Text>
                 </View>
               </View>
@@ -3426,21 +3431,6 @@ const s = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     marginTop: -10,
-  },
-
-  visionLoadingBadge: {
-    position: "absolute",
-    top: 128,
-    alignSelf: "center",
-    backgroundColor: "rgba(0,0,0,0.52)",
-    borderRadius: 999,
-    paddingHorizontal: 12,
-    paddingVertical: 8,
-  },
-  visionLoadingText: {
-    color: "#fff",
-    fontWeight: "800",
-    fontSize: 12,
   },
 
   scanFeedback: {
@@ -3777,6 +3767,56 @@ const s = StyleSheet.create({
     color: PSU.blue,
     fontWeight: "800",
     fontSize: 14,
+  },
+  mapFallback: {
+    alignItems: "stretch",
+    padding: 18,
+  },
+  mapFallbackEyebrow: {
+    color: PSU.mapAccent,
+    fontSize: 11,
+    fontWeight: "900",
+    letterSpacing: 1,
+    textTransform: "uppercase",
+    marginBottom: 8,
+  },
+  mapFallbackTitle: {
+    color: PSU.text,
+    fontSize: 22,
+    fontWeight: "900",
+    lineHeight: 28,
+  },
+  mapFallbackBody: {
+    color: PSU.muted,
+    fontSize: 14,
+    lineHeight: 21,
+    marginTop: 10,
+  },
+  mapFallbackMetricRow: {
+    flexDirection: "row",
+    gap: 10,
+    marginTop: 18,
+  },
+  mapFallbackMetric: {
+    flex: 1,
+    backgroundColor: "#fff",
+    borderRadius: 14,
+    borderWidth: 1,
+    borderColor: PSU.mapBorder,
+    paddingHorizontal: 12,
+    paddingVertical: 10,
+  },
+  mapFallbackMetricLabel: {
+    color: PSU.muted,
+    fontSize: 11,
+    fontWeight: "800",
+    textTransform: "uppercase",
+    marginBottom: 4,
+  },
+  mapFallbackMetricValue: {
+    color: PSU.blue,
+    fontSize: 17,
+    fontWeight: "900",
   },
   mapLoadingOverlay: {
     position: "absolute",
